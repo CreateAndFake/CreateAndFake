@@ -1,0 +1,39 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+
+namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
+{
+    /// <summary>Handles comparing string dictionaries for the valuer.</summary>
+    public sealed class StringDictionaryCompareHint : CompareHint<StringDictionary>
+    {
+        /// <summary>Finds the differences between two objects.</summary>
+        /// <param name="expected">First object to compare.</param>
+        /// <param name="actual">Second object to compare.</param>
+        /// <param name="valuer">Valuer to handle child values.</param>
+        /// <returns>Found differences.</returns>
+        protected override IEnumerable<Difference> Compare(
+            StringDictionary expected, StringDictionary actual, IValuer valuer)
+        {
+            return valuer.Compare(Convert(expected), Convert(actual));
+        }
+
+        /// <summary>Calculates a hash code based upon value.</summary>
+        /// <param name="item">Object to generate a code for.</param>
+        /// <param name="valuer">Valuer to handle child values.</param>
+        /// <returns>The generated hash.</returns>
+        protected override int GetHashCode(StringDictionary item, IValuer valuer)
+        {
+            return valuer.GetHashCode(Convert(item));
+        }
+
+        /// <summary>Handles changing string dictionaries to dictionaries.</summary>
+        /// <param name="dict">Dictionary to convert.</param>
+        /// <returns>Converted dictionary.</returns>
+        private static IDictionary Convert(StringDictionary dict)
+        {
+            return dict.Cast<DictionaryEntry>().ToDictionary(e => e.Key, e => e.Value);
+        }
+    }
+}

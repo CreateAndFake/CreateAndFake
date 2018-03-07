@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>..\..\artifacts\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <OutputPath>..\..\artifacts\testing\$(Configuration)\</OutputPath>
+    <DocumentationFile>..\..\artifacts\testing\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+    <CodeAnalysisRuleSet>..\TestRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+</Project>

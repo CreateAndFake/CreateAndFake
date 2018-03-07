@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateAndFake", "src\CreateAndFake\CreateAndFake.csproj", "{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateAndFakeTests", "tests\CreateAndFakeTests\CreateAndFakeTests.csproj", "{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B} = {F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Full|Any CPU = Full|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Travis|Any CPU = Travis|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Full|Any CPU.ActiveCfg = Full|Any CPU
+		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Full|Any CPU.Build.0 = Full|Any CPU
+		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Travis|Any CPU.ActiveCfg = Travis|Any CPU
+		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Travis|Any CPU.Build.0 = Travis|Any CPU
+		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Full|Any CPU.ActiveCfg = Full|Any CPU
+		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Full|Any CPU.Build.0 = Full|Any CPU
+		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Travis|Any CPU.ActiveCfg = Travis|Any CPU
+		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Travis|Any CPU.Build.0 = Travis|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E04E3CC-869E-469A-BE61-FE8C557D937F}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,118 @@
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using CreateAndFake;
+using CreateAndFake.Toolbox;
+using CreateAndFake.Toolbox.FakerTool;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace CreateAndFakeTests.Toolbox.FakerTool
+{
+    /// <summary>Verifies behavior.</summary>
+    [TestClass]
+    public sealed class BehaviorTests
+    {
+        /// <summary>Verifies default instances are not null.</summary>
+        [TestMethod]
+        public void Set_BehaviorWorks()
+        {
+            foreach (MethodInfo info in typeof(Behavior)
+                .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Where(m => m.Name == nameof(Behavior.Set)))
+            {
+                Type type = info.GetParameters().First().ParameterType;
+                Type[] generics = type.AsGenericType()?.GetGenericArguments()
+                    .Select(a => typeof(string)).ToArray() ?? Type.EmptyTypes;
+
+                MethodInfo caller = (generics.Any()) ? info.MakeGenericMethod(generics) : info;
+                Type setupType = caller.GetParameters().First().ParameterType;
+
+                Type[] args = (type.Name.StartsWith("Func", StringComparison.InvariantCulture))
+                    ? generics.Skip(1).ToArray()
+                    : generics;
+
+                Behavior noTimes = (Behavior)caller.Invoke(null,
+                    new[] { Tools.Randomizer.Create(setupType), null });
+
+                Tools.Asserter.Is(true, noTimes.HasExpectedCalls());
+                noTimes.Invoke(args.Select(g => Tools.Randomizer.Create(g)).ToArray());
+                Tools.Asserter.Is(true, noTimes.HasExpectedCalls());
+
+                Behavior withTimes = (Behavior)caller.Invoke(null,
+                    new[] { Tools.Randomizer.Create(setupType), Times.Once });
+
+                Tools.Asserter.Is(false, withTimes.HasExpectedCalls());
+                withTimes.Invoke(args.Select(g => Tools.Randomizer.Create(g)).ToArray());
+                Tools.Asserter.Is(true, withTimes.HasExpectedCalls());
+            }
+        }
+
+        /// <summary>Verifies behavior behavior.</summary>
+        [TestMethod]
+        public void None_BehaviorWorks()
+        {
+            Behavior.None().Invoke(Array.Empty<object>());
+        }
+
+        /// <summary>Verifies behavior behavior.</summary>
+        [TestMethod]
+        public void Error_BehaviorWorks()
+        {
+            Tools.Asserter.Throws<NotImplementedException>(
+                () => Behavior.Error().Invoke(Array.Empty<object>()));
+        }
+
+        /// <summary>Verifies behavior behavior.</summary>
+        [TestMethod]
+        public void Null_BehaviorWorks()
+        {
+            Tools.Asserter.Is(null, Behavior.Null<string>().Invoke(Array.Empty<object>()));
+        }
+
+        /// <summary>Verifies behavior behavior.</summary>
+        [TestMethod]
+        public void Default_BehaviorWorks()
+        {
+            Tools.Asserter.Is(default(int), Behavior.Default<int>().Invoke(Array.Empty<object>()));
+        }
+
+        /// <summary>Verifies behavior behavior.</summary>
+        [TestMethod]
+        public void Throw_BehaviorWorks()
+        {
+            Tools.Asserter.Throws<InvalidOperationException>(
+                () => Behavior.Throw<InvalidOperationException>().Invoke(Array.Empty<object>()));
+        }
+
+        /// <summary>Verifies behavior behavior.</summary>
+        [TestMethod]
+        public void Returns_BehaviorWorks()
+        {
+            int value = Tools.Randomizer.Create<int>();
+            Tools.Asserter.Is(value, Behavior.Returns(value).Invoke(Array.Empty<object>()));
+        }
+
+        /// <summary>Verifies behavior behavior.</summary>
+        [TestMethod]
+        public void Series_BehaviorWorks()
+        {
+            Behavior behavior = Behavior.Series(false, true, false);
+            Tools.Asserter.Is(false, behavior.Invoke(Array.Empty<object>()));
+            Tools.Asserter.Is(true, behavior.Invoke(Array.Empty<object>()));
+            Tools.Asserter.Is(false, behavior.Invoke(Array.Empty<object>()));
+
+            Tools.Asserter.Throws<NotImplementedException>(
+                () => behavior.Invoke(Array.Empty<object>()));
+        }
+
+        /// <summary>Verifies times is passed through.</summary>
+        [TestMethod]
+        public void ToExpectedCalls_MatchesTimes()
+        {
+            Times times = Tools.Randomizer.Create<Times>();
+
+            Tools.Asserter.Is(null, Behavior.None().ToExpectedCalls());
+            Tools.Asserter.Is(times.ToString(), Behavior.None(times).ToExpectedCalls());
+        }
+    }
+}
