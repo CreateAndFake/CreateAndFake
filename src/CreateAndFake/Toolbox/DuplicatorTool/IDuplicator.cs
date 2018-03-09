@@ -6,6 +6,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
     public interface IDuplicator
     {
         /// <summary>Deep clones an object.</summary>
+        /// <typeparam name="T">Type being cloned.</typeparam>
         /// <param name="source">Object to clone.</param>
         /// <returns>The duplicate.</returns>
         /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>

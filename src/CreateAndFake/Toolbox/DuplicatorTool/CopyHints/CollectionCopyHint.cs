@@ -20,9 +20,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
         /// <summary>Deep clones an object.</summary>
         /// <param name="source">Object to clone.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>Duplicate object.</returns>
-        protected override IEnumerable Copy(IEnumerable source, IDuplicator duplicator)
+        protected override IEnumerable Copy(IEnumerable source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
             if (source == null) return source;
@@ -51,9 +51,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
         /// <summary>Copies the contents of a collection.</summary>
         /// <param name="source">Collection with contents to copy.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>Duplicate object.</returns>
-        private static IEnumerable CopyContents(IEnumerable source, IDuplicator duplicator)
+        private static IEnumerable CopyContents(IEnumerable source, DuplicatorChainer duplicator)
         {
             Type type = source.GetType();
             Type genericType = type.AsGenericType();
@@ -103,9 +103,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
         /// <summary>Copies the contents of a collection.</summary>
         /// <param name="source">Collection with contents to copy.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>Duplicate object.</returns>
-        private static IEnumerable<object> CopyContentsHelper(IEnumerable source, IDuplicator duplicator)
+        private static IEnumerable<object> CopyContentsHelper(IEnumerable source, DuplicatorChainer duplicator)
         {
             IEnumerator enumerator = source.GetEnumerator();
             while (enumerator.MoveNext())

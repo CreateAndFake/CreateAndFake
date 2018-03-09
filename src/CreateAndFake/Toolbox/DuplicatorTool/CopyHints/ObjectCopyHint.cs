@@ -14,9 +14,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
         /// <summary>Tries to deep clone an object.</summary>
         /// <param name="source">Object to clone.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>If the type could be cloned and the cloned instance.</returns>
-        protected internal override sealed (bool, object) TryCopy(object source, IDuplicator duplicator)
+        protected internal override sealed (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
             if (source == null) return (true, null);
@@ -27,15 +27,16 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
         /// <summary>Deep clones an object.</summary>
         /// <param name="source">Object to clone.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>Duplicate object.</returns>
-        private static object Copy(object source, IDuplicator duplicator)
+        private static object Copy(object source, DuplicatorChainer duplicator)
         {
             object dupe = CreateNew(source, duplicator);
             if (dupe == null)
             {
                 return dupe;
             }
+            duplicator.AddToHistory(source, dupe);
 
             foreach (FieldInfo field in source.GetType().GetFields().Where(f => !f.IsInitOnly && !f.IsLiteral))
             {
@@ -52,9 +53,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
         /// <summary>Creates an instance of an object.</summary>
         /// <param name="source">Object to create.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>Created instance.</returns>
-        private static object CreateNew(object source, IDuplicator duplicator)
+        private static object CreateNew(object source, DuplicatorChainer duplicator)
         {
             Type type = source.GetType();
 
@@ -76,12 +77,12 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
         /// <summary>Attempts to create and instance using a constructor.</summary>
         /// <param name="source">Object being cloned.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <param name="constructor">Constructor to use.</param>
         /// <param name="props">Properties on the object.</param>
         /// <param name="fields">Fields on the object.</param>
         /// <returns>Null if failed; created instance otherwise.</returns>
-        private static object TryCreate(object source, IDuplicator duplicator,
+        private static object TryCreate(object source, DuplicatorChainer duplicator,
             ConstructorInfo constructor, IEnumerable<PropertyInfo> props, IEnumerable<FieldInfo> fields)
         {
             List<PropertyInfo> propList = props.ToList();
@@ -142,7 +143,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <param name="source">Instance containing the member.</param>
         /// <param name="duplicator">Duplicator handling the cloning.</param>
         /// <returns>Duplicate object.</returns>
-        private static object CopyMember(MemberInfo member, object source, IDuplicator duplicator)
+        private static object CopyMember(MemberInfo member, object source, DuplicatorChainer duplicator)
         {
             if (member is PropertyInfo prop)
             {

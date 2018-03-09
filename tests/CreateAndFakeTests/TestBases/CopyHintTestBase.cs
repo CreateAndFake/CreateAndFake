@@ -38,7 +38,7 @@ namespace CreateAndFakeTests.TestBases
         public void TryCopy_NullBehaviorCheck()
         {
             Tools.Asserter.Is((true, (object)null),
-                TestInstance.TryCopy(null, Tools.Duplicator));
+                TestInstance.TryCopy(null, CreateChainer()));
 
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => TestInstance.TryCopy(null, null));
@@ -51,7 +51,7 @@ namespace CreateAndFakeTests.TestBases
             foreach (Type type in m_ValidTypes)
             {
                 object data = Tools.Randomizer.Create(type);
-                (bool, object) result = TestInstance.TryCopy(data, Tools.Duplicator);
+                (bool, object) result = TestInstance.TryCopy(data, CreateChainer());
 
                 Tools.Asserter.Is((true, data), result,
                     "Hint '" + typeof(T).Name + "' failed to clone type '" + type.Name + "'.");
@@ -79,7 +79,7 @@ namespace CreateAndFakeTests.TestBases
             foreach (Type type in m_InvalidTypes)
             {
                 object data = Tools.Randomizer.Create(type);
-                (bool, object) result = TestInstance.TryCopy(data, Tools.Duplicator);
+                (bool, object) result = TestInstance.TryCopy(data, CreateChainer());
 
                 Tools.Asserter.Is((false, (object)null), result,
                     "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
@@ -87,6 +87,12 @@ namespace CreateAndFakeTests.TestBases
                 (data as IDisposable)?.Dispose();
                 (result.Item2 as IDisposable)?.Dispose();
             }
+        }
+
+        /// <returns>Chainer to use for testing.</returns>
+        protected static DuplicatorChainer CreateChainer()
+        {
+            return new DuplicatorChainer(null, (object o, IDictionary<int, object> h) => Tools.Duplicator.Copy(o));
         }
     }
 }

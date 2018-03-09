@@ -41,7 +41,7 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
 
             Fake<CopyHint> hint = Tools.Faker.Mock<CopyHint>();
             hint.Setup(
-                m => m.TryCopy(data, Arg.Any<IDuplicator>()),
+                m => m.TryCopy(data, Arg.Any<DuplicatorChainer>()),
                 Behavior.Returns((true, data), Times.Once));
 
             Tools.Asserter.Is(data, new Duplicator(Tools.Asserter, false, hint.Dummy).Copy(data));

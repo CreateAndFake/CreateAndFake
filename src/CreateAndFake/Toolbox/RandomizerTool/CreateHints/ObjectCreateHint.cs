@@ -12,7 +12,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <summary>Caches found subclasses for types.</summary>
         private static readonly IDictionary<Type, Type[]> s_SubclassCache = new Dictionary<Type, Type[]>
         {
-            { typeof(object), Array.Empty<Type>() }
+            { typeof(object), new[] { typeof(object) } }
         };
 
         /// <summary>Tries to create a random instance of the given type.</summary>
@@ -87,25 +87,25 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             {
                 return defaultConstructor.Invoke(null);
             }
-            else if (FindConstructors(type, BindingFlags.Public).Any())
+            else if (FindConstructors(type, BindingFlags.Public, randomizer).Any())
             {
                 return CreateFrom(type, randomizer, (c, d) => c.Invoke(d),
-                    FindConstructors(type, BindingFlags.Public));
+                    FindConstructors(type, BindingFlags.Public, randomizer));
             }
-            else if (FindFactories(type, BindingFlags.Public).Any())
+            else if (FindFactories(type, BindingFlags.Public, randomizer).Any())
             {
                 return CreateFrom(type, randomizer, (c, d) => c.Invoke(null, d),
-                    FindFactories(type, BindingFlags.Public));
+                    FindFactories(type, BindingFlags.Public, randomizer));
             }
-            else if (FindFactories(type, BindingFlags.NonPublic).Any())
+            else if (FindFactories(type, BindingFlags.NonPublic, randomizer).Any())
             {
                 return CreateFrom(type, randomizer, (c, d) => c.Invoke(null, d),
-                    FindFactories(type, BindingFlags.NonPublic));
+                    FindFactories(type, BindingFlags.NonPublic, randomizer));
             }
-            else if (FindConstructors(type, BindingFlags.NonPublic).Any())
+            else if (FindConstructors(type, BindingFlags.NonPublic, randomizer).Any())
             {
                 return CreateFrom(type, randomizer, (c, d) => c.Invoke(d),
-                    FindConstructors(type, BindingFlags.NonPublic));
+                    FindConstructors(type, BindingFlags.NonPublic, randomizer));
             }
             else if (!type.IsSealed)
             {
@@ -179,25 +179,33 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <summary>Finds public or internal constructors.</summary>
         /// <param name="type">Type to search.</param>
         /// <param name="scope">Which constructors to look for.</param>
+        /// <param name="randomizer">Handles callback behavior for child values.</param>
         /// <returns>Found constructors.</returns>
-        private static IEnumerable<ConstructorInfo> FindConstructors(Type type, BindingFlags scope)
+        private static IEnumerable<ConstructorInfo> FindConstructors(Type type,
+            BindingFlags scope, RandomizerChainer randomizer = null)
         {
             return type
                 .GetConstructors(BindingFlags.Instance | scope)
-                .Where(c => c.IsPublic || c.IsAssembly);
+                .Where(c => c.IsPublic || c.IsAssembly)
+                .Where(c => randomizer == null
+                    || c.GetParameters().All(p => !randomizer.AlreadyCreated(p.ParameterType)));
         }
 
         /// <summary>Finds static methods that create the type.</summary>
         /// <param name="type">Type to search.</param>
         /// <param name="scope">Which constructors to look for.</param>
+        /// <param name="randomizer">Handles callback behavior for child values.</param>
         /// <returns>Found factory methods.</returns>
-        private static IEnumerable<MethodInfo> FindFactories(Type type, BindingFlags scope)
+        private static IEnumerable<MethodInfo> FindFactories(Type type,
+            BindingFlags scope, RandomizerChainer randomizer = null)
         {
             return type
                 .GetMethods(BindingFlags.Static | scope)
                 .Where(m => m.IsPublic || m.IsAssembly)
                 .Where(m => m.ReturnType.Inherits(type))
-                .Where(m => !m.ContainsGenericParameters);
+                .Where(m => !m.ContainsGenericParameters)
+                .Where(c => randomizer == null
+                    || c.GetParameters().All(p => !randomizer.AlreadyCreated(p.ParameterType)));
         }
     }
 }

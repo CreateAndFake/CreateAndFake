@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 
@@ -61,13 +60,21 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="item">Object to generate a code for.</param>
         /// <returns>The generated hash.</returns>
         /// <exception cref="NotSupportedException">If no hint supports hashing the object.</exception>
-        [SuppressMessage("Microsoft.Design",
-            "CA1065:DoNotRaiseExceptionsInUnexpectedLocations",
-            Justification = "Necessary and expected.")]
         public int GetHashCode(object item)
         {
+            return GetHashCode(item, null);
+        }
+
+        /// <summary>Returns a hash code for the specified object.</summary>
+        /// <param name="item">Object to generate a code for.</param>
+        /// <param name="history">History of hashes to match up references.</param>
+        /// <returns>The generated hash.</returns>
+        /// <exception cref="NotSupportedException">If no hint supports hashing the object.</exception>
+        private int GetHashCode(object item, ICollection<int> history)
+        {
+            ValuerChainer chainer = new ValuerChainer(history, GetHashCode);
             (bool, int) result = m_Hints
-                .Select(h => h.TryGetHashCode(item, this))
+                .Select(h => h.TryGetHashCode(item, chainer))
                 .FirstOrDefault(r => r.Item1);
 
             if (!result.Equals(default))
@@ -98,13 +105,25 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <exception cref="NotSupportedException">If no hint supports comparing the objects.</exception>
         public IEnumerable<Difference> Compare(object expected, object actual)
         {
+            return Compare(expected, actual, null);
+        }
+
+        /// <summary>Finds the differences between two objects.</summary>
+        /// <param name="expected">First object to compare.</param>
+        /// <param name="actual">Second object to compare.</param>
+        /// <param name="history">History of comparisons to match up references.</param>
+        /// <returns>Found differences.</returns>
+        /// <exception cref="NotSupportedException">If no hint supports comparing the objects.</exception>
+        private IEnumerable<Difference> Compare(object expected, object actual, ICollection<(int, int)> history)
+        {
             if (ReferenceEquals(expected, actual))
             {
                 return Enumerable.Empty<Difference>();
             }
 
+            ValuerChainer chainer = new ValuerChainer(history, Compare);
             (bool, IEnumerable<Difference>) result = m_Hints
-                .Select(h => h.TryCompare(expected, actual, this))
+                .Select(h => h.TryCompare(expected, actual, chainer))
                 .FirstOrDefault(r => r.Item1);
 
             if (!result.Equals(default))

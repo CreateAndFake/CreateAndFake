@@ -14,10 +14,10 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <summary>Finds the differences between two objects.</summary>
         /// <param name="expected">First object to compare.</param>
         /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Valuer to handle child values.</param>
+        /// <param name="valuer">Handles callback behavior for child values.</param>
         /// <returns>Found differences.</returns>
         protected override IEnumerable<Difference> Compare(
-            IValueEquatable expected, IValueEquatable actual, IValuer valuer)
+            IValueEquatable expected, IValueEquatable actual, ValuerChainer valuer)
         {
             if (!expected.ValuesEqual(actual))
             {
@@ -36,9 +36,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 
         /// <summary>Calculates a hash code based upon value.</summary>
         /// <param name="item">Object to generate a code for.</param>
-        /// <param name="valuer">Valuer to handle child values.</param>
+        /// <param name="valuer">Handles callback behavior for child values.</param>
         /// <returns>The generated hash.</returns>
-        protected override int GetHashCode(IValueEquatable item, IValuer valuer)
+        protected override int GetHashCode(IValueEquatable item, ValuerChainer valuer)
         {
             return ValueComparer.Use.GetHashCode(item);
         }

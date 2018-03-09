@@ -107,10 +107,10 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
 
             Fake<CompareHint> hint = Tools.Faker.Mock<CompareHint>();
             hint.Setup("Supports",
-                new[] { data1, data2, Arg.LambdaAny<IValuer>() },
+                new[] { data1, data2, Arg.LambdaAny<ValuerChainer>() },
                 Behavior.Returns(true, Times.Once));
             hint.Setup("Compare",
-                new[] { data1, data2, Arg.LambdaAny<Valuer>() },
+                new[] { data1, data2, Arg.LambdaAny<ValuerChainer>() },
                 Behavior.Returns(Tools.Randomizer.Create<IEnumerable<Difference>>(), Times.Once));
 
             Tools.Asserter.Is(false, new Valuer(false, hint.Dummy).Equals(data1, data2));

@@ -54,6 +54,14 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
             hint.Verify(Times.Once);
         }
 
+        /// <summary>Verifies null type can't be created.</summary>
+        [TestMethod]
+        public void Create_NullTypeThrows()
+        {
+            Tools.Asserter.Throws<ArgumentNullException>(
+                () => new Randomizer(Tools.Faker, new FastRandom()).Create(null));
+        }
+
         /// <summary>Verifies hint behavior works.</summary>
         [TestMethod]
         public void Create_ValidHintWorks()

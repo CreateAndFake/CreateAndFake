@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using CreateAndFake;
 using CreateAndFake.Toolbox;
 using CreateAndFake.Toolbox.FakerTool;
+using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFakeTests.TestSamples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -37,6 +38,25 @@ namespace CreateAndFakeTests
                 "Value equality did not work for args.");
 
             faked.Verify(Times.Once);
+        }
+
+        /// <summary>Verifies the tools have limits.</summary>
+        [TestMethod]
+        public void Tools_HandlesInfinites()
+        {
+            Tools.Asserter.Throws<InfiniteLoopException>(
+                () => Tools.Randomizer.Create<InfiniteSample>());
+
+            InfiniteSample sample = new InfiniteSample();
+            sample.Hole = sample;
+
+            Tools.Asserter.Throws<TimeoutException>(
+                () => Tools.Randiffer.Branch(sample));
+
+            InfiniteSample dupe = Tools.Duplicator.Copy(sample);
+
+            Tools.Asserter.Is(sample, dupe);
+            Tools.Asserter.Is(Tools.Valuer.GetHashCode(sample), Tools.Valuer.GetHashCode(dupe));
         }
 
         /// <summary>Verifies the tools work on all the introduced types besides static classes.</summary>

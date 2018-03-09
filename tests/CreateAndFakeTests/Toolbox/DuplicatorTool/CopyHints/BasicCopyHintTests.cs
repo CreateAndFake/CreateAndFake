@@ -27,7 +27,7 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
         public void TryCopy_HandlesBaseObject()
         {
             object data = new object();
-            (bool, object) result = new BasicCopyHint().TryCopy(data, Tools.Duplicator);
+            (bool, object) result = new BasicCopyHint().TryCopy(data, CreateChainer());
 
             Tools.Asserter.Is((true, data), result);
             Tools.Asserter.ReferenceEqual(data, result.Item2);

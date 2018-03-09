@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.FakerTool;
 
@@ -33,7 +34,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             Gen = gen ?? throw new ArgumentNullException(nameof(randomizer));
             m_Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
 
-            m_History = history ?? Enumerable.Empty<Type>();
+            m_History = new HashSet<Type>(history ?? Enumerable.Empty<Type>());
         }
 
         /// <summary>Checks if a type has already been created by the randomizer.</summary>
@@ -67,6 +68,12 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <returns>The created instance.</returns>
         public object Create(Type type, Type createdContainer = null)
         {
+            if (AlreadyCreated(type))
+            {
+                throw new InfiniteLoopException(type, m_History);
+            }
+
+            RuntimeHelpers.EnsureSufficientExecutionStack();
             return m_Randomizer.Invoke(type, m_History.Append(createdContainer));
         }
 

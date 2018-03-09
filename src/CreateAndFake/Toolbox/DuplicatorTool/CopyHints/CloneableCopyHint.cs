@@ -7,9 +7,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
     {
         /// <summary>Deep clones an object.</summary>
         /// <param name="source">Object to clone.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>Duplicate object.</returns>
-        protected override ICloneable Copy(ICloneable source, IDuplicator duplicator)
+        protected override ICloneable Copy(ICloneable source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
             if (source == null) return null;

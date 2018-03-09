@@ -22,9 +22,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <summary>Determines if the objects are supported by the hint.</summary>
         /// <param name="expected">First object under question.</param>
         /// <param name="actual">Second object under question.</param>
-        /// <param name="valuer">Valuer to handle child values.</param>
+        /// <param name="valuer">Handles callback behavior for child values.</param>
         /// <returns>True if the objects can be compared; false otherwise.</returns>
-        protected override bool Supports(object expected, object actual, IValuer valuer)
+        protected override bool Supports(object expected, object actual, ValuerChainer valuer)
         {
             if (expected == null) throw new ArgumentNullException(nameof(expected));
             if (actual == null) throw new ArgumentNullException(nameof(actual));
@@ -38,9 +38,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <summary>Finds the differences between two objects.</summary>
         /// <param name="expected">First object to compare.</param>
         /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Valuer to handle child values.</param>
+        /// <param name="valuer">Handles callback behavior for child values.</param>
         /// <returns>Found differences.</returns>
-        protected override IEnumerable<Difference> Compare(object expected, object actual, IValuer valuer)
+        protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
         {
             Type type = expected.GetType();
 
@@ -63,9 +63,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 
         /// <summary>Calculates a hash code based upon value.</summary>
         /// <param name="item">Object to generate a code for.</param>
-        /// <param name="valuer">Valuer to handle child values.</param>
+        /// <param name="valuer">Handles callback behavior for child values.</param>
         /// <returns>The generated hash.</returns>
-        protected override int GetHashCode(object item, IValuer valuer)
+        protected override int GetHashCode(object item, ValuerChainer valuer)
         {
             Type type = item.GetType();
             int hash = ValueComparer.BaseHash + type.GetHashCode();

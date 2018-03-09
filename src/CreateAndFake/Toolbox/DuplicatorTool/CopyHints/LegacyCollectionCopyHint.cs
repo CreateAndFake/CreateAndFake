@@ -9,8 +9,8 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
     public sealed class LegacyCollectionCopyHint : CopyHint
     {
         /// <summary>Supported types and the methods used to generate them.</summary>
-        private static readonly IDictionary<Type, Func<object, IDuplicator, object>> s_Copiers
-            = new Dictionary<Type, Func<object, IDuplicator, object>>
+        private static readonly IDictionary<Type, Func<object, DuplicatorChainer, object>> s_Copiers
+            = new Dictionary<Type, Func<object, DuplicatorChainer, object>>
             {
                 { typeof(Hashtable), CreateAndCopy<Hashtable> },
                 { typeof(SortedList), CreateAndCopy<SortedList> },
@@ -45,9 +45,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
         /// <summary>Tries to deep clone an object.</summary>
         /// <param name="source">Object to clone.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>If the type could be cloned and the cloned instance.</returns>
-        protected internal override sealed (bool, object) TryCopy(object source, IDuplicator duplicator)
+        protected internal override sealed (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
             if (source == null) return (true, null);
@@ -65,9 +65,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <summary>Clones a collection.</summary>
         /// <typeparam name="T">Collection type being cloned.</typeparam>
         /// <param name="source">Collection to clone.</param>
-        /// <param name="duplicator">Duplicator to handle child values.</param>
+        /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>The cloned instance.</returns>
-        private static T CreateAndCopy<T>(object source, IDuplicator duplicator) where T : IDictionary, new()
+        private static T CreateAndCopy<T>(object source, DuplicatorChainer duplicator) where T : IDictionary, new()
         {
             T result = new T();
             foreach (DictionaryEntry entry in (T)source)

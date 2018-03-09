@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.RandomizerTool;
@@ -80,7 +79,7 @@ namespace CreateAndFakeTests.TestBases
         /// <returns>Chainer to use for testing.</returns>
         protected static RandomizerChainer CreateChainer()
         {
-            return new RandomizerChainer(Tools.Faker, new FastRandom(), Enumerable.Empty<Type>(),
+            return new RandomizerChainer(Tools.Faker, new FastRandom(), null,
                 (Type t, IEnumerable<Type> h) => Tools.Randomizer.Create(t));
         }
     }
