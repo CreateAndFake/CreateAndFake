@@ -37,9 +37,9 @@ namespace CreateAndFakeTests.TestBases
         public virtual void TryCompare_NullBehaviorCheck()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCompare(null, new object(), CreateCompareChainer()));
+                () => TestInstance.TryCompare(null, new object(), CreateChainer()));
             Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCompare(new object(), null, CreateCompareChainer()));
+                () => TestInstance.TryCompare(new object(), null, CreateChainer()));
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => TestInstance.TryCompare(new object(), new object(), null));
         }
@@ -60,7 +60,7 @@ namespace CreateAndFakeTests.TestBases
             {
                 object data = Tools.Randomizer.Create(type);
 
-                (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(data, data, CreateCompareChainer());
+                (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(data, data, CreateChainer());
 
                 Tools.Asserter.Is(true, result.Item1,
                     "Hint '" + typeof(T).Name + "' failed to support '" + type.Name + "'.");
@@ -86,7 +86,7 @@ namespace CreateAndFakeTests.TestBases
                 object one = Tools.Randomizer.Create(type);
                 object two = Tools.Randiffer.Branch(one.GetType(), one);
 
-                (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(one, two, CreateCompareChainer());
+                (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(one, two, CreateChainer());
 
                 Tools.Asserter.Is(true, result.Item1,
                     "Hint '" + typeof(T).Name + "' failed to support '" + type.Name + "'.");
@@ -107,7 +107,7 @@ namespace CreateAndFakeTests.TestBases
                 object two = Tools.Randomizer.Create(one.GetType());
 
                 Tools.Asserter.Is((false, (IEnumerable<Difference>)null),
-                    TestInstance.TryCompare(one, two, CreateCompareChainer()),
+                    TestInstance.TryCompare(one, two, CreateChainer()),
                     "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
                 valuer.Verify(Times.Never);
             }
@@ -118,7 +118,7 @@ namespace CreateAndFakeTests.TestBases
         public virtual void TryGetHashCode_NullBehaviorCheck()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryGetHashCode(null, CreateHashChainer()));
+                () => TestInstance.TryGetHashCode(null, CreateChainer()));
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => TestInstance.TryGetHashCode(new object(), null));
         }
@@ -140,12 +140,12 @@ namespace CreateAndFakeTests.TestBases
                     data = Tools.Randomizer.Create(type);
                     dataCopy = Tools.Duplicator.Copy(data);
 
-                    (bool, int) dataHash = TestInstance.TryGetHashCode(data, CreateHashChainer());
+                    (bool, int) dataHash = TestInstance.TryGetHashCode(data, CreateChainer());
                     Tools.Asserter.Is(true, dataHash.Item1,
                         "Hint '" + typeof(T).Name + "' failed to support '" + type.Name + "'.");
-                    Tools.Asserter.Is(dataHash, TestInstance.TryGetHashCode(data, CreateHashChainer()),
+                    Tools.Asserter.Is(dataHash, TestInstance.TryGetHashCode(data, CreateChainer()),
                         "Hint '" + typeof(T).Name + "' generated different hash for same '" + type.Name + "'.");
-                    Tools.Asserter.Is(dataHash, TestInstance.TryGetHashCode(dataCopy, CreateHashChainer()),
+                    Tools.Asserter.Is(dataHash, TestInstance.TryGetHashCode(dataCopy, CreateChainer()),
                         "Hint '" + typeof(T).Name + "' generated different hash for dupe '" + type.Name + "'.");
                 }
                 finally
@@ -173,10 +173,10 @@ namespace CreateAndFakeTests.TestBases
                     data = Tools.Randomizer.Create(type);
                     dataDiffer = Tools.Randiffer.Branch(data);
 
-                    (bool, int) dataHash = TestInstance.TryGetHashCode(data, CreateHashChainer());
+                    (bool, int) dataHash = TestInstance.TryGetHashCode(data, CreateChainer());
                     Tools.Asserter.Is(true, dataHash.Item1,
                         "Hint '" + typeof(T).Name + "' failed to support '" + type.Name + "'.");
-                    Tools.Asserter.IsNot(dataHash, TestInstance.TryGetHashCode(dataDiffer, CreateHashChainer()),
+                    Tools.Asserter.IsNot(dataHash, TestInstance.TryGetHashCode(dataDiffer, CreateChainer()),
                         "Hint '" + typeof(T).Name + "' generated same hash for different '" + type.Name + "'.");
                 }
                 finally
@@ -196,23 +196,18 @@ namespace CreateAndFakeTests.TestBases
             foreach (Type type in m_InvalidTypes)
             {
                 Tools.Asserter.Is((false, default(int)),
-                    TestInstance.TryGetHashCode(Tools.Randomizer.Create(type), CreateHashChainer()),
+                    TestInstance.TryGetHashCode(Tools.Randomizer.Create(type), CreateChainer()),
                     "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
                 valuer.Verify(Times.Never);
             }
         }
 
         /// <returns>Chainer to use for testing.</returns>
-        protected static ValuerChainer CreateCompareChainer()
+        protected static ValuerChainer CreateChainer()
         {
-            return new ValuerChainer(null,
-                (object e, object a, ICollection<(int, int)> h) => Tools.Valuer.Compare(e, a));
-        }
-
-        /// <returns>Chainer to use for testing.</returns>
-        protected static ValuerChainer CreateHashChainer()
-        {
-            return new ValuerChainer(null, (object o, ICollection<int> h) => Tools.Valuer.GetHashCode(o));
+            return new ValuerChainer(Tools.Valuer,
+                (o, c) => Tools.Valuer.GetHashCode(o),
+                (e, a, c) => Tools.Valuer.Compare(e, a));
         }
     }
 }

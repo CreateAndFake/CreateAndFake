@@ -36,7 +36,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
             string key = data.First().Key;
             dupe[key] = Tools.Randiffer.Branch(data[key]);
 
-            Tools.Asserter.IsNotEmpty(TestInstance.TryCompare(data, dupe, CreateCompareChainer()).Item2.ToArray(),
+            Tools.Asserter.IsNotEmpty(TestInstance.TryCompare(data, dupe, CreateChainer()).Item2.ToArray(),
                 "Hint didn't find differences with a modified key on '" + data.GetType().Name + "'.");
         }
     }

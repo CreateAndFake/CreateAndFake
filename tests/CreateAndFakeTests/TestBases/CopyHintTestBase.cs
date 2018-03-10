@@ -92,7 +92,7 @@ namespace CreateAndFakeTests.TestBases
         /// <returns>Chainer to use for testing.</returns>
         protected static DuplicatorChainer CreateChainer()
         {
-            return new DuplicatorChainer(null, (object o, IDictionary<int, object> h) => Tools.Duplicator.Copy(o));
+            return new DuplicatorChainer(Tools.Duplicator, (o, c) => Tools.Duplicator.Copy(o));
         }
     }
 }

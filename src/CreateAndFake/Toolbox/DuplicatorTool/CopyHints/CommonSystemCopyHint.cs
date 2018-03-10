@@ -16,7 +16,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
             if (source is TimeSpan span)
             {
-                return (true, new TimeSpan(span.Ticks));
+                return (true, new TimeSpan(duplicator.Copy(span.Ticks)));
             }
             else if (source is WeakReference reference)
             {

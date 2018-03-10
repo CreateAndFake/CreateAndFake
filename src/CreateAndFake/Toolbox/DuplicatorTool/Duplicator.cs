@@ -55,20 +55,19 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>
         public T Copy<T>(T source)
         {
-            return Copy(source, null);
+            return Copy(source, new DuplicatorChainer(this, Copy));
         }
 
         /// <summary>Deep clones an object.</summary>
         /// <typeparam name="T">Type being cloned.</typeparam>
         /// <param name="source">Object to clone.</param>
-        /// <param name="history">Types not to create as to prevent infinite recursion.</param>
+        /// <param name="chainer">Handles callback behavior for child values.</param>
         /// <returns>The duplicate.</returns>
         /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>
-        private T Copy<T>(T source, IDictionary<int, object> history)
+        private T Copy<T>(T source, DuplicatorChainer chainer)
         {
             if (source == null) return default;
 
-            DuplicatorChainer chainer = new DuplicatorChainer(history, Copy);
             (bool, object) result = m_Hints
                 .Select(h => h.TryCopy(source, chainer))
                 .FirstOrDefault(r => r.Item1);

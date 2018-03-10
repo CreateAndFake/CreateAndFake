@@ -36,7 +36,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
             var actual = new { Value = Tools.Randomizer.Create<string>() };
 
             (bool, IEnumerable<Difference>) result = TestInstance
-                .TryCompare(expected, actual, CreateCompareChainer());
+                .TryCompare(expected, actual, CreateChainer());
 
             Tools.Asserter.Is(true, result.Item1);
             Tools.Asserter.IsNotEmpty(result.Item2);

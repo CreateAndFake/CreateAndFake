@@ -11,7 +11,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
     public sealed class RandomizerChainer
     {
         /// <summary>Callback to the randomizer to create child values.</summary>
-        private readonly Func<Type, IEnumerable<Type>, object> m_Randomizer;
+        private readonly Func<Type, RandomizerChainer, object> m_Randomizer;
 
         /// <summary>Types not to create as to prevent infinite recursion.</summary>
         private readonly IEnumerable<Type> m_History;
@@ -25,16 +25,33 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <summary>Sets up the callback functionality.</summary>
         /// <param name="faker">Provides stubs.</param>
         /// <param name="gen">Value generator to use for base randomization.</param>
-        /// <param name="history">Types not to create as to prevent infinite recursion.</param>
         /// <param name="randomizer">Callback to the randomizer to create child values.</param>
-        public RandomizerChainer(IFaker faker, IRandom gen, IEnumerable<Type> history,
-            Func<Type, IEnumerable<Type>, object> randomizer)
+        public RandomizerChainer(IFaker faker, IRandom gen, Func<Type, RandomizerChainer, object> randomizer)
         {
             m_Faker = faker ?? throw new ArgumentNullException(nameof(faker));
             Gen = gen ?? throw new ArgumentNullException(nameof(randomizer));
             m_Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
 
-            m_History = new HashSet<Type>(history ?? Enumerable.Empty<Type>());
+            m_History = Array.Empty<Type>();
+        }
+
+        /// <summary>Sets up the callback functionality.</summary>
+        /// <param name="prevChainer">Previous chainer to build upon.</param>
+        /// <param name="createdContainer">Container of the instance just created.</param>
+        private RandomizerChainer(RandomizerChainer prevChainer, Type createdContainer)
+        {
+            Gen = prevChainer.Gen;
+            m_Faker = prevChainer.m_Faker;
+            m_Randomizer = prevChainer.m_Randomizer;
+
+            if (createdContainer != null)
+            {
+                m_History = new HashSet<Type>(prevChainer.m_History.Append(createdContainer));
+            }
+            else
+            {
+                m_History = prevChainer.m_History;
+            }
         }
 
         /// <summary>Checks if a type has already been created by the randomizer.</summary>
@@ -74,7 +91,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             }
 
             RuntimeHelpers.EnsureSufficientExecutionStack();
-            return m_Randomizer.Invoke(type, m_History.Append(createdContainer));
+            return m_Randomizer.Invoke(type, new RandomizerChainer(this, createdContainer));
         }
 
         /// <summary>Calls the faker to create a stub instance.</summary>

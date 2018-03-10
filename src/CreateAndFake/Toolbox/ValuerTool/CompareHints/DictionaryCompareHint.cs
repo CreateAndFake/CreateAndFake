@@ -53,8 +53,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             int hash = ValueComparer.BaseHash;
             foreach (DictionaryEntry entry in item)
             {
-                hash += valuer.GetHashCode(entry.Key);
-                hash += valuer.GetHashCode(entry.Value);
+                hash += valuer.GetHashCode(entry.Key, entry.Value);
             }
             return hash;
         }

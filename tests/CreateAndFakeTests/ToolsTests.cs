@@ -4,8 +4,10 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using CreateAndFake;
 using CreateAndFake.Toolbox;
+using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
+using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -63,7 +65,8 @@ namespace CreateAndFakeTests
         [TestMethod]
         public void Tools_AllCreateAndFakeTypesWork()
         {
-            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType) };
+            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>),
+                typeof(VoidType), typeof(DuplicatorChainer), typeof(ValuerChainer) };
 
             foreach (Type type in typeof(Tools).Assembly.GetTypes()
                 .Where(t => !(t.IsAbstract && t.IsSealed))
@@ -91,6 +94,7 @@ namespace CreateAndFakeTests
         /// <param name="type">Type to test.</param>
         private static void TestTrip(Type type)
         {
+            string failMessage = "Behavior did not work for type '" + type.FullName + "'.";
             object
                 original = null,
                 variant = null,
@@ -99,18 +103,18 @@ namespace CreateAndFakeTests
             {
                 original = Tools.Randomizer.Create(type);
                 dupe = Tools.Duplicator.Copy(original);
-                Tools.Asserter.ValuesEqual(original, dupe);
+                Tools.Asserter.ValuesEqual(original, dupe, failMessage);
                 Tools.Asserter.ValuesEqual(
                     Tools.Valuer.GetHashCode(original),
-                    Tools.Valuer.GetHashCode(dupe));
+                    Tools.Valuer.GetHashCode(dupe), failMessage);
 
                 if (type.GetProperties(s_Mutable).Any() || type.GetFields(s_Mutable).Any())
                 {
                     variant = Tools.Randiffer.Branch(type, original);
-                    Tools.Asserter.ValuesNotEqual(original, variant);
+                    Tools.Asserter.ValuesNotEqual(original, variant, failMessage);
                     Tools.Asserter.ValuesNotEqual(
                         Tools.Valuer.GetHashCode(original),
-                        Tools.Valuer.GetHashCode(variant));
+                        Tools.Valuer.GetHashCode(variant), failMessage);
                 }
 
                 if (Tools.Faker.Supports(type) && !type.Inherits<IDisposable>())

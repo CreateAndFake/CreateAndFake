@@ -72,19 +72,18 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
         public object Create(Type type)
         {
-            return Create(type, null);
+            return Create(type, new RandomizerChainer(m_Faker, Gen, Create));
         }
 
         /// <summary>Creates a randomized instance.</summary>
         /// <param name="type">Type to create.</param>
-        /// <param name="history">Types not to create as to prevent infinite recursion.</param>
+        /// <param name="chainer">Handles callback behavior for child values.</param>
         /// <returns>The created instance.</returns>
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
-        private object Create(Type type, IEnumerable<Type> history)
+        private object Create(Type type, RandomizerChainer chainer)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            RandomizerChainer chainer = new RandomizerChainer(m_Faker, Gen, history, Create);
             (bool, object) result = Hints
                 .Select(h => h.TryCreate(type, chainer))
                 .FirstOrDefault(r => r.Item1);

@@ -32,15 +32,15 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         [TestMethod]
         public override void TryCompare_NullBehaviorCheck()
         {
-            Tools.Asserter.Is(true, TestInstance.TryCompare(null, new object(), CreateCompareChainer()).Item1);
-            Tools.Asserter.IsNotEmpty(TestInstance.TryCompare(null, new object(), CreateCompareChainer()).Item2);
+            Tools.Asserter.Is(true, TestInstance.TryCompare(null, new object(), CreateChainer()).Item1);
+            Tools.Asserter.IsNotEmpty(TestInstance.TryCompare(null, new object(), CreateChainer()).Item2);
 
-            Tools.Asserter.Is(true, TestInstance.TryCompare(null, null, CreateCompareChainer()).Item1);
-            Tools.Asserter.IsEmpty(TestInstance.TryCompare(null, null, CreateCompareChainer()).Item2);
+            Tools.Asserter.Is(true, TestInstance.TryCompare(null, null, CreateChainer()).Item1);
+            Tools.Asserter.IsEmpty(TestInstance.TryCompare(null, null, CreateChainer()).Item2);
 
-            Tools.Asserter.Is(true, TestInstance.TryCompare(new object(), null, CreateCompareChainer()).Item1);
+            Tools.Asserter.Is(true, TestInstance.TryCompare(new object(), null, CreateChainer()).Item1);
             Tools.Asserter.IsNotEmpty(TestInstance.TryCompare(
-                new object(), null, CreateCompareChainer()).Item2.ToArray());
+                new object(), null, CreateChainer()).Item2.ToArray());
 
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => TestInstance.TryCompare(new object(), new object(), null));
@@ -50,8 +50,8 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         [TestMethod]
         public override void TryGetHashCode_NullBehaviorCheck()
         {
-            Tools.Asserter.Is(true, TestInstance.TryGetHashCode(null, CreateHashChainer()).Item1);
-            Tools.Asserter.Is(ValueComparer.NullHash, TestInstance.TryGetHashCode(null, CreateHashChainer()).Item2);
+            Tools.Asserter.Is(true, TestInstance.TryGetHashCode(null, CreateChainer()).Item1);
+            Tools.Asserter.Is(ValueComparer.NullHash, TestInstance.TryGetHashCode(null, CreateChainer()).Item2);
 
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => TestInstance.TryGetHashCode(new object(), null));

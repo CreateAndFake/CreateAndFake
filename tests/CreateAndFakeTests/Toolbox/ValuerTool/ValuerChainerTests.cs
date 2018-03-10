@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using CreateAndFake;
 using CreateAndFake.Toolbox.ValuerTool;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,18 +11,14 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
     {
         /// <summary>Verifies callback must be provided.</summary>
         [TestMethod]
-        public void New_NullCompareFuncInvalid()
+        public void New_NullsInvalid()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
-                () => new ValuerChainer(Tools.Randomizer.Create<ICollection<(int, int)>>(), null));
-        }
-
-        /// <summary>Verifies callback must be provided.</summary>
-        [TestMethod]
-        public void New_NullHashFuncInvalid()
-        {
+                () => new ValuerChainer(null, (o, c) => 0, (e, a, c) => null));
             Tools.Asserter.Throws<ArgumentNullException>(
-                () => new ValuerChainer(Tools.Randomizer.Create<ICollection<int>>(), null));
+                () => new ValuerChainer(Tools.Valuer, (o, c) => 0, null));
+            Tools.Asserter.Throws<ArgumentNullException>(
+                () => new ValuerChainer(Tools.Valuer, null, (e, a, c) => null));
         }
     }
 }

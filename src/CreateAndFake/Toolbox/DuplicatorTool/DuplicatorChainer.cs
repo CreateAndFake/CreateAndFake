@@ -1,26 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool
 {
     /// <summary>Provides a callback into the duplicator to create child values.</summary>
-    public sealed class DuplicatorChainer : IDuplicator
+    public sealed class DuplicatorChainer
     {
-        /// <summary>History of clones to match up references.</summary>
-        private readonly IDictionary<int, object> m_History;
-
         /// <summary>Callback to the duplicator to handle child values.</summary>
-        private readonly Func<object, IDictionary<int, object>, object> m_Duplicator;
+        private readonly Func<object, DuplicatorChainer, object> m_Callback;
+
+        /// <summary>History of clones to match up references.</summary>
+        private readonly ConditionalWeakTable<object, object> m_History;
+
+        /// <summary>Reference to the actual duplicator.</summary>
+        internal IDuplicator Duplicator { get; }
 
         /// <summary>Sets up the callback functionality.</summary>
-        /// <param name="history">History of clones to match up references.</param>
-        /// <param name="duplicator">Callback to the duplicator to handle child values.</param>
-        public DuplicatorChainer(IDictionary<int, object> history,
-            Func<object, IDictionary<int, object>, object> duplicator)
+        /// <param name="duplicator">Reference to the actual duplicator.</param>
+        /// <param name="callback">Callback to the duplicator to handle child values.</param>
+        public DuplicatorChainer(IDuplicator duplicator, Func<object, DuplicatorChainer, object> callback)
         {
-            m_Duplicator = duplicator ?? throw new ArgumentNullException(nameof(duplicator));
-            m_History = history ?? new Dictionary<int, object>();
+            Duplicator = duplicator ?? throw new ArgumentNullException(nameof(duplicator));
+            m_Callback = callback ?? throw new ArgumentNullException(nameof(callback));
+            m_History = new ConditionalWeakTable<object, object>();
         }
 
         /// <summary>Adds created type to history.</summary>
@@ -28,7 +31,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         /// <param name="clone">The clone.</param>
         public void AddToHistory(object source, object clone)
         {
-            m_History.Add(RuntimeHelpers.GetHashCode(source), clone);
+            if (CanTrack(source))
+            {
+                m_History.Add(source, clone);
+            }
         }
 
         /// <summary>Deep clones an object.</summary>
@@ -48,23 +54,30 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         public object Copy(object source)
         {
             RuntimeHelpers.EnsureSufficientExecutionStack();
-            if (source == null)
+            if (!CanTrack(source))
             {
-                return m_Duplicator.Invoke(source, m_History);
+                return m_Callback.Invoke(source, this);
             }
 
-            int refHash = RuntimeHelpers.GetHashCode(source);
-            if (m_History.TryGetValue(refHash, out object clone))
+            if (m_History.TryGetValue(source, out object clone))
             {
                 return clone;
             }
 
-            object result = m_Duplicator.Invoke(source, m_History);
-            if (!m_History.ContainsKey(refHash))
+            object result = m_Callback.Invoke(source, this);
+            if (!m_History.TryGetValue(source, out object blank))
             {
-                m_History.Add(refHash, result);
+                m_History.Add(source, result);
             }
             return result;
+        }
+
+        /// <summary>If the object can be tracked in history.</summary>
+        /// <param name="source">Item to check.</param>
+        /// <returns>True if possible; false otherwise.</returns>
+        private static bool CanTrack(object source)
+        {
+            return !(source == null || source is IFaked || source.GetType().IsValueType);
         }
     }
 }

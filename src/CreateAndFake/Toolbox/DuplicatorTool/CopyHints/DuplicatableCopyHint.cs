@@ -13,7 +13,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
-            return source?.DeepClone(duplicator);
+            return source?.DeepClone(duplicator.Duplicator);
         }
     }
 }

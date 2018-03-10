@@ -137,7 +137,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
             if (!Valuer.Compare(expected, actual).Any())
             {
                 throw new AssertException("Value inequality failed for type '" +
-                    expected?.GetType().Name + "'.", details);
+                    expected?.GetType().Name + "'.", details, expected?.ToString());
             }
         }
 

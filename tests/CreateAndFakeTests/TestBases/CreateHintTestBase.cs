@@ -79,8 +79,7 @@ namespace CreateAndFakeTests.TestBases
         /// <returns>Chainer to use for testing.</returns>
         protected static RandomizerChainer CreateChainer()
         {
-            return new RandomizerChainer(Tools.Faker, new FastRandom(), null,
-                (Type t, IEnumerable<Type> h) => Tools.Randomizer.Create(t));
+            return new RandomizerChainer(Tools.Faker, new FastRandom(), (t, c) => Tools.Randomizer.Create(t));
         }
     }
 }

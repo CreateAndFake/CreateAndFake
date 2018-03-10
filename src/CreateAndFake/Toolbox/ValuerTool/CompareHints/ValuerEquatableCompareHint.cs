@@ -18,7 +18,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         protected override IEnumerable<Difference> Compare(
             IValuerEquatable expected, IValuerEquatable actual, ValuerChainer valuer)
         {
-            if (!expected.ValuesEqual(actual, valuer))
+            if (!expected.ValuesEqual(actual, valuer.Valuer))
             {
                 yield return new Difference(".ValuesEqual", new Difference(true, false));
 
@@ -39,7 +39,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>The generated hash.</returns>
         protected override int GetHashCode(IValuerEquatable item, ValuerChainer valuer)
         {
-            return item.GetValueHash(valuer);
+            return item.GetValueHash(valuer.Valuer);
         }
     }
 }

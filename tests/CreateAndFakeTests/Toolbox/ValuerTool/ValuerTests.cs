@@ -49,10 +49,10 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
 
             Fake<CompareHint> hint = Tools.Faker.Mock<CompareHint>();
             hint.Setup("Supports",
-                new[] { data, data, Arg.LambdaAny<IValuer>() },
+                new[] { data, data, Arg.LambdaAny<ValuerChainer>() },
                 Behavior.Returns(true, Times.Once));
             hint.Setup("GetHashCode",
-                new[] { data, Arg.LambdaAny<IValuer>() },
+                new[] { data, Arg.LambdaAny<ValuerChainer>() },
                 Behavior.Returns(result, Times.Once));
 
             Tools.Asserter.Is(result, new Valuer(false, hint.Dummy).GetHashCode(data));
@@ -87,10 +87,10 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
 
             Fake<CompareHint> hint = Tools.Faker.Mock<CompareHint>();
             hint.Setup("Supports",
-                new[] { data1, data2, Arg.LambdaAny<IValuer>() },
+                new[] { data1, data2, Arg.LambdaAny<ValuerChainer>() },
                 Behavior.Returns(true, Times.Once));
             hint.Setup("Compare",
-                new[] { data1, data2, Arg.LambdaAny<IValuer>() },
+                new[] { data1, data2, Arg.LambdaAny<ValuerChainer>() },
                 Behavior.Returns(Enumerable.Empty<Difference>(), Times.Once));
 
             Tools.Asserter.Is(true, new Valuer(false, hint.Dummy).Equals(data1, data2));
