@@ -2,7 +2,18 @@
 
 [![NuGet](https://img.shields.io/badge/nuget-v1.0-blue.svg?style=flat)](https://www.nuget.org/packages/CreateAndFake) [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/rmbj86u333y66hfw?svg=true)](https://ci.appveyor.com/project/Werebunny/createandfake) [![Travis Build Status](https://travis-ci.org/CreateAndFake/CreateAndFake.svg?branch=master)](https://travis-ci.org/CreateAndFake/CreateAndFake) [![CodeCov Coverage](https://codecov.io/gh/CreateAndFake/CreateAndFake/branch/master/graph/badge.svg)](https://codecov.io/gh/CreateAndFake/CreateAndFake) [![Codacy Grade](https://api.codacy.com/project/badge/Grade/cc753a1417c24f6dba43e2386e89005a)](https://www.codacy.com/app/Werebunny/CreateAndFake?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CreateAndFake/CreateAndFake&amp;utm_campaign=Badge_Grade)
 
-A C# class library for .NET Standard 2.0 and .NET Core 2.0 that handles mocking, test data generation, and validation. Designed to handle the bulk of test setup quickly and easily so that developers can focus on the behavior to test, making tests easier to develop and maintain. Visit the [documentation site](https://createandfake.github.io/CreateAndFake/) for more information and how to get started.
+A C# class library for .NET Standard 2.0 and .NET Core 2.0 that handles mocking, test data generation, and validation. Designed to handle the bulk of test setup quickly and easily so that developers can focus on the behavior to test, making tests easier to develop and maintain. The handful of tools provided are both easy to use and customizable should the need arise:
+
+* `Faker` - Creates mocks and stubs.
+* `Randomizer` - Creates random instances of any type.
+* `Randiffer` - Creates random variants of objects.
+* `Duplicator` - Creates deep clones of objects.
+* `Valuer` - Compares objects by value.
+* `Asserter` - Handles common test scenarios.
+
+A key benefit of the library is in how the tools are logically integrated with each other. For example, the `Randomizer` will use stubs for interfaces that have no known implementations in the code. Or the mocks created by the `Faker` utilize value equality in matching arguments.
+
+Visit the [documentation site](https://createandfake.github.io/CreateAndFake/) for more information and how to get started.
 
 ## Installation
 

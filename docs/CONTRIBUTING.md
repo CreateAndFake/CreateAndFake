@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing.
 
-Please first discuss the change you wish to make via issue, feature request, email, or any other method with the owners of this repository before making a change. Failure to do so will likely lead to a declined pull request regardless of quality.
+Please first discuss the change you wish to make via issue/request, email, or any other method with the owners of this repository before making changes. Failure to do so will likely lead to a declined pull request regardless of quality.
 
 Make sure to refer to and follow the [code of conduct](CODE_OF_CONDUCT.md).
 
@@ -24,7 +24,7 @@ To allow contributions to be used by the project, developers must declare that t
 Signed-off-by: FirstName LastName <email@mail.com>
 ```
 
-This can be accomplished manually or by using the -s or --signoff when committing. This is confirming that you've read DCO and agree with it, which can be found at https://developercertificate.org/ or read below:
+This can be accomplished manually or by using -s or --signoff when committing. Github can verify this signature with your GPG key, which you can learn about [here](https://help.github.com/articles/signing-commits-with-gpg/). By signing off your commits to this repository, you're confirming that you've read DCO and agree with it, which can be found at https://developercertificate.org/ or read below:
 
 
 ```
