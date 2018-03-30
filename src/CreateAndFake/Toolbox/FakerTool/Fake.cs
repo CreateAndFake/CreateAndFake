@@ -38,9 +38,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="args">Args to match on the call.</param>
         /// <param name="callback">Fake behavior to invoke.</param>
         /// <returns>Representation of the call.</returns>
-        public CallData Setup(string methodName, object[] args, Behavior callback)
+        public void Setup(string methodName, object[] args, Behavior callback)
         {
-            return Setup(methodName, Array.Empty<Type>(), args, callback);
+            Setup(methodName, Array.Empty<Type>(), args, callback);
         }
 
         /// <summary>Ties a method call to fake behavior.</summary>
@@ -49,11 +49,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="args">Args to match on the call.</param>
         /// <param name="callback">Fake behavior to invoke.</param>
         /// <returns>Representation of the call.</returns>
-        public CallData Setup(string methodName, Type[] generics, object[] args, Behavior callback)
+        public void Setup(string methodName, Type[] generics, object[] args, Behavior callback)
         {
-            CallData call = new CallData(methodName, generics, args, Valuer);
-            Dummy.FakeMeta.SetCallBehavior(call, callback);
-            return call;
+            Dummy.FakeMeta.SetCallBehavior(new CallData(methodName, generics, args, Valuer), callback);
         }
 
         /// <summary>Verifies behavior with associated times were called as expected.</summary>
@@ -89,7 +87,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Verifies the number of calls made.</summary>
         /// <param name="times">Expected number of calls.</param>
         /// <param name="call">Call to verify.</param>
-        public void Verify(Times times, CallData call)
+        private void Verify(Times times, CallData call)
         {
             Dummy.FakeMeta.Verify(times, call);
         }

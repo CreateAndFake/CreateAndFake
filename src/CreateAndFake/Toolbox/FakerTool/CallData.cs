@@ -6,7 +6,7 @@ using CreateAndFake.Toolbox.ValuerTool;
 namespace CreateAndFake.Toolbox.FakerTool
 {
     /// <summary>Method call details.</summary>
-    public sealed class CallData : IDuplicatable
+    internal sealed class CallData : IDuplicatable
     {
         /// <summary>Name tied to the call.</summary>
         private readonly string m_MethodName;
@@ -25,7 +25,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="generics">Generics tied to the call.</param>
         /// <param name="args">Args tied to the call.</param>
         /// <param name="valuer">How to compare call data.</param>
-        public CallData(string methodName, Type[] generics, object[] args, IValuer valuer)
+        internal CallData(string methodName, Type[] generics, object[] args, IValuer valuer)
         {
             m_MethodName = methodName ?? throw new ArgumentNullException(nameof(methodName));
             m_Generics = generics ?? throw new ArgumentNullException(nameof(generics));
