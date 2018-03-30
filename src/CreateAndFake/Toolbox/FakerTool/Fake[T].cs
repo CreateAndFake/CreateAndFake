@@ -35,10 +35,10 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="value">Set value to match from the call.</param>
         /// <param name="callback">Fake behavior to invoke.</param>
         /// <returns>Representation of the call.</returns>
-        public CallData SetupSet<TResult>(Expression<Func<T, TResult>> method, TResult value, Behavior<VoidType> callback)
+        public void SetupSet<TResult>(Expression<Func<T, TResult>> method, TResult value, Behavior<VoidType> callback)
         {
             (MethodInfo, Type[], object[]) call = ExtractCall(method, true);
-            return Setup(call.Item1.Name, call.Item2, new object[] { value }, callback);
+            Setup(call.Item1.Name, call.Item2, new object[] { value }, callback);
         }
 
         /// <summary>Ties a set method call to fake behavior.</summary>
@@ -47,20 +47,20 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="value">Arg expression to match from the call.</param>
         /// <param name="callback">Fake behavior to invoke.</param>
         /// <returns>Representation of the call.</returns>
-        public CallData SetupSet<TResult>(Expression<Func<T, TResult>> method, Arg value, Behavior<VoidType> callback)
+        public void SetupSet<TResult>(Expression<Func<T, TResult>> method, Arg value, Behavior<VoidType> callback)
         {
             (MethodInfo, Type[], object[]) call = ExtractCall(method, true);
-            return Setup(call.Item1.Name, call.Item2, new object[] { value }, callback);
+            Setup(call.Item1.Name, call.Item2, new object[] { value }, callback);
         }
 
         /// <summary>Ties a method call to fake behavior.</summary>
         /// <param name="method">Expression of method to setup.</param>
         /// <param name="callback">Fake behavior to invoke.</param>
         /// <returns>Representation of the call.</returns>
-        public CallData Setup(Expression<Action<T>> method, Behavior<VoidType> callback)
+        public void Setup(Expression<Action<T>> method, Behavior<VoidType> callback)
         {
             (MethodInfo, Type[], object[]) call = ExtractCall(method, false);
-            return Setup(call.Item1.Name, call.Item2, call.Item3, callback);
+            Setup(call.Item1.Name, call.Item2, call.Item3, callback);
         }
 
         /// <summary>Ties a method call to fake behavior.</summary>
@@ -68,10 +68,10 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="method">Expression of method to setup.</param>
         /// <param name="callback">Fake behavior to invoke.</param>
         /// <returns>Representation of the call.</returns>
-        public CallData Setup<TResult>(Expression<Func<T, TResult>> method, Behavior<TResult> callback)
+        public void Setup<TResult>(Expression<Func<T, TResult>> method, Behavior<TResult> callback)
         {
             (MethodInfo, Type[], object[]) call = ExtractCall(method, false);
-            return Setup(call.Item1.Name, call.Item2, call.Item3, callback);
+            Setup(call.Item1.Name, call.Item2, call.Item3, callback);
         }
 
         /// <summary>Verifies the number of calls made to the setter.</summary>
