@@ -43,6 +43,14 @@ namespace CreateAndFake.Toolbox.FakerTool
             return default;
         }
 
+        /// <summary>Matches any reference of the given type.</summary>
+        /// <typeparam name="T">Type to match.</typeparam>
+        /// <returns>Container for the reference.</returns>
+        public static OutRef<T> AnyRef<T>()
+        {
+            return new OutRef<T>();
+        }
+
         /// <summary>Matches any instance but null of the given type.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <returns>Default instance of T for the fake setup.</returns>
@@ -62,12 +70,31 @@ namespace CreateAndFake.Toolbox.FakerTool
             return default;
         }
 
+        /// <summary>Matches any reference that fulfills the given condition.</summary>
+        /// <typeparam name="T">Type to match.</typeparam>
+        /// <param name="condition">Condition to verify.</param>
+        /// <returns>Container for the reference.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters",
+            Justification = "Taken and used through lambdas for setup replacement behavior.")]
+        public static OutRef<T> WhereRef<T>(Func<T, bool> condition)
+        {
+            return new OutRef<T>();
+        }
+
         /// <summary>Matches any instance of the given type.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <returns>Arg for the fake provider to match with.</returns>
         public static Arg LambdaAny<T>()
         {
             return new Arg(o => o is T || o == null);
+        }
+
+        /// <summary>Matches any reference of the given type.</summary>
+        /// <typeparam name="T">Type to match.</typeparam>
+        /// <returns>Arg for the fake provider to match with.</returns>
+        public static Arg LambdaAnyRef<T>()
+        {
+            return LambdaWhere<OutRef<T>>(null);
         }
 
         /// <summary>Matches any instance but null of the given type.</summary>
@@ -84,7 +111,16 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Arg for the fake provider to match with.</returns>
         public static Arg LambdaWhere<T>(Func<T, bool> condition)
         {
-            return new Arg(o => o is T && (condition?.Invoke((T)o) ?? true));
+            return new Arg(o => o is T value && (condition?.Invoke(value) ?? true));
+        }
+
+        /// <summary>Matches any reference that fulfills the given condition.</summary>
+        /// <typeparam name="T">Type to match.</typeparam>
+        /// <param name="condition">Condition to verify.</param>
+        /// <returns>Container for the reference.</returns>
+        public static Arg LambdaWhereRef<T>(Func<T, bool> condition)
+        {
+            return LambdaWhere<OutRef<T>>(o => condition?.Invoke(o.Var) ?? true);
         }
     }
 }

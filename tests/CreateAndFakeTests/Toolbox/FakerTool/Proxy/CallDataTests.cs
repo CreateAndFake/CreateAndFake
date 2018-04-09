@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using CreateAndFake;
-using CreateAndFake.Toolbox.FakerTool;
+using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFakeTests.TestSamples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CreateAndFakeTests.Toolbox.FakerTool
+namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
 {
     /// <summary>Verifies behavior.</summary>
     [TestClass]

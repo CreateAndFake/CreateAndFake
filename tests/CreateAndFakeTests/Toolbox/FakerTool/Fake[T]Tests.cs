@@ -59,6 +59,42 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.InternalSet);
         }
 
+        /// <summary>Verifies faking works with out arguments.</summary>
+        [TestMethod]
+        public void Fake_HandlesOut()
+        {
+            string data = Tools.Randomizer.Create<string>();
+
+            Fake<OutSample> fake = Tools.Faker.Mock<OutSample>();
+            fake.Setup(
+                d => d.ReturnVoid(out Arg.AnyRef<string>().Var),
+                Behavior.Set((OutRef<string> d) => { d.Var = data; }, Times.Once));
+
+            fake.Dummy.ReturnVoid(out string value);
+
+            Tools.Asserter.Is(data, value);
+            fake.Verify(Times.Once);
+        }
+
+        /// <summary>Verifies faking works with ref arguments.</summary>
+        [TestMethod]
+        public void Fake_HandlesRef()
+        {
+            string data = Tools.Randomizer.Create<string>();
+            string start = Tools.Randomizer.Create<string>();
+
+            Fake<RefSample> fake = Tools.Faker.Mock<RefSample>();
+            fake.Setup(
+                d => d.ReturnVoid(ref Arg.WhereRef<string>(v => v == start).Var),
+                Behavior.Set((OutRef<string> d) => { d.Var = data; }, Times.Once));
+
+            string value = start;
+            fake.Dummy.ReturnVoid(ref value);
+
+            Tools.Asserter.Is(data, value);
+            fake.Verify(Times.Once);
+        }
+
         /// <summary>Verifies faking works with generics.</summary>
         [TestMethod]
         public void Fake_GenericsWork()

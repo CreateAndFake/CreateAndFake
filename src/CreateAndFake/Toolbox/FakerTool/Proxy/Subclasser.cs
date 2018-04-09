@@ -292,9 +292,30 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             {
                 gen.Emit(OpCodes.Ldloc, args);
                 gen.Emit(OpCodes.Ldc_I4, i);
-                gen.Emit(OpCodes.Ldarg, i + 1);
-                gen.Emit(OpCodes.Box, argInfos[i].ParameterType);
-                gen.Emit(OpCodes.Stelem_Ref);
+                if (!argInfos[i].ParameterType.IsByRef)
+                {
+                    gen.Emit(OpCodes.Ldarg, i + 1);
+                    gen.Emit(OpCodes.Box, argInfos[i].ParameterType);
+                    gen.Emit(OpCodes.Stelem_Ref);
+                }
+                else
+                {
+                    // args[i] = new OutRef<T>();
+                    Type outRef = typeof(OutRef<>).MakeGenericType(argInfos[i].ParameterType.GetElementType());
+                    gen.Emit(OpCodes.Newobj, outRef.GetConstructor(Type.EmptyTypes));
+                    gen.Emit(OpCodes.Stelem_Ref);
+                    if(!argInfos[i].IsOut)
+                    {
+                        // ((OutRef<T>)args[i].Var) = params[i];
+                        gen.Emit(OpCodes.Ldloc, args);
+                        gen.Emit(OpCodes.Ldc_I4, i);
+                        gen.Emit(OpCodes.Ldelem_Ref);
+                        gen.Emit(OpCodes.Castclass, outRef);
+                        gen.Emit(OpCodes.Ldarg, i + 1);
+                        gen.Emit(OpCodes.Ldind_Ref);
+                        gen.Emit(OpCodes.Stfld, outRef.GetField(nameof(OutRef<Type>.Var)));
+                    }
+                }
             }
 
             // Type[] types = new Type[generics.Length];
@@ -313,7 +334,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 gen.Emit(OpCodes.Stelem_Ref);
             }
 
-            // return this.FakeMeta.Call('method.Name', types, args);
+            // this.FakeMeta.Call('method.Name', types, args);
             gen.Emit(OpCodes.Ldarg_0);
             gen.Emit(OpCodes.Call, metaGetter);
             gen.Emit(OpCodes.Ldstr, method.Name);
@@ -327,6 +348,24 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             {
                 gen.Emit(OpCodes.Call, s_VoidChainer);
             }
+
+            // params[0..x] = ((OutRef)args[0..x]).Var;
+            for (int i = 0; i < argInfos.Length; i++)
+            {
+                if (argInfos[i].ParameterType.IsByRef)
+                {
+                    Type outRef = typeof(OutRef<>).MakeGenericType(argInfos[i].ParameterType.GetElementType());
+
+                    gen.Emit(OpCodes.Ldarg, i + 1);
+                    gen.Emit(OpCodes.Ldloc, args);
+                    gen.Emit(OpCodes.Ldc_I4, i);
+                    gen.Emit(OpCodes.Ldelem_Ref);
+                    gen.Emit(OpCodes.Castclass, outRef);
+                    gen.Emit(OpCodes.Ldfld, outRef.GetField(nameof(OutRef<Type>.Var)));
+                    gen.Emit(OpCodes.Stind_Ref);
+                }
+            }
+
             gen.Emit(OpCodes.Ret);
         }
 

@@ -22,13 +22,13 @@ namespace CreateAndFake.Toolbox.FakerTool
 
         /// <summary>Sets up the behavior.</summary>
         /// <param name="implementation">Set behavior to run.</param>
-        /// <param name="limit">Behavior call limit.</param>
+        /// <param name="times">Behavior call limit.</param>
         /// <param name="calls">Starting number of calls.</param>
-        protected Behavior(Delegate implementation, Times limit, int? calls)
+        protected Behavior(Delegate implementation, Times times, int calls)
         {
             Implementation = implementation;
-            Limit = limit;
-            Calls = calls ?? 0;
+            Limit = times;
+            Calls = calls;
         }
 
         /// <summary>

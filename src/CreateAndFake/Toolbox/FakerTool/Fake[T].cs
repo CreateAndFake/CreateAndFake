@@ -149,13 +149,23 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Value to pass to the call.</returns>
         private static object ConvertArg(Expression arg)
         {
+            if (arg is MemberExpression memberExpression
+                && memberExpression.Member.Name == nameof(OutRef<Type>.Var))
+            {
+                return ConvertArg(memberExpression.Expression);
+            }
+
             MethodCallExpression call = arg as MethodCallExpression
                 ?? (arg as UnaryExpression)?.Operand as MethodCallExpression;
             if (call?.Method.DeclaringType == typeof(Arg) && call.Method.ReturnType != typeof(Arg))
             {
+                Type innerType = (call.Method.ReturnType.AsGenericType() == typeof(OutRef<>))
+                    ? call.Method.ReturnType.GetGenericArguments().Single()
+                    : call.Method.ReturnType;
+
                 return typeof(Arg)
                     .GetMethod("Lambda" + call.Method.Name)
-                    .MakeGenericMethod(call.Method.ReturnType)
+                    .MakeGenericMethod(innerType)
                     .Invoke(null, call.Arguments.Select(a => ConvertArg(a)).ToArray());
             }
             else

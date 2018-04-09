@@ -10,9 +10,14 @@ namespace CreateAndFake.Toolbox.FakerTool
     {
         /// <summary>Sets up the behavior.</summary>
         /// <param name="implementation">Set behavior to run.</param>
-        /// <param name="limit">Behavior call limit.</param>
+        /// <param name="times">Behavior call limit.</param>
+        internal Behavior(Delegate implementation, Times times = null) : base(implementation, times, 0) { }
+
+        /// <summary>Sets up the behavior.</summary>
+        /// <param name="implementation">Set behavior to run.</param>
+        /// <param name="times">Behavior call limit.</param>
         /// <param name="calls">Starting number of calls.</param>
-        internal Behavior(Delegate implementation, Times limit, int? calls = null) : base(implementation, limit, calls) { }
+        private Behavior(Delegate implementation, Times times, int calls) : base(implementation, times, calls) { }
 
         /// <summary>
         ///     Makes a clone such that any mutation to the source

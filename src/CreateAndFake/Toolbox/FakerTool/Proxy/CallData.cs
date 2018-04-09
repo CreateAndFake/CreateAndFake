@@ -3,7 +3,7 @@ using System.Linq;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.ValuerTool;
 
-namespace CreateAndFake.Toolbox.FakerTool
+namespace CreateAndFake.Toolbox.FakerTool.Proxy
 {
     /// <summary>Method call details.</summary>
     internal sealed class CallData : IDuplicatable

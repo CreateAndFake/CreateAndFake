@@ -48,7 +48,7 @@ There are a variety of options to verify methods were called as expected:
 * `Fake.Verify()` - Automatically checks methods based upon `Times` in each Behavior.
 * `Fake.Verify(Times)` - Does the above and that the total matches the provided `Times`.
 * `Fake.Verify(Times, delegate)` - Verifies the given delegate was called the given `Times`.
-* `Fake.VerifyTotalCalls(Times)` - Only verifies the total number of calls made matches.
+* `Fake.VerifyTotalCalls(Times)` - Only verifies the total number of calls made.
 
 ## Faking Internal
 
@@ -80,5 +80,36 @@ public void GetHashCode_ValidHint()
 
     Tools.Asserter.Is(result, new Valuer(false, hint.Dummy).GetHashCode(data));
     hint.Verify(Times.Exactly(2));
+}
+```
+
+## Faking Ref & Out
+
+The special class `OutRef` is used to handle reference behavior:
+
+```c#
+/// <summary>Verifies faking works with out and ref arguments.</summary>
+[TestMethod]
+public void Fake_HandlesOut()
+{
+    string data = Tools.Randomizer.Create<string>();
+    string start = Tools.Randomizer.Create<string>();
+
+    Fake<OutRefSample> fake = Tools.Faker.Mock<OutRefSample>();
+    fake.Setup(
+        d => d.WithOut(out Arg.AnyRef<string>().Var),
+        Behavior.Set((OutRef<string> d) => { d.Var = data; }, Times.Once));
+    fake.Setup(
+        d => d.WithRef(ref Arg.WhereRef<string>(v => v == start).Var),
+        Behavior.Set((OutRef<string> d) => { d.Var = data; }, Times.Once));
+
+    fake.Dummy.WithOut(out string outValue);
+    Tools.Asserter.Is(data, outValue);
+
+    string refValue = start;
+    fake.Dummy.WithRef(ref refValue);
+    Tools.Asserter.Is(data, refValue);
+
+    fake.Verify(2);
 }
 ```

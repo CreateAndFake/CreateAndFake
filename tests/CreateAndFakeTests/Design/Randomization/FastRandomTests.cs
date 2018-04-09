@@ -26,7 +26,7 @@ namespace CreateAndFakeTests.Randomization
         {
             IRandom random = new FastRandom(false);
 
-            Limiter limiter = new Limiter(10000);
+            Limiter limiter = new Limiter(15000);
             await limiter.StallUntil(() => badDoubles.Contains(random.Next<double>()));
             await limiter.StallUntil(() => badFloats.Contains(random.Next<float>()));
         }
