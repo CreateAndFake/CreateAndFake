@@ -108,6 +108,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <returns>Clone that is equal in value to the instance.</returns>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
+            if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
+
             return new Randomizer(duplicator.Copy(m_Faker),
                 duplicator.Copy(Gen), false, duplicator.Copy(Hints).ToArray());
         }

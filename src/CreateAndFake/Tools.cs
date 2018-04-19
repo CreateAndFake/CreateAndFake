@@ -5,6 +5,7 @@ using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandifferTool;
 using CreateAndFake.Toolbox.RandomizerTool;
+using CreateAndFake.Toolbox.TesterTool;
 using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake
@@ -29,5 +30,8 @@ namespace CreateAndFake
 
         /// <summary>Deep clones objects.</summary>
         public static IDuplicator Duplicator { get; } = new Duplicator(Asserter);
+
+        /// <summary>Automates common tests.</summary>
+        public static Tester Tester { get; } = new Tester(Randomizer, Asserter);
     }
 }
