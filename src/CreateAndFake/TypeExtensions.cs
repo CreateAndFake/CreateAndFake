@@ -30,13 +30,17 @@ namespace CreateAndFake.Toolbox
                 .Where(a => !a.IsDynamic)
                 .SelectMany(a =>
                     {
+                        // Ignore assemblies that can't load.
                         try
                         {
                             return a.GetExportedTypes();
                         }
                         catch (FileNotFoundException)
                         {
-                            // Ignore assemblies that can't load.
+                            return Type.EmptyTypes;
+                        }
+                        catch (ReflectionTypeLoadException)
+                        {
                             return Type.EmptyTypes;
                         }
                     })
