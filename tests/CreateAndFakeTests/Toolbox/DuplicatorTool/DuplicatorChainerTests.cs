@@ -1,17 +1,16 @@
 ﻿using System;
 using CreateAndFake;
 using CreateAndFake.Toolbox.DuplicatorTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class DuplicatorChainerTests
+    public static class DuplicatorChainerTests
     {
         /// <summary>Verifies callback must be provided.</summary>
-        [TestMethod]
-        public void New_NullsInvalid()
+        [Fact]
+        public static void New_NullsInvalid()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => new DuplicatorChainer(null, (o, c) => null));

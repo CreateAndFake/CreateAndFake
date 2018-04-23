@@ -1,17 +1,16 @@
 ﻿using System;
 using CreateAndFake;
 using CreateAndFake.Toolbox.ValuerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class ValuerChainerTests
+    public static class ValuerChainerTests
     {
         /// <summary>Verifies callback must be provided.</summary>
-        [TestMethod]
-        public void New_NullsInvalid()
+        [Fact]
+        public static void New_NullsInvalid()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => new ValuerChainer(null, (o, c) => 0, (e, a, c) => null));

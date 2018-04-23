@@ -6,12 +6,11 @@ using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class ObjectCompareHintTests : CompareHintTestBase<ObjectCompareHint>
     {
         /// <summary>Instance to test with.</summary>
@@ -29,7 +28,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         public ObjectCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
 
         /// <summary>Verifies the hint finds differences comparing different objects.</summary>
-        [TestMethod]
+        [Fact]
         public void Compare_DifferentObjectsDifferences()
         {
             var expected = new { Value = Tools.Randomizer.Create<string>() };

@@ -5,12 +5,10 @@ using System.Linq;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class CollectionCreateHintTests : CreateHintTestBase<CollectionCreateHint>
     {
         /// <summary>Potential item types to test with.</summary>

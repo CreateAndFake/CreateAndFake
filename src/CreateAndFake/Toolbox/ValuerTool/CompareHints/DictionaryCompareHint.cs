@@ -26,12 +26,12 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
                 {
                     foreach (Difference diff in valuer.Compare(expected[key], actual[match]))
                     {
-                        yield return new Difference("[" + key + "]", diff);
+                        yield return new Difference($"[{key}]", diff);
                     }
                 }
                 else
                 {
-                    yield return new Difference("[" + key + "]", new Difference(expected[key], "'null'"));
+                    yield return new Difference($"[{key}]", new Difference(expected[key], "'null'"));
                 }
             }
 
@@ -39,7 +39,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             {
                 if (!expectedKeys.Any(k => valuer.Equals(key, k)))
                 {
-                    yield return new Difference("[" + key + "]", new Difference("'null'", actual[key]));
+                    yield return new Difference($"[{key}]", new Difference("'null'", actual[key]));
                 }
             }
         }

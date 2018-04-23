@@ -95,7 +95,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             else
             {
                 throw new NotSupportedException(
-                    "Type '" + type.FullName + "' not supported by the randomizer. " +
+                    $"Type '{type.FullName}' not supported by the randomizer. " +
                     "Create a hint to generate the type and pass it to the randomizer.");
             }
         }

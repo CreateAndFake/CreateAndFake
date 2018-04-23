@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using CreateAndFake;
+using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class EnumerableCompareHintTests : CompareHintTestBase<EnumerableCompareHint>
     {
         /// <summary>Instance to test with.</summary>
@@ -24,5 +26,23 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 
         /// <summary>Sets up the tests.</summary>
         public EnumerableCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+
+        /// <summary>Verifies mismatched list sizes aren't equal.</summary>
+        [Theory, RandomData]
+        public void Compare_SizeMismatchOutOfBounds(List<string> original)
+        {
+            List<string> variant = Tools.Duplicator.Copy(original);
+            variant.RemoveAt(variant.Count - 1);
+
+            (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(original, variant, CreateChainer());
+            Tools.Asserter.Is(true, result.Item1);
+            Tools.Asserter.HasCount(1, result.Item2);
+            Tools.Asserter.Is(true, result.Item2.Single().ToString().Contains("outofbounds"));
+
+            result = TestInstance.TryCompare(variant, original, CreateChainer());
+            Tools.Asserter.Is(true, result.Item1);
+            Tools.Asserter.HasCount(1, result.Item2);
+            Tools.Asserter.Is(true, result.Item2.Single().ToString().Contains("outofbounds"));
+        }
     }
 }

@@ -4,32 +4,31 @@ using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFakeTests.TestSamples;
 using CreateAndFakeTests.Toolbox.FakerTool.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public class Fake_T_Tests
+    public static class Fake_T_Tests
     {
         /// <summary>Verifies interfaces can be faked.</summary>
-        [TestMethod]
-        public void Fake_InterfacesWork()
+        [Fact]
+        public static void Fake_InterfacesWork()
         {
             FakeTester<IFakeSample>();
         }
 
         /// <summary>Verifies classes can be faked.</summary>
-        [TestMethod]
-        public void Fake_ClassesWork()
+        [Fact]
+        public static void Fake_ClassesWork()
         {
             FakeTester<AbstractFakeSample>();
             FakeTester<VirtualFakeSample>();
         }
 
         /// <summary>Verifies scopes are handled properly.</summary>
-        [TestMethod]
-        public void Fake_ScopeBehavior()
+        [Fact]
+        public static void Fake_ScopeBehavior()
         {
             Fake<ScopeSample> fake = Tools.Faker.Mock<ScopeSample>();
             Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.PublicProp);
@@ -60,11 +59,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies faking works with out arguments.</summary>
-        [TestMethod]
-        public void Fake_HandlesOut()
+        [Theory, RandomData]
+        public static void Fake_HandlesOut(string data)
         {
-            string data = Tools.Randomizer.Create<string>();
-
             Fake<OutSample> fake = Tools.Faker.Mock<OutSample>();
             fake.Setup(
                 d => d.ReturnVoid(out Arg.AnyRef<string>().Var),
@@ -77,12 +74,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies faking works with ref arguments.</summary>
-        [TestMethod]
-        public void Fake_HandlesRef()
+        [Theory, RandomData]
+        public static void Fake_HandlesRef(string data, string start)
         {
-            string data = Tools.Randomizer.Create<string>();
-            string start = Tools.Randomizer.Create<string>();
-
             Fake<RefSample> fake = Tools.Faker.Mock<RefSample>();
             fake.Setup(
                 d => d.ReturnVoid(ref Arg.WhereRef<string>(v => v == start).Var),
@@ -96,11 +90,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies faking works with generics.</summary>
-        [TestMethod]
-        public void Fake_GenericsWork()
+        [Theory, RandomData]
+        public static void Fake_GenericsWork(string text, DataSample sample)
         {
-            string text = Tools.Randomizer.Create<string>();
-            DataSample sample = Tools.Randomizer.Create<DataSample>();
             Fake<GenericSample<string>> fake = Tools.Faker.Mock<GenericSample<string>>();
 
             fake.Setup(
@@ -120,8 +112,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies bad expressions can't be passed in.</summary>
-        [TestMethod]
-        public void Setup_InvalidExpressionThrows()
+        [Fact]
+        public static void Setup_InvalidExpressionThrows()
         {
             Fake<object> fake = Tools.Faker.Mock<object>();
 

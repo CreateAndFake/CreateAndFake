@@ -75,14 +75,14 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
             if (!result.Equals(default))
             {
                 m_Asserter.ValuesEqual(source, result.Item2,
-                    "Type '" + source.GetType() + "' did not clone properly. " +
+                    $"Type '{source.GetType()}' did not clone properly. " +
                     "Verify/create a hint to generate the type and pass it to the duplicator.");
                 return (T)result.Item2;
             }
             else
             {
                 throw new NotSupportedException(
-                    "Type '" + source.GetType().FullName + "' not supported by the duplicator. " +
+                    $"Type '{source.GetType().FullName}' not supported by the duplicator. " +
                     "Create a hint to generate the type and pass it to the duplicator.");
             }
         }

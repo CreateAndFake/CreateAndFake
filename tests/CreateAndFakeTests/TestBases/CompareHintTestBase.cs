@@ -4,12 +4,11 @@ using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.ValuerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public abstract class CompareHintTestBase<T> where T : CompareHint
     {
         /// <summary>Instance to test with.</summary>
@@ -33,7 +32,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint handles nulls properly.</summary>
-        [TestMethod]
+        [Fact]
         public virtual void TryCompare_NullBehaviorCheck()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
@@ -45,7 +44,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryCompare_SupportsSameValidTypes()
         {
             Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
@@ -70,7 +69,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
+        [Fact]
         public virtual void TryCompare_SupportsDifferentValidTypes()
         {
             Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
@@ -96,7 +95,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint doesn't support the wrong types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryCompare_InvalidTypesFail()
         {
             Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
@@ -114,7 +113,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint handles nulls properly.</summary>
-        [TestMethod]
+        [Fact]
         public virtual void TryGetHashCode_NullBehaviorCheck()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
@@ -124,7 +123,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryGetHashCode_SupportsSameValidTypes()
         {
             Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
@@ -157,7 +156,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryGetHashCode_SupportsDifferentValidTypes()
         {
             Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
@@ -188,7 +187,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint doesn't support the wrong types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryGetHashCode_InvalidTypesFail()
         {
             Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();

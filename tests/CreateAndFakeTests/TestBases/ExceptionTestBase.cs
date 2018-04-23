@@ -5,16 +5,15 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Json;
 using CreateAndFake;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public abstract class ExceptionTestBase<T> where T : Exception
     {
         /// <summary>Verifies the default constructor is present for serialization but private.</summary>
-        [TestMethod]
+        [Fact]
         public void Exception_DefaultConstructorPrivate()
         {
             Tools.Asserter.Is(null, typeof(T).GetConstructor(Type.EmptyTypes));
@@ -22,10 +21,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies that the exception can make a binary roundtrip.</summary>
-        [TestMethod]
-        public void Exception_BinarySerializes()
+        [Theory, RandomData]
+        public void Exception_BinarySerializes(T original)
         {
-            T original = Tools.Randomizer.Create<T>();
             IFormatter formatter = new BinaryFormatter();
 
             using (Stream stream = new MemoryStream())
@@ -38,11 +36,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies that the exception can make an xml roundtrip.</summary>
-        [TestMethod]
-        public void Exception_XmlSerializes()
+        [Theory, RandomData]
+        public void Exception_XmlSerializes(T original)
         {
-            T original = Tools.Randomizer.Create<T>();
-
             XmlObjectSerializer formatter = new DataContractSerializer(typeof(T),
                 new[] { original.InnerException }.Where(t => t != null).Select(t => t.GetType()));
 
@@ -56,7 +52,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies that the exception can make a json roundtrip.</summary>
-        [TestMethod]
+        [Fact]
         public void Exception_JsonSerializes()
         {
             T original;

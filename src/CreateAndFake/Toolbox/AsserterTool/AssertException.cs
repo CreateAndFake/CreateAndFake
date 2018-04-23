@@ -47,9 +47,11 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <returns>Message to use for the exception.</returns>
         private static string BuildMessage(string message, string details, string content = null)
         {
+            string nl = Environment.NewLine;
+
             return (message ?? "Unknown assert failure.") +
-                ((details == null) ? "" : Environment.NewLine + "Details: " + details) +
-                ((content == null) ? "" : Environment.NewLine + "Content:" + Environment.NewLine + content);
+                ((details == null) ? "" : $"{nl}Details: {details}") +
+                ((content == null) ? "" : $"{nl}Content: {nl}{content}");
         }
     }
 }

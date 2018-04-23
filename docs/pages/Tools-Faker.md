@@ -11,7 +11,7 @@ Fakes use a typical lambda based style with a very methodical structure:
 
 ```c#
 /// <summary>Verifies setup functionality.</summary>
-[TestMethod]
+[Fact]
 public void Setup_ObjectEquality()
 {
     object data = new object();
@@ -64,7 +64,7 @@ The fakes can be setup using the string names for protected methods with an arra
 
 ```c#
 /// <summary>Verifies hints generate the hashes.</summary>
-[TestMethod]
+[Fact]
 public void GetHashCode_ValidHint()
 {
     object data = new object();
@@ -89,12 +89,9 @@ The special class `OutRef` is used to handle reference behavior:
 
 ```c#
 /// <summary>Verifies faking works with out and ref arguments.</summary>
-[TestMethod]
-public void Fake_HandlesOut()
+[Theory, RandomData]
+public void Fake_HandlesOut(string data, string start)
 {
-    string data = Tools.Randomizer.Create<string>();
-    string start = Tools.Randomizer.Create<string>();
-
     Fake<OutRefSample> fake = Tools.Faker.Mock<OutRefSample>();
     fake.Setup(
         d => d.WithOut(out Arg.AnyRef<string>().Var),

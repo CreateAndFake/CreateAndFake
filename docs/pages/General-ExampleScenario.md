@@ -8,7 +8,7 @@ This library provides a solution:
 
 ```c#
 /// <summary>Verifies data can roundtrip.</summary>
-[TestMethod]
+[Fact]
 public void DataHolder_BinarySerializes()
 {
     DataHolder original = Tools.Randomizer.Create<DataHolder>();

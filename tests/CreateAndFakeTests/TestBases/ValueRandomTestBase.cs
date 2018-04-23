@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CreateAndFake;
+using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFakeTests.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public abstract class ValueRandomTestBase<T> where T : ValueRandom
     {
         /// <summary>Instance to test with.</summary>
         private static ValueRandom s_TestInstance = Tools.Randomizer.Create<T>();
 
         /// <summary>Verifies intended value types work.</summary>
-        [TestMethod]
+        [Fact]
         public void Supports_TypeCoverage()
         {
             Tools.Asserter.Is(true, s_TestInstance.Supports<double>());
@@ -34,14 +35,14 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies an invalid type is not supported.</summary>
-        [TestMethod]
+        [Fact]
         public void Supports_InvalidTypeFalse()
         {
             Tools.Asserter.Is(false, s_TestInstance.Supports(typeof(object)));
         }
 
         /// <summary>Verifies intended value types work.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_TypeCoverage()
         {
             s_TestInstance.Next<double>();
@@ -60,7 +61,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies intended value types work.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_MaxTypeCoverage()
         {
             s_TestInstance.Next(double.MaxValue);
@@ -79,7 +80,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies intended value types work.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_MinTypeCoverage()
         {
             s_TestInstance.Next(double.MinValue, double.MaxValue);
@@ -98,23 +99,23 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies backup stumble behavior works.</summary>
-        [TestMethod]
-        public void Next_StumbleWorks()
+        [Fact]
+        public async Task Next_StumbleWorks()
         {
             int min = int.MinValue / 2 - 1;
             int max = int.MaxValue / 2 + 1;
 
-            for (int i = 0; i < 1000; i++)
+            await Limiter.Myriad.Repeat(() =>
             {
                 int result = s_TestInstance.Next(min, max);
 
                 Tools.Asserter.Is(true, result >= min, "Value lower than min was returned.");
                 Tools.Asserter.Is(true, result < max, "Value higher than max was returned.");
-            }
+            });
         }
 
         /// <summary>Verifies that an invalid type throws.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_InvalidTypeThrows()
         {
             Tools.Asserter.Throws<NotSupportedException>(
@@ -122,21 +123,21 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the same min and max can be used.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_SameMinMaxWorks()
         {
             Tools.Asserter.Is(0, s_TestInstance.Next(0, 0));
         }
 
         /// <summary>Verifies different values are generated.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_Variation()
         {
             Tools.Asserter.IsNot(s_TestInstance.Next<long>(), s_TestInstance.Next<long>());
         }
 
         /// <summary>Verifies unsupported types don't work.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_UnsupportedTypeThrows()
         {
             Tools.Asserter.Throws<NotSupportedException>(
@@ -147,13 +148,14 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies max is excluded as a possible result.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_MaxDoubleExcluded()
         {
+            double min = 9.9999999;
+            double max = 10;
+
             for (int i = 0; i < 25000; i++)
             {
-                double min = 9.9999999;
-                double max = 10;
                 double result = s_TestInstance.Next(min, max);
 
                 Tools.Asserter.Is(true, result >= min, "Value lower than min was returned.");
@@ -162,13 +164,14 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies max is excluded as a possible result.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_MaxDecimalExcluded()
         {
+            decimal min = 9.9999999M;
+            decimal max = 10;
+
             for (int i = 0; i < 25000; i++)
             {
-                decimal min = 9.9999999M;
-                decimal max = 10;
                 decimal result = s_TestInstance.Next(min, max);
 
                 Tools.Asserter.Is(true, result >= min, "Value lower than min was returned.");
@@ -177,7 +180,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies max values greater than min can't be used.</summary>
-        [TestMethod]
+        [Fact]
         public void Next_MinGreaterMaxThrows()
         {
             Tools.Asserter.Throws<ArgumentOutOfRangeException>(
@@ -185,7 +188,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies collections work.</summary>
-        [TestMethod]
+        [Fact]
         public void NextItem_CollectionsWork()
         {
             ICollection<string> data = Tools.Randomizer.Create<ICollection<string>>();
@@ -193,7 +196,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies linq enumerables work.</summary>
-        [TestMethod]
+        [Fact]
         public void NextItem_YieldWorks()
         {
             Tools.Asserter.IsNot(null, s_TestInstance.NextItem(CreateEnum(1)));
@@ -202,7 +205,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies empty enumerables throw.</summary>
-        [TestMethod]
+        [Fact]
         public void NextItem_EmptyThrows()
         {
             Tools.Asserter.Throws<ArgumentOutOfRangeException>(
@@ -213,7 +216,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies null is not valid.</summary>
-        [TestMethod]
+        [Fact]
         public void NextItem_NullThrows()
         {
             Tools.Asserter.Throws<ArgumentNullException>(

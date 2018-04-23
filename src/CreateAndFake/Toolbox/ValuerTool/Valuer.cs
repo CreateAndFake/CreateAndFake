@@ -82,7 +82,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             else
             {
                 throw new NotSupportedException(
-                    "Type '" + item?.GetType().FullName + "' not supported by the valuer. " +
+                    $"Type '{item?.GetType().FullName}' not supported by the valuer. " +
                     "Create a hint to generate the type and pass it to the valuer.");
             }
         }
@@ -130,7 +130,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             else
             {
                 throw new NotSupportedException(
-                    "Type '" + expected?.GetType().FullName + "' not supported by the valuer. " +
+                    $"Type '{expected?.GetType().FullName}' not supported by the valuer. " +
                     "Create a hint to generate the type and pass it to the valuer.");
             }
         }

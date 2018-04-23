@@ -4,12 +4,11 @@ using CreateAndFake;
 using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class BasicCopyHintTests : CopyHintTestBase<BasicCopyHint>
     {
         /// <summary>Types that can be created by the hint.</summary>
@@ -23,8 +22,8 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
         public BasicCopyHintTests() : base(s_ValidTypes, s_InvalidTypes, true) { }
 
         /// <summary>Verifies the hint can handle just plain objects.</summary>
-        [TestMethod]
-        public void TryCopy_HandlesBaseObject()
+        [Fact]
+        public static void TryCopy_HandlesBaseObject()
         {
             object data = new object();
             (bool, object) result = new BasicCopyHint().TryCopy(data, CreateChainer());

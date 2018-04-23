@@ -4,25 +4,24 @@ using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.ValuerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class ValuerTests
+    public static class ValuerTests
     {
         /// <summary>Verifies nulls are valid.</summary>
-        [TestMethod]
-        public void New_NullHintsValid()
+        [Fact]
+        public static void New_NullHintsValid()
         {
             Tools.Asserter.IsNot(null, new Valuer(true, null));
             Tools.Asserter.IsNot(null, new Valuer(false, null));
         }
 
         /// <summary>Verifies an exception throws when no hint matches.</summary>
-        [TestMethod]
-        public void GetHashCode_MissingMatchThrows()
+        [Fact]
+        public static void GetHashCode_MissingMatchThrows()
         {
             Tools.Asserter.Throws<NotSupportedException>(
                 () => new Valuer(false).GetHashCode((object)null));
@@ -32,8 +31,8 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         /// <summary>Verifies multiple items are combined.</summary>
-        [TestMethod]
-        public void GetHashCode_SupportsMultiple()
+        [Fact]
+        public static void GetHashCode_SupportsMultiple()
         {
             int[] data = new[] { Tools.Randomizer.Create<int>(), Tools.Randomizer.Create<int>() };
 
@@ -41,8 +40,8 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         /// <summary>Verifies hints generate the hashes.</summary>
-        [TestMethod]
-        public void GetHashCode_ValidHint()
+        [Fact]
+        public static void GetHashCode_ValidHint()
         {
             object data = new object();
             int result = Tools.Randomizer.Create<int>();
@@ -60,8 +59,8 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         /// <summary>Verifies an exception throws when no hint matches.</summary>
-        [TestMethod]
-        public void Compare_MissingMatchThrows()
+        [Fact]
+        public static void Compare_MissingMatchThrows()
         {
             Tools.Asserter.Throws<NotSupportedException>(
                 () => new Valuer(false).Compare(null, new object()));
@@ -71,16 +70,16 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         /// <summary>Verifies no differences when the same reference is passed.</summary>
-        [TestMethod]
-        public void Compare_ReferenceNoDifferences()
+        [Fact]
+        public static void Compare_ReferenceNoDifferences()
         {
             object data = new object();
             Tools.Asserter.IsEmpty(new Valuer(false).Compare(data, data));
         }
 
         /// <summary>Verifies no differences means equal.</summary>
-        [TestMethod]
-        public void Equals_NoDifferencesTrue()
+        [Fact]
+        public static void Equals_NoDifferencesTrue()
         {
             object data1 = new object();
             object data2 = new object();
@@ -99,8 +98,8 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         /// <summary>Verifies differences means unequal.</summary>
-        [TestMethod]
-        public void Equals_DifferencesFalse()
+        [Fact]
+        public static void Equals_DifferencesFalse()
         {
             object data1 = new object();
             object data2 = new object();

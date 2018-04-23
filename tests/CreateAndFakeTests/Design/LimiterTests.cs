@@ -8,20 +8,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using CreateAndFake;
 using CreateAndFake.Design;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Design
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class LimiterTests
+    public static class LimiterTests
     {
         /// <summary>Small delay to test with.</summary>
         private static readonly TimeSpan s_SmallDelay = new TimeSpan(0, 0, 0, 0, 20);
 
         /// <summary>Verifies limit starts after first attempt.</summary>
-        [TestMethod]
-        public async Task Repeat_AtLeastOnce()
+        [Fact]
+        public static async Task Repeat_AtLeastOnce()
         {
             int attempts = 0;
 
@@ -33,8 +32,8 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies limit starts after first attempt.</summary>
-        [TestMethod]
-        public void StallUntil_AtLeastOnce()
+        [Fact]
+        public static void StallUntil_AtLeastOnce()
         {
             int attempts = 0;
 
@@ -48,10 +47,9 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies limit starts after first attempt.</summary>
-        [TestMethod]
-        public void Retry_AtLeastOnce()
+        [Theory, RandomData]
+        public static void Retry_AtLeastOnce(Exception exception)
         {
-            Exception exception = Tools.Randomizer.Create<Exception>();
             int attempts = 0;
 
             Tools.Asserter.Throws<TimeoutException>(
@@ -66,134 +64,121 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
-        [TestMethod]
-        public async Task Repeat_TryLimited()
+        [Theory,
+            InlineData(1),
+            InlineData(3)]
+        public static async Task Repeat_TryLimited(int tries)
         {
             int attempts = 0;
 
-            await new Limiter(1).Repeat(() => attempts++);
-            Tools.Asserter.Is(1, attempts);
-
-            await new Limiter(3).Repeat(() => attempts++);
-            Tools.Asserter.Is(4, attempts);
+            await new Limiter(tries).Repeat(() => attempts++);
+            Tools.Asserter.Is(tries, attempts);
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
-        [TestMethod]
-        public void StallUntil_TryLimited()
+        [Theory,
+            InlineData(1),
+            InlineData(3)]
+        public static void StallUntil_TryLimited(int tries)
         {
             int attempts = 0;
 
             Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(1).StallUntil(() => attempts++, () => false).Wait());
-            Tools.Asserter.Is(1, attempts);
-
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(3).StallUntil(() => attempts++, () => false).Wait());
-            Tools.Asserter.Is(4, attempts);
+                () => new Limiter(tries).StallUntil(() => attempts++, () => false).Wait());
+            Tools.Asserter.Is(tries, attempts);
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
-        [TestMethod]
-        public void Retry_TryLimited()
+        [Theory,
+            InlineData(1),
+            InlineData(3)]
+        public static void Retry_TryLimited(int tries)
         {
             Exception exception = Tools.Randomizer.Create<Exception>();
             int attempts = 0;
 
             Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(1).Retry(() => { attempts++; throw exception; }).Wait(),
+                () => new Limiter(tries).Retry(() => { attempts++; throw exception; }).Wait(),
                 e => Tools.Asserter.Is(exception, e.InnerException));
-            Tools.Asserter.Is(1, attempts);
-
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(3).Retry(() => { attempts++; throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
-            Tools.Asserter.Is(4, attempts);
+            Tools.Asserter.Is(tries, attempts);
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
-        [TestMethod]
-        public async Task Repeat_TimeoutLimited()
+        [Fact]
+        public static async Task Repeat_TimeoutLimited()
         {
             Stopwatch watch = Stopwatch.StartNew();
             await new Limiter(s_SmallDelay).Repeat(() => { });
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks < s_SmallDelay.Ticks * 2);
-
-            watch.Restart();
-            await new Limiter(s_SmallDelay).Repeat(() => { });
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks < s_SmallDelay.Ticks * 3);
+            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks);
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
-        [TestMethod]
-        public void StallUntil_TimeoutLimited()
+        [Fact]
+        public static void StallUntil_TimeoutLimited()
         {
             Stopwatch watch = Stopwatch.StartNew();
 
             Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(s_SmallDelay).StallUntil(() => { }, () => false).Wait());
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks < s_SmallDelay.Ticks * 2);
-
-            watch.Restart();
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(s_SmallDelay).StallUntil(() => { }, () => false).Wait());
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks < s_SmallDelay.Ticks * 3);
+            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks);
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
-        [TestMethod]
-        public void Retry_TimeoutLimited()
+        [Theory, RandomData]
+        public static void Retry_TimeoutLimited(Exception exception)
         {
-            Exception exception = Tools.Randomizer.Create<Exception>();
             Stopwatch watch = Stopwatch.StartNew();
 
             Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(s_SmallDelay).Retry(() => { throw exception; }).Wait(),
                 e => Tools.Asserter.Is(exception, e.InnerException));
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks < s_SmallDelay.Ticks * 2);
-
-            watch.Restart();
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(s_SmallDelay).Retry(() => { throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks < s_SmallDelay.Ticks * 3);
+            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks);
         }
 
         /// <summary>Verifies limiter delays between attempts.</summary>
-        [TestMethod]
-        public async Task Repeat_DelayOccurs()
+        [Theory,
+            InlineData(1),
+            InlineData(2),
+            InlineData(3)]
+        public static async Task Repeat_DelayOccurs(int tries)
         {
             Stopwatch watch = Stopwatch.StartNew();
-            await new Limiter(2, s_SmallDelay).Repeat(() => { });
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks / 2);
+            await new Limiter(tries, s_SmallDelay).Repeat(() => { });
+            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks * (tries - 1));
         }
 
         /// <summary>Verifies limiter delays between attempts.</summary>
-        [TestMethod]
-        public async Task StallUntil_DelayOccurs()
+        [Theory,
+            InlineData(1),
+            InlineData(2),
+            InlineData(3)]
+        public static async Task StallUntil_DelayOccurs(int tries)
         {
             int attempts = 0;
 
             Stopwatch watch = Stopwatch.StartNew();
-            await new Limiter(2, s_SmallDelay).StallUntil(() => ++attempts == 2);
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks / 2);
+            await new Limiter(tries, s_SmallDelay).StallUntil(() => ++attempts == tries);
+            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks * (tries - 1));
         }
 
         /// <summary>Verifies limiter delays between attempts.</summary>
-        [TestMethod]
-        public async Task Retry_DelayOccurs()
+        [Theory,
+            InlineData(1),
+            InlineData(2),
+            InlineData(3)]
+        public static async Task Retry_DelayOccurs(int tries)
         {
             Exception exception = Tools.Randomizer.Create<Exception>();
             int attempts = 0;
 
             Stopwatch watch = Stopwatch.StartNew();
-            await new Limiter(2, s_SmallDelay).Retry(() => { if (++attempts != 2) throw exception; });
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks / 2);
+            await new Limiter(tries, s_SmallDelay).Retry(() => { if (++attempts != tries) throw exception; });
+            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks * (tries - 1));
         }
 
         /// <summary>Verifies the task can be canceled.</summary>
-        [TestMethod]
-        public void Repeat_Cancelable()
+        [Fact]
+        public static void Repeat_Cancelable()
         {
             using (CancellationTokenSource tokenSource = new CancellationTokenSource())
             {
@@ -209,8 +194,8 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies the task can be canceled.</summary>
-        [TestMethod]
-        public void StallUntil_Cancelable()
+        [Fact]
+        public static void StallUntil_Cancelable()
         {
             using (CancellationTokenSource tokenSource = new CancellationTokenSource())
             {
@@ -226,11 +211,9 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies the task can be canceled.</summary>
-        [TestMethod]
-        public void Retry_Cancelable()
+        [Theory, RandomData]
+        public static void Retry_Cancelable(Exception exception)
         {
-            Exception exception = Tools.Randomizer.Create<Exception>();
-
             using (CancellationTokenSource tokenSource = new CancellationTokenSource())
             {
                 Tools.Asserter.Throws<TaskCanceledException>(() => Limiter.Few.Retry(
@@ -245,10 +228,9 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies limiter collates results correctly.</summary>
-        [TestMethod]
-        public async Task Repeat_ResultsValid()
+        [Theory, RandomData]
+        public static async Task Repeat_ResultsValid(List<int> data)
         {
-            List<int> data = Tools.Randomizer.Create<List<int>>();
             int attempt = 0;
 
             Tools.Asserter.Is(data.AsReadOnly(),
@@ -256,10 +238,9 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies limiter collates results correctly.</summary>
-        [TestMethod]
-        public async Task StallUntil_ResultsValid()
+        [Theory, RandomData]
+        public static async Task StallUntil_ResultsValid(List<int> data)
         {
-            List<int> data = Tools.Randomizer.Create<List<int>>();
             int attempt = 0;
 
             Tools.Asserter.Is(data.AsReadOnly(),
@@ -267,18 +248,16 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies limiter collates results correctly.</summary>
-        [TestMethod]
-        public async Task Retry_ResultsValid()
+        [Theory, RandomData]
+        public static async Task Retry_ResultsValid(int data)
         {
-            int data = Tools.Randomizer.Create<int>();
-
             Tools.Asserter.Is(data, await new Limiter(1).Retry(() => data));
             Tools.Asserter.Is(data, await new Limiter(1).Retry(() => data));
         }
 
         /// <summary>Verifies limiter retries until success.</summary>
-        [TestMethod]
-        public async Task Retry_Continues()
+        [Fact]
+        public static async Task Retry_Continues()
         {
             int calls = 0;
 
@@ -304,8 +283,8 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies null works as intended.</summary>
-        [TestMethod]
-        public async Task Repeat_NullBehavior()
+        [Fact]
+        public static async Task Repeat_NullBehavior()
         {
             await Limiter.Few.Repeat(null);
 
@@ -314,8 +293,8 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies null works as intended.</summary>
-        [TestMethod]
-        public async Task StallUntil_NullBehavior()
+        [Fact]
+        public static async Task StallUntil_NullBehavior()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => Limiter.Few.StallUntil(null).Wait());
@@ -330,8 +309,8 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies null works as intended.</summary>
-        [TestMethod]
-        public async Task Retry_NullBehavior()
+        [Fact]
+        public static async Task Retry_NullBehavior()
         {
             await Limiter.Few.Retry(null);
             await Limiter.Few.Retry(null, null);
@@ -343,41 +322,58 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies that check state is called properly.</summary>
-        [TestMethod]
-        public async Task StallUntil_CheckStateBehavior()
+        [Theory,
+            InlineData(1),
+            InlineData(3)]
+        public static async Task StallUntil_CheckStateBehavior(int tries)
         {
             int attempt = 0;
             int checkAttempt = 0;
 
-            await new Limiter(1).StallUntil(() => attempt++, () => ++checkAttempt == 1);
-            Tools.Asserter.Is(1, attempt);
-            Tools.Asserter.Is(1, checkAttempt);
-
-            await new Limiter(3).StallUntil(() => attempt++, () => ++checkAttempt == 4);
-            Tools.Asserter.Is(4, attempt);
-            Tools.Asserter.Is(4, checkAttempt);
+            await new Limiter(tries).StallUntil(() => attempt++, () => ++checkAttempt == tries);
+            Tools.Asserter.Is(tries, attempt);
+            Tools.Asserter.Is(tries, checkAttempt);
         }
 
         /// <summary>Verifies that reset state is called properly.</summary>
-        [TestMethod]
-        public async Task Retry_ResetStateBehavior()
+        [Theory,
+            InlineData(1),
+            InlineData(3)]
+        public static async Task Retry_ResetStateBehavior(int tries)
         {
             Exception exception = Tools.Randomizer.Create<Exception>();
             int attempt = 0;
             int resetAttempt = 0;
 
-            await new Limiter(1).Retry(() => attempt++, () => resetAttempt++);
-            Tools.Asserter.Is(1, attempt);
-            Tools.Asserter.Is(0, resetAttempt);
+            await new Limiter(tries).Retry(() => { if (++attempt != tries) throw exception; }, () => resetAttempt++);
+            Tools.Asserter.Is(tries, attempt);
+            Tools.Asserter.Is(tries - 1, resetAttempt);
+        }
 
-            await new Limiter(3).Retry(() => { if (++attempt != 4) throw exception; }, () => resetAttempt++);
-            Tools.Asserter.Is(4, attempt);
-            Tools.Asserter.Is(2, resetAttempt);
+        /// <summary>Verifies that reset state is called properly.</summary>
+        [Theory,
+            InlineData(1),
+            InlineData(3)]
+        public static async Task Retry_ReturnResetStateBehavior(int tries)
+        {
+            Exception exception = Tools.Randomizer.Create<Exception>();
+            int attempt = 0;
+            int resetAttempt = 0;
+
+            int result = Tools.Randomizer.Create<int>();
+            int ResetBehavior()
+            {
+                return (++attempt == tries) ? result : throw exception;
+            };
+
+            Tools.Asserter.Is(result, await new Limiter(tries).Retry(ResetBehavior, () => resetAttempt++));
+            Tools.Asserter.Is(tries, attempt);
+            Tools.Asserter.Is(tries - 1, resetAttempt);
         }
 
         /// <summary>Verifies retry only catches expected exceptions.</summary>
-        [TestMethod]
-        public void Retry_WrongExceptionThrows()
+        [Fact]
+        public static void Retry_WrongExceptionThrows()
         {
             NotSupportedException exception = Tools.Randomizer.Create<NotSupportedException>();
 
@@ -393,8 +389,8 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies default instances are not null.</summary>
-        [TestMethod]
-        public void Limiter_DefaultsSet()
+        [Fact]
+        public static void Limiter_DefaultsSet()
         {
             foreach (PropertyInfo info in typeof(Limiter)
                 .GetProperties(BindingFlags.Static | BindingFlags.Public)
@@ -405,12 +401,9 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies the equality methods work properly.</summary>
-        [TestMethod]
-        public void Equality_MatchesValue()
+        [Theory, RandomData]
+        public static void Equality_MatchesValue(int tries, TimeSpan elapsed)
         {
-            int tries = Tools.Randomizer.Create<int>();
-            TimeSpan elapsed = Tools.Randomizer.Create<TimeSpan>();
-
             Limiter original = new Limiter(tries, elapsed);
             Limiter dupe = new Limiter(tries, elapsed);
             Limiter variant1 = new Limiter(Tools.Randiffer.Branch(tries), elapsed);
@@ -429,14 +422,10 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies readable as string.</summary>
-        [TestMethod]
-        public void ToString_Readable()
+        [Theory, RandomData]
+        public static void ToString_Readable(int tries, TimeSpan timeout, TimeSpan delay)
         {
-            int tries = Tools.Randomizer.Create<int>();
-            TimeSpan timeout = Tools.Randomizer.Create<TimeSpan>();
-            TimeSpan delay = Tools.Randomizer.Create<TimeSpan>();
-
-            Tools.Asserter.Is(tries + "-" + timeout + "-" + delay,
+            Tools.Asserter.Is($"{tries}-{timeout}-{delay}",
                 new Limiter(timeout, tries, delay).ToString());
         }
     }

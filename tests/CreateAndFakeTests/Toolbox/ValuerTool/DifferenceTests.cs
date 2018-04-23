@@ -2,25 +2,24 @@
 using System.Reflection;
 using CreateAndFake;
 using CreateAndFake.Toolbox.ValuerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class DifferenceTests
+    public static class DifferenceTests
     {
         /// <summary>Verifies acceptable null arguments work.</summary>
-        [TestMethod]
-        public void New_ValidNullsWork()
+        [Fact]
+        public static void New_ValidNullsWork()
         {
             Tools.Asserter.IsNot(null, new Difference((Type)null, null));
             Tools.Asserter.IsNot(null, new Difference((object)null, null));
         }
 
         /// <summary>Verifies unacceptable null arguments throw.</summary>
-        [TestMethod]
-        public void New_InvalidNullsThrow()
+        [Fact]
+        public static void New_InvalidNullsThrow()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => new Difference(Tools.Randomizer.Create<int>(), null));

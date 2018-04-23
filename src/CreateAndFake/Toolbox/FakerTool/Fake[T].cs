@@ -140,7 +140,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             }
             else
             {
-                throw new InvalidOperationException("Unexpected expression type: " + method);
+                throw new InvalidOperationException($"Unexpected expression type: {method}");
             }
         }
 
