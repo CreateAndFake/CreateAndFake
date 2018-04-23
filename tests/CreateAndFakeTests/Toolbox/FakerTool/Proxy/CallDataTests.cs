@@ -3,17 +3,16 @@ using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFakeTests.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class CallDataTests
+    public static class CallDataTests
     {
         /// <summary>Verifies nulls are not accepted.</summary>
-        [TestMethod]
-        public void New_NullsThrow()
+        [Fact]
+        public static void New_NullsThrow()
         {
             Tools.Asserter.Throws<ArgumentNullException>(() => new CallData(
                 null, Tools.Randomizer.Create<Type[]>(), Tools.Randomizer.Create<DataHolderSample[]>(), Tools.Valuer));
@@ -24,28 +23,25 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies a null isn't accepted.</summary>
-        [TestMethod]
-        public void DeepClone_NullThrows()
+        [Fact]
+        public static void DeepClone_NullThrows()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => Tools.Randomizer.Create<CallData>().DeepClone(null));
         }
 
         /// <summary>Verifies a null isn't accepted.</summary>
-        [TestMethod]
-        public void MatchesCall_NullThrows()
+        [Fact]
+        public static void MatchesCall_NullThrows()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => Tools.Randomizer.Create<CallData>().MatchesCall(null));
         }
 
         /// <summary>Verifies no match with different method names.</summary>
-        [TestMethod]
-        public void MatchesCall_MethodNameMismatch()
+        [Theory, RandomData]
+        public static void MatchesCall_MethodNameMismatch(DataHolderSample[] data, Type[] generics, string name1)
         {
-            DataHolderSample[] data = Tools.Randomizer.Create<DataHolderSample[]>();
-            Type[] generics = Tools.Randomizer.Create<Type[]>();
-            string name1 = Tools.Randomizer.Create<string>();
             string name2 = Tools.Randiffer.Branch(name1);
 
             Tools.Asserter.Is(false, new CallData(name1, generics, data, Tools.Valuer)
@@ -53,12 +49,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies no match with different method names.</summary>
-        [TestMethod]
-        public void MatchesCall_GenericsMismatch()
+        [Theory, RandomData]
+        public static void MatchesCall_GenericsMismatch(DataHolderSample[] data, string name, Type[] generics1)
         {
-            DataHolderSample[] data = Tools.Randomizer.Create<DataHolderSample[]>();
-            string name = Tools.Randomizer.Create<string>();
-            Type[] generics1 = Tools.Randomizer.Create<Type[]>();
             Type[] generics2 = Tools.Randiffer.Branch(generics1);
 
             Tools.Asserter.Is(false, new CallData(name, generics1, data, Tools.Valuer)
@@ -66,12 +59,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies match functionality.</summary>
-        [TestMethod]
-        public void MatchesCall_DataMatchBehavior()
+        [Theory, RandomData]
+        public static void MatchesCall_DataMatchBehavior(string name, Type[] generics, DataHolderSample[] data1)
         {
-            string name = Tools.Randomizer.Create<string>();
-            Type[] generics = Tools.Randomizer.Create<Type[]>();
-            DataHolderSample[] data1 = Tools.Randomizer.Create<DataHolderSample[]>();
             DataHolderSample[] data2 = data1.Select(d => Tools.Duplicator.Copy(d)).ToArray();
 
             Tools.Asserter.Is(true, new CallData(name, generics, data1, Tools.Valuer)

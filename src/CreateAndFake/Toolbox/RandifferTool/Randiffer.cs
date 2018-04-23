@@ -58,7 +58,7 @@ namespace CreateAndFake.Toolbox.RandifferTool
             }
             catch (AggregateException e)
             {
-                throw new TimeoutException("Could not create different instance of type '" + type + "'.", e);
+                throw new TimeoutException($"Could not create different instance of type '{type}'.", e);
             }
             return result;
         }

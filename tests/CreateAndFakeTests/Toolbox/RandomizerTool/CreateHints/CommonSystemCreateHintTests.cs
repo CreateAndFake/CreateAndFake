@@ -2,12 +2,11 @@
 using System.Reflection;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class CommonSystemCreateHintTests : CreateHintTestBase<CommonSystemCreateHint>
     {
         /// <summary>Instance to test with.</summary>
@@ -24,8 +23,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         public CommonSystemCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
 
         /// <summary>Verifies the hint keeps trying.</summary>
-        [TestMethod]
-        public void TryCreate_ContinuesUntilMemberFound()
+        [Fact]
+        public static void TryCreate_ContinuesUntilMemberFound()
         {
             for (int i = 0; i < 50; i++)
             {

@@ -2,12 +2,10 @@
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class DuplicatableCopyHintTests : CopyHintTestBase<DuplicatableCopyHint>
     {
         /// <summary>Types that can be created by the hint.</summary>

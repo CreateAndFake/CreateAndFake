@@ -5,12 +5,11 @@ using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class DictionaryCompareHintTests : CompareHintTestBase<DictionaryCompareHint>
     {
         /// <summary>Instance to test with.</summary>
@@ -28,7 +27,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         public DictionaryCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryCompare_SameKeyDifferentValuesWorks()
         {
             Dictionary<string, int> data = Tools.Randomizer.Create<Dictionary<string, int>>();

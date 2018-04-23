@@ -115,8 +115,8 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             object result = CallRet<object>(name, generics, args);
             if (result != null)
             {
-                throw new InvalidOperationException("Method '" + name +
-                    "' expected void but instead returned '" + result + "'.");
+                throw new InvalidOperationException(
+                    $"Method '{name}' expected void but instead returned '{result}'.");
             }
         }
 

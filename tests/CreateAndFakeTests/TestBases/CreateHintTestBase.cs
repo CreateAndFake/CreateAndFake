@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using CreateAndFake;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.RandomizerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public abstract class CreateHintTestBase<T> where T : CreateHint
     {
         /// <summary>Instance to test with.</summary>
@@ -33,7 +32,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint throws when given nulls.</summary>
-        [TestMethod]
+        [Fact]
         public void TryCreate_NullsThrow()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
@@ -43,7 +42,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryCreate_SupportsValidTypes()
         {
             foreach (Type type in m_ValidTypes)
@@ -66,7 +65,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint doesn't support the wrong types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryCreate_InvalidTypesFail()
         {
             foreach (Type type in m_InvalidTypes)

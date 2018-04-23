@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using CreateAndFake;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.FakerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Design.Content
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class ValueComparerTests
+    public static class ValueComparerTests
     {
         /// <summary>Verifies params works as intended.</summary>
-        [TestMethod]
-        public void GetHashCode_ParamsBehavior()
+        [Theory, RandomData]
+        public static void GetHashCode_ParamsBehavior(int item1)
         {
-            int item1 = Tools.Randomizer.Create<int>();
             int item2 = Tools.Randiffer.Branch(item1);
             int item3 = Tools.Randiffer.Branch(item2);
             List<int> collection = new List<int> { item1, item2, item3 };
@@ -26,8 +24,8 @@ namespace CreateAndFakeTests.Design.Content
         }
 
         /// <summary>Verifies the type works as intended.</summary>
-        [TestMethod]
-        public void ValueComparer_ValueEquatableBehavior()
+        [Fact]
+        public static void ValueComparer_ValueEquatableBehavior()
         {
             Fake<IValueEquatable> stub1 = Tools.Faker.Stub<IValueEquatable>();
             Fake<IValueEquatable> stub2 = Tools.Faker.Stub<IValueEquatable>();
@@ -54,16 +52,16 @@ namespace CreateAndFakeTests.Design.Content
         }
 
         /// <summary>Verifies the type works as intended.</summary>
-        [TestMethod]
-        public void ValueComparer_ObjectBehavior()
+        [Fact]
+        public static void ValueComparer_ObjectBehavior()
         {
             TestBehavior<int, object>(ValueComparer.Use, ValueComparer.Use);
             TestBehavior<string, object>(ValueComparer.Use, ValueComparer.Use);
         }
 
         /// <summary>Verifies the type works as intended.</summary>
-        [TestMethod]
-        public void ValueComparer_IEnumerableBehavior()
+        [Fact]
+        public static void ValueComparer_IEnumerableBehavior()
         {
             TestBehavior<IEnumerable<int>, object>(ValueComparer.Use, ValueComparer.Use);
             TestBehavior<IEnumerable<int>, IEnumerable>(ValueComparer.Use, ValueComparer.Use);
@@ -73,8 +71,8 @@ namespace CreateAndFakeTests.Design.Content
         }
 
         /// <summary>Verifies the type works as intended.</summary>
-        [TestMethod]
-        public void ValueComparer_IDictionaryBehavior()
+        [Fact]
+        public static void ValueComparer_IDictionaryBehavior()
         {
             TestBehavior<IDictionary<int, int>, object>(ValueComparer.Use, ValueComparer.Use);
             TestBehavior<IDictionary<int, int>, IEnumerable>(ValueComparer.Use, ValueComparer.Use);

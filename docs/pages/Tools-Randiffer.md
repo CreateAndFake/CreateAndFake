@@ -8,10 +8,9 @@ A common scenario for this behavior is verifying a method's behavior changes bas
 
 ```c#
 /// <summary>Verifies different hashes are generated for different values.</summary>
-[TestMethod]
-public void GetHashCode_HashVaries()
+[Theory, RandomData]
+public void GetHashCode_HashVaries(int original)
 {
-    int original = Tools.Randomizer.Create<int>();
     int variant = Tools.Randiffer.Branch(original);
 
     Tools.Asserter.ValuesNotEqual(

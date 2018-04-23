@@ -2,12 +2,10 @@
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class FakedCreateHintTests : CreateHintTestBase<FakedCreateHint>
     {
         /// <summary>Instance to test with.</summary>

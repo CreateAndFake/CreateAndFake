@@ -2,17 +2,16 @@
 using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class FakeMetaProviderTests
+    public static class FakeMetaProviderTests
     {
         /// <summary>Verifies data is required.</summary>
-        [TestMethod]
-        public void SetCallBehavior_NullsThrow()
+        [Fact]
+        public static void SetCallBehavior_NullsThrow()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => new FakeMetaProvider().SetCallBehavior(null, Tools.Randomizer.Create<Behavior>()));
@@ -21,24 +20,24 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies a null isn't accepted.</summary>
-        [TestMethod]
-        public void DeepClone_NullThrows()
+        [Fact]
+        public static void DeepClone_NullThrows()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => Tools.Randomizer.Create<FakeMetaProvider>().DeepClone(null));
         }
 
         /// <summary>Verifies a call data is required.</summary>
-        [TestMethod]
-        public void Verify_NullCallDataThrows()
+        [Fact]
+        public static void Verify_NullCallDataThrows()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => new FakeMetaProvider().Verify(0, null));
         }
 
         /// <summary>Verifies the provided value is matched by calls.</summary>
-        [TestMethod]
-        public void Verify_PresetOutOfRangeThrows()
+        [Fact]
+        public static void Verify_PresetOutOfRangeThrows()
         {
             FakeMetaProvider provider = new FakeMetaProvider
             {
@@ -62,8 +61,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies the provided value is matched by calls.</summary>
-        [TestMethod]
-        public void Verify_CustomOutOfRangeThrows()
+        [Fact]
+        public static void Verify_CustomOutOfRangeThrows()
         {
             FakeMetaProvider provider = new FakeMetaProvider
             {
@@ -90,8 +89,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies the provided value is matched by calls.</summary>
-        [TestMethod]
-        public void VerifyTotalCalls_OutOfRangeThrows()
+        [Fact]
+        public static void VerifyTotalCalls_OutOfRangeThrows()
         {
             FakeMetaProvider provider = new FakeMetaProvider
             {
@@ -111,8 +110,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies matched call has no return.</summary>
-        [TestMethod]
-        public void CallVoid_ReturnValueThrows()
+        [Fact]
+        public static void CallVoid_ReturnValueThrows()
         {
             FakeMetaProvider provider = new FakeMetaProvider();
             string name = Tools.Randomizer.Create<string>();

@@ -19,7 +19,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <param name="lastType">Last type attempted to be created.</param>
         /// <param name="history">Stack of created parents.</param>
         public InfiniteLoopException(Type lastType, IEnumerable<Type> history)
-            : base("Already created type '" + lastType.FullName + "'. History:" +
+            : base($"Already created type '{lastType.FullName}'. History:" +
                 Environment.NewLine + String.Join(Environment.NewLine, history.Select(t => t.FullName)))
         { }
 

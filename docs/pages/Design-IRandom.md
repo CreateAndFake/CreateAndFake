@@ -22,7 +22,7 @@ Providing an initial seed and using the `SeededRandom` enables one to get the sa
 
 ```c#
 /// <summary>Verifies values are deterministic based upon seed.</summary>
-[TestMethod]
+[Fact]
 public void Seed_Deterministic()
 {
     SeededRandom gen = new SeededRandom(5);

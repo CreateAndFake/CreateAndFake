@@ -8,7 +8,7 @@ A default set of all tools are ready to use under the static class Tools.
 
 ```c#
 /// <summary>Verifies that the tools integrate together.</summary>
-[TestMethod]
+[Fact]
 public void Tools_IntegrationWorks()
 {
     DataSample original = Tools.Randomizer.Create<DataSample>();
@@ -40,7 +40,7 @@ It is recommended to create a your own static class containing the tools instead
 
 ```c#
 /// <summary>Holds basic implementations of all reflection tools.</summary>
-public static class Tools
+public static class Tool
 {
     /// <summary>Compares objects by value.</summary>
     public static IValuer Valuer { get; } = new Valuer();

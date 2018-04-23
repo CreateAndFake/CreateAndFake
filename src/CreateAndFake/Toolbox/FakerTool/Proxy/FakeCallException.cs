@@ -30,9 +30,11 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>Message to use for the exception.</returns>
         private static string BuildMessage(CallData data, IEnumerable<CallData> setup)
         {
+            string nl = Environment.NewLine;
+
             return "Method called without matched behavior." +
-                ((data == null) ? "" : Environment.NewLine + "Call: " + data) +
-                ((setup == null) ? "" : Environment.NewLine + "Calls with behavior set: " + BuildMessage(setup));
+                ((data == null) ? "" : $"{nl}Call: {data}") +
+                ((setup == null) ? "" : $"{nl}Calls with behavior set: {BuildMessage(setup)}");
         }
 
         /// <summary>Integrates the details into the message.</summary>

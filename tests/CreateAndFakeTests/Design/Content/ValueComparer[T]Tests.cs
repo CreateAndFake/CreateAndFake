@@ -1,17 +1,16 @@
 ﻿using CreateAndFake;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.FakerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Design.Content
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class ValueComparer_T_Tests
+    public static class ValueComparer_T_Tests
     {
         /// <summary>Verifies the type works as intended.</summary>
-        [TestMethod]
-        public void ValueComparer_ValueEquatableBehavior()
+        [Fact]
+        public static void ValueComparer_ValueEquatableBehavior()
         {
             ValueComparer<IValueEquatable> comparer = ValueComparer<IValueEquatable>.Use;
 
@@ -44,6 +43,5 @@ namespace CreateAndFakeTests.Design.Content
             Tools.Asserter.IsNot(0, comparer.Compare(null, fake.Dummy));
             Tools.Asserter.Is(0, comparer.Compare(null, null));
         }
-
     }
 }

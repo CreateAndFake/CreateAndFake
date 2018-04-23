@@ -99,7 +99,7 @@ namespace CreateAndFake.Design.Randomization
         {
             if (!Supports(type))
             {
-                throw new NotSupportedException("Type '" + type.Name + "' not supported.");
+                throw new NotSupportedException($"Type '{type.Name}' not supported.");
             }
             else
             {
@@ -129,7 +129,7 @@ namespace CreateAndFake.Design.Randomization
         {
             if (!Supports<T>())
             {
-                throw new NotSupportedException("Type '" + typeof(T).Name + "' not supported.");
+                throw new NotSupportedException($"Type '{typeof(T).Name}' not supported.");
             }
             else if (min.Equals(max))
             {
@@ -138,7 +138,7 @@ namespace CreateAndFake.Design.Randomization
             else if (min.CompareTo(max) >= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(max), max,
-                    "Value must be greater than given min: '" + min + "'.");
+                    $"Value must be greater than given min: '{min}'.");
             }
             else if (typeof(T) == typeof(bool))
             {

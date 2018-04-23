@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -27,7 +28,22 @@ namespace CreateAndFake.Toolbox
             return AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => !a.ReflectionOnly)
                 .Where(a => !a.IsDynamic)
-                .SelectMany(a => a.GetExportedTypes())
+                .SelectMany(a =>
+                    {
+                        // Ignore assemblies that can't load.
+                        try
+                        {
+                            return a.GetExportedTypes();
+                        }
+                        catch (FileNotFoundException)
+                        {
+                            return Type.EmptyTypes;
+                        }
+                        catch (ReflectionTypeLoadException)
+                        {
+                            return Type.EmptyTypes;
+                        }
+                    })
                 .Where(t => !t.IsAbstract)
                 .Where(t => t.Inherits(type));
         }

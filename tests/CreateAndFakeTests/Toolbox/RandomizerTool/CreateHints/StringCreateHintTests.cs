@@ -3,12 +3,11 @@ using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class StringCreateHintTests : CreateHintTestBase<StringCreateHint>
     {
         /// <summary>Instance to test with.</summary>
@@ -24,8 +23,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         public StringCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
 
         /// <summary>Verifies the hint creates strings within bounds.</summary>
-        [TestMethod]
-        public void TryCreate_SizeConstraintsWork()
+        [Fact]
+        public static void TryCreate_SizeConstraintsWork()
         {
             int minSize = 2;
             int range = 3;
@@ -41,8 +40,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         }
 
         /// <summary>Verifies the hint creates strings with the chars specified.</summary>
-        [TestMethod]
-        public void TryCreate_UsesCharSet()
+        [Fact]
+        public static void TryCreate_UsesCharSet()
         {
             StringCreateHint hint = new StringCreateHint(3, 0, "a");
             for (int i = 0; i < 100; i++)

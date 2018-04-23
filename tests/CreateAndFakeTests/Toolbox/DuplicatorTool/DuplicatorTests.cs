@@ -2,40 +2,39 @@
 using CreateAndFake;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class DuplicatorTests
+    public static class DuplicatorTests
     {
         /// <summary>Verifies nulls are valid.</summary>
-        [TestMethod]
-        public void New_NullHintsValid()
+        [Fact]
+        public static void New_NullHintsValid()
         {
             Tools.Asserter.IsNot(null, new Duplicator(Tools.Asserter, true, null));
             Tools.Asserter.IsNot(null, new Duplicator(Tools.Asserter, false, null));
         }
 
         /// <summary>Verifies an exception throws when no hint matches.</summary>
-        [TestMethod]
-        public void Copy_MissingMatchThrows()
+        [Fact]
+        public static void Copy_MissingMatchThrows()
         {
             Tools.Asserter.Throws<NotSupportedException>(
                 () => new Duplicator(Tools.Asserter, false).Copy(new object()));
         }
 
         /// <summary>Verifies the duplicator can copy null.</summary>
-        [TestMethod]
-        public void Copy_NullWorks()
+        [Fact]
+        public static void Copy_NullWorks()
         {
             Tools.Asserter.Is(null, new Duplicator(Tools.Asserter, false).Copy<object>(null));
         }
 
         /// <summary>Verifies hint behavior works.</summary>
-        [TestMethod]
-        public void Copy_ValidHintWorks()
+        [Fact]
+        public static void Copy_ValidHintWorks()
         {
             object data = new object();
 

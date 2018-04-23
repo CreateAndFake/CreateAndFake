@@ -1,16 +1,15 @@
 ﻿using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class TimesTests
+    public static class TimesTests
     {
         /// <summary>Verifies the option works.</summary>
-        [TestMethod]
-        public void Never_Works()
+        [Fact]
+        public static void Never_Works()
         {
             Tools.Asserter.Is(true, Times.Never.IsInRange(0));
             Tools.Asserter.Is(false, Times.Never.IsInRange(1));
@@ -18,8 +17,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the option works.</summary>
-        [TestMethod]
-        public void Once_Works()
+        [Fact]
+        public static void Once_Works()
         {
             Tools.Asserter.Is(false, Times.Once.IsInRange(0));
             Tools.Asserter.Is(true, Times.Once.IsInRange(1));
@@ -27,8 +26,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the option works.</summary>
-        [TestMethod]
-        public void Exactly_Works()
+        [Fact]
+        public static void Exactly_Works()
         {
             int value = Tools.Randomizer.Create<int>();
             Tools.Asserter.Is(false, Times.Exactly(value).IsInRange(value - 1));
@@ -37,8 +36,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the option works.</summary>
-        [TestMethod]
-        public void Between_Works()
+        [Fact]
+        public static void Between_Works()
         {
             int min, max;
             do
@@ -57,18 +56,17 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the option works.</summary>
-        [TestMethod]
-        public void Min_Works()
+        [Theory, RandomData]
+        public static void Min_Works(int value)
         {
-            int value = Tools.Randomizer.Create<int>();
             Tools.Asserter.Is(false, Times.Min(value).IsInRange(value - 1));
             Tools.Asserter.Is(true, Times.Min(value).IsInRange(value));
             Tools.Asserter.Is(true, Times.Min(value).IsInRange(value + 1));
         }
 
         /// <summary>Verifies the option works.</summary>
-        [TestMethod]
-        public void Max_Works()
+        [Fact]
+        public static void Max_Works()
         {
             int value;
             do
@@ -82,8 +80,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies readable strings.</summary>
-        [TestMethod]
-        public void ToString_Terse()
+        [Fact]
+        public static void ToString_Terse()
         {
             Tools.Asserter.Is("0", Times.Never.ToString());
             Tools.Asserter.Is("1", Times.Once.ToString());
@@ -94,8 +92,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the equality methods work properly.</summary>
-        [TestMethod]
-        public void Equality_MatchesValue()
+        [Fact]
+        public static void Equality_MatchesValue()
         {
             int min, max;
             do

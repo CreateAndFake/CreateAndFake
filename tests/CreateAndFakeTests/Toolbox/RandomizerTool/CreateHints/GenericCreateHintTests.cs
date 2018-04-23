@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class GenericCreateHintTests : CreateHintTestBase<GenericCreateHint>
     {
         /// <summary>Instance to test with.</summary>

@@ -120,20 +120,20 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         {
             if (parent.IsSealed)
             {
-                return (false, new ArgumentException("Cannot subclass the sealed type '" + parent.Name + "'."));
+                return (false, new ArgumentException($"Cannot subclass the sealed type '{parent.Name}'."));
             }
             else if (parent.IsPointer)
             {
-                return (false, new ArgumentException("Cannot subclass the pointer '" + parent.Name + "'."));
+                return (false, new ArgumentException($"Cannot subclass the pointer '{parent.Name}'."));
             }
             else if (parent.ContainsGenericParameters)
             {
-                return (false, new ArgumentException("Cannot subclass with unspecified generics '" + parent.Name + "'."));
+                return (false, new ArgumentException($"Cannot subclass with unspecified generics '{parent.Name}'."));
             }
             else if (!parent.IsVisibleTo(AssemblyName))
             {
-                return (false, new ArgumentException("Cannot subclass with nonpublic type '" + parent.Name + "'. "
-                    + "Think about adding 'InternalsVisibleTo(\"" + AssemblyName.Name + "\")' to the type's assembly."));
+                return (false, new ArgumentException($"Cannot subclass with nonpublic type '{parent.Name}'. "
+                    + $"Think about adding 'InternalsVisibleTo(\"{AssemblyName.Name}\")' to the type's assembly."));
             }
             else if (parent == typeof(Array))
             {
@@ -304,7 +304,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                     Type outRef = typeof(OutRef<>).MakeGenericType(argInfos[i].ParameterType.GetElementType());
                     gen.Emit(OpCodes.Newobj, outRef.GetConstructor(Type.EmptyTypes));
                     gen.Emit(OpCodes.Stelem_Ref);
-                    if(!argInfos[i].IsOut)
+                    if (!argInfos[i].IsOut)
                     {
                         // ((OutRef<T>)args[i].Var) = params[i];
                         gen.Emit(OpCodes.Ldloc, args);

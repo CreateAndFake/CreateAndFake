@@ -4,12 +4,11 @@ using CreateAndFake;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Randomization
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class FastRandomTests : ValueRandomTestBase<FastRandom>
     {
         /// <summary>Invalid values to test for.</summary>
@@ -21,8 +20,8 @@ namespace CreateAndFakeTests.Randomization
             float.NaN, float.NegativeInfinity, float.PositiveInfinity };
 
         /// <summary>Verifies invalid values are creatable.</summary>
-        [TestMethod]
-        public async Task Create_InvalidValuesPossible()
+        [Fact]
+        public static async Task Create_InvalidValuesPossible()
         {
             IRandom random = new FastRandom(false);
 
@@ -32,8 +31,8 @@ namespace CreateAndFakeTests.Randomization
         }
 
         /// <summary>Verifies invalid values can be prevented.</summary>
-        [TestMethod]
-        public async Task Create_OnlyValidValuesPreventsInvalids()
+        [Fact]
+        public static async Task Create_OnlyValidValuesPreventsInvalids()
         {
             IRandom random = new FastRandom(true);
 

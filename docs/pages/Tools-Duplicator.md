@@ -8,10 +8,9 @@ A common scenario for this behavior is verifying a method doesn't change the val
 
 ```c#
 /// <summary>Verifies that the method won't mutate the object.</summary>
-[TestMethod]
-public void SomeMethod_ValuesUnchanged()
+[Theory, RandomData]
+public void SomeMethod_ValuesUnchanged(DataSample original)
 {
-    DataSample original = Tools.Randomizer.Create<DataSample>();
     DataSample dupe = Tools.Duplicator.Copy(original);
 
     SomeMethod(original);
