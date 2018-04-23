@@ -109,7 +109,7 @@ namespace CreateAndFakeTests.Design
         {
             Stopwatch watch = Stopwatch.StartNew();
             await new Limiter(s_SmallDelay).Repeat(() => { });
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks);
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= s_SmallDelay.TotalMilliseconds - 1);
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
@@ -120,7 +120,7 @@ namespace CreateAndFakeTests.Design
 
             Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(s_SmallDelay).StallUntil(() => { }, () => false).Wait());
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks);
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= s_SmallDelay.TotalMilliseconds - 1);
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
@@ -132,7 +132,7 @@ namespace CreateAndFakeTests.Design
             Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(s_SmallDelay).Retry(() => { throw exception; }).Wait(),
                 e => Tools.Asserter.Is(exception, e.InnerException));
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks);
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= s_SmallDelay.TotalMilliseconds - 1);
         }
 
         /// <summary>Verifies limiter delays between attempts.</summary>
@@ -144,7 +144,8 @@ namespace CreateAndFakeTests.Design
         {
             Stopwatch watch = Stopwatch.StartNew();
             await new Limiter(tries, s_SmallDelay).Repeat(() => { });
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks * (tries - 1));
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >=
+                (s_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
         }
 
         /// <summary>Verifies limiter delays between attempts.</summary>
@@ -158,7 +159,8 @@ namespace CreateAndFakeTests.Design
 
             Stopwatch watch = Stopwatch.StartNew();
             await new Limiter(tries, s_SmallDelay).StallUntil(() => ++attempts == tries);
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks * (tries - 1));
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >=
+                (s_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
         }
 
         /// <summary>Verifies limiter delays between attempts.</summary>
@@ -173,7 +175,8 @@ namespace CreateAndFakeTests.Design
 
             Stopwatch watch = Stopwatch.StartNew();
             await new Limiter(tries, s_SmallDelay).Retry(() => { if (++attempts != tries) throw exception; });
-            Tools.Asserter.Is(true, watch.Elapsed.Ticks >= s_SmallDelay.Ticks * (tries - 1));
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >=
+                (s_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
         }
 
         /// <summary>Verifies the task can be canceled.</summary>
