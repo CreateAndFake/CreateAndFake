@@ -54,8 +54,25 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             if (input == null) throw new ArgumentNullException(nameof(input));
 
             return (m_MethodName == input.m_MethodName)
-                && m_Generics.SequenceEqual(input.m_Generics)
+                && GenericsMatch(input.m_Generics)
                 && ArgsMatch(input.m_Args);
+        }
+
+        /// <summary>Determines if the call generics match the expected ones.</summary>
+        /// <param name="inputGenerics">Generics used in the call.</param>
+        /// <returns>True if matched; false otherwise.</returns>
+        private bool GenericsMatch(Type[] inputGenerics)
+        {
+            bool matches = (inputGenerics.Length == m_Generics.Length);
+
+            for (int i = 0; matches && i < inputGenerics.Length; i++)
+            {
+                if (m_Generics[i] != typeof(AnyGeneric))
+                {
+                    matches &= m_Generics[i] == inputGenerics[i];
+                }
+            }
+            return matches;
         }
 
         /// <summary>Determines if the call args match the expected ones.</summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CreateAndFake;
+using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFakeTests.TestSamples;
 using Xunit;
@@ -56,6 +57,16 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
 
             Tools.Asserter.Is(false, new CallData(name, generics1, data, Tools.Valuer)
                 .MatchesCall(new CallData(name, generics2, data, null)));
+        }
+
+        /// <summary>Verifies always a match when using AnyGeneric.</summary>
+        [Theory, RandomData]
+        public static void MatchesCall_AnyGenericsMatch(DataHolderSample[] data, string name, Type[] generics1)
+        {
+            Type[] generics2 = generics1.Select(t => typeof(AnyGeneric)).ToArray();
+
+            Tools.Asserter.Is(true, new CallData(name, generics2, data, Tools.Valuer)
+                .MatchesCall(new CallData(name, generics1, data, null)));
         }
 
         /// <summary>Verifies match functionality.</summary>
