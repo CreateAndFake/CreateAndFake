@@ -85,10 +85,12 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             mock.Dummy.FakeMeta.Identifier = randomizer.Create<int>(typeof(IFaked));
             mock.ThrowByDefault = true;
 
+            // Generic returns have to just use stub behavior.
             foreach (MethodInfo method in target
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(m => m.IsAbstract || (m.IsVirtual && !m.IsFinal))
                 .Where(m => !m.IsPrivate)
+                .Where(m => !m.ReturnType.IsGenericParameter)
                 .Where(m => m.Name != "Finalize"))
             {
                 Type[] generics = (method.IsGenericMethod)
@@ -140,7 +142,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             {
                 return typeof(IOutRef);
             }
-            else if (type.IsGenericType)
+            else if (type.IsGenericParameter)
             {
                 return typeof(object);
             }
@@ -159,7 +161,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             {
                 return Arg.LambdaAny<IOutRef>();
             }
-            else if (type.IsGenericType)
+            else if (type.IsGenericParameter)
             {
                 return Arg.LambdaAny<object>();
             }

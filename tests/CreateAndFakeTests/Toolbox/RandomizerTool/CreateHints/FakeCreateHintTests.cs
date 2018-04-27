@@ -2,6 +2,7 @@
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
+using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 {
@@ -12,7 +13,10 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         private static readonly FakeCreateHint s_TestInstance = new FakeCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[] { typeof(Fake<object>) };
+        private static readonly Type[] s_ValidTypes = new[]
+        {
+            typeof(Fake<object>), typeof(Fake<OutSample>), typeof(Fake<GenericSample<string>>)
+        };
 
         /// <summary>Types that can't be created by the hint.</summary>
         private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };

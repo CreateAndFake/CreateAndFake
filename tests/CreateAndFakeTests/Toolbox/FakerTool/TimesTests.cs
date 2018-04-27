@@ -26,10 +26,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the option works.</summary>
-        [Fact]
-        public static void Exactly_Works()
+        [Theory, RandomData]
+        public static void Exactly_Works(int value)
         {
-            int value = Tools.Randomizer.Create<int>();
             Tools.Asserter.Is(false, Times.Exactly(value).IsInRange(value - 1));
             Tools.Asserter.Is(true, Times.Exactly(value).IsInRange(value));
             Tools.Asserter.Is(false, Times.Exactly(value).IsInRange(value + 1));

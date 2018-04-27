@@ -123,10 +123,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies disposable behavior upon failure case.</summary>
-        [Fact]
-        public void Throws_Disposes()
+        [Theory, RandomData]
+        public void Throws_Disposes(Fake<IDisposable> disposable)
         {
-            Fake<IDisposable> disposable = Tools.Faker.Mock<IDisposable>();
             disposable.Setup(m => m.Dispose(), Behavior.None(Times.Once));
 
             Tools.Asserter.Throws<AssertException>(
@@ -221,10 +220,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies equality comparison is not used.</summary>
-        [Fact]
-        public void ReferenceEqual_NotByValue()
+        [Theory, RandomData]
+        public void ReferenceEqual_NotByValue(Fake<object> fake)
         {
-            Fake<object> fake = Tools.Faker.Mock<object>();
             fake.Setup(
                 m => m.Equals(Arg.Any<object>()),
                 Behavior.Returns(true, Times.Never));
@@ -237,10 +235,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies equality comparison is not used.</summary>
-        [Fact]
-        public void ReferenceNotEqual_NotByValue()
+        [Theory, RandomData]
+        public void ReferenceNotEqual_NotByValue(Fake<object> fake)
         {
-            Fake<object> fake = Tools.Faker.Mock<object>();
             fake.Setup(
                 m => m.Equals(Arg.Any<object>()),
                 Behavior.Returns(false, Times.Never));

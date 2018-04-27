@@ -41,10 +41,9 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
         }
 
         /// <summary>Verifies limiter limits attempts.</summary>
-        [Fact]
-        public static void Create_TimesOut()
+        [Theory, RandomData]
+        public static void Create_TimesOut(Fake<IValuer> fakeValuer)
         {
-            Fake<IValuer> fakeValuer = Tools.Faker.Mock<IValuer>();
             fakeValuer.Setup(
                 m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Returns(true));
@@ -58,10 +57,9 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
         }
 
         /// <summary>Verifies create keeps trying until unequal instance is created.</summary>
-        [Fact]
-        public static void Create_RepeatsUntilUnequal()
+        [Theory, RandomData]
+        public static void Create_RepeatsUntilUnequal(Fake<IValuer> fakeValuer)
         {
-            Fake<IValuer> fakeValuer = Tools.Faker.Mock<IValuer>();
             fakeValuer.Setup(
                 m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Series(true, true, true, false));
@@ -73,10 +71,9 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
         }
 
         /// <summary>Verifies create keeps trying until unequal instance is created.</summary>
-        [Fact]
-        public static void Create_RepeatsUntilBothUnequal()
+        [Theory, RandomData]
+        public static void Create_RepeatsUntilBothUnequal(Fake<IValuer> fakeValuer)
         {
-            Fake<IValuer> fakeValuer = Tools.Faker.Mock<IValuer>();
             fakeValuer.Setup(
                 m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Series(false, true, true, false, true, true, false, false));
