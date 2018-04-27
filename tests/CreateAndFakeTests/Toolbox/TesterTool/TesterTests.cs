@@ -1,27 +1,24 @@
 ﻿using System.Linq;
 using System.Reflection;
+using CreateAndFake;
 using CreateAndFake.Toolbox.TesterTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class TesterTests
+    public static class TesterTests
     {
         /// <summary>Verifies openness for custom individual behavior by inheritance.</summary>
-        [TestMethod]
-        public void Tester_AllMethodsVirtual()
+        [Fact]
+        public static void Tester_AllMethodsVirtual()
         {
             MemberInfo[] nonVirtualMethods = typeof(Tester)
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                 .Where(m => !m.IsVirtual && m.Name != "Is" && m.Name != "IsNot")
                 .ToArray();
 
-            if (nonVirtualMethods.Any())
-            {
-                Assert.Fail("Methods not virtual: " + string.Join(", ", nonVirtualMethods.Select(m => m.Name)));
-            }
+            Tools.Asserter.IsEmpty(nonVirtualMethods, "Methods not virtual.");
         }
     }
 }

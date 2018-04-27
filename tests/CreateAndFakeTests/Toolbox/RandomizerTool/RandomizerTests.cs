@@ -11,8 +11,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
     public static class RandomizerTests
     {
         /// <summary>Verifies null reference exceptions are prevented.</summary>
-        [TestMethod]
-        public void Randomizer_GuardsNulls()
+        [Fact]
+        public static void Randomizer_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException<Randomizer>();
         }
