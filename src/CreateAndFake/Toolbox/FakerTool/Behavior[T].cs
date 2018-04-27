@@ -11,7 +11,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Sets up the behavior.</summary>
         /// <param name="implementation">Set behavior to run.</param>
         /// <param name="times">Behavior call limit.</param>
-        internal Behavior(Delegate implementation, Times times = null) : base(implementation, times, 0) { }
+        public Behavior(Delegate implementation, Times times = null) : base(implementation, times, 0) { }
 
         /// <summary>Sets up the behavior.</summary>
         /// <param name="implementation">Set behavior to run.</param>

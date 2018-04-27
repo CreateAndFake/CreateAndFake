@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using CreateAndFake.Toolbox.FakerTool;
+using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 {
@@ -92,7 +93,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 foreach (object outRef in inputs.Where(o => o != null))
                 {
                     Type inputType = outRef.GetType();
-                    if (inputType.Inherits(typeof(OutRef<>)))
+                    if (inputType.Inherits<IOutRef>())
                     {
                         FieldInfo valueField = inputType.GetField(nameof(OutRef<object>.Var));
                         valueField.SetValue(outRef, m_Randomizer.Create(valueField.FieldType));
