@@ -68,10 +68,10 @@ namespace CreateAndFake.Toolbox.FakerTool
         public override string ToString()
         {
             string maxValue = (m_Max != int.MaxValue)
-                ? "" + m_Max
+                ? $"{m_Max}"
                 : "*";
             return (m_Min != m_Max)
-                ? "[" + m_Min + "-" + maxValue + "]"
+                ? $"[{m_Min}-{maxValue}]"
                 : maxValue;
         }
 

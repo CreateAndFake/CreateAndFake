@@ -1,24 +1,27 @@
 ﻿using System;
-using System.Linq;
-using CreateAndFake.Design.Randomization;
+using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
+using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Verifies behavior.</summary>
-    public sealed class ValueCreateHintTests : CreateHintTestBase<ValueCreateHint>
+    public sealed class FakeCreateHintTests : CreateHintTestBase<FakeCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly ValueCreateHint s_TestInstance = new ValueCreateHint();
+        private static readonly FakeCreateHint s_TestInstance = new FakeCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = ValueRandom.ValueTypes.ToArray();
+        private static readonly Type[] s_ValidTypes = new[]
+        {
+            typeof(Fake<object>), typeof(Fake<OutSample>), typeof(Fake<GenericSample<string>>)
+        };
 
         /// <summary>Types that can't be created by the hint.</summary>
         private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public ValueCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public FakeCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
     }
 }

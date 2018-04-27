@@ -4,12 +4,10 @@ using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class ValueEquatableCompareHintTests : CompareHintTestBase<ValueEquatableCompareHint>
     {
         /// <summary>Instance to test with.</summary>

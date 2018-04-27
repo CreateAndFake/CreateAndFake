@@ -6,31 +6,29 @@ using CreateAndFake;
 using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.ValuerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.AsserterTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class AsserterTests
     {
         /// <summary>Instance to test with.</summary>
-        private Asserter m_TestInstance;
+        private readonly Asserter m_TestInstance;
 
         /// <summary>Faked valuer to test with.</summary>
-        private Fake<IValuer> m_FakeValuer;
+        private readonly Fake<IValuer> m_FakeValuer;
 
         /// <summary>Sets up the test instance.</summary>
-        [TestInitialize]
-        public void FakeSetup()
+        public AsserterTests()
         {
             m_FakeValuer = Tools.Faker.Mock<IValuer>();
             m_TestInstance = new Asserter(m_FakeValuer.Dummy);
         }
 
         /// <summary>Verifies openness for custom individual behavior by inheritance.</summary>
-        [TestMethod]
-        public void Asserter_AllMethodsVirtual()
+        [Fact]
+        public static void Asserter_AllMethodsVirtual()
         {
             MemberInfo[] nonVirtualMethods = typeof(Asserter)
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
@@ -39,19 +37,27 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
 
             if (nonVirtualMethods.Any())
             {
-                Assert.Fail("Methods not virtual: " + string.Join(", ", nonVirtualMethods.Select(m => m.Name)));
+                Tools.Asserter.Fail("Methods not virtual: " +
+                    string.Join(", ", nonVirtualMethods.Select(m => m.Name)));
             }
         }
 
         /// <summary>Verifies valid arguments are provided.</summary>
-        [TestMethod]
-        public void New_NullAsserterThrows()
+        [Fact]
+        public static void New_NullAsserterThrows()
         {
             Tools.Asserter.Throws<ArgumentNullException>(() => new Asserter(null));
         }
 
+        /// <summary>Verifies fail will throw.</summary>
+        [Fact]
+        public static void Fail_Throws()
+        {
+            Tools.Asserter.Throws<AssertException>(() => Tools.Asserter.Fail());
+        }
+
         /// <summary>Verifies success when actions throw.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_ActionThrowsSuccess()
         {
             m_TestInstance.Throws<InvalidOperationException>((Action)
@@ -59,7 +65,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies failure when actions throw the wrong exception.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_ActionTypeMismatch()
         {
             Tools.Asserter.Throws<AssertException>(
@@ -68,7 +74,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies failure when actions don't throw an exception.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_ActionNoThrowFail()
         {
             Tools.Asserter.Throws<AssertException>(
@@ -76,7 +82,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies failure when null actions don't throw an exception.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_ActionNullCase()
         {
             Tools.Asserter.Throws<AssertException>(
@@ -84,7 +90,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies success when funcs throw.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_FuncThrowsSuccess()
         {
             m_TestInstance.Throws<InvalidOperationException>(
@@ -92,7 +98,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies failure when funcs throw the wrong exception.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_FuncTypeMismatch()
         {
             Tools.Asserter.Throws<AssertException>(
@@ -101,7 +107,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies failure when funcs don't throw an exception.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_FuncNoThrowFail()
         {
             Tools.Asserter.Throws<AssertException>(
@@ -109,7 +115,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies failure when null funcs don't throw an exception.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_FuncNullCase()
         {
             Tools.Asserter.Throws<AssertException>(
@@ -117,10 +123,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies disposable behavior upon failure case.</summary>
-        [TestMethod]
-        public void Throws_Disposes()
+        [Theory, RandomData]
+        public void Throws_Disposes(Fake<IDisposable> disposable)
         {
-            Fake<IDisposable> disposable = Tools.Faker.Mock<IDisposable>();
             disposable.Setup(m => m.Dispose(), Behavior.None(Times.Once));
 
             Tools.Asserter.Throws<AssertException>(
@@ -130,7 +135,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies aggregate exception wrapping is ignored.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_AggregateUnwraps()
         {
             AggregateException ex = new AggregateException(new InvalidOperationException());
@@ -139,7 +144,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies aggregate exception still fails if internals aren't expected.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_AggregateExtraInternal()
         {
             AggregateException ex = new AggregateException(
@@ -150,7 +155,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies aggregate exception still fails if internals aren't expected.</summary>
-        [TestMethod]
+        [Fact]
         public void Throws_AggregateWrongInternals()
         {
             AggregateException ex = new AggregateException(new InvalidOperationException());
@@ -160,7 +165,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies the expected cases.</summary>
-        [TestMethod]
+        [Fact]
         public void IsEmpty_Works()
         {
             m_TestInstance.IsEmpty(Array.Empty<string>());
@@ -172,7 +177,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies the expected cases.</summary>
-        [TestMethod]
+        [Fact]
         public void IsNotEmpty_Works()
         {
             m_FakeValuer.Setup(
@@ -201,11 +206,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies the expected cases.</summary>
-        [TestMethod]
-        public void HasCount_Works()
+        [Theory, RandomData]
+        public void HasCount_Works(IEnumerable<string> data)
         {
-            IEnumerable<string> data = Tools.Randomizer.Create<IEnumerable<string>>();
-
             m_TestInstance.HasCount(data.Count(), data);
 
             Tools.Asserter.Throws<AssertException>(
@@ -217,10 +220,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies equality comparison is not used.</summary>
-        [TestMethod]
-        public void ReferenceEqual_NotByValue()
+        [Theory, RandomData]
+        public void ReferenceEqual_NotByValue(Fake<object> fake)
         {
-            Fake<object> fake = Tools.Faker.Mock<object>();
             fake.Setup(
                 m => m.Equals(Arg.Any<object>()),
                 Behavior.Returns(true, Times.Never));
@@ -233,10 +235,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies equality comparison is not used.</summary>
-        [TestMethod]
-        public void ReferenceNotEqual_NotByValue()
+        [Theory, RandomData]
+        public void ReferenceNotEqual_NotByValue(Fake<object> fake)
         {
-            Fake<object> fake = Tools.Faker.Mock<object>();
             fake.Setup(
                 m => m.Equals(Arg.Any<object>()),
                 Behavior.Returns(false, Times.Never));
@@ -249,7 +250,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies valid when no differences are found.</summary>
-        [TestMethod]
+        [Fact]
         public void ValuesEqual_EqualValid()
         {
             m_FakeValuer.Setup(
@@ -262,7 +263,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies invalid when differences are found.</summary>
-        [TestMethod]
+        [Fact]
         public void ValuesEqual_UnequalInvalid()
         {
             m_FakeValuer.Setup(
@@ -281,7 +282,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies invalid when no differences are found.</summary>
-        [TestMethod]
+        [Fact]
         public void ValuesNotEqual_EqualInvalid()
         {
             m_FakeValuer.Setup(
@@ -300,7 +301,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         /// <summary>Verifies invalid when differences are found.</summary>
-        [TestMethod]
+        [Fact]
         public void ValuesNotEqual_UnequalValid()
         {
             m_FakeValuer.Setup(

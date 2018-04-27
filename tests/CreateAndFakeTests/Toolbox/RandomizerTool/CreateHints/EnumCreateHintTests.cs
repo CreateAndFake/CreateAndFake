@@ -2,12 +2,10 @@
 using System.Reflection;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class EnumCreateHintTests : CreateHintTestBase<EnumCreateHint>
     {
         /// <summary>Instance to test with.</summary>

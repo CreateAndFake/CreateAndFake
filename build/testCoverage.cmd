@@ -18,7 +18,7 @@ for /D %%x in (..\%packagesDir%\opencover\*) do set latestCover=%%x
  -searchdirs:..\%testingDir%\Full ^
  -output:..\%coverageRawFile% ^
  -filter:"+[*]* -[*Tests]*" ^
- -register:user -hideskipped:Filter -mergebyhash -oldStyle
+ -register:user -hideskipped:Filter -mergeoutput -oldStyle
 
 for /D %%x in (..\%packagesDir%\reportgenerator\*) do set latestReporter=%%x
 

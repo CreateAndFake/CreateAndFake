@@ -51,9 +51,11 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>Message to use for the exception.</returns>
         private static string BuildMessage(CallData source, string expected, int actual, IEnumerable<CallData> log)
         {
-            return "Expected '" + expected + "', but had '" + actual + "' calls." +
-                ((source == null) ? "" : Environment.NewLine + "Call: " + source) +
-                ((log == null) ? "" : Environment.NewLine + "Log: " + BuildMessage(log));
+            string nl = Environment.NewLine;
+
+            return $"Expected '{expected}', but had '{actual}' calls." +
+                ((source == null) ? "" : $"{nl}Call: {source}") +
+                ((log == null) ? "" : $"{nl}Log: {BuildMessage(log)}");
         }
 
         /// <summary>Integrates the details into the message.</summary>

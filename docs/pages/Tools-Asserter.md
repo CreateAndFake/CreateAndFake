@@ -17,12 +17,10 @@ The `Asserter` tool provides methods to verify common test scenarios:
 
 ```c#
 /// <summary>Test that will fail.</summary>
-[TestMethod]
-public void Tools_DataSampleExample()
+[Theory, RandomData]
+public void Tools_DataSampleExample(DataSample original)
 {
-    DataSample original = Tools.Randomizer.Create<DataSample>();
-    DataSample variant = Tools.Randiffer.Branch(original);
-    Tools.Asserter.Is(original, variant);
+    Tools.Asserter.Is(original, Tools.Randiffer.Branch(original));
 }
 ```
 

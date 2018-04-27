@@ -139,10 +139,14 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <returns>Type to use.</returns>
         private static Type FindTypeToCreate(Type type, RandomizerChainer randomizer)
         {
-            if (!s_SubclassCache.TryGetValue(type, out Type[] subclasses))
+            Type[] subclasses;
+            lock (s_SubclassCache)
             {
-                subclasses = FindSubclasses(type);
-                s_SubclassCache.Add(type, subclasses);
+                if (!s_SubclassCache.TryGetValue(type, out subclasses))
+                {
+                    subclasses = FindSubclasses(type);
+                    s_SubclassCache.Add(type, subclasses);
+                }
             }
 
             IEnumerable<Type> pruned = subclasses.Where(t => !randomizer.AlreadyCreated(t));

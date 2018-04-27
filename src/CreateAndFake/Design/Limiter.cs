@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using CreateAndFake.Design.Content;
@@ -289,11 +288,11 @@ namespace CreateAndFake.Design
         {
             if (tries >= m_Tries)
             {
-                throw new TimeoutException("Reached max attempts of '" + m_Tries + "'.", ex);
+                throw new TimeoutException($"Reached max attempts of '{m_Tries}'.", ex);
             }
             else if (elapsed >= m_Timeout)
             {
-                throw new TimeoutException("Reached timeout of '" + m_Timeout + "'.", ex);
+                throw new TimeoutException($"Reached timeout of '{m_Timeout}'.", ex);
             }
             else
             {
@@ -345,8 +344,7 @@ namespace CreateAndFake.Design
         /// <returns>String representation of the object.</returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{0}-{1}-{2}", m_Tries, m_Timeout, m_Delay);
+            return $"{m_Tries}-{m_Timeout}-{m_Delay}";
         }
     }
 }

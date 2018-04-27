@@ -8,7 +8,7 @@ Typically, many tests will verify behavior based upon specific values on an obje
 
 ```c#
 /// <summary>Verifies the method can't find a child on null.</summary>
-[TestMethod]
+[Fact]
 public void FindFirstChild_NullChildrenThrows()
 {
     DataSample item = Tools.Randomizer.Create<DataSample>();

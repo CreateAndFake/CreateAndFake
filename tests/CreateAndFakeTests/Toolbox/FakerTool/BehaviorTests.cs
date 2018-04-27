@@ -4,17 +4,16 @@ using System.Reflection;
 using CreateAndFake;
 using CreateAndFake.Toolbox;
 using CreateAndFake.Toolbox.FakerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class BehaviorTests
+    public static class BehaviorTests
     {
         /// <summary>Verifies default instances are not null.</summary>
-        [TestMethod]
-        public void Set_BehaviorWorks()
+        [Fact]
+        public static void Set_BehaviorWorks()
         {
             foreach (MethodInfo info in typeof(Behavior)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
@@ -48,53 +47,52 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies behavior behavior.</summary>
-        [TestMethod]
-        public void None_BehaviorWorks()
+        [Fact]
+        public static void None_BehaviorWorks()
         {
             Behavior.None().Invoke(Array.Empty<object>());
         }
 
         /// <summary>Verifies behavior behavior.</summary>
-        [TestMethod]
-        public void Error_BehaviorWorks()
+        [Fact]
+        public static void Error_BehaviorWorks()
         {
             Tools.Asserter.Throws<NotImplementedException>(
                 () => Behavior.Error().Invoke(Array.Empty<object>()));
         }
 
         /// <summary>Verifies behavior behavior.</summary>
-        [TestMethod]
-        public void Null_BehaviorWorks()
+        [Fact]
+        public static void Null_BehaviorWorks()
         {
             Tools.Asserter.Is(null, Behavior.Null<string>().Invoke(Array.Empty<object>()));
         }
 
         /// <summary>Verifies behavior behavior.</summary>
-        [TestMethod]
-        public void Default_BehaviorWorks()
+        [Fact]
+        public static void Default_BehaviorWorks()
         {
             Tools.Asserter.Is(default(int), Behavior.Default<int>().Invoke(Array.Empty<object>()));
         }
 
         /// <summary>Verifies behavior behavior.</summary>
-        [TestMethod]
-        public void Throw_BehaviorWorks()
+        [Fact]
+        public static void Throw_BehaviorWorks()
         {
             Tools.Asserter.Throws<InvalidOperationException>(
                 () => Behavior.Throw<InvalidOperationException>().Invoke(Array.Empty<object>()));
         }
 
         /// <summary>Verifies behavior behavior.</summary>
-        [TestMethod]
-        public void Returns_BehaviorWorks()
+        [Theory, RandomData]
+        public static void Returns_BehaviorWorks(int value)
         {
-            int value = Tools.Randomizer.Create<int>();
             Tools.Asserter.Is(value, Behavior.Returns(value).Invoke(Array.Empty<object>()));
         }
 
         /// <summary>Verifies behavior behavior.</summary>
-        [TestMethod]
-        public void Series_BehaviorWorks()
+        [Fact]
+        public static void Series_BehaviorWorks()
         {
             Behavior behavior = Behavior.Series(false, true, false);
             Tools.Asserter.Is(false, behavior.Invoke(Array.Empty<object>()));
@@ -106,11 +104,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies times is passed through.</summary>
-        [TestMethod]
-        public void ToExpectedCalls_MatchesTimes()
+        [Theory, RandomData]
+        public static void ToExpectedCalls_MatchesTimes(Times times)
         {
-            Times times = Tools.Randomizer.Create<Times>();
-
             Tools.Asserter.Is(null, Behavior.None().ToExpectedCalls());
             Tools.Asserter.Is(times.ToString(), Behavior.None(times).ToExpectedCalls());
         }

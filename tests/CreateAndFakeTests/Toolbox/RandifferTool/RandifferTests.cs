@@ -5,17 +5,16 @@ using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandifferTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandifferTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class RandifferTests
+    public static class RandifferTests
     {
         /// <summary>Verifies invalid nulls throw.</summary>
-        [TestMethod]
-        public void New_NullsThrow()
+        [Fact]
+        public static void New_NullsThrow()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
                 () => new Randiffer(null, Tools.Valuer, Limiter.Few));
@@ -24,23 +23,17 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
         }
 
         /// <summary>Verifies null defaults to empty.</summary>
-        [TestMethod]
-        public void Create_AcceptsNull()
+        [Theory, RandomData]
+        public static void Create_AcceptsNull(string value)
         {
-            string value = Tools.Randomizer.Create<string>();
-
             Tools.Asserter.IsNot(null, Tools.Randiffer.Branch<string>(null));
             Tools.Asserter.IsNot(value, Tools.Randiffer.Branch(value, null));
         }
 
         /// <summary>Verifies extra values to not equal work.</summary>
-        [TestMethod]
-        public void Create_ManyValuesWorks()
+        [Theory, RandomData]
+        public static void Create_ManyValuesWorks(string value1, string value2, string value3)
         {
-            string value1 = Tools.Randomizer.Create<string>();
-            string value2 = Tools.Randomizer.Create<string>();
-            string value3 = Tools.Randomizer.Create<string>();
-
             string result = Tools.Randiffer.Branch(value1, value2, value3);
             Tools.Asserter.IsNot(value1, result);
             Tools.Asserter.IsNot(value2, result);
@@ -48,10 +41,9 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
         }
 
         /// <summary>Verifies limiter limits attempts.</summary>
-        [TestMethod]
-        public void Create_TimesOut()
+        [Theory, RandomData]
+        public static void Create_TimesOut(Fake<IValuer> fakeValuer)
         {
-            Fake<IValuer> fakeValuer = Tools.Faker.Mock<IValuer>();
             fakeValuer.Setup(
                 m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Returns(true));
@@ -65,10 +57,9 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
         }
 
         /// <summary>Verifies create keeps trying until unequal instance is created.</summary>
-        [TestMethod]
-        public void Create_RepeatsUntilUnequal()
+        [Theory, RandomData]
+        public static void Create_RepeatsUntilUnequal(Fake<IValuer> fakeValuer)
         {
-            Fake<IValuer> fakeValuer = Tools.Faker.Mock<IValuer>();
             fakeValuer.Setup(
                 m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Series(true, true, true, false));
@@ -80,10 +71,9 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
         }
 
         /// <summary>Verifies create keeps trying until unequal instance is created.</summary>
-        [TestMethod]
-        public void Create_RepeatsUntilBothUnequal()
+        [Theory, RandomData]
+        public static void Create_RepeatsUntilBothUnequal(Fake<IValuer> fakeValuer)
         {
-            Fake<IValuer> fakeValuer = Tools.Faker.Mock<IValuer>();
             fakeValuer.Setup(
                 m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Series(false, true, true, false, true, true, false, false));

@@ -11,7 +11,7 @@ Fakes use a typical lambda based style with a very methodical structure:
 
 ```c#
 /// <summary>Verifies setup functionality.</summary>
-[TestMethod]
+[Fact]
 public void Setup_ObjectEquality()
 {
     object data = new object();
@@ -50,6 +50,13 @@ There are a variety of options to verify methods were called as expected:
 * `Fake.Verify(Times, delegate)` - Verifies the given delegate was called the given `Times`.
 * `Fake.VerifyTotalCalls(Times)` - Only verifies the total number of calls made.
 
+## Voids & Generics
+
+There are two special useful types provided:
+
+* `VoidType` - Used to specify void for return type on behaviors.
+* `AnyGeneric` - Used to match any generic in setup methods.
+
 ## Faking Internal
 
 The assembly containing the internals to fake needs to grant visibility to the dynamic assembly by adding somewhere (typically AssemblyInfo.cs):
@@ -64,7 +71,7 @@ The fakes can be setup using the string names for protected methods with an arra
 
 ```c#
 /// <summary>Verifies hints generate the hashes.</summary>
-[TestMethod]
+[Fact]
 public void GetHashCode_ValidHint()
 {
     object data = new object();
@@ -89,12 +96,9 @@ The special class `OutRef` is used to handle reference behavior:
 
 ```c#
 /// <summary>Verifies faking works with out and ref arguments.</summary>
-[TestMethod]
-public void Fake_HandlesOut()
+[Theory, RandomData]
+public void Fake_HandlesOut(string data, string start)
 {
-    string data = Tools.Randomizer.Create<string>();
-    string start = Tools.Randomizer.Create<string>();
-
     Fake<OutRefSample> fake = Tools.Faker.Mock<OutRefSample>();
     fake.Setup(
         d => d.WithOut(out Arg.AnyRef<string>().Var),

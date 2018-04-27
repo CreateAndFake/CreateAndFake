@@ -3,12 +3,10 @@ using System.Collections;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class FakedCompareHintTests : CompareHintTestBase<FakedCompareHint>
     {
         /// <summary>Instance to test with.</summary>

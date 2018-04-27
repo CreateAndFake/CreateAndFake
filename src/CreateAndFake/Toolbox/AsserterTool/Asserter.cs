@@ -20,6 +20,13 @@ namespace CreateAndFake.Toolbox.AsserterTool
             Valuer = valuer ?? throw new ArgumentNullException(nameof(valuer));
         }
 
+        /// <summary>Throws an assert exception.</summary>
+        /// <param name="details">Optional failure details.</param>
+        public virtual void Fail(string details = null)
+        {
+            throw new AssertException("Test failed.", details);
+        }
+
         /// <summary>Verifies two objects are equal by value.</summary>
         /// <param name="expected">Object to compare against.</param>
         /// <param name="actual">Object to compare with.</param>
@@ -67,8 +74,8 @@ namespace CreateAndFake.Toolbox.AsserterTool
         {
             if (collection == null)
             {
-                throw new AssertException("Expected collection of '" +
-                    count + "' elements, but was 'null'.", details);
+                throw new AssertException(
+                    $"Expected collection of '{count}' elements, but was 'null'.", details);
             }
 
             StringBuilder contents = new StringBuilder();
@@ -80,8 +87,8 @@ namespace CreateAndFake.Toolbox.AsserterTool
 
             if (i != count)
             {
-                throw new AssertException("Expected collection of '" + count +
-                    "' elements, but was '" + i + "'.", details, contents.ToString());
+                throw new AssertException(
+                    $"Expected collection of '{count}' elements, but was '{i}'.", details, contents.ToString());
             }
         }
 
@@ -122,7 +129,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
             if (differences.Length > 0)
             {
                 Type rootType = expected?.GetType() ?? actual.GetType();
-                throw new AssertException("Value equality failed for type '" + rootType.Name + "'.",
+                throw new AssertException($"Value equality failed for type '{rootType.Name}'.",
                     details, string.Join<Difference>(Environment.NewLine, differences));
             }
         }
@@ -136,8 +143,8 @@ namespace CreateAndFake.Toolbox.AsserterTool
         {
             if (!Valuer.Compare(expected, actual).Any())
             {
-                throw new AssertException("Value inequality failed for type '" +
-                    expected?.GetType().Name + "'.", details, expected?.ToString());
+                throw new AssertException(
+                    $"Value inequality failed for type '{expected?.GetType().Name}'.", details, expected?.ToString());
             }
         }
 
@@ -180,7 +187,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual void Throws<T>(Func<object> behavior, Action<T> verifier, string details = null) where T : Exception
         {
-            string errorMessage = "Expected exception of type '" + typeof(T).FullName + "'.";
+            string errorMessage = $"Expected exception of type '{typeof(T).FullName}'.";
             try
             {
                 (behavior?.Invoke() as IDisposable)?.Dispose();

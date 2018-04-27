@@ -6,12 +6,11 @@ using CreateAndFake;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class EarlyFailCompareHintTests : CompareHintTestBase<EarlyFailCompareHint>
     {
         /// <summary>Instance to test with.</summary>
@@ -29,7 +28,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         public EarlyFailCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
 
         /// <summary>Verifies the hint supports nulls.</summary>
-        [TestMethod]
+        [Fact]
         public override void TryCompare_NullBehaviorCheck()
         {
             Tools.Asserter.Is(true, TestInstance.TryCompare(null, new object(), CreateChainer()).Item1);
@@ -47,7 +46,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         }
 
         /// <summary>Verifies the hint handles nulls properly.</summary>
-        [TestMethod]
+        [Fact]
         public override void TryGetHashCode_NullBehaviorCheck()
         {
             Tools.Asserter.Is(true, TestInstance.TryGetHashCode(null, CreateChainer()).Item1);

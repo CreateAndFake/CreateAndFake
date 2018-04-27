@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Specialized;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class StringDictionaryCompareHintTests : CompareHintTestBase<StringDictionaryCompareHint>
     {
         /// <summary>Instance to test with.</summary>

@@ -4,12 +4,11 @@ using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.ValuerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public abstract class CompareHintTestBase<T> where T : CompareHint
     {
         /// <summary>Instance to test with.</summary>
@@ -33,7 +32,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint handles nulls properly.</summary>
-        [TestMethod]
+        [Fact]
         public virtual void TryCompare_NullBehaviorCheck()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
@@ -45,10 +44,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
-        public void TryCompare_SupportsSameValidTypes()
+        [Theory, RandomData]
+        public void TryCompare_SupportsSameValidTypes(Fake<IValuer> valuer)
         {
-            Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
             valuer.Setup(
                 m => m.Compare(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Returns(Enumerable.Empty<Difference>()));
@@ -70,7 +68,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
+        [Fact]
         public virtual void TryCompare_SupportsDifferentValidTypes()
         {
             Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
@@ -96,11 +94,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint doesn't support the wrong types.</summary>
-        [TestMethod]
-        public void TryCompare_InvalidTypesFail()
+        [Theory, RandomData]
+        public void TryCompare_InvalidTypesFail(Fake<IValuer> valuer)
         {
-            Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
-
             foreach (Type type in m_InvalidTypes)
             {
                 object one = Tools.Randomizer.Create(type);
@@ -114,7 +110,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint handles nulls properly.</summary>
-        [TestMethod]
+        [Fact]
         public virtual void TryGetHashCode_NullBehaviorCheck()
         {
             Tools.Asserter.Throws<ArgumentNullException>(
@@ -124,10 +120,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
-        public void TryGetHashCode_SupportsSameValidTypes()
+        [Theory, RandomData]
+        public void TryGetHashCode_SupportsSameValidTypes(Fake<IValuer> valuer)
         {
-            Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
             valuer.Setup(
                 m => m.GetHashCode(Arg.Any<object>()),
                 Behavior.Returns(Tools.Randomizer.Create<int>()));
@@ -157,10 +152,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
-        public void TryGetHashCode_SupportsDifferentValidTypes()
+        [Theory, RandomData]
+        public void TryGetHashCode_SupportsDifferentValidTypes(Fake<IValuer> valuer)
         {
-            Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
             valuer.Setup(
                 m => m.GetHashCode(Arg.Any<object>()),
                 Behavior.Set(() => Tools.Randomizer.Create<int>()));
@@ -188,11 +182,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint doesn't support the wrong types.</summary>
-        [TestMethod]
-        public void TryGetHashCode_InvalidTypesFail()
+        [Theory, RandomData]
+        public void TryGetHashCode_InvalidTypesFail(Fake<IValuer> valuer)
         {
-            Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
-
             foreach (Type type in m_InvalidTypes)
             {
                 Tools.Asserter.Is((false, default(int)),

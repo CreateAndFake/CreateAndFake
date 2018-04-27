@@ -2,11 +2,11 @@
 
 namespace CreateAndFake.Toolbox.FakerTool
 {
-    /// <summary>Represents void type for behaviors.</summary>
+    /// <summary>Represents any generic for mock matching.</summary>
     [SuppressMessage("Sonar", "S3453:Uncreatable", Justification = "Intended to be uncreatable.")]
-    public sealed class VoidType
+    public sealed class AnyGeneric
     {
         /// <summary>Prevents instantiation.</summary>
-        private VoidType() { }
+        private AnyGeneric() { }
     }
 }

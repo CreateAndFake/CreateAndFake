@@ -9,20 +9,19 @@ using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class ToolsTests
+    public static class ToolsTests
     {
         /// <summary>Flags representing mutable data.</summary>
         private const BindingFlags s_Mutable = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
         /// <summary>Verifies that the tools integrate together.</summary>
-        [TestMethod]
-        public void Tools_IntegrationWorks()
+        [Fact]
+        public static void Tools_IntegrationWorks()
         {
             DataHolderSample original = Tools.Randomizer.Create<DataHolderSample>();
             DataHolderSample variant = Tools.Randiffer.Branch(original);
@@ -43,8 +42,8 @@ namespace CreateAndFakeTests
         }
 
         /// <summary>Verifies the tools have limits.</summary>
-        [TestMethod]
-        public void Tools_HandlesInfinites()
+        [Fact]
+        public static void Tools_HandlesInfinites()
         {
             Tools.Asserter.Throws<InfiniteLoopException>(
                 () => Tools.Randomizer.Create<InfiniteSample>());
@@ -62,11 +61,11 @@ namespace CreateAndFakeTests
         }
 
         /// <summary>Verifies the tools work on all the introduced types besides static classes.</summary>
-        [TestMethod]
-        public void Tools_AllCreateAndFakeTypesWork()
+        [Fact]
+        public static void Tools_AllCreateAndFakeTypesWork()
         {
-            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>),
-                typeof(VoidType), typeof(DuplicatorChainer), typeof(ValuerChainer) };
+            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType),
+                typeof(AnyGeneric), typeof(DuplicatorChainer), typeof(ValuerChainer) };
 
             foreach (Type type in typeof(Tools).Assembly.GetTypes()
                 .Where(t => !(t.IsAbstract && t.IsSealed))
@@ -79,8 +78,8 @@ namespace CreateAndFakeTests
         }
 
         /// <summary>Verifies the tools work on possible exceptions.</summary>
-        [TestMethod]
-        public void Tools_ExceptionTypesWork()
+        [Fact]
+        public static void Tools_ExceptionTypesWork()
         {
             Type type = typeof(Exception);
 

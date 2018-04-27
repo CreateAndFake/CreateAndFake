@@ -4,12 +4,10 @@ using System.Linq;
 using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class CollectionCopyHintTests : CopyHintTestBase<CollectionCopyHint>
     {
         /// <summary>Types that can be created by the hint.</summary>

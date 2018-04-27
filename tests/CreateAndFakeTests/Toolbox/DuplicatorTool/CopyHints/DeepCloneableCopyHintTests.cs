@@ -3,12 +3,10 @@ using System.Linq;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFakeTests.TestBases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public sealed class DeepCloneableCopyHintTests : CopyHintTestBase<DeepCloneableCopyHint>
     {
         /// <summary>Types that can be created by the hint.</summary>

@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using CreateAndFake;
 using CreateAndFake.Toolbox.DuplicatorTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
     public abstract class CopyHintTestBase<T> where T : CopyHint, new()
     {
         /// <summary>Instance to test with.</summary>
@@ -34,7 +33,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint handles nulls properly.</summary>
-        [TestMethod]
+        [Fact]
         public void TryCopy_NullBehaviorCheck()
         {
             Tools.Asserter.Is((true, (object)null),
@@ -45,7 +44,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryCopy_SupportsValidTypes()
         {
             foreach (Type type in m_ValidTypes)
@@ -73,7 +72,7 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint doesn't support the wrong types.</summary>
-        [TestMethod]
+        [Fact]
         public void TryCopy_InvalidTypesFail()
         {
             foreach (Type type in m_InvalidTypes)

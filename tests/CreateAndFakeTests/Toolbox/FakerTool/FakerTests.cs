@@ -3,24 +3,23 @@ using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFakeTests.TestSamples;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class FakerTests
+    public static class FakerTests
     {
         /// <summary>Verifies valuer can be null.</summary>
-        [TestMethod]
-        public void New_NullValuerValid()
+        [Fact]
+        public static void New_NullValuerValid()
         {
             Tools.Asserter.IsNot(null, new Faker(null));
         }
 
         /// <summary>Verifies the sample can be created.</summary>
-        [TestMethod]
-        public void Mock_SampleWorks()
+        [Fact]
+        public static void Mock_SampleWorks()
         {
             Fake<DataHolderSample> sample = new Faker(Tools.Valuer).Mock<DataHolderSample>();
             Tools.Asserter.Is(true, sample.ThrowByDefault);
@@ -28,8 +27,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the sample can be created.</summary>
-        [TestMethod]
-        public void Stub_SampleWorks()
+        [Fact]
+        public static void Stub_SampleWorks()
         {
             Fake<DataHolderSample> sample = new Faker(Tools.Valuer).Stub<DataHolderSample>();
             Tools.Asserter.Is(false, sample.ThrowByDefault);
@@ -37,8 +36,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies invalid types aren't supported.</summary>
-        [TestMethod]
-        public void Supports_InvalidTypesFalse()
+        [Fact]
+        public static void Supports_InvalidTypesFalse()
         {
             Tools.Asserter.Is(false, Tools.Faker.Supports<int>());
             Tools.Asserter.Is(false, Tools.Faker.Supports<Array>());

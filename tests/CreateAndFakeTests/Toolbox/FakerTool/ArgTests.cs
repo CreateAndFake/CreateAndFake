@@ -3,17 +3,16 @@ using System.Linq;
 using System.Reflection;
 using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool
 {
     /// <summary>Verifies behavior.</summary>
-    [TestClass]
-    public sealed class ArgTests
+    public static class ArgTests
     {
         /// <summary>Verifies all methods come in pairs with a lambda version.</summary>
-        [TestMethod]
-        public void Arg_PairsWithLambda()
+        [Fact]
+        public static void Arg_PairsWithLambda()
         {
             string[] methods = typeof(Arg)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
@@ -27,8 +26,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies regular args just return default.</summary>
-        [TestMethod]
-        public void Arg_Defaults()
+        [Fact]
+        public static void Arg_Defaults()
         {
             Tools.Asserter.Is(default(int), Arg.Any<int>());
             Tools.Asserter.Is(default(int), Arg.Where<int>(null));
@@ -39,8 +38,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies args for references aren't just default.</summary>
-        [TestMethod]
-        public void Arg_OutRefDefault()
+        [Fact]
+        public static void Arg_OutRefDefault()
         {
             Tools.Asserter.Is(default(int), Arg.AnyRef<int>().Var);
             Tools.Asserter.Is(default(int), Arg.WhereRef<int>(null).Var);
@@ -50,45 +49,45 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the arg match behavior.</summary>
-        [TestMethod]
-        public void LambdaAny_MatchesValues()
+        [Fact]
+        public static void LambdaAny_MatchesValues()
         {
             Tools.Asserter.Is(true, Arg.LambdaAny<int>().Matches(Tools.Randomizer.Create<int>()));
             Tools.Asserter.Is(true, Arg.LambdaAny<string>().Matches(Tools.Randomizer.Create<string>()));
         }
 
         /// <summary>Verifies the arg match behavior.</summary>
-        [TestMethod]
-        public void LambdaAny_NullsMatch()
+        [Fact]
+        public static void LambdaAny_NullsMatch()
         {
             Tools.Asserter.Is(true, Arg.LambdaAny<string>().Matches(null));
         }
 
         /// <summary>Verifies the arg match behavior.</summary>
-        [TestMethod]
-        public void LambdaAnyRef_MatchesValues()
+        [Fact]
+        public static void LambdaAnyRef_MatchesValues()
         {
             Tools.Asserter.Is(true, Arg.LambdaAnyRef<int>().Matches(Tools.Randomizer.Create<OutRef<int>>()));
             Tools.Asserter.Is(true, Arg.LambdaAnyRef<string>().Matches(Tools.Randomizer.Create<OutRef<string>>()));
         }
 
         /// <summary>Verifies the arg match behavior.</summary>
-        [TestMethod]
-        public void LambdaNotNull_MatchesValues()
+        [Fact]
+        public static void LambdaNotNull_MatchesValues()
         {
             Tools.Asserter.Is(true, Arg.LambdaNotNull<string>().Matches(Tools.Randomizer.Create<string>()));
         }
 
         /// <summary>Verifies the arg match behavior.</summary>
-        [TestMethod]
-        public void LambdaNotNull_NullsInvalid()
+        [Fact]
+        public static void LambdaNotNull_NullsInvalid()
         {
             Tools.Asserter.Is(false, Arg.LambdaNotNull<string>().Matches(null));
         }
 
         /// <summary>Verifies the arg match behavior.</summary>
-        [TestMethod]
-        public void LambdaWhere_MatchesCondition()
+        [Fact]
+        public static void LambdaWhere_MatchesCondition()
         {
             Tools.Asserter.Is(true, Arg.LambdaWhere<string>(null)
                 .Matches(Tools.Randomizer.Create<string>()));
@@ -99,8 +98,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the arg match behavior.</summary>
-        [TestMethod]
-        public void LambdaWhereRef_MatchesCondition()
+        [Fact]
+        public static void LambdaWhereRef_MatchesCondition()
         {
             Tools.Asserter.Is(true, Arg.LambdaWhereRef<string>(null)
                 .Matches(Tools.Randomizer.Create<OutRef<string>>()));
@@ -111,10 +110,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         /// <summary>Verifies the arg can clone.</summary>
-        [TestMethod]
-        public void Arg_Cloneable()
+        [Theory, RandomData]
+        public static void Arg_Cloneable(string value)
         {
-            string value = Tools.Randomizer.Create<string>();
             Arg origin = Arg.LambdaWhere<string>(d => d == value);
             Arg copy = Tools.Duplicator.Copy(origin);
 

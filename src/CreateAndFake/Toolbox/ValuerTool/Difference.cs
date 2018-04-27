@@ -16,7 +16,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         public Difference(Type expected, Type actual)
         {
             m_Message = new Lazy<string>(
-                () => " -> Expected type:<" + expected + ">, Actual type:<" + actual + ">");
+                () => $" -> Expected type:<{expected}>, Actual type:<{actual}>");
         }
 
         /// <summary>Details a difference of values.</summary>
@@ -24,7 +24,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="actual">Second value being compared.</param>
         public Difference(object expected, object actual)
         {
-            m_Message = new Lazy<string>(() => " -> Expected:<" + expected + ">, Actual:<" + actual + ">");
+            m_Message = new Lazy<string>(() => $" -> Expected:<{expected}>, Actual:<{actual}>");
         }
 
         /// <summary>Details a difference on a member.</summary>
@@ -40,7 +40,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="index">Index where the objects differed.</param>
         /// <param name="difference">Found difference.</param>
         public Difference(int index, Difference difference)
-            : this("[" + index + "]", difference) { }
+            : this($"[{index}]", difference) { }
 
         /// <summary>Details a difference.</summary>
         /// <param name="access">Acess method where the objects differed.</param>
