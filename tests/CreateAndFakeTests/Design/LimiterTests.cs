@@ -375,11 +375,9 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies retry only catches expected exceptions.</summary>
-        [Fact]
-        public static void Retry_WrongExceptionThrows()
+        [Theory, RandomData]
+        public static void Retry_WrongExceptionThrows(NotSupportedException exception)
         {
-            NotSupportedException exception = Tools.Randomizer.Create<NotSupportedException>();
-
             Tools.Asserter.Throws<NotSupportedException>(
                 () => new Limiter(3).Retry<InvalidOperationException>((Action)(() => throw exception)).Wait(),
                 e => Tools.Asserter.Is(exception, e));
@@ -404,7 +402,7 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies the equality methods work properly.</summary>
-        [Theory, RandomData]
+        [Theory, RandomData(Trials = 3)]
         public static void Equality_MatchesValue(int tries, TimeSpan elapsed)
         {
             Limiter original = new Limiter(tries, elapsed);

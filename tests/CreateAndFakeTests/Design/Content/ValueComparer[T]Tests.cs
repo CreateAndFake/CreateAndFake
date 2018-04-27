@@ -9,14 +9,13 @@ namespace CreateAndFakeTests.Design.Content
     public static class ValueComparer_T_Tests
     {
         /// <summary>Verifies the type works as intended.</summary>
-        [Fact]
-        public static void ValueComparer_ValueEquatableBehavior()
+        [Theory, RandomData]
+        public static void ValueComparer_ValueEquatableBehavior(
+            Fake<IValueEquatable> fake,
+            Fake<IValueEquatable> equalFake,
+            Fake<IValueEquatable> unequalFake)
         {
             ValueComparer<IValueEquatable> comparer = ValueComparer<IValueEquatable>.Use;
-
-            Fake<IValueEquatable> fake = Tools.Faker.Mock<IValueEquatable>();
-            Fake<IValueEquatable> equalFake = Tools.Faker.Mock<IValueEquatable>();
-            Fake<IValueEquatable> unequalFake = Tools.Faker.Mock<IValueEquatable>();
 
             fake.Setup(m => m.GetValueHash(), Behavior.Returns(1));
             equalFake.Setup(m => m.GetValueHash(), Behavior.Returns(1));

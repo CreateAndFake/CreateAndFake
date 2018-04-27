@@ -40,13 +40,9 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         /// <summary>Verifies hints generate the hashes.</summary>
-        [Fact]
-        public static void GetHashCode_ValidHint()
+        [Theory, RandomData]
+        public static void GetHashCode_ValidHint(object data, int result, Fake<CompareHint> hint)
         {
-            object data = new object();
-            int result = Tools.Randomizer.Create<int>();
-
-            Fake<CompareHint> hint = Tools.Faker.Mock<CompareHint>();
             hint.Setup("Supports",
                 new[] { data, data, Arg.LambdaAny<ValuerChainer>() },
                 Behavior.Returns(true, Times.Once));
@@ -70,21 +66,16 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         /// <summary>Verifies no differences when the same reference is passed.</summary>
-        [Fact]
-        public static void Compare_ReferenceNoDifferences()
+        [Theory, RandomData]
+        public static void Compare_ReferenceNoDifferences(object data)
         {
-            object data = new object();
             Tools.Asserter.IsEmpty(new Valuer(false).Compare(data, data));
         }
 
         /// <summary>Verifies no differences means equal.</summary>
-        [Fact]
-        public static void Equals_NoDifferencesTrue()
+        [Theory, RandomData]
+        public static void Equals_NoDifferencesTrue(object data1, object data2, Fake<CompareHint> hint)
         {
-            object data1 = new object();
-            object data2 = new object();
-
-            Fake<CompareHint> hint = Tools.Faker.Mock<CompareHint>();
             hint.Setup("Supports",
                 new[] { data1, data2, Arg.LambdaAny<ValuerChainer>() },
                 Behavior.Returns(true, Times.Once));
@@ -98,13 +89,9 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         /// <summary>Verifies differences means unequal.</summary>
-        [Fact]
-        public static void Equals_DifferencesFalse()
+        [Theory, RandomData]
+        public static void Equals_DifferencesFalse(object data1, object data2, Fake<CompareHint> hint)
         {
-            object data1 = new object();
-            object data2 = new object();
-
-            Fake<CompareHint> hint = Tools.Faker.Mock<CompareHint>();
             hint.Setup("Supports",
                 new[] { data1, data2, Arg.LambdaAny<ValuerChainer>() },
                 Behavior.Returns(true, Times.Once));

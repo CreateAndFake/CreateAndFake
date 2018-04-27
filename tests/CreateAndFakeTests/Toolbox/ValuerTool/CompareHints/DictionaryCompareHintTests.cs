@@ -27,10 +27,9 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         public DictionaryCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [Fact]
-        public void TryCompare_SameKeyDifferentValuesWorks()
+        [Theory, RandomData]
+        public void TryCompare_SameKeyDifferentValuesWorks(Dictionary<string, int> data)
         {
-            Dictionary<string, int> data = Tools.Randomizer.Create<Dictionary<string, int>>();
             Dictionary<string, int> dupe = Tools.Duplicator.Copy(data);
             string key = data.First().Key;
             dupe[key] = Tools.Randiffer.Branch(data[key]);

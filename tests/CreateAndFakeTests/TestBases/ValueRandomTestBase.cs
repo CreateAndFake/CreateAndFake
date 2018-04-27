@@ -188,10 +188,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies collections work.</summary>
-        [Fact]
-        public void NextItem_CollectionsWork()
+        [Theory, RandomData]
+        public void NextItem_CollectionsWork(ICollection<string> data)
         {
-            ICollection<string> data = Tools.Randomizer.Create<ICollection<string>>();
             Tools.Asserter.Is(true, data.Contains(s_TestInstance.NextItem(data)));
         }
 

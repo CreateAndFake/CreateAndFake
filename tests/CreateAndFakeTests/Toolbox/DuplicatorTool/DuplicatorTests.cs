@@ -33,12 +33,9 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
         }
 
         /// <summary>Verifies hint behavior works.</summary>
-        [Fact]
-        public static void Copy_ValidHintWorks()
+        [Theory, RandomData]
+        public static void Copy_ValidHintWorks(object data, Fake<CopyHint> hint)
         {
-            object data = new object();
-
-            Fake<CopyHint> hint = Tools.Faker.Mock<CopyHint>();
             hint.Setup(
                 m => m.TryCopy(data, Arg.Any<DuplicatorChainer>()),
                 Behavior.Returns((true, data), Times.Once));

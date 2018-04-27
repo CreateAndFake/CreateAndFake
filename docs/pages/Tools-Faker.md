@@ -50,6 +50,13 @@ There are a variety of options to verify methods were called as expected:
 * `Fake.Verify(Times, delegate)` - Verifies the given delegate was called the given `Times`.
 * `Fake.VerifyTotalCalls(Times)` - Only verifies the total number of calls made.
 
+## Voids & Generics
+
+There are two special useful types provided:
+
+* `VoidType` - Used to specify void for return type on behaviors.
+* `AnyGeneric` - Used to match any generic in setup methods.
+
 ## Faking Internal
 
 The assembly containing the internals to fake needs to grant visibility to the dynamic assembly by adding somewhere (typically AssemblyInfo.cs):

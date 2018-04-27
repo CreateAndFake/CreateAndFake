@@ -36,15 +36,14 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies the provided value is matched by calls.</summary>
-        [Fact]
-        public static void Verify_PresetOutOfRangeThrows()
+        [Theory, RandomData]
+        public static void Verify_PresetOutOfRangeThrows(string name)
         {
             FakeMetaProvider provider = new FakeMetaProvider
             {
                 ThrowByDefault = false
             };
 
-            string name = Tools.Randomizer.Create<string>();
             CallData data = new CallData(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
 
             provider.SetCallBehavior(data, Behavior.None(Times.Once));
@@ -61,15 +60,14 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies the provided value is matched by calls.</summary>
-        [Fact]
-        public static void Verify_CustomOutOfRangeThrows()
+        [Theory, RandomData]
+        public static void Verify_CustomOutOfRangeThrows(string name)
         {
             FakeMetaProvider provider = new FakeMetaProvider
             {
                 ThrowByDefault = false
             };
 
-            string name = Tools.Randomizer.Create<string>();
             CallData data = new CallData(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
 
             provider.Verify(0, data);
@@ -110,11 +108,10 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Verifies matched call has no return.</summary>
-        [Fact]
-        public static void CallVoid_ReturnValueThrows()
+        [Theory, RandomData]
+        public static void CallVoid_ReturnValueThrows(string name)
         {
             FakeMetaProvider provider = new FakeMetaProvider();
-            string name = Tools.Randomizer.Create<string>();
 
             CallData data = new CallData(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
             provider.SetCallBehavior(data, Behavior.Returns(""));
