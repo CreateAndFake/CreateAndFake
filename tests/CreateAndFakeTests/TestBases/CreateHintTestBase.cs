@@ -31,14 +31,25 @@ namespace CreateAndFakeTests.TestBases
             m_InvalidTypes = invalidTypes ?? Type.EmptyTypes;
         }
 
-        /// <summary>Verifies the hint throws when given nulls.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public void TryCreate_NullsThrow()
+        public void CreateHint_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCreate(null, CreateChainer()));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCreate(typeof(object), null));
+            Tools.Tester.PreventsNullRefException<T>();
+        }
+
+        /// <summary>Verifies the hint handles nulls properly.</summary>
+        [Fact]
+        public virtual void TryCreate_NullChainerCheck()
+        {
+            try
+            {
+                TestInstance.TryCreate(Tools.Gen.NextItem(m_ValidTypes), null);
+            }
+            catch (ArgumentNullException e)
+            {
+                Tools.Asserter.Is("randomizer", e.ParamName);
+            }
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>

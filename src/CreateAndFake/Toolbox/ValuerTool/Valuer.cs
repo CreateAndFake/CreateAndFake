@@ -143,6 +143,8 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <returns>Clone that is equal in value to the instance.</returns>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
+            if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
+
             return new Valuer(false, duplicator.Copy(m_Hints).ToArray());
         }
     }

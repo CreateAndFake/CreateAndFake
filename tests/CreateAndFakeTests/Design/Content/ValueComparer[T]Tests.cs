@@ -1,6 +1,7 @@
 ﻿using CreateAndFake;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.FakerTool;
+using CreateAndFake.Toolbox.ValuerTool;
 using Xunit;
 
 namespace CreateAndFakeTests.Design.Content
@@ -8,6 +9,13 @@ namespace CreateAndFakeTests.Design.Content
     /// <summary>Verifies behavior.</summary>
     public static class ValueComparer_T_Tests
     {
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void ValueComparer_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException<ValueComparer<IValueEquatable>>();
+        }
+
         /// <summary>Verifies the type works as intended.</summary>
         [Theory, RandomData]
         public static void ValueComparer_ValueEquatableBehavior(

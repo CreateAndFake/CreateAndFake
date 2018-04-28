@@ -11,12 +11,11 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
     /// <summary>Verifies behavior.</summary>
     public static class ValuerTests
     {
-        /// <summary>Verifies nulls are valid.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void New_NullHintsValid()
+        public static void Valuer_GuardsNulls()
         {
-            Tools.Asserter.IsNot(null, new Valuer(true, null));
-            Tools.Asserter.IsNot(null, new Valuer(false, null));
+            Tools.Tester.PreventsNullRefException<Valuer>();
         }
 
         /// <summary>Verifies an exception throws when no hint matches.</summary>

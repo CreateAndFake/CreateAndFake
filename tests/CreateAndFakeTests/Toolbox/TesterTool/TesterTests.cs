@@ -20,5 +20,12 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
 
             Tools.Asserter.IsEmpty(nonVirtualMethods, "Methods not virtual.");
         }
+
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void Tester_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException<Tester>();
+        }
     }
 }

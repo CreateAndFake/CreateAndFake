@@ -31,16 +31,27 @@ namespace CreateAndFakeTests.TestBases
             m_InvalidTypes = invalidTypes ?? Type.EmptyTypes;
         }
 
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public void CompareHint_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException<T>();
+        }
+
         /// <summary>Verifies the hint handles nulls properly.</summary>
         [Fact]
-        public virtual void TryCompare_NullBehaviorCheck()
+        public virtual void TryCompare_NullChainerCheck()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCompare(null, new object(), CreateChainer()));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCompare(new object(), null, CreateChainer()));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCompare(new object(), new object(), null));
+            object one = Tools.Randomizer.Create(Tools.Gen.NextItem(m_ValidTypes));
+            object two = Tools.Duplicator.Copy(one);
+            try
+            {
+                TestInstance.TryCompare(one, two, null);
+            }
+            catch (ArgumentNullException e)
+            {
+                Tools.Asserter.Is("valuer", e.ParamName);
+            }
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>

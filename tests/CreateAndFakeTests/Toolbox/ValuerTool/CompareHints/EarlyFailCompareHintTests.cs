@@ -29,7 +29,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 
         /// <summary>Verifies the hint supports nulls.</summary>
         [Fact]
-        public override void TryCompare_NullBehaviorCheck()
+        public void TryCompare_NullBehaviorCheck()
         {
             Tools.Asserter.Is(true, TestInstance.TryCompare(null, new object(), CreateChainer()).Item1);
             Tools.Asserter.IsNotEmpty(TestInstance.TryCompare(null, new object(), CreateChainer()).Item2);

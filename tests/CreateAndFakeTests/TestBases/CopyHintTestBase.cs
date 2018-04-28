@@ -32,6 +32,13 @@ namespace CreateAndFakeTests.TestBases
             m_CopiesByRef = copiesByRef;
         }
 
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public void CopyHint_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException<T>();
+        }
+
         /// <summary>Verifies the hint handles nulls properly.</summary>
         [Fact]
         public void TryCopy_NullBehaviorCheck()
@@ -39,8 +46,15 @@ namespace CreateAndFakeTests.TestBases
             Tools.Asserter.Is((true, (object)null),
                 TestInstance.TryCopy(null, CreateChainer()));
 
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCopy(null, null));
+            object data = Tools.Randomizer.Create(Tools.Gen.NextItem(m_ValidTypes));
+            try
+            {
+                TestInstance.TryCopy(data, null);
+            }
+            catch (ArgumentNullException e)
+            {
+                Tools.Asserter.Is("duplicator", e.ParamName);
+            }
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
