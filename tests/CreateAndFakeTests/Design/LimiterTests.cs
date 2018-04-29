@@ -52,14 +52,13 @@ namespace CreateAndFakeTests.Design
         {
             int attempts = 0;
 
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(0).Retry(() => { attempts++; throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
+                () => new Limiter(0).Retry(() => { attempts++; throw exception; }).Wait()).InnerException);
             Tools.Asserter.Is(1, attempts);
 
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(TimeSpan.MinValue).Retry(() => { attempts++; throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
+                () => new Limiter(TimeSpan.MinValue).Retry(
+                    () => { attempts++; throw exception; }).Wait()).InnerException);
             Tools.Asserter.Is(2, attempts);
         }
 
@@ -97,9 +96,8 @@ namespace CreateAndFakeTests.Design
             Exception exception = Tools.Randomizer.Create<Exception>();
             int attempts = 0;
 
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(tries).Retry(() => { attempts++; throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
+                () => new Limiter(tries).Retry(() => { attempts++; throw exception; }).Wait()).InnerException);
             Tools.Asserter.Is(tries, attempts);
         }
 
@@ -129,9 +127,8 @@ namespace CreateAndFakeTests.Design
         {
             Stopwatch watch = Stopwatch.StartNew();
 
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(s_SmallDelay).Retry(() => { throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
+                () => new Limiter(s_SmallDelay).Retry(() => { throw exception; }).Wait()).InnerException);
             Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= s_SmallDelay.TotalMilliseconds - 1);
         }
 
@@ -378,15 +375,14 @@ namespace CreateAndFakeTests.Design
         [Theory, RandomData]
         public static void Retry_WrongExceptionThrows(NotSupportedException exception)
         {
-            Tools.Asserter.Throws<NotSupportedException>(
-                () => new Limiter(3).Retry<InvalidOperationException>((Action)(() => throw exception)).Wait(),
-                e => Tools.Asserter.Is(exception, e));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<NotSupportedException>(
+                () => new Limiter(3).Retry<InvalidOperationException>((Action)(() => throw exception)).Wait()));
 
             IOException exception2 = new IOException();
 
-            Tools.Asserter.Throws<AggregateException>(
-                () => new Limiter(3).Retry<DirectoryNotFoundException, bool>(() => throw exception2).Wait(),
-                e => Tools.Asserter.Is(exception2, e.InnerExceptions.Single()));
+            Tools.Asserter.Is(exception2, Tools.Asserter.Throws<AggregateException>(
+                () => new Limiter(3).Retry<DirectoryNotFoundException, bool>(
+                    () => throw exception2).Wait()).InnerExceptions.Single());
         }
 
         /// <summary>Verifies default instances are not null.</summary>
