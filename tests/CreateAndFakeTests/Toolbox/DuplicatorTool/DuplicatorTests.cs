@@ -9,6 +9,13 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
     /// <summary>Verifies behavior.</summary>
     public static class DuplicatorTests
     {
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void Duplicator_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException<Duplicator>();
+        }
+
         /// <summary>Verifies nulls are valid.</summary>
         [Fact]
         public static void New_NullHintsValid()

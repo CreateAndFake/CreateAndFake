@@ -11,32 +11,11 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
     /// <summary>Verifies behavior.</summary>
     public static class CallDataTests
     {
-        /// <summary>Verifies nulls are not accepted.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void New_NullsThrow()
+        public static void CallData_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(() => new CallData(
-                null, Tools.Randomizer.Create<Type[]>(), Tools.Randomizer.Create<DataHolderSample[]>(), Tools.Valuer));
-            Tools.Asserter.Throws<ArgumentNullException>(() => new CallData(
-                Tools.Randomizer.Create<string>(), null, Tools.Randomizer.Create<DataHolderSample[]>(), Tools.Valuer));
-            Tools.Asserter.Throws<ArgumentNullException>(() => new CallData(
-                Tools.Randomizer.Create<string>(), Tools.Randomizer.Create<Type[]>(), null, Tools.Valuer));
-        }
-
-        /// <summary>Verifies a null isn't accepted.</summary>
-        [Fact]
-        public static void DeepClone_NullThrows()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Tools.Randomizer.Create<CallData>().DeepClone(null));
-        }
-
-        /// <summary>Verifies a null isn't accepted.</summary>
-        [Fact]
-        public static void MatchesCall_NullThrows()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Tools.Randomizer.Create<CallData>().MatchesCall(null));
+            Tools.Tester.PreventsNullRefException<CallData>();
         }
 
         /// <summary>Verifies no match with different method names.</summary>

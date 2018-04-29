@@ -9,30 +9,11 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
     /// <summary>Verifies behavior.</summary>
     public static class FakeMetaProviderTests
     {
-        /// <summary>Verifies data is required.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void SetCallBehavior_NullsThrow()
+        public static void FakeMetaProvider_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new FakeMetaProvider().SetCallBehavior(null, Tools.Randomizer.Create<Behavior>()));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new FakeMetaProvider().SetCallBehavior(Tools.Randomizer.Create<CallData>(), null));
-        }
-
-        /// <summary>Verifies a null isn't accepted.</summary>
-        [Fact]
-        public static void DeepClone_NullThrows()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Tools.Randomizer.Create<FakeMetaProvider>().DeepClone(null));
-        }
-
-        /// <summary>Verifies a call data is required.</summary>
-        [Fact]
-        public static void Verify_NullCallDataThrows()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new FakeMetaProvider().Verify(0, null));
+            Tools.Tester.PreventsNullRefException<FakeMetaProvider>();
         }
 
         /// <summary>Verifies the provided value is matched by calls.</summary>

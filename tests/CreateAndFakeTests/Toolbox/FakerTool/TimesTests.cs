@@ -7,6 +7,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
     /// <summary>Verifies behavior.</summary>
     public static class TimesTests
     {
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void Times_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException<Times>();
+        }
+
         /// <summary>Verifies the option works.</summary>
         [Fact]
         public static void Never_Works()

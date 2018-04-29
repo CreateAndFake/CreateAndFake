@@ -18,6 +18,13 @@ namespace CreateAndFakeTests.Design
         /// <summary>Small delay to test with.</summary>
         private static readonly TimeSpan s_SmallDelay = new TimeSpan(0, 0, 0, 0, 20);
 
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void Limiter_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException(Limiter.Few);
+        }
+
         /// <summary>Verifies limit starts after first attempt.</summary>
         [Fact]
         public static async Task Repeat_AtLeastOnce()

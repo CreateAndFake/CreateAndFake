@@ -13,12 +13,10 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         [Fact]
         public static void Tester_AllMethodsVirtual()
         {
-            MemberInfo[] nonVirtualMethods = typeof(Tester)
+            Tools.Asserter.IsEmpty(typeof(Tester)
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-                .Where(m => !m.IsVirtual && m.Name != "Is" && m.Name != "IsNot")
-                .ToArray();
-
-            Tools.Asserter.IsEmpty(nonVirtualMethods, "Methods not virtual.");
+                .Where(m => !m.IsVirtual)
+                .Select(m => m.Name));
         }
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>

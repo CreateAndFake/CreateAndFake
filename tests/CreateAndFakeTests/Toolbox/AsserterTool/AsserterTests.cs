@@ -37,11 +37,11 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
                 .Where(n => n != "Is" && n != "IsNot"));
         }
 
-        /// <summary>Verifies valid arguments are provided.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void New_NullAsserterThrows()
+        public static void Asserter_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(() => new Asserter(null));
+            Tools.Tester.PreventsNullRefException<Asserter>();
         }
 
         /// <summary>Verifies fail will throw.</summary>
