@@ -73,7 +73,15 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
         public object Create(Type type)
         {
-            return Create(type, new RandomizerChainer(m_Faker, Gen, Create));
+            try
+            {
+                return Create(type, new RandomizerChainer(m_Faker, Gen, Create));
+            }
+            catch (InsufficientExecutionStackException)
+            {
+                throw new InsufficientExecutionStackException(
+                    $"Ran into infinite generation trying to randomize type '{type.Name}'.");
+            }
         }
 
         /// <summary>Creates a randomized instance.</summary>

@@ -16,7 +16,6 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         {
             if (expected == null) throw new ArgumentNullException(nameof(expected));
             if (actual == null) throw new ArgumentNullException(nameof(actual));
-            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
 
             return expected.GetType().Inherits(typeof(IEquatable<>).MakeGenericType(expected.GetType()))
                 && !(expected is IStructuralEquatable);
@@ -29,6 +28,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>Found differences.</returns>
         protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
         {
+            if (expected == null) throw new ArgumentNullException(nameof(expected));
+
             if (!expected.Equals(actual))
             {
                 yield return new Difference(expected, actual);
@@ -41,6 +42,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>The generated hash.</returns>
         protected override int GetHashCode(object item, ValuerChainer valuer)
         {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
             return item.GetHashCode();
         }
     }

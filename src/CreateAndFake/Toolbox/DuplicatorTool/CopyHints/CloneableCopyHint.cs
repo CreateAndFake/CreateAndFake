@@ -11,10 +11,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <returns>Duplicate object.</returns>
         protected override ICloneable Copy(ICloneable source, DuplicatorChainer duplicator)
         {
-            if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
-            if (source == null) return null;
-
-            return (ICloneable)source.Clone();
+            return (ICloneable)source?.Clone();
         }
     }
 }

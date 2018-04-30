@@ -35,21 +35,7 @@ namespace CreateAndFakeTests.TestBases
         [Fact]
         public void CreateHint_GuardsNulls()
         {
-            Tools.Tester.PreventsNullRefException<T>();
-        }
-
-        /// <summary>Verifies the hint handles nulls properly.</summary>
-        [Fact]
-        public virtual void TryCreate_NullChainerCheck()
-        {
-            try
-            {
-                TestInstance.TryCreate(Tools.Gen.NextItem(m_ValidTypes), null);
-            }
-            catch (ArgumentNullException e)
-            {
-                Tools.Asserter.Is("randomizer", e.ParamName);
-            }
+            Tools.Tester.PreventsNullRefException(TestInstance);
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>

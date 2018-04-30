@@ -32,26 +32,53 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <summary>Verifies nulls are guarded on the type.</summary>
         /// <typeparam name="T">Type to verify.</typeparam>
         /// <remarks>
-        ///     Tests each parameter possible with null.
-        ///     Constructor parameters are additionally tested by running all methods.
+        ///     Tests each nullable parameter possible with null.
+        ///     Constructor and factory parameters are additionally tested by running all methods.
         ///     Ignores any exception besides NullReferenceException and moves on.
         /// </remarks>
         public virtual void PreventsNullRefException<T>()
         {
-            new NullGuarder(Gen, Randomizer, Asserter).PreventsNullRefException<T>();
+            PreventsNullRefException(typeof(T));
         }
 
-        /// <summary>Verifies nulls are guarded on methods.</summary>
+        /// <summary>Verifies nulls are guarded on the type.</summary>
+        /// <param name="type">Type to verify.</param>
+        /// <remarks>
+        ///     Tests each nullable parameter possible with null.
+        ///     Constructor and factory parameters are additionally tested by running all methods.
+        ///     Ignores any exception besides NullReferenceException and moves on.
+        /// </remarks>
+        public virtual void PreventsNullRefException(Type type)
+        {
+            NullGuarder checker = new NullGuarder(Gen, Randomizer, Asserter);
+
+            checker.PreventsNullRefExceptionOnConstructors(type, true);
+
+            if (!(type.IsAbstract && type.IsSealed))
+            {
+                object instance = Randomizer.Create(type);
+                checker.PreventsNullRefExceptionOnMethods(instance);
+                (instance as IDisposable)?.Dispose();
+            }
+
+            checker.PreventsNullRefExceptionOnStatics(type, true);
+        }
+
+        /// <summary>Verifies nulls are guarded on the type.</summary>
         /// <typeparam name="T">Type to verify.</typeparam>
         /// <param name="instance">Instance to test the methods on.</param>
         /// <remarks>
         ///     Tests each parameter possible with null.
-        ///     Static methods are also tested on the type.
+        ///     Constructor and factory parameters are not tested by running all methods.
         ///     Ignores any exception besides NullReferenceException and moves on.
         /// </remarks>
         public virtual void PreventsNullRefException<T>(T instance)
         {
-            new NullGuarder(Gen, Randomizer, Asserter).PreventsNullRefException(instance);
+            NullGuarder checker = new NullGuarder(Gen, Randomizer, Asserter);
+
+            checker.PreventsNullRefExceptionOnConstructors(typeof(T), false);
+            checker.PreventsNullRefExceptionOnMethods(instance);
+            checker.PreventsNullRefExceptionOnStatics(typeof(T), false);
         }
     }
 }

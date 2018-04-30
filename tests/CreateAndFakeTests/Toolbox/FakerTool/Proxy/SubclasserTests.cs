@@ -10,6 +10,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
     /// <summary>Verifies behavior.</summary>
     public static class SubclasserTests
     {
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void Subclasser_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException(typeof(Subclasser));
+        }
+
         /// <summary>Verifies interfaces can be created.</summary>
         [Fact]
         public static void Create_InterfacesWork()

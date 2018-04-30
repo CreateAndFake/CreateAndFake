@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
@@ -13,7 +14,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>Found differences.</returns>
         protected override IEnumerable<Difference> Compare(IFaked expected, IFaked actual, ValuerChainer valuer)
         {
-            return valuer.Compare(expected.FakeMeta, actual.FakeMeta);
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
+            return valuer.Compare(expected?.FakeMeta, actual?.FakeMeta);
         }
 
         /// <summary>Calculates a hash code based upon value.</summary>
@@ -22,7 +25,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>The generated hash.</returns>
         protected override int GetHashCode(IFaked item, ValuerChainer valuer)
         {
-            return valuer.GetHashCode(item.FakeMeta);
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
+            return valuer.GetHashCode(item?.FakeMeta);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -12,6 +13,9 @@ namespace CreateAndFake.Toolbox.TesterTool
     /// <summary>Automates null reference guard checks.</summary>
     internal sealed class NullGuarder
     {
+        /// <summary>Default for how long to wait for methods to complete.</summary>
+        private static readonly TimeSpan s_DefaultTimeout = new TimeSpan(0, 0, 5);
+
         /// <summary>Core value random handler.</summary>
         private readonly IRandom m_Gen;
 
@@ -21,87 +25,95 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <summary>Handles common test scenarios.</summary>
         private readonly Asserter m_Asserter;
 
+        /// <summary>How long to wait for methods to complete.</summary>
+        private readonly TimeSpan m_Timeout;
+
         /// <summary>Sets up the guarder capabilities.</summary>
         /// <param name="gen">Core value random handler.</param>
         /// <param name="randomizer">Creates objects and populates them with random values.</param>
         /// <param name="asserter">Handles common test scenarios.</param>
-        internal NullGuarder(IRandom gen, IRandomizer randomizer, Asserter asserter)
+        /// <param name="timeout">How long to wait for methods to complete.</param>
+        internal NullGuarder(IRandom gen, IRandomizer randomizer, Asserter asserter, TimeSpan? timeout = null)
         {
             m_Gen = gen ?? throw new ArgumentNullException(nameof(gen));
             m_Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
             m_Asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
+            m_Timeout = timeout ?? s_DefaultTimeout;
         }
 
-        /// <summary>Verifies nulls are guarded on the type.</summary>
-        /// <typeparam name="T">Type to verify.</typeparam>
+        /// <summary>Verifies nulls are guarded on constructors.</summary>
+        /// <param name="type">Type to verify.</param>
+        /// <param name="callAllMethods">
+        ///     If all instance methods are run to validate constructor parameters.
+        /// </param>
         /// <remarks>
-        ///     Tests each parameter possible with null.
-        ///     Constructor parameters are additionally tested by running all methods.
+        ///     Tests each nullable parameter possible with null.
         ///     Ignores any exception besides NullReferenceException and moves on.
         /// </remarks>
-        internal void PreventsNullRefException<T>()
+        internal void PreventsNullRefExceptionOnConstructors(Type type, bool callAllMethods)
         {
-            foreach (ConstructorInfo constructor in typeof(T)
-                .GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(c => c.IsPublic || c.IsAssembly || c.IsFamilyOrAssembly))
-            {
-                PreventsNullRefException(null, constructor);
-            }
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (!(typeof(T).IsAbstract && typeof(T).IsSealed))
+            foreach (ConstructorInfo constructor in type
+                .GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(c => c.IsPublic || c.IsAssembly || c.IsFamily || c.IsFamilyOrAssembly)
+                .Where(c => !c.IsPrivate))
             {
-                T instance = m_Randomizer.Create<T>();
-                PreventsNullRefException(instance);
-                (instance as IDisposable)?.Dispose();
-            }
-            else
-            {
-                foreach (MethodInfo method in typeof(T)
-                    .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                    .Where(m => m.IsPublic || m.IsAssembly))
-                {
-                    PreventsNullRefException(null, FixGenerics(method));
-                }
+                PreventsNullRefException(null, constructor, callAllMethods);
             }
         }
 
         /// <summary>Verifies nulls are guarded on methods.</summary>
-        /// <typeparam name="T">Type to verify.</typeparam>
         /// <param name="instance">Instance to test the methods on.</param>
         /// <remarks>
-        ///     Tests each parameter possible with null.
-        ///     Static methods are also tested on the type.
+        ///     Tests each nullable parameter possible with null.
         ///     Ignores any exception besides NullReferenceException and moves on.
         /// </remarks>
-        internal void PreventsNullRefException<T>(T instance)
+        internal void PreventsNullRefExceptionOnMethods(object instance)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
-            if (!(typeof(T).IsAbstract && typeof(T).IsSealed))
+            foreach (MethodInfo method in instance.GetType()
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+                .Where(m => !m.IsPrivate))
             {
-                foreach (MethodInfo method in typeof(T)
-                    .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    .Where(m => m.IsPublic || m.IsAssembly || m.IsFamilyOrAssembly))
-                {
-                    PreventsNullRefException(instance, FixGenerics(method));
-                }
+                PreventsNullRefException(instance, FixGenerics(method), false);
             }
+        }
 
-            foreach (MethodInfo method in typeof(T)
+        /// <summary>Verifies nulls are guarded on methods.</summary>
+        /// <param name="type">Type to verify.</param>
+        /// <param name="callAllMethods">
+        ///     If all instance methods are run to validate factory parameters.
+        /// </param>
+        /// <remarks>
+        ///     Tests each nullable parameter possible with null.
+        ///     Ignores any exception besides NullReferenceException and moves on.
+        /// </remarks>
+        internal void PreventsNullRefExceptionOnStatics(Type type, bool callAllMethods)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            foreach (MethodInfo method in type
                 .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(m => m.IsPublic || m.IsAssembly))
+                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+                .Where(m => !m.IsPrivate))
             {
-                PreventsNullRefException(null, FixGenerics(method));
+                PreventsNullRefException(null, FixGenerics(method),
+                    callAllMethods && method.ReturnType.Inherits(type));
             }
         }
 
         /// <summary>Verifies nulls are guarded on a method.</summary>
         /// <param name="instance">Instance with the method under test.</param>
         /// <param name="method">Method under test.</param>
-        private void PreventsNullRefException(object instance, MethodBase method)
+        /// <param name="callAllMethods">If all instance methods should be called after the method.</param>
+        private void PreventsNullRefException(object instance, MethodBase method, bool callAllMethods)
         {
             object[] data = method.GetParameters()
-                .Select(p => m_Randomizer.Create(p.ParameterType)).ToArray();
+                .Select(p => (!p.ParameterType.IsByRef) ? m_Randomizer.Create(p.ParameterType) : null)
+                .ToArray();
 
             for (int i = 0; i < data.Length; i++)
             {
@@ -119,14 +131,15 @@ namespace CreateAndFake.Toolbox.TesterTool
                 if (instance == null && method is ConstructorInfo builder)
                 {
                     result = NullCheck(method, param, () => builder.Invoke(data));
-                    if (result != null)
-                    {
-                        CallAllMethods(method, param, result);
-                    }
                 }
                 else
                 {
                     result = NullCheck(method, param, () => method.Invoke(instance, data));
+                }
+
+                if (result != null && callAllMethods)
+                {
+                    CallAllMethods(method, param, result);
                 }
                 (result as IDisposable)?.Dispose();
 
@@ -142,7 +155,8 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             foreach (MethodInfo method in instance.GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamilyOrAssembly)
+                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+                .Where(m => !m.IsPrivate)
                 .Select(m => FixGenerics(m)))
             {
                 (NullCheck(testOrigin, testParam, () => method.Invoke(instance, method.GetParameters()
@@ -159,36 +173,45 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             try
             {
-                Task<object> task = Task.Run(() => call.Invoke());
-                if (!task.Wait(new TimeSpan(0, 0, 2)))
+                Task<object> task = Task.Run(() =>
+                {
+                    object result = call.Invoke();
+                    if (result is IEnumerable collection)
+                    {
+                        return collection?.OfType<object>()?.ToArray();
+                    }
+                    else
+                    {
+                        return result;
+                    }
+                });
+                if (!task.Wait(m_Timeout))
                 {
                     throw new TimeoutException($"Attempting to run method '{testOrigin.Name}' timed out.");
                 }
                 return task.Result;
             }
-            catch (AggregateException e)
+            catch (AggregateException taskException)
             {
-                if (e.InnerExceptions[0] is TargetInvocationException ex)
+                Exception actual = taskException.InnerExceptions.Single();
+                if (actual is TargetInvocationException ex)
                 {
-                    string details = $"on method '{testOrigin.Name}' with parameter '{testParam.Name}'";
+                    actual = ex.InnerException;
+                }
 
-                    if (e.InnerException is ArgumentNullException inner
-                        && testOrigin.Name == inner.TargetSite.Name)
-                    {
-                        m_Asserter.Is(testParam.Name, inner.ParamName,
-                            $"Incorrect name provided for exception {details}.");
-                    }
-                    else if (e.InnerException is NullReferenceException)
-                    {
-                        m_Asserter.Fail(e.InnerException,
-                            $"Null reference exception encountered {details}.");
-                    }
-                    return null;
-                }
-                else
+                string details = $"on method '{testOrigin.Name}' with parameter '{testParam.Name}'";
+
+                if (actual is ArgumentNullException inner
+                    && testOrigin.Name == inner.TargetSite.Name)
                 {
-                    throw;
+                    m_Asserter.Is(testParam.Name, inner.ParamName,
+                        $"Incorrect name provided for exception {details}.");
                 }
+                else if (actual is NullReferenceException)
+                {
+                    m_Asserter.Fail(actual, $"Null reference exception encountered {details}.");
+                }
+                return null;
             }
         }
 

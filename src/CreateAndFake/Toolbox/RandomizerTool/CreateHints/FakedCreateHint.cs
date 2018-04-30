@@ -1,4 +1,5 @@
-﻿using CreateAndFake.Toolbox.FakerTool;
+﻿using System;
+using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
@@ -11,6 +12,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <returns>Created instance.</returns>
         protected override IFaked Create(RandomizerChainer randomizer)
         {
+            if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));
+
             Fake stub = randomizer.Stub(typeof(object));
             stub.Dummy.FakeMeta.Identifier = randomizer.Create<int>(typeof(IFaked));
             return stub.Dummy;

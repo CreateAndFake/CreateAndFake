@@ -289,45 +289,6 @@ namespace CreateAndFakeTests.Design
             Tools.Asserter.Is(4, calls);
         }
 
-        /// <summary>Verifies null works as intended.</summary>
-        [Fact]
-        public static async Task Repeat_NullBehavior()
-        {
-            await Limiter.Few.Repeat(null);
-
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.Repeat<object>(null).Wait());
-        }
-
-        /// <summary>Verifies null works as intended.</summary>
-        [Fact]
-        public static async Task StallUntil_NullBehavior()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.StallUntil(null).Wait());
-
-            await Limiter.Few.StallUntil(null, () => true);
-
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.StallUntil(() => { }, null).Wait());
-
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.StallUntil<object>(null, () => true).Wait());
-        }
-
-        /// <summary>Verifies null works as intended.</summary>
-        [Fact]
-        public static async Task Retry_NullBehavior()
-        {
-            await Limiter.Few.Retry(null);
-            await Limiter.Few.Retry(null, null);
-
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.Retry<bool>(null).Wait());
-
-            await Limiter.Few.Retry(() => true, null);
-        }
-
         /// <summary>Verifies that check state is called properly.</summary>
         [Theory,
             InlineData(1),

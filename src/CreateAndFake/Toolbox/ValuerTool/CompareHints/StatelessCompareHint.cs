@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CreateAndFake.Design.Content;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
@@ -21,7 +20,6 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         {
             if (expected == null) throw new ArgumentNullException(nameof(expected));
             if (actual == null) throw new ArgumentNullException(nameof(actual));
-            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
 
             Type type = expected.GetType();
             return !type.GetProperties(s_Scope).Any(p => p.CanRead)
@@ -44,6 +42,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>The generated hash.</returns>
         protected override int GetHashCode(object item, ValuerChainer valuer)
         {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
             return item.GetType().GetHashCode();
         }
     }

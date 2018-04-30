@@ -9,8 +9,8 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
     public sealed class ObjectCopyHint : CopyHint
     {
         /// <summary>Flags used to identify members.</summary>
-        private const BindingFlags s_MemberFlags = BindingFlags.FlattenHierarchy |
-            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+        private const BindingFlags s_MemberFlags = BindingFlags.Public
+            | BindingFlags.NonPublic | BindingFlags.Instance;
 
         /// <summary>Tries to deep clone an object.</summary>
         /// <param name="source">Object to clone.</param>

@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
         [Fact]
         public static void Randiffer_GuardsNulls()
         {
-            Tools.Tester.PreventsNullRefException<Randiffer>();
+            Tools.Tester.PreventsNullRefException(Tools.Randiffer);
         }
 
         /// <summary>Verifies null defaults to empty.</summary>

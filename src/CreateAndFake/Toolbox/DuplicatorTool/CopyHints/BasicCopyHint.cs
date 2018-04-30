@@ -11,8 +11,6 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <returns>If the type could be cloned and the cloned instance.</returns>
         protected internal override sealed (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
         {
-            if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
-
             Type type = source?.GetType();
             if (type == null
                 || type.IsPrimitive

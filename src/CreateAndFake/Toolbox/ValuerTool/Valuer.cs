@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using CreateAndFake.Toolbox.DuplicatorTool;
@@ -18,8 +19,8 @@ namespace CreateAndFake.Toolbox.ValuerTool
             new ValueEquatableCompareHint(),
             new ValuerEquatableCompareHint(),
             new EquatableCompareHint(),
-            new DictionaryCompareHint(),
             new StringDictionaryCompareHint(),
+            new DictionaryCompareHint(),
             new EnumerableCompareHint(),
             new ObjectCompareHint(BindingFlags.Public | BindingFlags.Instance),
             new ObjectCompareHint(BindingFlags.NonPublic | BindingFlags.Instance),
@@ -59,9 +60,19 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="item">Object to generate a code for.</param>
         /// <returns>The generated hash.</returns>
         /// <exception cref="NotSupportedException">If no hint supports hashing the object.</exception>
+        [SuppressMessage("Microsoft.Design",
+            "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Forwarded.")]
         public int GetHashCode(object item)
         {
-            return GetHashCode(item, new ValuerChainer(this, GetHashCode, Compare));
+            try
+            {
+                return GetHashCode(item, new ValuerChainer(this, GetHashCode, Compare));
+            }
+            catch (InsufficientExecutionStackException)
+            {
+                throw new InsufficientExecutionStackException(
+                    $"Ran into infinite generation trying to hash type '{item.GetType().Name}'.");
+            }
         }
 
         /// <summary>Returns a hash code for the specified object.</summary>
@@ -103,7 +114,15 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <exception cref="NotSupportedException">If no hint supports comparing the objects.</exception>
         public IEnumerable<Difference> Compare(object expected, object actual)
         {
-            return Compare(expected, actual, new ValuerChainer(this, GetHashCode, Compare));
+            try
+            {
+                return Compare(expected, actual, new ValuerChainer(this, GetHashCode, Compare));
+            }
+            catch (InsufficientExecutionStackException)
+            {
+                throw new InsufficientExecutionStackException(
+                    $"Ran into infinite generation trying to compare type '{expected.GetType().Name}'.");
+            }
         }
 
         /// <summary>Finds the differences between two objects.</summary>

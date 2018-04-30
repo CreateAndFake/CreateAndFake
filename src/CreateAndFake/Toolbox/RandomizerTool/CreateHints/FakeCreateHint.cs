@@ -115,7 +115,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 
             if (method.ReturnType != typeof(void))
             {
-                Type[] withOut = new[] { method.ReturnType }.Concat(args).ToArray();
+                Type[] withOut = args.Concat(new[] { method.ReturnType }).ToArray();
 
                 return (Behavior)typeof(Behavior<>)
                     .MakeGenericType(method.ReturnType)

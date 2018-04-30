@@ -14,8 +14,6 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>True if the objects can be compared; false otherwise.</returns>
         protected override bool Supports(object expected, object actual, ValuerChainer valuer)
         {
-            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
-
             Type objectType = expected?.GetType();
             return expected == null
                 || actual == null

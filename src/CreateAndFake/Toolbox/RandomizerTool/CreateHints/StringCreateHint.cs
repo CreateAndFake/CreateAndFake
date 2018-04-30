@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
@@ -40,6 +41,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <returns>Created instance.</returns>
         protected override string Create(RandomizerChainer randomizer)
         {
+            if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));
+
             char[] data = new char[m_MinSize + randomizer.Gen.Next(m_Range)];
             for (int i = 0; i < data.Length; i++)
             {

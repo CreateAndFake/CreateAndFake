@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         protected override IEnumerable<Difference> Compare(
             StringDictionary expected, StringDictionary actual, ValuerChainer valuer)
         {
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
             return valuer.Compare(Convert(expected), Convert(actual));
         }
 
@@ -25,6 +28,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>The generated hash.</returns>
         protected override int GetHashCode(StringDictionary item, ValuerChainer valuer)
         {
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
             return valuer.GetHashCode(Convert(item));
         }
 
@@ -33,6 +38,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>Converted dictionary.</returns>
         private static IDictionary Convert(StringDictionary dict)
         {
+            if (dict == null) throw new ArgumentNullException(nameof(dict));
+
             return dict.Cast<DictionaryEntry>().ToDictionary(e => e.Key, e => e.Value);
         }
     }

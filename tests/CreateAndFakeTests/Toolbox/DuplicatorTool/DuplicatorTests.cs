@@ -50,5 +50,19 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
             Tools.Asserter.Is(data, new Duplicator(Tools.Asserter, false, hint.Dummy).Copy(data));
             hint.Verify(Times.Once);
         }
+
+        /// <summary>Verifies an infinite loop exception is caught and given details.</summary>
+        [Theory, RandomData]
+        public static void Copy_InfiniteLoopDetails(object instance, Fake<CopyHint> hint)
+        {
+            hint.Setup(
+                m => m.TryCopy(instance, Arg.Any<DuplicatorChainer>()),
+                Behavior.Throw<InsufficientExecutionStackException>(Times.Once));
+
+            InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
+                () => new Duplicator(Tools.Asserter, false, hint.Dummy).Copy(instance));
+
+            Tools.Asserter.Is(true, e.Message.Contains(instance.GetType().Name));
+        }
     }
 }
