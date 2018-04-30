@@ -10,22 +10,19 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
     /// <summary>Verifies behavior.</summary>
     public static class RandomizerTests
     {
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void Randomizer_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException(Tools.Randomizer);
+        }
+
         /// <summary>Verifies nulls are valid.</summary>
         [Fact]
         public static void New_NullHintsValid()
         {
             Tools.Asserter.IsNot(null, new Randomizer(Tools.Faker, new FastRandom(), true, null));
             Tools.Asserter.IsNot(null, new Randomizer(Tools.Faker, new FastRandom(), false, null));
-        }
-
-        /// <summary>Verifies random must be provided.</summary>
-        [Fact]
-        public static void New_NullsThrows()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new Randomizer(Tools.Faker, null));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new Randomizer(null, new FastRandom()));
         }
 
         /// <summary>Verifies an exception throws when no hint matches.</summary>
@@ -53,14 +50,6 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
             hint.Verify(Times.Once);
         }
 
-        /// <summary>Verifies null type can't be created.</summary>
-        [Fact]
-        public static void Create_NullTypeThrows()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new Randomizer(Tools.Faker, new FastRandom()).Create(null));
-        }
-
         /// <summary>Verifies hint behavior works.</summary>
         [Fact]
         public static void Create_ValidHintWorks()
@@ -76,6 +65,20 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
                 new FastRandom(), false, hint.Dummy).Create<string>());
 
             hint.Verify(Times.Once);
+        }
+
+        /// <summary>Verifies an infinite loop exception is caught and given details.</summary>
+        [Theory, RandomData]
+        public static void Create_InfiniteLoopDetails(Type type, Fake<CreateHint> hint)
+        {
+            hint.Setup(
+                m => m.TryCreate(type, Arg.Any<RandomizerChainer>()),
+                Behavior.Throw<InsufficientExecutionStackException>(Times.Once));
+
+            InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
+                () => new Randomizer(Tools.Faker, new FastRandom(), false, hint.Dummy).Create(type));
+
+            Tools.Asserter.Is(true, e.Message.Contains(type.Name));
         }
     }
 }

@@ -55,7 +55,15 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>
         public T Copy<T>(T source)
         {
-            return Copy(source, new DuplicatorChainer(this, Copy));
+            try
+            {
+                return Copy(source, new DuplicatorChainer(this, Copy));
+            }
+            catch (InsufficientExecutionStackException)
+            {
+                throw new InsufficientExecutionStackException(
+                    $"Ran into infinite generation trying to duplicate type '{source.GetType().Name}'.");
+            }
         }
 
         /// <summary>Deep clones an object.</summary>
@@ -95,6 +103,8 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         /// <returns>Clone that is equal in value to the instance.</returns>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
+            if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
+
             return new Duplicator(duplicator.Copy(m_Asserter), false, duplicator.Copy(m_Hints).ToArray());
         }
     }

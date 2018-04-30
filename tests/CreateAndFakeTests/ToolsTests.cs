@@ -7,6 +7,7 @@ using CreateAndFake.Toolbox;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
+using CreateAndFake.Toolbox.TesterTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
 using Xunit;
@@ -64,8 +65,8 @@ namespace CreateAndFakeTests
         [Fact]
         public static void Tools_AllCreateAndFakeTypesWork()
         {
-            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType),
-                typeof(AnyGeneric), typeof(DuplicatorChainer), typeof(ValuerChainer) };
+            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType), typeof(Behavior),
+                typeof(AnyGeneric), typeof(DuplicatorChainer), typeof(ValuerChainer), typeof(NullGuarder) };
 
             foreach (Type type in typeof(Tools).Assembly.GetTypes()
                 .Where(t => !(t.IsAbstract && t.IsSealed))
@@ -73,7 +74,14 @@ namespace CreateAndFakeTests
                 .Where(t => !t.IsNestedPrivate)
                 .Where(t => t.GetCustomAttribute<CompilerGeneratedAttribute>() == null))
             {
-                TestTrip(type);
+                try
+                {
+                    TestTrip(type);
+                }
+                catch (Exception e)
+                {
+                    Tools.Asserter.Fail(e, $"Failed testing type '{type.Name}'.");
+                }
             }
         }
 

@@ -12,6 +12,7 @@ The `Asserter` tool provides methods to verify common test scenarios:
 * `ValuesNotEqual` - Verifies two objects are not equal by value.
 * `ReferenceEqual` - Verifies two objects are equal by reference.
 * `ReferenceNotEqual` - Verifies two objects are not equal by reference.
+* `Fail` - Immediately fails the test.
 
 ## Example
 

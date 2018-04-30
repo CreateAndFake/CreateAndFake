@@ -13,7 +13,6 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         private static Type[] s_ReverseCases = new[]
         {
             typeof(ConcurrentStack<>),
-            typeof(ConcurrentBag<>),
             typeof(Stack<>),
             typeof(Stack)
         };

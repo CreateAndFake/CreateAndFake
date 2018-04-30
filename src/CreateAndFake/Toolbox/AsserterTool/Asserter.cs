@@ -27,6 +27,14 @@ namespace CreateAndFake.Toolbox.AsserterTool
             throw new AssertException("Test failed.", details);
         }
 
+        /// <summary>Throws an assert exception.</summary>
+        /// <param name="exception">Exception that occurred.</param>
+        /// <param name="details">Optional failure details.</param>
+        public virtual void Fail(Exception exception, string details = null)
+        {
+            throw new AssertException("Test failed.", details, exception);
+        }
+
         /// <summary>Verifies two objects are equal by value.</summary>
         /// <param name="expected">Object to compare against.</param>
         /// <param name="actual">Object to compare with.</param>
@@ -153,20 +161,9 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <param name="behavior">Behavior to verify.</param>
         /// <param name="details">Optional failure details.</param>
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
-        public virtual void Throws<T>(Action behavior, string details = null) where T : Exception
+        public virtual T Throws<T>(Action behavior, string details = null) where T : Exception
         {
-            Throws<T>(behavior, null, details);
-        }
-
-        /// <summary>Verifies the given behavior throws an exception.</summary>
-        /// <typeparam name="T">Exception type expected.</typeparam>
-        /// <param name="behavior">Behavior to verify.</param>
-        /// <param name="verifier">Extra verification for the exception.</param>
-        /// <param name="details">Optional failure details.</param>
-        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
-        public virtual void Throws<T>(Action behavior, Action<T> verifier, string details = null) where T : Exception
-        {
-            Throws<T>(() => { behavior?.Invoke(); return true; }, verifier, details);
+            return Throws<T>(() => { behavior?.Invoke(); return true; }, details);
         }
 
         /// <summary>Verifies the given behavior throws an exception.</summary>
@@ -174,18 +171,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <param name="behavior">Behavior to verify.</param>
         /// <param name="details">Optional failure details.</param>
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
-        public virtual void Throws<T>(Func<object> behavior, string details = null) where T : Exception
-        {
-            Throws<T>(behavior, null, details);
-        }
-
-        /// <summary>Verifies the given behavior throws an exception.</summary>
-        /// <typeparam name="T">Exception type expected.</typeparam>
-        /// <param name="behavior">Behavior to verify.</param>
-        /// <param name="verifier">Extra verification for the exception.</param>
-        /// <param name="details">Optional failure details.</param>
-        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
-        public virtual void Throws<T>(Func<object> behavior, Action<T> verifier, string details = null) where T : Exception
+        public virtual T Throws<T>(Func<object> behavior, string details = null) where T : Exception
         {
             string errorMessage = $"Expected exception of type '{typeof(T).FullName}'.";
             try
@@ -194,15 +180,13 @@ namespace CreateAndFake.Toolbox.AsserterTool
             }
             catch (T e)
             {
-                verifier?.Invoke(e);
-                return;
+                return e;
             }
             catch (AggregateException e)
             {
                 if (e.InnerExceptions.Count == 1 && e.InnerExceptions[0] is T actual)
                 {
-                    verifier?.Invoke(actual);
-                    return;
+                    return actual;
                 }
                 else
                 {

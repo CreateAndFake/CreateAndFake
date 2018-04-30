@@ -21,7 +21,6 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             typeof(HashSet<>),
             typeof(LinkedList<>),
             typeof(ArraySegment<>),
-            typeof(ConcurrentBag<>),
             typeof(ConcurrentQueue<>),
             typeof(ConcurrentStack<>),
             typeof(ConcurrentDictionary<,>)

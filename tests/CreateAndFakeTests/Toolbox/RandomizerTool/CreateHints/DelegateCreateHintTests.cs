@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
@@ -11,6 +12,50 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     /// <summary>Verifies behavior.</summary>
     public sealed class DelegateCreateHintTests : CreateHintTestBase<DelegateCreateHint>
     {
+        /// <summary>Possible action types to use.</summary>
+        private static readonly Type[] s_ActionTypes = new[]
+        {
+            typeof(Action),
+            typeof(Action<>),
+            typeof(Action<,>),
+            typeof(Action<,,>),
+            typeof(Action<,,,>),
+            typeof(Action<,,,,>),
+            typeof(Action<,,,,,>),
+            typeof(Action<,,,,,,>),
+            typeof(Action<,,,,,,,>),
+            typeof(Action<,,,,,,,,>),
+            typeof(Action<,,,,,,,,,>),
+            typeof(Action<,,,,,,,,,,>),
+            typeof(Action<,,,,,,,,,,,>),
+            typeof(Action<,,,,,,,,,,,,>),
+            typeof(Action<,,,,,,,,,,,,,>),
+            typeof(Action<,,,,,,,,,,,,,,>),
+            typeof(Action<,,,,,,,,,,,,,,,>)
+        };
+
+        /// <summary>Possible func types to use.</summary>
+        private static readonly Type[] s_FuncTypes = new[]
+        {
+            typeof(Func<>),
+            typeof(Func<,>),
+            typeof(Func<,,>),
+            typeof(Func<,,,>),
+            typeof(Func<,,,,>),
+            typeof(Func<,,,,,>),
+            typeof(Func<,,,,,,>),
+            typeof(Func<,,,,,,,>),
+            typeof(Func<,,,,,,,,>),
+            typeof(Func<,,,,,,,,,>),
+            typeof(Func<,,,,,,,,,,>),
+            typeof(Func<,,,,,,,,,,,>),
+            typeof(Func<,,,,,,,,,,,,>),
+            typeof(Func<,,,,,,,,,,,,,>),
+            typeof(Func<,,,,,,,,,,,,,,>),
+            typeof(Func<,,,,,,,,,,,,,,,>),
+            typeof(Func<,,,,,,,,,,,,,,,,>)
+        };
+
         /// <summary>Instance to test with.</summary>
         private static readonly DelegateCreateHint s_TestInstance = new DelegateCreateHint();
 
@@ -23,6 +68,16 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 
         /// <summary>Sets up the tests.</summary>
         public DelegateCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+
+        /// <summary>Verifies every func and action type are handled.</summary>
+        [Fact]
+        public static void Create_HandlesAllDelegates()
+        {
+            foreach (Type type in s_ActionTypes.Concat(s_FuncTypes))
+            {
+                Tools.Asserter.Is(true, s_TestInstance.TryCreate(type, CreateChainer()).Item1);
+            }
+        }
 
         /// <summary>Verifies out is supported through OutRef.</summary>
         [Fact]

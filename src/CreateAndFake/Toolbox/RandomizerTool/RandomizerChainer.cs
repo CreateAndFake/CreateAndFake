@@ -29,7 +29,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         public RandomizerChainer(IFaker faker, IRandom gen, Func<Type, RandomizerChainer, object> randomizer)
         {
             m_Faker = faker ?? throw new ArgumentNullException(nameof(faker));
-            Gen = gen ?? throw new ArgumentNullException(nameof(randomizer));
+            Gen = gen ?? throw new ArgumentNullException(nameof(gen));
             m_Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
 
             m_History = Array.Empty<Type>();

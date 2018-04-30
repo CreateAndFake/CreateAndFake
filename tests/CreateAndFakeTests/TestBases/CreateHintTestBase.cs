@@ -31,14 +31,11 @@ namespace CreateAndFakeTests.TestBases
             m_InvalidTypes = invalidTypes ?? Type.EmptyTypes;
         }
 
-        /// <summary>Verifies the hint throws when given nulls.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public void TryCreate_NullsThrow()
+        public void CreateHint_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCreate(null, CreateChainer()));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCreate(typeof(object), null));
+            Tools.Tester.PreventsNullRefException(TestInstance);
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>

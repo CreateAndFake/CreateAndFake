@@ -1,6 +1,4 @@
-﻿using System;
-using CreateAndFake;
-using CreateAndFake.Design.Randomization;
+﻿using CreateAndFake;
 using CreateAndFake.Toolbox.RandomizerTool;
 using Xunit;
 
@@ -9,14 +7,11 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
     /// <summary>Verifies behavior.</summary>
     public static class RandomizerChainerTests
     {
-        /// <summary>Verifies bad nulls are prevented.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void New_InvalidNullsThrow()
+        public static void RandomizerChainer_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new RandomizerChainer(Tools.Faker, null, (t, c) => null));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new RandomizerChainer(Tools.Faker, new FastRandom(), null));
+            Tools.Tester.PreventsNullRefException<RandomizerChainer>();
         }
     }
 }

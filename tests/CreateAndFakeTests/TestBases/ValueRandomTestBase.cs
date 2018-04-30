@@ -15,6 +15,13 @@ namespace CreateAndFakeTests.TestBases
         /// <summary>Instance to test with.</summary>
         private static ValueRandom s_TestInstance = Tools.Randomizer.Create<T>();
 
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public void ValueRandom_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException<T>();
+        }
+
         /// <summary>Verifies intended value types work.</summary>
         [Fact]
         public void Supports_TypeCoverage()
@@ -212,14 +219,6 @@ namespace CreateAndFakeTests.TestBases
 
             Tools.Asserter.Throws<InvalidOperationException>(
                 () => s_TestInstance.NextItem(CreateEnum(0)));
-        }
-
-        /// <summary>Verifies null is not valid.</summary>
-        [Fact]
-        public void NextItem_NullThrows()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => s_TestInstance.NextItem<object>(null));
         }
 
         /// <summary>Helper for creating linq enumerables.</summary>

@@ -10,6 +10,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
     /// <summary>Verifies behavior.</summary>
     public static class FakerTests
     {
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void Faker_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException<Faker>();
+        }
+
         /// <summary>Verifies valuer can be null.</summary>
         [Fact]
         public static void New_NullValuerValid()

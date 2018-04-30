@@ -73,7 +73,15 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
         public object Create(Type type)
         {
-            return Create(type, new RandomizerChainer(m_Faker, Gen, Create));
+            try
+            {
+                return Create(type, new RandomizerChainer(m_Faker, Gen, Create));
+            }
+            catch (InsufficientExecutionStackException)
+            {
+                throw new InsufficientExecutionStackException(
+                    $"Ran into infinite generation trying to randomize type '{type.Name}'.");
+            }
         }
 
         /// <summary>Creates a randomized instance.</summary>
@@ -109,6 +117,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <returns>Clone that is equal in value to the instance.</returns>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
+            if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
+
             return new Randomizer(duplicator.Copy(m_Faker),
                 duplicator.Copy(Gen), false, duplicator.Copy(Hints).ToArray());
         }

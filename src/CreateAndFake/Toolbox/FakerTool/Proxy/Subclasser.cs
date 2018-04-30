@@ -118,7 +118,11 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>True if possible; false if not with exception to throw.</returns>
         private static (bool, Exception) CanBeSubclassed(Type parent)
         {
-            if (parent.IsSealed)
+            if (parent == null)
+            {
+                return (true, null);
+            }
+            else if (parent.IsSealed)
             {
                 return (false, new ArgumentException($"Cannot subclass the sealed type '{parent.Name}'."));
             }

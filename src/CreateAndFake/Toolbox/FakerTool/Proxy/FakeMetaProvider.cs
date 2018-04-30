@@ -31,6 +31,9 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <param name="log">Record of calls to pass in.</param>
         internal FakeMetaProvider(IEnumerable<(CallData, Behavior)> behavior, IEnumerable<CallData> log)
         {
+            if (behavior == null) throw new ArgumentNullException(nameof(behavior));
+            if (log == null) throw new ArgumentNullException(nameof(log));
+
             foreach (var set in behavior)
             {
                 m_Behavior.Push(set);
@@ -87,6 +90,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <param name="callData">Call to verify.</param>
         internal void Verify(Times times, CallData callData)
         {
+            if (times == null) throw new ArgumentNullException(nameof(times));
             if (callData == null) throw new ArgumentNullException(nameof(callData));
 
             IEnumerable<CallData> calls = m_Log.Where(c => callData.MatchesCall(c)).ToArray();
@@ -100,6 +104,8 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <param name="times">Expected total.</param>
         internal void VerifyTotalCalls(Times times)
         {
+            if (times == null) throw new ArgumentNullException(nameof(times));
+
             if (!times.IsInRange(m_Log.Count))
             {
                 throw new FakeVerifyException(times, m_Log);

@@ -18,7 +18,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] s_ValidTypes
-            = new[] { typeof(IEnumerable), typeof(IList), typeof(List<string>), typeof(List<KeyValuePair<int, int>>) };
+            = new[] { typeof(IList), typeof(List<string>), typeof(List<KeyValuePair<int, int>>) };
 
         /// <summary>Types that can't be created by the hint.</summary>
         private static readonly Type[] s_InvalidTypes

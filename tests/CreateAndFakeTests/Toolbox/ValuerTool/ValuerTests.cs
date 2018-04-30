@@ -11,6 +11,13 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
     /// <summary>Verifies behavior.</summary>
     public static class ValuerTests
     {
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void Valuer_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException(Tools.Valuer);
+        }
+
         /// <summary>Verifies nulls are valid.</summary>
         [Fact]
         public static void New_NullHintsValid()
@@ -102,6 +109,34 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
             Tools.Asserter.Is(false, new Valuer(false, hint.Dummy).Equals(data1, data2));
 
             hint.Verify(Times.Exactly(2));
+        }
+
+        /// <summary>Verifies an infinite loop exception is caught and given details.</summary>
+        [Theory, RandomData]
+        public static void Compare_InfiniteLoopDetails(object item1, object item2, Fake<CompareHint> hint)
+        {
+            hint.Setup("Supports",
+                new[] { item1, item2, Arg.LambdaAny<ValuerChainer>() },
+                Behavior.Throw<InsufficientExecutionStackException>(Times.Once));
+
+            InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
+                () => new Valuer(false, hint.Dummy).Compare(item1, item2));
+
+            Tools.Asserter.Is(true, e.Message.Contains(item1.GetType().Name));
+        }
+
+        /// <summary>Verifies an infinite loop exception is caught and given details.</summary>
+        [Theory, RandomData]
+        public static void GetHashCode_InfiniteLoopDetails(object item, Fake<CompareHint> hint)
+        {
+            hint.Setup("Supports",
+                new[] { item, item, Arg.LambdaAny<ValuerChainer>() },
+                Behavior.Throw<InsufficientExecutionStackException>(Times.Once));
+
+            InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
+                () => new Valuer(false, hint.Dummy).GetHashCode(item));
+
+            Tools.Asserter.Is(true, e.Message.Contains(item.GetType().Name));
         }
     }
 }

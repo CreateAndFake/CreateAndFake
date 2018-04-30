@@ -28,7 +28,6 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         {
             if (expected == null) throw new ArgumentNullException(nameof(expected));
             if (actual == null) throw new ArgumentNullException(nameof(actual));
-            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
 
             Type type = expected.GetType();
             return type.GetProperties(m_Scope).Any(p => p.CanRead)
@@ -42,6 +41,10 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>Found differences.</returns>
         protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
         {
+            if (expected == null) throw new ArgumentNullException(nameof(expected));
+            if (actual == null) throw new ArgumentNullException(nameof(actual));
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
             Type type = expected.GetType();
 
             foreach (PropertyInfo property in type.GetProperties(m_Scope).Where(p => p.CanRead))
@@ -67,6 +70,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>The generated hash.</returns>
         protected override int GetHashCode(object item, ValuerChainer valuer)
         {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
             Type type = item.GetType();
             int hash = ValueComparer.BaseHash + type.GetHashCode();
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using CreateAndFake.Design.Content;
 
@@ -19,6 +20,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         protected override IEnumerable<Difference> Compare(
             IValueEquatable expected, IValueEquatable actual, ValuerChainer valuer)
         {
+            if (expected == null) throw new ArgumentNullException(nameof(expected));
+
             if (!expected.ValuesEqual(actual))
             {
                 yield return new Difference(".ValuesEqual", new Difference(true, false));

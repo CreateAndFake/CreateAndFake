@@ -13,10 +13,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         private static readonly FakeCreateHint s_TestInstance = new FakeCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[]
-        {
-            typeof(Fake<object>), typeof(Fake<OutSample>), typeof(Fake<GenericSample<string>>)
-        };
+        private static readonly Type[] s_ValidTypes
+            = new[] { typeof(Fake<object>), typeof(Fake<OutSample>), typeof(Fake<GenericSample<string>>) };
 
         /// <summary>Types that can't be created by the hint.</summary>
         private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using CreateAndFake.Design.Content;
 
@@ -15,6 +16,10 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         protected override IEnumerable<Difference> Compare(
             IEnumerable expected, IEnumerable actual, ValuerChainer valuer)
         {
+            if (expected == null) throw new ArgumentNullException(nameof(expected));
+            if (actual == null) throw new ArgumentNullException(nameof(actual));
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
             IEnumerator expectedEnumerator = expected.GetEnumerator();
             IEnumerator actualEnumerator = actual.GetEnumerator();
             int index = 0;
@@ -46,6 +51,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>The generated hash.</returns>
         protected override int GetHashCode(IEnumerable item, ValuerChainer valuer)
         {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
             int hash = ValueComparer.BaseHash;
             foreach (object value in item)
             {

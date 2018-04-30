@@ -31,16 +31,11 @@ namespace CreateAndFakeTests.TestBases
             m_InvalidTypes = invalidTypes ?? Type.EmptyTypes;
         }
 
-        /// <summary>Verifies the hint handles nulls properly.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public virtual void TryCompare_NullBehaviorCheck()
+        public void CompareHint_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCompare(null, new object(), CreateChainer()));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCompare(new object(), null, CreateChainer()));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryCompare(new object(), new object(), null));
+            Tools.Tester.PreventsNullRefException(TestInstance);
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
@@ -61,9 +56,9 @@ namespace CreateAndFakeTests.TestBases
                 (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(data, data, CreateChainer());
 
                 Tools.Asserter.Is(true, result.Item1,
-                    "Hint '" + typeof(T).Name + "' failed to support '" + type.Name + "'.");
+                    $"Hint '{typeof(T).Name}' failed to support '{type.Name}'.");
                 Tools.Asserter.IsEmpty(result.Item2,
-                    "Hint '" + typeof(T).Name + "' found differences with the same '" + type.Name + "'.");
+                    $"Hint '{typeof(T).Name}' found differences with same '{type.Name}' of '{data.GetType()}'.");
             }
         }
 
@@ -87,9 +82,9 @@ namespace CreateAndFakeTests.TestBases
                 (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(one, two, CreateChainer());
 
                 Tools.Asserter.Is(true, result.Item1,
-                    "Hint '" + typeof(T).Name + "' failed to support '" + type.Name + "'.");
+                    $"Hint '{typeof(T).Name}' failed to support '{type.Name}'.");
                 Tools.Asserter.IsNotEmpty(result.Item2.ToArray(),
-                    "Hint '" + typeof(T).Name + "' didn't find differences with two random '" + type.Name + "'.");
+                    $"Hint '{typeof(T).Name}' didn't find differences with two random '{type.Name}'.");
             }
         }
 
@@ -104,19 +99,9 @@ namespace CreateAndFakeTests.TestBases
 
                 Tools.Asserter.Is((false, (IEnumerable<Difference>)null),
                     TestInstance.TryCompare(one, two, CreateChainer()),
-                    "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
+                    $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
                 valuer.Verify(Times.Never);
             }
-        }
-
-        /// <summary>Verifies the hint handles nulls properly.</summary>
-        [Fact]
-        public virtual void TryGetHashCode_NullBehaviorCheck()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryGetHashCode(null, CreateChainer()));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => TestInstance.TryGetHashCode(new object(), null));
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
@@ -137,11 +122,11 @@ namespace CreateAndFakeTests.TestBases
 
                     (bool, int) dataHash = TestInstance.TryGetHashCode(data, CreateChainer());
                     Tools.Asserter.Is(true, dataHash.Item1,
-                        "Hint '" + typeof(T).Name + "' failed to support '" + type.Name + "'.");
+                        $"Hint '{typeof(T).Name}' failed to support '{type.Name}'.");
                     Tools.Asserter.Is(dataHash, TestInstance.TryGetHashCode(data, CreateChainer()),
-                        "Hint '" + typeof(T).Name + "' generated different hash for same '" + type.Name + "'.");
+                        $"Hint '{typeof(T).Name}' generated different hash for same '{type.Name}'.");
                     Tools.Asserter.Is(dataHash, TestInstance.TryGetHashCode(dataCopy, CreateChainer()),
-                        "Hint '" + typeof(T).Name + "' generated different hash for dupe '" + type.Name + "'.");
+                        $"Hint '{typeof(T).Name}' generated different hash for dupe '{type.Name}'.");
                 }
                 finally
                 {
@@ -169,9 +154,9 @@ namespace CreateAndFakeTests.TestBases
 
                     (bool, int) dataHash = TestInstance.TryGetHashCode(data, CreateChainer());
                     Tools.Asserter.Is(true, dataHash.Item1,
-                        "Hint '" + typeof(T).Name + "' failed to support '" + type.Name + "'.");
+                        $"Hint '{typeof(T).Name}' failed to support '{type.Name}'.");
                     Tools.Asserter.IsNot(dataHash, TestInstance.TryGetHashCode(dataDiffer, CreateChainer()),
-                        "Hint '" + typeof(T).Name + "' generated same hash for different '" + type.Name + "'.");
+                        $"Hint '{typeof(T).Name}' generated same hash for different '{type.Name}'.");
                 }
                 finally
                 {
@@ -189,7 +174,7 @@ namespace CreateAndFakeTests.TestBases
             {
                 Tools.Asserter.Is((false, default(int)),
                     TestInstance.TryGetHashCode(Tools.Randomizer.Create(type), CreateChainer()),
-                    "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
+                    $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
                 valuer.Verify(Times.Never);
             }
         }

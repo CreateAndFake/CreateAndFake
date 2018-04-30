@@ -10,6 +10,13 @@ namespace CreateAndFakeTests.Design.Content
     /// <summary>Verifies behavior.</summary>
     public static class ValueComparerTests
     {
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void ValueComparer_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException<ValueComparer>();
+        }
+
         /// <summary>Verifies params works as intended.</summary>
         [Theory, RandomData]
         public static void GetHashCode_ParamsBehavior(int item1)

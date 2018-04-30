@@ -12,14 +12,11 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
     /// <summary>Verifies behavior.</summary>
     public static class RandifferTests
     {
-        /// <summary>Verifies invalid nulls throw.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void New_NullsThrow()
+        public static void Randiffer_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new Randiffer(null, Tools.Valuer, Limiter.Few));
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => new Randiffer(Tools.Randomizer, null, Limiter.Few));
+            Tools.Tester.PreventsNullRefException(Tools.Randiffer);
         }
 
         /// <summary>Verifies null defaults to empty.</summary>

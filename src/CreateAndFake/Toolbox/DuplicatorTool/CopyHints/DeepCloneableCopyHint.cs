@@ -12,8 +12,6 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <returns>Duplicate object.</returns>
         protected override IDeepCloneable Copy(IDeepCloneable source, DuplicatorChainer duplicator)
         {
-            if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
-
             return source?.DeepClone();
         }
     }

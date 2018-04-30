@@ -30,23 +30,18 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         [Fact]
         public static void Asserter_AllMethodsVirtual()
         {
-            MemberInfo[] nonVirtualMethods = typeof(Asserter)
+            Tools.Asserter.IsEmpty(typeof(Asserter)
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-                .Where(m => !m.IsVirtual && m.Name != "Is" && m.Name != "IsNot")
-                .ToArray();
-
-            if (nonVirtualMethods.Any())
-            {
-                Tools.Asserter.Fail("Methods not virtual: " +
-                    string.Join(", ", nonVirtualMethods.Select(m => m.Name)));
-            }
+                .Where(m => !m.IsVirtual)
+                .Select(m => m.Name)
+                .Where(n => n != "Is" && n != "IsNot"));
         }
 
-        /// <summary>Verifies valid arguments are provided.</summary>
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void New_NullAsserterThrows()
+        public static void Asserter_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(() => new Asserter(null));
+            Tools.Tester.PreventsNullRefException<Asserter>();
         }
 
         /// <summary>Verifies fail will throw.</summary>
@@ -54,6 +49,14 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         public static void Fail_Throws()
         {
             Tools.Asserter.Throws<AssertException>(() => Tools.Asserter.Fail());
+        }
+
+        /// <summary>Verifies fail will throw.</summary>
+        [Theory, RandomData]
+        public static void Fail_ThrowsWithException(Exception error)
+        {
+            Tools.Asserter.Is(error, Tools.Asserter.Throws<AssertException>(
+                () => Tools.Asserter.Fail(error)).InnerException);
         }
 
         /// <summary>Verifies success when actions throw.</summary>

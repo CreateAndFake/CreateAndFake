@@ -18,6 +18,13 @@ namespace CreateAndFakeTests.Design
         /// <summary>Small delay to test with.</summary>
         private static readonly TimeSpan s_SmallDelay = new TimeSpan(0, 0, 0, 0, 20);
 
+        /// <summary>Verifies null reference exceptions are prevented.</summary>
+        [Fact]
+        public static void Limiter_GuardsNulls()
+        {
+            Tools.Tester.PreventsNullRefException(Limiter.Few);
+        }
+
         /// <summary>Verifies limit starts after first attempt.</summary>
         [Fact]
         public static async Task Repeat_AtLeastOnce()
@@ -52,14 +59,13 @@ namespace CreateAndFakeTests.Design
         {
             int attempts = 0;
 
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(0).Retry(() => { attempts++; throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
+                () => new Limiter(0).Retry(() => { attempts++; throw exception; }).Wait()).InnerException);
             Tools.Asserter.Is(1, attempts);
 
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(TimeSpan.MinValue).Retry(() => { attempts++; throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
+                () => new Limiter(TimeSpan.MinValue).Retry(
+                    () => { attempts++; throw exception; }).Wait()).InnerException);
             Tools.Asserter.Is(2, attempts);
         }
 
@@ -97,9 +103,8 @@ namespace CreateAndFakeTests.Design
             Exception exception = Tools.Randomizer.Create<Exception>();
             int attempts = 0;
 
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(tries).Retry(() => { attempts++; throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
+                () => new Limiter(tries).Retry(() => { attempts++; throw exception; }).Wait()).InnerException);
             Tools.Asserter.Is(tries, attempts);
         }
 
@@ -129,9 +134,8 @@ namespace CreateAndFakeTests.Design
         {
             Stopwatch watch = Stopwatch.StartNew();
 
-            Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(s_SmallDelay).Retry(() => { throw exception; }).Wait(),
-                e => Tools.Asserter.Is(exception, e.InnerException));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
+                () => new Limiter(s_SmallDelay).Retry(() => { throw exception; }).Wait()).InnerException);
             Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= s_SmallDelay.TotalMilliseconds - 1);
         }
 
@@ -285,45 +289,6 @@ namespace CreateAndFakeTests.Design
             Tools.Asserter.Is(4, calls);
         }
 
-        /// <summary>Verifies null works as intended.</summary>
-        [Fact]
-        public static async Task Repeat_NullBehavior()
-        {
-            await Limiter.Few.Repeat(null);
-
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.Repeat<object>(null).Wait());
-        }
-
-        /// <summary>Verifies null works as intended.</summary>
-        [Fact]
-        public static async Task StallUntil_NullBehavior()
-        {
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.StallUntil(null).Wait());
-
-            await Limiter.Few.StallUntil(null, () => true);
-
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.StallUntil(() => { }, null).Wait());
-
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.StallUntil<object>(null, () => true).Wait());
-        }
-
-        /// <summary>Verifies null works as intended.</summary>
-        [Fact]
-        public static async Task Retry_NullBehavior()
-        {
-            await Limiter.Few.Retry(null);
-            await Limiter.Few.Retry(null, null);
-
-            Tools.Asserter.Throws<ArgumentNullException>(
-                () => Limiter.Few.Retry<bool>(null).Wait());
-
-            await Limiter.Few.Retry(() => true, null);
-        }
-
         /// <summary>Verifies that check state is called properly.</summary>
         [Theory,
             InlineData(1),
@@ -378,15 +343,14 @@ namespace CreateAndFakeTests.Design
         [Theory, RandomData]
         public static void Retry_WrongExceptionThrows(NotSupportedException exception)
         {
-            Tools.Asserter.Throws<NotSupportedException>(
-                () => new Limiter(3).Retry<InvalidOperationException>((Action)(() => throw exception)).Wait(),
-                e => Tools.Asserter.Is(exception, e));
+            Tools.Asserter.Is(exception, Tools.Asserter.Throws<NotSupportedException>(
+                () => new Limiter(3).Retry<InvalidOperationException>((Action)(() => throw exception)).Wait()));
 
             IOException exception2 = new IOException();
 
-            Tools.Asserter.Throws<AggregateException>(
-                () => new Limiter(3).Retry<DirectoryNotFoundException, bool>(() => throw exception2).Wait(),
-                e => Tools.Asserter.Is(exception2, e.InnerExceptions.Single()));
+            Tools.Asserter.Is(exception2, Tools.Asserter.Throws<AggregateException>(
+                () => new Limiter(3).Retry<DirectoryNotFoundException, bool>(
+                    () => throw exception2).Wait()).InnerExceptions.Single());
         }
 
         /// <summary>Verifies default instances are not null.</summary>
