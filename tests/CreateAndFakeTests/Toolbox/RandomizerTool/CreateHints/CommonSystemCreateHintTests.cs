@@ -13,8 +13,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         private static readonly CommonSystemCreateHint s_TestInstance = new CommonSystemCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[] { typeof(PropertyInfo),
-            typeof(MemberInfo), typeof(FieldInfo), typeof(Type), typeof(TimeSpan) };
+        private static readonly Type[] s_ValidTypes = new[] { typeof(PropertyInfo), typeof(Type),
+            typeof(MemberInfo), typeof(MethodInfo), typeof(FieldInfo), typeof(TimeSpan) };
 
         /// <summary>Types that can't be created by the hint.</summary>
         private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };

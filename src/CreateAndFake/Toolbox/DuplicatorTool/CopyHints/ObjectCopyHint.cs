@@ -68,7 +68,8 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
                 PropertyInfo[] props = type.GetProperties(s_MemberFlags).Where(p => p.CanRead).ToArray();
                 FieldInfo[] fields = type.GetFields(s_MemberFlags).ToArray();
 
-                return type.GetConstructors()
+                return type.GetConstructors(s_MemberFlags)
+                    .Where(c => !c.IsPrivate)
                     .OrderByDescending(c => c.GetParameters().Length)
                     .Select(c => TryCreate(source, duplicator, c, props, fields))
                     .FirstOrDefault(o => o != null);

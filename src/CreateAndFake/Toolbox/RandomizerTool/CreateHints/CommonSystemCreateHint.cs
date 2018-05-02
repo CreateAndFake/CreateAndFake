@@ -14,6 +14,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 { typeof(Type).GetType(), rand => rand.Gen.NextItem(Assembly.GetExecutingAssembly().GetTypes()) },
                 { typeof(Type), rand => rand.Gen.NextItem(Assembly.GetExecutingAssembly().GetTypes()) },
                 { typeof(PropertyInfo), rand => FindTypeInfo(rand, t => t.GetProperties()) },
+                { typeof(MethodInfo), rand => FindTypeInfo(rand, t => t.GetMethods()) },
                 { typeof(MemberInfo), rand => FindTypeInfo(rand, t => t.GetMembers()) },
                 { typeof(FieldInfo), rand => FindTypeInfo(rand, t => t.GetFields()) },
                 { typeof(TimeSpan), rand => new TimeSpan(rand.Gen.Next<long>()) }
