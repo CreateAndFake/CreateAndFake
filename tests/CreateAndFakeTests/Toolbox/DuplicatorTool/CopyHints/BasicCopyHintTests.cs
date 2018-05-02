@@ -13,7 +13,7 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
     {
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] s_ValidTypes
-            = new[] { typeof(BindingFlags), typeof(string), typeof(int) };
+            = new[] { typeof(BindingFlags), typeof(string), typeof(int), typeof(decimal) };
 
         /// <summary>Types that can't be created by the hint.</summary>
         private static readonly Type[] s_InvalidTypes = new[] { typeof(DataHolderSample) };

@@ -1,4 +1,5 @@
 ﻿using System;
+using CreateAndFake.Design.Randomization;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 {
@@ -15,6 +16,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             if (type == null
                 || type.IsPrimitive
                 || type.IsEnum
+                || ValueRandom.ValueTypes.Contains(type)
                 || type == typeof(object)
                 || type == typeof(String))
             {
