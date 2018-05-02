@@ -14,6 +14,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Tester.PreventsNullRefException<Times>();
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void Times_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<Times>();
+        }
+
         /// <summary>Verifies the option works.</summary>
         [Fact]
         public static void Never_Works()

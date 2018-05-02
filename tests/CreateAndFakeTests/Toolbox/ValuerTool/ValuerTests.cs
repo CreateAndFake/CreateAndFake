@@ -18,6 +18,13 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
             Tools.Tester.PreventsNullRefException(Tools.Valuer);
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void Valuer_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation(Tools.Valuer);
+        }
+
         /// <summary>Verifies nulls are valid.</summary>
         [Fact]
         public static void New_NullHintsValid()

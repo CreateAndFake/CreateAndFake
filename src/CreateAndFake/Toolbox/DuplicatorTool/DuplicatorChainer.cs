@@ -7,14 +7,14 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
     /// <summary>Provides a callback into the duplicator to create child values.</summary>
     public sealed class DuplicatorChainer
     {
+        /// <summary>Reference to the actual duplicator.</summary>
+        internal IDuplicator Duplicator { get; }
+
         /// <summary>Callback to the duplicator to handle child values.</summary>
         private readonly Func<object, DuplicatorChainer, object> m_Callback;
 
         /// <summary>History of clones to match up references.</summary>
         private readonly ConditionalWeakTable<object, object> m_History;
-
-        /// <summary>Reference to the actual duplicator.</summary>
-        internal IDuplicator Duplicator { get; }
 
         /// <summary>Sets up the callback functionality.</summary>
         /// <param name="duplicator">Reference to the actual duplicator.</param>

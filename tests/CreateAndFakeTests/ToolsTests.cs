@@ -4,8 +4,10 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using CreateAndFake;
 using CreateAndFake.Toolbox;
+using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
+using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
 using Xunit;
 
@@ -62,7 +64,8 @@ namespace CreateAndFakeTests
         [Fact]
         public static void Tools_AllCreateAndFakeTypesWork()
         {
-            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType), typeof(AnyGeneric) };
+            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType),
+                typeof(AnyGeneric), typeof(DuplicatorChainer), typeof(ValuerChainer) };
 
             foreach (Type type in typeof(Tools).Assembly.GetTypes()
                 .Where(t => !(t.IsAbstract && t.IsSealed))

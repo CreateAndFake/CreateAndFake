@@ -13,5 +13,12 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         {
             Tools.Tester.PreventsNullRefException<RandomizerChainer>();
         }
+
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void RandomizerChainer_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<RandomizerChainer>();
+        }
     }
 }

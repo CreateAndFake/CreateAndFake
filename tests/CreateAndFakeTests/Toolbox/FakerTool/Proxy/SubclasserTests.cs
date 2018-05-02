@@ -17,6 +17,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             Tools.Tester.PreventsNullRefException(typeof(Subclasser));
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void Subclasser_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation(typeof(Subclasser));
+        }
+
         /// <summary>Verifies interfaces can be created.</summary>
         [Fact]
         public static void Create_InterfacesWork()

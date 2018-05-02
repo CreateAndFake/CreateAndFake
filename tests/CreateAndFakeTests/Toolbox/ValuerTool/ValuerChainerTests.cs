@@ -13,5 +13,12 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         {
             Tools.Tester.PreventsNullRefException<ValuerChainer>();
         }
+
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void ValuerChainer_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<ValuerChainer>();
+        }
     }
 }

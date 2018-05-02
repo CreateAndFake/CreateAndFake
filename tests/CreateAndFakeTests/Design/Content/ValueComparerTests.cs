@@ -17,6 +17,13 @@ namespace CreateAndFakeTests.Design.Content
             Tools.Tester.PreventsNullRefException<ValueComparer>();
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void ValueComparer_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<ValueComparer>();
+        }
+
         /// <summary>Verifies params works as intended.</summary>
         [Theory, RandomData]
         public static void GetHashCode_ParamsBehavior(int item1)

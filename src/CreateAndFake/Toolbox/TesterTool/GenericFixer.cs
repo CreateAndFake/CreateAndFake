@@ -42,8 +42,6 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <returns>Created arg type.</returns>
         private Type CreateArg(Type type)
         {
-            if (type.IsByRef) return null;
-
             bool newNeeded = type.GenericParameterAttributes.HasFlag(
                 GenericParameterAttributes.DefaultConstructorConstraint);
 

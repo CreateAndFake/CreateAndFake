@@ -9,17 +9,17 @@ namespace CreateAndFake.Toolbox.ValuerTool
     /// <summary>Provides a callback into the valuer to create child values.</summary>
     public sealed class ValuerChainer
     {
-        /// <summary>History of comparisons to match up references.</summary>
-        private readonly ICollection<(int, int)> m_CompareHistory;
-
-        /// <summary>History of hashes to match up references.</summary>
-        private readonly IDictionary<int, object> m_HashHistory;
+        /// <summary>Callback to valuer to handle child values.</summary>
+        private readonly Func<object, ValuerChainer, int> m_Hasher;
 
         /// <summary>Callback to valuer to handle child values.</summary>
         private readonly Func<object, object, ValuerChainer, IEnumerable<Difference>> m_Comparer;
 
-        /// <summary>Callback to valuer to handle child values.</summary>
-        private readonly Func<object, ValuerChainer, int> m_Hasher;
+        /// <summary>History of hashes to match up references.</summary>
+        private readonly IDictionary<int, object> m_HashHistory;
+
+        /// <summary>History of comparisons to match up references.</summary>
+        private readonly ICollection<(int, int)> m_CompareHistory;
 
         /// <summary>Reference to the actual valuer.</summary>
         internal IValuer Valuer { get; }

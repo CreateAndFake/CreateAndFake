@@ -17,6 +17,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Tester.PreventsNullRefException<Faker>();
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void Faker_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<Faker>();
+        }
+
         /// <summary>Verifies valuer can be null.</summary>
         [Fact]
         public static void New_NullValuerValid()

@@ -1,6 +1,7 @@
 ﻿using System;
 using CreateAndFake;
 using CreateAndFake.Toolbox.TesterTool;
+using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool
@@ -25,6 +26,14 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         public static void MutationGuarder_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation(s_TestInstance);
+        }
+
+        /// <summary>Verifies long methods time out.</summary>
+        [Fact]
+        public static void CallMethod_TimesOut()
+        {
+            Tools.Asserter.Throws<TimeoutException>(() => s_TestInstance
+                .PreventsMutationOnStatics(typeof(LongMethodSample), false));
         }
     }
 }

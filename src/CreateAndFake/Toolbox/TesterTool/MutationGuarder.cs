@@ -32,6 +32,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="randomizer">Creates objects and populates them with random values.</param>
         /// <param name="duplicator">Deep clones objects.</param>
         /// <param name="asserter">Handles common test scenarios.</param>
+        /// <param name="timeout">How long to wait for methods to complete.</param>
         internal MutationGuarder(GenericFixer fixer, IRandomizer randomizer,
             IDuplicator duplicator, Asserter asserter, TimeSpan timeout)
         {
