@@ -12,13 +12,21 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
     {
         /// <summary>Instance to test with.</summary>
         private static NullGuarder s_TestInstance = new NullGuarder(
-            Tools.Gen, Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
+            new GenericFixer(Tools.Gen, Tools.Randomizer),
+            Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
         public static void NullGuarder_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException(s_TestInstance);
+        }
+
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void NullGuarder_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation(s_TestInstance);
         }
 
         /// <summary>Verifies long methods time out.</summary>
