@@ -40,7 +40,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         {
             if (dict == null) throw new ArgumentNullException(nameof(dict));
 
-            return dict.Cast<DictionaryEntry>().ToDictionary(e => e.Key, e => e.Value);
+            return dict.Cast<DictionaryEntry>().ToDictionary(e => (string)e.Key, e => (string)e.Value);
         }
     }
 }

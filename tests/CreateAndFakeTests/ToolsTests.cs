@@ -4,11 +4,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using CreateAndFake;
 using CreateAndFake.Toolbox;
-using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
-using CreateAndFake.Toolbox.TesterTool;
-using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
 using Xunit;
 
@@ -65,8 +62,7 @@ namespace CreateAndFakeTests
         [Fact]
         public static void Tools_AllCreateAndFakeTypesWork()
         {
-            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType), typeof(Behavior),
-                typeof(AnyGeneric), typeof(DuplicatorChainer), typeof(ValuerChainer), typeof(NullGuarder) };
+            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType), typeof(AnyGeneric) };
 
             foreach (Type type in typeof(Tools).Assembly.GetTypes()
                 .Where(t => !(t.IsAbstract && t.IsSealed))
@@ -113,7 +109,7 @@ namespace CreateAndFakeTests
                 Tools.Asserter.ValuesEqual(original, dupe, failMessage);
                 Tools.Asserter.ValuesEqual(
                     Tools.Valuer.GetHashCode(original),
-                    Tools.Valuer.GetHashCode(dupe), failMessage);
+                    Tools.Valuer.GetHashCode(dupe), $"Hashcode {failMessage}");
 
                 if (type.GetProperties(s_Mutable).Any() || type.GetFields(s_Mutable).Any())
                 {

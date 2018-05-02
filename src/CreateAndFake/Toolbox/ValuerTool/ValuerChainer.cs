@@ -92,7 +92,10 @@ namespace CreateAndFake.Toolbox.ValuerTool
             }
 
             m_HashHistory[refHash] = item;
-            return m_Hasher.Invoke(item, this);
+
+            int hash = m_Hasher.Invoke(item, this);
+            m_HashHistory.Remove(refHash);
+            return hash;
         }
 
         /// <summary>Returns a hash code for the specified objects.</summary>
