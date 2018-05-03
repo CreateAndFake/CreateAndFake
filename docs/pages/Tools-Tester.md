@@ -3,6 +3,7 @@
 The `Tester` tool provides methods to automatically handle common scenarios:
 
 * `PreventsNullRefException` - Verifies nulls are guarded.
+* `MutationGuarder` - Verifies paramters aren't mutated by methods.
 
 Be warned that these methods are not trivial and can be relatively slow.
 

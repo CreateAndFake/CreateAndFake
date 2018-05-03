@@ -64,7 +64,7 @@ public static class Tool
     public static IDuplicator Duplicator { get; } = new Duplicator(Asserter);
 
     /// <summary>Automates common tests.</summary>
-    public static Tester Tester { get; } = new Tester(Gen, Randomizer, Asserter);
+    public static Tester Tester { get; } = new Tester(Gen, Randomizer, Duplicator, Asserter);
 }
 ```
 
