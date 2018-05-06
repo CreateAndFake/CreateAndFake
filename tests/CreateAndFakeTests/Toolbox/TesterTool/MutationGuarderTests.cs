@@ -18,7 +18,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         /// <summary>Instance to test with.</summary>
         private static MutationGuarder s_LongTestInstance = new MutationGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
-            Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 5));
+            Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]

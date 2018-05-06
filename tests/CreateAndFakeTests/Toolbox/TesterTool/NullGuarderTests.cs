@@ -19,7 +19,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         /// <summary>Instance to test with.</summary>
         private static NullGuarder s_LongTestInstance = new NullGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer),
-            Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 5));
+            Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 10));
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
