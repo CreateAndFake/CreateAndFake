@@ -38,12 +38,16 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             }
             duplicator.AddToHistory(source, dupe);
 
-            foreach (FieldInfo field in source.GetType().GetFields().Where(f => !f.IsInitOnly && !f.IsLiteral))
+            foreach (FieldInfo field in source.GetType()
+                .GetFields(BindingFlags.Instance | BindingFlags.Public)
+                .Where(f => !f.IsInitOnly && !f.IsLiteral))
             {
                 field.SetValue(dupe, duplicator.Copy(field.GetValue(source)));
             }
 
-            foreach (PropertyInfo property in source.GetType().GetProperties().Where(p => p.CanRead && p.CanWrite))
+            foreach (PropertyInfo property in source.GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => p.CanRead && p.CanWrite))
             {
                 property.SetValue(dupe, duplicator.Copy(property.GetValue(source)));
             }

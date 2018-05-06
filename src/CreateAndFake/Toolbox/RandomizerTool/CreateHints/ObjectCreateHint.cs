@@ -48,11 +48,14 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 
             Type dataType = data.GetType();
 
-            foreach (FieldInfo field in dataType.GetFields().Where(f => !f.IsInitOnly && !f.IsLiteral))
+            foreach (FieldInfo field in dataType.GetFields(BindingFlags.Instance | BindingFlags.Public)
+                .Where(f => !f.IsInitOnly && !f.IsLiteral))
             {
                 field.SetValue(data, randomizer.Create(field.FieldType, dataType));
             }
-            foreach (PropertyInfo property in dataType.GetProperties().Where(p => p.CanWrite))
+            foreach (PropertyInfo property in dataType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => p.CanWrite)
+                .Where(p => p.GetSetMethod() != null))
             {
                 property.SetValue(data, randomizer.Create(property.PropertyType, dataType));
             }

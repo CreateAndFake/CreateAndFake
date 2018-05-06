@@ -14,6 +14,12 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     [SuppressMessage("Sonar", "S1186:MethodsShouldNotBeEmpty", Justification = "No behavior intended.")]
     public sealed class DelegateCreateHint : CreateHint
     {
+        /// <summary>Methods used to match delegates.</summary>
+        private static readonly MethodInfo[] s_Delegators = typeof(Delegator)
+            .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+            .Where(m => m.Name == "AutoDelegate")
+            .ToArray();
+
         /// <summary>Tries to create a random instance of the given type.</summary>
         /// <param name="type">Type to generate.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
@@ -48,9 +54,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             MethodInfo info = type.GetMethod("Invoke");
             bool hasReturn = info.ReturnType != typeof(void);
 
-            MethodInfo match = typeof(Delegator)
-                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
-                .Where(m => m.Name == "AutoDelegate")
+            MethodInfo match = s_Delegators
                 .Where(m => m.GetParameters().Length == info.GetParameters().Length)
                 .Single(m => (m.ReturnType != typeof(void)) == hasReturn);
 

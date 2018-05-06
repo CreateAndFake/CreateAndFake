@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Reflection;
 using CreateAndFake;
+using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.TesterTool;
+using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool
@@ -36,6 +38,40 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         public static void Tester_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation(s_TestInstance);
+        }
+
+        /// <summary>Verifies disposables are properly disposed.</summary>
+        [Fact]
+        public static void PreventsNullRefException_Disposes()
+        {
+            lock (MockDisposableSample.Lock)
+            {
+                MockDisposableSample.ClassDisposes = 0;
+                MockDisposableSample.FinalizerDisposes = 0;
+                MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
+
+                s_TestInstance.PreventsNullRefException<MockDisposableSample>();
+                Tools.Asserter.Is(3, MockDisposableSample.ClassDisposes);
+                Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
+                MockDisposableSample.Fake.Verify(Times.Exactly(2), d => d.Dispose());
+            }
+        }
+
+        /// <summary>Verifies disposables are properly disposed.</summary>
+        [Fact]
+        public static void PreventsParameterMutation_Disposes()
+        {
+            lock (MockDisposableSample.Lock)
+            {
+                MockDisposableSample.ClassDisposes = 0;
+                MockDisposableSample.FinalizerDisposes = 0;
+                MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
+
+                s_TestInstance.PreventsParameterMutation<MockDisposableSample>();
+                Tools.Asserter.Is(4, MockDisposableSample.ClassDisposes);
+                Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
+                MockDisposableSample.Fake.Verify(Times.Exactly(2), d => d.Dispose());
+            }
         }
     }
 }

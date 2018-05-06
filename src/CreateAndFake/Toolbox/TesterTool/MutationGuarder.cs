@@ -68,6 +68,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             foreach (MethodInfo method in instance.GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+                .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
                 .Where(m => !m.IsPrivate))
             {
                 PreventsMutation(instance, m_Fixer.FixMethod(method), false);
@@ -129,6 +130,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             foreach (MethodInfo method in instance.GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+                .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
                 .Where(m => !m.IsPrivate)
                 .Select(m => m_Fixer.FixMethod(m)))
             {

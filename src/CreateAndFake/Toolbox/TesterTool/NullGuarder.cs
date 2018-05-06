@@ -69,6 +69,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             foreach (MethodInfo method in instance.GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+                .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
                 .Where(m => !m.IsPrivate))
             {
                 PreventsNullRefException(instance, m_Fixer.FixMethod(method), false);
@@ -147,6 +148,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             foreach (MethodInfo method in instance.GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+                .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
                 .Where(m => !m.IsPrivate)
                 .Select(m => m_Fixer.FixMethod(m)))
             {
@@ -199,9 +201,10 @@ namespace CreateAndFake.Toolbox.TesterTool
                     m_Asserter.Is(testParam.Name, inner.ParamName,
                         $"Incorrect name provided for exception {details}.");
                 }
-                else if (actual is NullReferenceException)
+                else
                 {
-                    m_Asserter.Fail(actual, $"Null reference exception encountered {details}.");
+                    m_Asserter.Is(false, actual is NullReferenceException,
+                        $"Null reference exception encountered {details}.");
                 }
                 return null;
             }

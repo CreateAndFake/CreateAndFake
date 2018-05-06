@@ -21,7 +21,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 { typeof(MethodInfo), rand => FindTypeInfo(rand, t => t.GetMethods()) },
                 { typeof(MemberInfo), rand => FindTypeInfo(rand, t => t.GetMembers()) },
                 { typeof(FieldInfo), rand => FindTypeInfo(rand, t => t.GetFields()) },
-                { typeof(CultureInfo), rand => rand.Gen.NextItem(s_RandomTypes) },
+                { typeof(CultureInfo), rand => rand.Gen.NextItem(CultureInfo.GetCultures(CultureTypes.AllCultures)) },
                 { typeof(TimeSpan), rand => new TimeSpan(rand.Gen.Next<long>()) },
             };
 

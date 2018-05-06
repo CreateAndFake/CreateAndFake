@@ -188,7 +188,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 "Fake[" + string.Join("|", interfaces.Prepend(parent).Select(i => i.Name)) + "]-" + Guid.NewGuid(),
                 TypeAttributes.NotPublic | TypeAttributes.Sealed, parent, interfaces);
 
-            MethodInfo metaGetter = SetupFakeMetaProvider(newType);
+            MethodInfo metaGetter = SetupFakeMetaProvider(newType, parent);
 
             (PropertyInfo, PropertyBuilder)[] props =
                 FindImplementableProperties(interfaces.Prepend(parent))
@@ -375,9 +375,14 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
 
         /// <summary>Hooks up the fake behavior mechanism for the new type.</summary>
         /// <param name="newType">Dynamic type being created.</param>
+        /// <param name="parent">Base class inheriting from.</param>
         /// <returns>Info for the meta provider hook.</returns>
-        private static MethodInfo SetupFakeMetaProvider(TypeBuilder newType)
+        private static MethodInfo SetupFakeMetaProvider(TypeBuilder newType, Type parent)
         {
+            ConstructorInfo baseConstuctor = parent
+                .GetConstructors(s_MemberFinder)
+                .SingleOrDefault(c => !c.GetParameters().Any());
+
             FieldBuilder backingField = newType.DefineField(
                 newType.Name + ".m_" + nameof(IFaked.FakeMeta), s_MetaType,
                 FieldAttributes.Private | FieldAttributes.InitOnly);
@@ -385,8 +390,15 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             ConstructorBuilder constructor = newType.DefineConstructor(
                 MethodAttributes.Public, CallingConventions.HasThis, new[] { s_MetaType });
             {
-                // this.m_FakeMeta = params[0];
+                // base();
                 ILGenerator newGenerator = constructor.GetILGenerator();
+                if (baseConstuctor != null)
+                {
+                    newGenerator.Emit(OpCodes.Ldarg_0);
+                    newGenerator.Emit(OpCodes.Call, baseConstuctor);
+                }
+
+                // this.m_FakeMeta = params[0];
                 newGenerator.Emit(OpCodes.Ldarg_0);
                 newGenerator.Emit(OpCodes.Ldarg_1);
                 newGenerator.Emit(OpCodes.Stfld, backingField);

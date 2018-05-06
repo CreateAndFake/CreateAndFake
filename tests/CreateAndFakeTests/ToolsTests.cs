@@ -65,7 +65,7 @@ namespace CreateAndFakeTests
         public static void Tools_AllCreateAndFakeTypesWork()
         {
             Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType),
-                typeof(AnyGeneric), typeof(DuplicatorChainer), typeof(ValuerChainer) };
+                typeof(AnyGeneric), typeof(DuplicatorChainer), typeof(ValuerChainer), typeof(Behavior<>) };
 
             foreach (Type type in typeof(Tools).Assembly.GetTypes()
                 .Where(t => !(t.IsAbstract && t.IsSealed))
