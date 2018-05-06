@@ -13,5 +13,12 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
         {
             Tools.Tester.PreventsNullRefException<DuplicatorChainer>();
         }
+
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void DuplicatorChainer_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<DuplicatorChainer>();
+        }
     }
 }

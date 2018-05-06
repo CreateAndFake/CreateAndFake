@@ -13,5 +13,12 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         {
             Tools.Tester.PreventsNullRefException<Difference>();
         }
+
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void Difference_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<Difference>();
+        }
     }
 }

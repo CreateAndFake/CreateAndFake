@@ -18,6 +18,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             Tools.Tester.PreventsNullRefException<CallData>();
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void CallData_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<CallData>();
+        }
+
         /// <summary>Verifies no match with different method names.</summary>
         [Theory, RandomData]
         public static void MatchesCall_MethodNameMismatch(DataHolderSample[] data, Type[] generics, string name1)

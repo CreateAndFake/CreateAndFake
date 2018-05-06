@@ -16,6 +16,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             Tools.Tester.PreventsNullRefException<FakeMetaProvider>();
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void FakeMetaProvider_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<FakeMetaProvider>();
+        }
+
         /// <summary>Verifies the provided value is matched by calls.</summary>
         [Theory, RandomData]
         public static void Verify_PresetOutOfRangeThrows(string name)

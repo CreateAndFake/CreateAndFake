@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 {
@@ -21,6 +22,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             else if (source is WeakReference reference)
             {
                 return (true, new WeakReference(reference.Target, reference.TrackResurrection));
+            }
+            else if (source is MemberInfo member)
+            {
+                return (true, member);
             }
             else
             {

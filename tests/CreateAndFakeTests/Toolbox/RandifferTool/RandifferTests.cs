@@ -19,6 +19,13 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
             Tools.Tester.PreventsNullRefException(Tools.Randiffer);
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void MutationGuarder_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation(Tools.Randiffer);
+        }
+
         /// <summary>Verifies null defaults to empty.</summary>
         [Theory, RandomData]
         public static void Create_AcceptsNull(string value)

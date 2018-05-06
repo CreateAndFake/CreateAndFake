@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
 using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.TesterTool;
@@ -10,43 +8,43 @@ using Xunit;
 namespace CreateAndFakeTests.Toolbox.TesterTool
 {
     /// <summary>Verifies behavior.</summary>
-    public static class TesterTests
+    public static class MutationGuarderTests
     {
         /// <summary>Instance to test with.</summary>
-        private static Tester s_ShortTestInstance = new Tester(Tools.Gen, Tools.Randomizer,
+        private static MutationGuarder s_ShortTestInstance = new MutationGuarder(
+            new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Instance to test with.</summary>
-        private static Tester s_LongTestInstance = new Tester(Tools.Gen, Tools.Randomizer,
+        private static MutationGuarder s_LongTestInstance = new MutationGuarder(
+            new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
-
-        /// <summary>Verifies openness for custom individual behavior by inheritance.</summary>
-        [Fact]
-        public static void Tester_AllMethodsVirtual()
-        {
-            Tools.Asserter.IsEmpty(typeof(Tester)
-                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-                .Where(m => !m.IsVirtual)
-                .Select(m => m.Name));
-        }
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void Tester_GuardsNulls()
+        public static void MutationGuarder_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException(s_ShortTestInstance);
         }
 
         /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void Tester_NoParameterMutation()
+        public static void MutationGuarder_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation(s_ShortTestInstance);
         }
 
+        /// <summary>Verifies long methods time out.</summary>
+        [Fact]
+        public static void CallMethod_TimesOut()
+        {
+            Tools.Asserter.Throws<TimeoutException>(() => s_ShortTestInstance
+                .PreventsMutationOnStatics(typeof(LongMethodSample), false));
+        }
+
         /// <summary>Verifies disposables are properly disposed.</summary>
         [Fact]
-        public static void PreventsNullRefException_Disposes()
+        public static void PreventsMutationOnConstructors_Disposes()
         {
             lock (MockDisposableSample.Lock)
             {
@@ -54,16 +52,16 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 MockDisposableSample.FinalizerDisposes = 0;
                 MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
 
-                s_LongTestInstance.PreventsNullRefException<MockDisposableSample>();
-                Tools.Asserter.Is(3, MockDisposableSample.ClassDisposes);
+                s_LongTestInstance.PreventsMutationOnConstructors(typeof(MockDisposableSample), true);
+                Tools.Asserter.Is(2, MockDisposableSample.ClassDisposes);
                 Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
-                MockDisposableSample.Fake.Verify(Times.Exactly(2), d => d.Dispose());
+                MockDisposableSample.Fake.Verify(Times.Once, d => d.Dispose());
             }
         }
 
         /// <summary>Verifies disposables are properly disposed.</summary>
         [Fact]
-        public static void PreventsParameterMutation_Disposes()
+        public static void PreventsMutationOnMethods_Disposes()
         {
             lock (MockDisposableSample.Lock)
             {
@@ -71,10 +69,13 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 MockDisposableSample.FinalizerDisposes = 0;
                 MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
 
-                s_LongTestInstance.PreventsParameterMutation<MockDisposableSample>();
-                Tools.Asserter.Is(4, MockDisposableSample.ClassDisposes);
-                Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
-                MockDisposableSample.Fake.Verify(Times.Exactly(2), d => d.Dispose());
+                using (MockDisposableSample sample = new MockDisposableSample(null))
+                {
+                    s_LongTestInstance.PreventsMutationOnMethods(sample);
+                    Tools.Asserter.Is(1, MockDisposableSample.ClassDisposes);
+                    Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
+                    MockDisposableSample.Fake.Verify(Times.Once, d => d.Dispose());
+                }
             }
         }
     }

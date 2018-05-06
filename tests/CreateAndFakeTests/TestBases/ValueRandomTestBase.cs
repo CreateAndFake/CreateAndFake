@@ -22,6 +22,13 @@ namespace CreateAndFakeTests.TestBases
             Tools.Tester.PreventsNullRefException<T>();
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public void ValueRandom_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<T>();
+        }
+
         /// <summary>Verifies intended value types work.</summary>
         [Fact]
         public void Supports_TypeCoverage()

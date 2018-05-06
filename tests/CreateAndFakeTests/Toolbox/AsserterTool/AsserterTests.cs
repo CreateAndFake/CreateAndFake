@@ -44,6 +44,13 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             Tools.Tester.PreventsNullRefException<Asserter>();
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void Asserter_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<Asserter>();
+        }
+
         /// <summary>Verifies fail will throw.</summary>
         [Fact]
         public static void Fail_Throws()

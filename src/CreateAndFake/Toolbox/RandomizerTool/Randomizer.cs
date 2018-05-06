@@ -32,10 +32,10 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         private readonly IFaker m_Faker;
 
         /// <summary>Generators used to randomize specific types.</summary>
-        internal IEnumerable<CreateHint> Hints { get; }
+        private readonly IEnumerable<CreateHint> m_Hints;
 
         /// <summary>Value generator used for base randomization.</summary>
-        public IRandom Gen { get; }
+        private readonly IRandom m_Gen;
 
         /// <summary>Sets up the randomizer capabilities.</summary>
         /// <param name="faker">Provides stubs.</param>
@@ -45,16 +45,16 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         public Randomizer(IFaker faker, IRandom gen, bool includeDefaultHints = true, params CreateHint[] hints)
         {
             m_Faker = faker ?? throw new ArgumentNullException(nameof(faker));
-            Gen = gen ?? throw new ArgumentNullException(nameof(gen));
+            m_Gen = gen ?? throw new ArgumentNullException(nameof(gen));
 
             var inputHints = hints ?? Enumerable.Empty<CreateHint>();
             if (includeDefaultHints)
             {
-                Hints = inputHints.Concat(s_DefaultHints).ToArray();
+                m_Hints = inputHints.Concat(s_DefaultHints).ToArray();
             }
             else
             {
-                Hints = inputHints.ToArray();
+                m_Hints = inputHints.ToArray();
             }
         }
 
@@ -75,7 +75,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         {
             try
             {
-                return Create(type, new RandomizerChainer(m_Faker, Gen, Create));
+                return Create(type, new RandomizerChainer(m_Faker, m_Gen, Create));
             }
             catch (InsufficientExecutionStackException)
             {
@@ -93,7 +93,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            (bool, object) result = Hints
+            (bool, object) result = m_Hints
                 .Select(h => h.TryCreate(type, chainer))
                 .FirstOrDefault(r => r.Item1);
 
@@ -120,7 +120,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
             return new Randomizer(duplicator.Copy(m_Faker),
-                duplicator.Copy(Gen), false, duplicator.Copy(Hints).ToArray());
+                duplicator.Copy(m_Gen), false, duplicator.Copy(m_Hints).ToArray());
         }
     }
 }

@@ -16,6 +16,13 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
             Tools.Tester.PreventsNullRefException<Duplicator>();
         }
 
+        /// <summary>Verifies parameters are not mutated.</summary>
+        [Fact]
+        public static void Duplicator_NoParameterMutation()
+        {
+            Tools.Tester.PreventsParameterMutation<Duplicator>();
+        }
+
         /// <summary>Verifies nulls are valid.</summary>
         [Fact]
         public static void New_NullHintsValid()

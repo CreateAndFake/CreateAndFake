@@ -38,12 +38,16 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             }
             duplicator.AddToHistory(source, dupe);
 
-            foreach (FieldInfo field in source.GetType().GetFields().Where(f => !f.IsInitOnly && !f.IsLiteral))
+            foreach (FieldInfo field in source.GetType()
+                .GetFields(BindingFlags.Instance | BindingFlags.Public)
+                .Where(f => !f.IsInitOnly && !f.IsLiteral))
             {
                 field.SetValue(dupe, duplicator.Copy(field.GetValue(source)));
             }
 
-            foreach (PropertyInfo property in source.GetType().GetProperties().Where(p => p.CanRead && p.CanWrite))
+            foreach (PropertyInfo property in source.GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => p.CanRead && p.CanWrite))
             {
                 property.SetValue(dupe, duplicator.Copy(property.GetValue(source)));
             }
@@ -68,7 +72,8 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
                 PropertyInfo[] props = type.GetProperties(s_MemberFlags).Where(p => p.CanRead).ToArray();
                 FieldInfo[] fields = type.GetFields(s_MemberFlags).ToArray();
 
-                return type.GetConstructors()
+                return type.GetConstructors(s_MemberFlags)
+                    .Where(c => !c.IsPrivate)
                     .OrderByDescending(c => c.GetParameters().Length)
                     .Select(c => TryCreate(source, duplicator, c, props, fields))
                     .FirstOrDefault(o => o != null);
