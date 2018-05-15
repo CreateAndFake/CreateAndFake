@@ -25,7 +25,7 @@ namespace CreateAndFake
         /// <summary>Creates objects and populates them with random values.</summary>
         public static IRandomizer Randomizer { get; } = new Randomizer(Faker, Gen);
 
-        /// <summary>Creates random variants of objects.</summary>
+        /// <summary>Changes the value of objects or creates alternatives.</summary>
         public static IMutator Mutator { get; } = new Mutator(Randomizer, Valuer, Limiter.Dozen);
 
         /// <summary>Handles common test scenarios.</summary>
