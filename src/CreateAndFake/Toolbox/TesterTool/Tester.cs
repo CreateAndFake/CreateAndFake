@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.TesterTool
     public class Tester
     {
         /// <summary>Default for how long to wait for methods to complete.</summary>
-        private static readonly TimeSpan s_DefaultTimeout = new TimeSpan(0, 0, 10);
+        private static readonly TimeSpan s_DefaultTimeout = new TimeSpan(0, 0, 15);
 
         /// <summary>Core value random handler.</summary>
         protected IRandom Gen { get; }

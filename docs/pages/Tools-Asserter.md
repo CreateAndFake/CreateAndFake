@@ -21,7 +21,7 @@ The `Asserter` tool provides methods to verify common test scenarios:
 [Theory, RandomData]
 public void Tools_DataSampleExample(DataSample original)
 {
-    Tools.Asserter.Is(original, Tools.Randiffer.Branch(original));
+    Tools.Asserter.Is(original, Tools.Mutator.Variant(original));
 }
 ```
 

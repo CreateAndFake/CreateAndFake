@@ -77,7 +77,7 @@ namespace CreateAndFakeTests.TestBases
             foreach (Type type in m_ValidTypes)
             {
                 object one = Tools.Randomizer.Create(type);
-                object two = Tools.Randiffer.Branch(one.GetType(), one);
+                object two = Tools.Mutator.Variant(one.GetType(), one);
 
                 (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(one, two, CreateChainer());
 
@@ -150,7 +150,7 @@ namespace CreateAndFakeTests.TestBases
                 try
                 {
                     data = Tools.Randomizer.Create(type);
-                    dataDiffer = Tools.Randiffer.Branch(data);
+                    dataDiffer = Tools.Mutator.Variant(data);
 
                     (bool, int) dataHash = TestInstance.TryGetHashCode(data, CreateChainer());
                     Tools.Asserter.Is(true, dataHash.Item1,

@@ -12,7 +12,7 @@ A default set of all tools are ready to use under the static class Tools.
 public void Tools_IntegrationWorks()
 {
     DataSample original = Tools.Randomizer.Create<DataSample>();
-    DataSample variant = Tools.Randiffer.Branch(original);
+    DataSample variant = Tools.Mutator.Variant(original);
     DataSample dupe = Tools.Duplicator.Copy(original);
 
     Tools.Asserter.Is(original, dupe);
@@ -36,7 +36,7 @@ The tools are designed to cover many common scenarios including immutable classe
 
 In case the default behavior is not enough, each tool can be customized for individual needs by creating your own instances. Additionally, interfaces have been provided for data classes to properly behave with the tools instead. Visit any tool's page to be guided on either route.
 
-Although each tool can be created and customized on a per test basis, it is recommended to create a your own static class containing the tools instead of the supplied default:
+Although each tool can be created and customized on a per test basis, it is recommended to create your own static class containing the tools instead of the supplied default:
 
 ```c#
 /// <summary>Holds basic implementations of all reflection tools.</summary>
@@ -54,8 +54,8 @@ public static class Tool
     /// <summary>Creates objects and populates them with random values.</summary>
     public static IRandomizer Randomizer { get; } = new Randomizer(Faker, Gen);
 
-    /// <summary>Creates random variants of objects.</summary>
-    public static IRandiffer Randiffer { get; } = new Randiffer(Randomizer, Valuer, Limiter.Dozen);
+    /// <summary>Changes the value of objects or creates alternatives.</summary>
+    public static IMutator Mutator { get; } = new Mutator(Randomizer, Valuer, Limiter.Dozen);
 
     /// <summary>Handles common test scenarios.</summary>
     public static Asserter Asserter { get; } = new Asserter(Valuer);

@@ -118,7 +118,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
 
             Tools.Asserter.Is(origin, copy);
             Tools.Asserter.Is(true, copy.Matches(value));
-            Tools.Asserter.Is(false, copy.Matches(Tools.Randiffer.Branch(value)));
+            Tools.Asserter.Is(false, copy.Matches(Tools.Mutator.Variant(value)));
         }
     }
 }

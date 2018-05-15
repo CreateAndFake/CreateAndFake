@@ -29,7 +29,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         [Theory, RandomData]
         public static void MatchesCall_MethodNameMismatch(DataHolderSample[] data, Type[] generics, string name1)
         {
-            string name2 = Tools.Randiffer.Branch(name1);
+            string name2 = Tools.Mutator.Variant(name1);
 
             Tools.Asserter.Is(false, new CallData(name1, generics, data, Tools.Valuer)
                 .MatchesCall(new CallData(name2, generics, data, null)));
@@ -39,7 +39,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         [Theory, RandomData]
         public static void MatchesCall_GenericsMismatch(DataHolderSample[] data, string name, Type[] generics1)
         {
-            Type[] generics2 = Tools.Randiffer.Branch(generics1);
+            Type[] generics2 = Tools.Mutator.Variant(generics1);
 
             Tools.Asserter.Is(false, new CallData(name, generics1, data, Tools.Valuer)
                 .MatchesCall(new CallData(name, generics2, data, null)));

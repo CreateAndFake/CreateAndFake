@@ -1,22 +1,22 @@
 ﻿using System;
 
-namespace CreateAndFake.Toolbox.RandifferTool
+namespace CreateAndFake.Toolbox.MutatorTool
 {
-    /// <summary>Creates random variants of objects.</summary>
-    public interface IRandiffer
+    /// <summary>Changes the value of objects or creates alternatives.</summary>
+    public interface IMutator
     {
-        /// <summary>Creates a variant.</summary>
+        /// <summary>Creates an object with different values.</summary>
         /// <typeparam name="T">Type to create.</typeparam>
         /// <param name="instance">Object to diverge from.</param>
         /// <param name="extraInstances">Extra objects to diverge from.</param>
         /// <returns>The created instance.</returns>
-        T Branch<T>(T instance, params T[] extraInstances);
+        T Variant<T>(T instance, params T[] extraInstances);
 
-        /// <summary>Creates a variant.</summary>
+        /// <summary>Creates an object with different values.</summary>
         /// <param name="type">Type to create.</param>
         /// <param name="instance">Object to diverge from.</param>
         /// <param name="extraInstances">Extra objects to diverge from.</param>
         /// <returns>The created instance.</returns>
-        object Branch(Type type, object instance, params object[] extraInstances);
+        object Variant(Type type, object instance, params object[] extraInstances);
     }
 }
