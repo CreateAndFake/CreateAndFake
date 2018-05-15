@@ -24,7 +24,7 @@ namespace CreateAndFakeTests
         public static void Tools_IntegrationWorks()
         {
             DataHolderSample original = Tools.Randomizer.Create<DataHolderSample>();
-            DataHolderSample variant = Tools.Randiffer.Branch(original);
+            DataHolderSample variant = Tools.Mutator.Variant(original);
             DataHolderSample dupe = Tools.Duplicator.Copy(original);
 
             Tools.Asserter.ValuesEqual(original, dupe);
@@ -52,7 +52,7 @@ namespace CreateAndFakeTests
             sample.Hole = sample;
 
             Tools.Asserter.Throws<TimeoutException>(
-                () => Tools.Randiffer.Branch(sample));
+                () => Tools.Mutator.Variant(sample));
 
             InfiniteSample dupe = Tools.Duplicator.Copy(sample);
 
@@ -116,7 +116,7 @@ namespace CreateAndFakeTests
 
                 if (type.GetProperties(s_Mutable).Any() || type.GetFields(s_Mutable).Any())
                 {
-                    variant = Tools.Randiffer.Branch(type, original);
+                    variant = Tools.Mutator.Variant(type, original);
                     Tools.Asserter.ValuesNotEqual(original, variant, failMessage);
                     Tools.Asserter.ValuesNotEqual(
                         Tools.Valuer.GetHashCode(original),

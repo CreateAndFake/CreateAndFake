@@ -32,7 +32,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         {
             Dictionary<string, int> dupe = Tools.Duplicator.Copy(data);
             string key = data.First().Key;
-            dupe[key] = Tools.Randiffer.Branch(data[key]);
+            dupe[key] = Tools.Mutator.Variant(data[key]);
 
             Tools.Asserter.IsNotEmpty(TestInstance.TryCompare(data, dupe, CreateChainer()).Item2.ToArray(),
                 "Hint didn't find differences with a modified key on '" + data.GetType().Name + "'.");

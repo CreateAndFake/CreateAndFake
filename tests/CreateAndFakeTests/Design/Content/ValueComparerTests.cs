@@ -28,8 +28,8 @@ namespace CreateAndFakeTests.Design.Content
         [Theory, RandomData]
         public static void GetHashCode_ParamsBehavior(int item1)
         {
-            int item2 = Tools.Randiffer.Branch(item1);
-            int item3 = Tools.Randiffer.Branch(item2);
+            int item2 = Tools.Mutator.Variant(item1);
+            int item3 = Tools.Mutator.Variant(item2);
             List<int> collection = new List<int> { item1, item2, item3 };
 
             Tools.Asserter.Is(
@@ -111,7 +111,7 @@ namespace CreateAndFakeTests.Design.Content
         {
             TActual baseObject = Tools.Randomizer.Create<TActual>();
             TActual equalObject = Tools.Duplicator.Copy(baseObject);
-            TActual unequalObject = Tools.Randiffer.Branch(baseObject);
+            TActual unequalObject = Tools.Mutator.Variant(baseObject);
 
             Tools.Asserter.Is(true, equalityComparer.Equals(baseObject, baseObject));
             Tools.Asserter.Is(true, equalityComparer.Equals(baseObject, equalObject));

@@ -371,8 +371,8 @@ namespace CreateAndFakeTests.Design
         {
             Limiter original = new Limiter(tries, elapsed);
             Limiter dupe = new Limiter(tries, elapsed);
-            Limiter variant1 = new Limiter(Tools.Randiffer.Branch(tries), elapsed);
-            Limiter variant2 = new Limiter(tries, Tools.Randiffer.Branch(elapsed));
+            Limiter variant1 = new Limiter(Tools.Mutator.Variant(tries), elapsed);
+            Limiter variant2 = new Limiter(tries, Tools.Mutator.Variant(elapsed));
 
             Tools.Asserter.Is(true, original.Equals(original));
             Tools.Asserter.Is(false, original.Equals(null));

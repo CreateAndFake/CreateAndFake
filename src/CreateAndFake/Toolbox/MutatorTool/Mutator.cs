@@ -5,10 +5,10 @@ using CreateAndFake.Design;
 using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFake.Toolbox.ValuerTool;
 
-namespace CreateAndFake.Toolbox.RandifferTool
+namespace CreateAndFake.Toolbox.MutatorTool
 {
-    /// <summary>Creates random variants of objects.</summary>
-    public sealed class Randiffer : IRandiffer
+    /// <summary>Changes the value of objects or creates alternatives.</summary>
+    public sealed class Mutator : IMutator
     {
         /// <summary>Handles randomization.</summary>
         private readonly IRandomizer m_Randomizer;
@@ -23,29 +23,29 @@ namespace CreateAndFake.Toolbox.RandifferTool
         /// <param name="randomizer">Handles randomization.</param>
         /// <param name="valuer">Ensures object variance.</param>
         /// <param name="limiter">Limits attempts at creating variants.</param>
-        public Randiffer(IRandomizer randomizer, IValuer valuer, Limiter limiter)
+        public Mutator(IRandomizer randomizer, IValuer valuer, Limiter limiter)
         {
             m_Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
             m_Valuer = valuer ?? throw new ArgumentNullException(nameof(valuer));
             m_Limiter = limiter;
         }
 
-        /// <summary>Creates a variant.</summary>
+        /// <summary>Creates an object with different values.</summary>
         /// <typeparam name="T">Type to create.</typeparam>
         /// <param name="instance">Object to diverge from.</param>
         /// <param name="extraInstances">Extra objects to diverge from.</param>
         /// <returns>The created instance.</returns>
-        public T Branch<T>(T instance, params T[] extraInstances)
+        public T Variant<T>(T instance, params T[] extraInstances)
         {
-            return (T)Branch(typeof(T), instance, extraInstances?.Cast<object>().ToArray());
+            return (T)Variant(typeof(T), instance, extraInstances?.Cast<object>().ToArray());
         }
 
-        /// <summary>Creates a variant.</summary>
+        /// <summary>Creates an object with different values.</summary>
         /// <param name="type">Type to create.</param>
         /// <param name="instance">Object to diverge from.</param>
         /// <param name="extraInstances">Extra objects to diverge from.</param>
         /// <returns>The created instance.</returns>
-        public object Branch(Type type, object instance, params object[] extraInstances)
+        public object Variant(Type type, object instance, params object[] extraInstances)
         {
             IEnumerable<object> values = (extraInstances ?? Enumerable.Empty<object>()).Prepend(instance);
 
