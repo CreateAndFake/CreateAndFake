@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.TesterTool
     public class Tester
     {
         /// <summary>Default for how long to wait for methods to complete.</summary>
-        private static readonly TimeSpan s_DefaultTimeout = new TimeSpan(0, 0, 15);
+        private static readonly TimeSpan s_DefaultTimeout = new TimeSpan(0, 0, 10);
 
         /// <summary>Core value random handler.</summary>
         protected IRandom Gen { get; }
@@ -27,7 +27,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <summary>How long to wait for tests to complete.</summary>
         private readonly TimeSpan m_Timeout;
 
-        /// <summary>Sets up the asserter capabilities.</summary>
+        /// <summary>Sets up the tester capabilities.</summary>
         /// <param name="gen">Core value random handler.</param>
         /// <param name="randomizer">Creates objects and populates them with random values.</param>
         /// <param name="duplicator">Deep clones objects.</param>
@@ -44,25 +44,25 @@ namespace CreateAndFake.Toolbox.TesterTool
             m_Timeout = timeout ?? s_DefaultTimeout;
         }
 
-        /// <summary>Verifies nulls are guarded on the type.</summary>
-        /// <typeparam name="T">Type to verify.</typeparam>
-        /// <remarks>
+        /// <summary>
+        ///     Verifies nulls are guarded on the type.
         ///     Tests each nullable parameter possible with null.
         ///     Constructor and factory parameters are additionally tested by running all methods.
         ///     Ignores any exception besides NullReferenceException and moves on.
-        /// </remarks>
+        /// </summary>
+        /// <typeparam name="T">Type to verify.</typeparam>
         public virtual void PreventsNullRefException<T>()
         {
             PreventsNullRefException(typeof(T));
         }
 
-        /// <summary>Verifies nulls are guarded on the type.</summary>
-        /// <param name="type">Type to verify.</param>
-        /// <remarks>
+        /// <summary>
+        ///     Verifies nulls are guarded on the type.
         ///     Tests each nullable parameter possible with null.
         ///     Constructor and factory parameters are additionally tested by running all methods.
         ///     Ignores any exception besides NullReferenceException and moves on.
-        /// </remarks>
+        /// </summary>
+        /// <param name="type">Type to verify.</param>
         public virtual void PreventsNullRefException(Type type)
         {
             NullGuarder checker = new NullGuarder(
@@ -80,14 +80,14 @@ namespace CreateAndFake.Toolbox.TesterTool
             checker.PreventsNullRefExceptionOnStatics(type, true);
         }
 
-        /// <summary>Verifies nulls are guarded on the type.</summary>
-        /// <typeparam name="T">Type to verify.</typeparam>
-        /// <param name="instance">Instance to test the methods on.</param>
-        /// <remarks>
+        /// <summary>
+        ///     Verifies nulls are guarded on the type.
         ///     Tests each parameter possible with null.
         ///     Constructor and factory parameters are not tested by running all methods.
         ///     Ignores any exception besides NullReferenceException and moves on.
-        /// </remarks>
+        /// </summary>
+        /// <typeparam name="T">Type to verify.</typeparam>
+        /// <param name="instance">Instance to test the methods on.</param>
         public virtual void PreventsNullRefException<T>(T instance)
         {
             NullGuarder checker = new NullGuarder(
@@ -98,23 +98,23 @@ namespace CreateAndFake.Toolbox.TesterTool
             checker.PreventsNullRefExceptionOnStatics(typeof(T), false);
         }
 
-        /// <summary>Verifies mutations are prevented on the type.</summary>
-        /// <typeparam name="T">Type to verify.</typeparam>
-        /// <remarks>
+        /// <summary>
+        ///     Verifies mutations are prevented on the type.
         ///     Constructor and factory parameters are additionally tested by running all methods.
         ///     Ignores any exception and moves on.
-        /// </remarks>
+        /// </summary>
+        /// <typeparam name="T">Type to verify.</typeparam>
         public virtual void PreventsParameterMutation<T>()
         {
             PreventsParameterMutation(typeof(T));
         }
 
-        /// <summary>Verifies mutations are prevented on the type.</summary>
-        /// <param name="type">Type to verify.</param>
-        /// <remarks>
+        /// <summary>
+        ///     Verifies mutations are prevented on the type.
         ///     Constructor and factory parameters are additionally tested by running all methods.
         ///     Ignores any exception and moves on.
-        /// </remarks>
+        /// </summary>
+        /// <param name="type">Type to verify.</param>
         public virtual void PreventsParameterMutation(Type type)
         {
             MutationGuarder checker = new MutationGuarder(
@@ -132,13 +132,13 @@ namespace CreateAndFake.Toolbox.TesterTool
             checker.PreventsMutationOnStatics(type, true);
         }
 
-        /// <summary>Verifies mutations are prevented on the type.</summary>
-        /// <typeparam name="T">Type to verify.</typeparam>
-        /// <param name="instance">Instance to test the methods on.</param>
-        /// <remarks>
+        /// <summary>
+        ///     Verifies mutations are prevented on the type.
         ///     Constructor and factory parameters are not tested by running all methods.
         ///     Ignores any exception and moves on.
-        /// </remarks>
+        /// </summary>
+        /// <typeparam name="T">Type to verify.</typeparam>
+        /// <param name="instance">Instance to test the methods on.</param>
         public virtual void PreventsParameterMutation<T>(T instance)
         {
             MutationGuarder checker = new MutationGuarder(

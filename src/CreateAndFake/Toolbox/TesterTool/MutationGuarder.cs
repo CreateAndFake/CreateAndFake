@@ -153,7 +153,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                     if (result is IEnumerable collection)
                     {
                         // Required to run through yield return methods.
-                        return collection?.OfType<object>()?.ToArray();
+                        return collection?.OfType<object>().ToArray();
                     }
                     else
                     {

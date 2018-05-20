@@ -36,13 +36,13 @@ namespace CreateAndFake.Toolbox.TesterTool
             m_Timeout = timeout;
         }
 
-        /// <summary>Verifies nulls are guarded on constructors.</summary>
-        /// <param name="type">Type to verify.</param>
-        /// <param name="callAllMethods">Run instance methods to validate constructor parameters.</param>
-        /// <remarks>
+        /// <summary>
+        ///     Verifies nulls are guarded on constructors.
         ///     Tests each nullable parameter possible with null.
         ///     Ignores any exception besides NullReferenceException and moves on.
-        /// </remarks>
+        /// </summary>
+        /// <param name="type">Type to verify.</param>
+        /// <param name="callAllMethods">Run instance methods to validate constructor parameters.</param>
         internal void PreventsNullRefExceptionOnConstructors(Type type, bool callAllMethods)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -56,12 +56,12 @@ namespace CreateAndFake.Toolbox.TesterTool
             }
         }
 
-        /// <summary>Verifies nulls are guarded on methods.</summary>
-        /// <param name="instance">Instance to test the methods on.</param>
-        /// <remarks>
+        /// <summary>
+        ///     Verifies nulls are guarded on methods.
         ///     Tests each nullable parameter possible with null.
         ///     Ignores any exception besides NullReferenceException and moves on.
-        /// </remarks>
+        /// </summary>
+        /// <param name="instance">Instance to test the methods on.</param>
         internal void PreventsNullRefExceptionOnMethods(object instance)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
@@ -76,13 +76,13 @@ namespace CreateAndFake.Toolbox.TesterTool
             }
         }
 
-        /// <summary>Verifies nulls are guarded on methods.</summary>
-        /// <param name="type">Type to verify.</param>
-        /// <param name="callAllMethods">Run instance methods to validate factory parameters.</param>
-        /// <remarks>
+        /// <summary>
+        ///     Verifies nulls are guarded on methods.
         ///     Tests each nullable parameter possible with null.
         ///     Ignores any exception besides NullReferenceException and moves on.
-        /// </remarks>
+        /// </summary>
+        /// <param name="type">Type to verify.</param>
+        /// <param name="callAllMethods">Run instance methods to validate factory parameters.</param>
         internal void PreventsNullRefExceptionOnStatics(Type type, bool callAllMethods)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -172,7 +172,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                     if (result is IEnumerable collection)
                     {
                         // Required to run through yield return methods.
-                        return collection?.OfType<object>()?.ToArray();
+                        return collection?.OfType<object>().ToArray();
                     }
                     else
                     {

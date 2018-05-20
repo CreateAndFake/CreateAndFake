@@ -37,8 +37,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
 
         /// <summary>Verifies no match with different method names.</summary>
         [Theory, RandomData]
-        public static void MatchesCall_GenericsMismatch(DataHolderSample[] data, string name, Type[] generics1)
+        public static void MatchesCall_GenericsMismatch(DataHolderSample[] data, string name)
         {
+            Type[] generics1 = Tools.Randomizer.Create<Type[]>().Except(new[] { typeof(AnyGeneric) }).ToArray();
             Type[] generics2 = Tools.Mutator.Variant(generics1);
 
             Tools.Asserter.Is(false, new CallData(name, generics1, data, Tools.Valuer)

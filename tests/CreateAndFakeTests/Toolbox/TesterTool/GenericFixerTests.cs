@@ -1,4 +1,5 @@
 ﻿using CreateAndFake;
+using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.TesterTool;
 using Xunit;
 
@@ -15,10 +16,10 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         }
 
         /// <summary>Verifies parameters are not mutated.</summary>
-        [Fact]
-        public static void GenericFixer_NoParameterMutation()
+        [Theory, RandomData]
+        public static void GenericFixer_NoParameterMutation(IRandom gen)
         {
-            Tools.Tester.PreventsParameterMutation<GenericFixer>();
+            Tools.Tester.PreventsParameterMutation(new GenericFixer(gen, Tools.Randomizer));
         }
     }
 }
