@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
@@ -12,16 +13,23 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         private static readonly IDictionary<Type, Func<RandomizerChainer, object>> s_Gens
             = new Dictionary<Type, Func<RandomizerChainer, object>>
             {
+                { typeof(CultureInfo), rand => rand.Gen.NextItem(CultureInfo.GetCultures(CultureTypes.AllCultures)) },
+                { typeof(TimeSpan), rand => new TimeSpan(rand.Gen.Next<long>()) },
+
+                { typeof(Assembly), rand => rand.Gen.NextItem(AppDomain.CurrentDomain.GetAssemblies()) },
+                { typeof(AssemblyName), rand => rand.Create<Assembly>().GetName() },
                 { typeof(Type).GetType(), rand => rand.Create<Type>() },
                 { typeof(Type), rand => rand.Gen.NextItem(Assembly.GetExecutingAssembly().GetTypes()) },
+
+                { typeof(ConstructorInfo), rand => FindTypeInfo(rand, t => t.GetConstructors()) },
                 { typeof(PropertyInfo), rand => FindTypeInfo(rand, t => t.GetProperties()) },
                 { typeof(MethodInfo), rand => FindTypeInfo(rand, t => t.GetMethods()) },
                 { typeof(MemberInfo), rand => FindTypeInfo(rand, t => t.GetMembers()) },
                 { typeof(FieldInfo), rand => FindTypeInfo(rand, t => t.GetFields()) },
-                { typeof(CultureInfo), rand => rand.Gen.NextItem(CultureInfo.GetCultures(CultureTypes.AllCultures)) },
-                { typeof(TimeSpan), rand => new TimeSpan(rand.Gen.Next<long>()) },
-                { typeof(Assembly), rand => rand.Gen.NextItem(AppDomain.CurrentDomain.GetAssemblies()) },
-                { typeof(AssemblyName), rand => rand.Create<Assembly>().GetName() }
+                { typeof(ParameterInfo), rand => FindTypeInfo(rand,
+                    t => t.GetMethods().SelectMany(m => m.GetParameters()).ToArray()) },
+                { typeof(MethodBase), rand => FindTypeInfo(rand,
+                    t => t.GetConstructors().Cast<MethodBase>().Concat(t.GetMethods()).ToArray()) },
             };
 
         /// <summary>Tries to create a random instance of the given type.</summary>

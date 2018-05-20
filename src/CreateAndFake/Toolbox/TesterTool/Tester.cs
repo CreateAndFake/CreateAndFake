@@ -1,4 +1,5 @@
 ﻿using System;
+using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.DuplicatorTool;
@@ -10,7 +11,10 @@ namespace CreateAndFake.Toolbox.TesterTool
     public class Tester
     {
         /// <summary>Default for how long to wait for methods to complete.</summary>
-        private static readonly TimeSpan s_DefaultTimeout = new TimeSpan(0, 0, 10);
+        private static readonly TimeSpan s_DefaultTimeout = new TimeSpan(0, 0, 3);
+
+        /// <summary>Retries tests if timeout is reached.</summary>
+        private static readonly Limiter s_Limiter = Limiter.Few;
 
         /// <summary>Core value random handler.</summary>
         protected IRandom Gen { get; }
@@ -68,16 +72,27 @@ namespace CreateAndFake.Toolbox.TesterTool
             NullGuarder checker = new NullGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Asserter, m_Timeout);
 
-            checker.PreventsNullRefExceptionOnConstructors(type, true);
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsNullRefExceptionOnConstructors(type, true)).Wait();
 
             if (!(type.IsAbstract && type.IsSealed))
             {
-                object instance = Randomizer.Create(type);
-                checker.PreventsNullRefExceptionOnMethods(instance);
-                (instance as IDisposable)?.Dispose();
+                s_Limiter.Retry<TimeoutException>(() =>
+                {
+                    object instance = Randomizer.Create(type);
+                    try
+                    {
+                        checker.PreventsNullRefExceptionOnMethods(instance);
+                    }
+                    finally
+                    {
+                        (instance as IDisposable)?.Dispose();
+                    }
+                }).Wait();
             }
 
-            checker.PreventsNullRefExceptionOnStatics(type, true);
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsNullRefExceptionOnStatics(type, true)).Wait();
         }
 
         /// <summary>
@@ -93,9 +108,12 @@ namespace CreateAndFake.Toolbox.TesterTool
             NullGuarder checker = new NullGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Asserter, m_Timeout);
 
-            checker.PreventsNullRefExceptionOnConstructors(typeof(T), false);
-            checker.PreventsNullRefExceptionOnMethods(instance);
-            checker.PreventsNullRefExceptionOnStatics(typeof(T), false);
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsNullRefExceptionOnConstructors(typeof(T), false)).Wait();
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsNullRefExceptionOnMethods(instance)).Wait();
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsNullRefExceptionOnStatics(typeof(T), false)).Wait();
         }
 
         /// <summary>
@@ -120,16 +138,27 @@ namespace CreateAndFake.Toolbox.TesterTool
             MutationGuarder checker = new MutationGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, m_Timeout);
 
-            checker.PreventsMutationOnConstructors(type, true);
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsMutationOnConstructors(type, true)).Wait();
 
             if (!(type.IsAbstract && type.IsSealed))
             {
-                object instance = Randomizer.Create(type);
-                checker.PreventsMutationOnMethods(instance);
-                (instance as IDisposable)?.Dispose();
+                s_Limiter.Retry<TimeoutException>(() =>
+                {
+                    object instance = Randomizer.Create(type);
+                    try
+                    {
+                        checker.PreventsMutationOnMethods(instance);
+                    }
+                    finally
+                    {
+                        (instance as IDisposable)?.Dispose();
+                    }
+                }).Wait();
             }
 
-            checker.PreventsMutationOnStatics(type, true);
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsMutationOnStatics(type, true)).Wait();
         }
 
         /// <summary>
@@ -144,9 +173,12 @@ namespace CreateAndFake.Toolbox.TesterTool
             MutationGuarder checker = new MutationGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, m_Timeout);
 
-            checker.PreventsMutationOnConstructors(typeof(T), false);
-            checker.PreventsMutationOnMethods(instance);
-            checker.PreventsMutationOnStatics(typeof(T), false);
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsMutationOnConstructors(typeof(T), false)).Wait();
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsMutationOnMethods(instance)).Wait();
+            s_Limiter.Retry<TimeoutException>(
+                () => checker.PreventsMutationOnStatics(typeof(T), false)).Wait();
         }
     }
 }

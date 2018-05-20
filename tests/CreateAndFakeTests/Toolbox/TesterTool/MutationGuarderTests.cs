@@ -11,12 +11,12 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
     public static class MutationGuarderTests
     {
         /// <summary>Instance to test with.</summary>
-        private static MutationGuarder s_ShortTestInstance = new MutationGuarder(
+        private static readonly MutationGuarder s_ShortTestInstance = new MutationGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Instance to test with.</summary>
-        private static MutationGuarder s_LongTestInstance = new MutationGuarder(
+        private static readonly MutationGuarder s_LongTestInstance = new MutationGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
 

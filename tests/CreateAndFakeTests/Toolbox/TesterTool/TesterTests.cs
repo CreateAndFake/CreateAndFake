@@ -13,11 +13,11 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
     public static class TesterTests
     {
         /// <summary>Instance to test with.</summary>
-        private static Tester s_ShortTestInstance = new Tester(Tools.Gen, Tools.Randomizer,
+        private static readonly Tester s_ShortTestInstance = new Tester(Tools.Gen, Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Instance to test with.</summary>
-        private static Tester s_LongTestInstance = new Tester(Tools.Gen, Tools.Randomizer,
+        private static readonly Tester s_LongTestInstance = new Tester(Tools.Gen, Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
 
         /// <summary>Verifies openness for custom individual behavior by inheritance.</summary>
