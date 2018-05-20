@@ -18,5 +18,10 @@ namespace CreateAndFake.Toolbox.MutatorTool
         /// <param name="extraInstances">Extra objects to diverge from.</param>
         /// <returns>The created instance.</returns>
         object Variant(Type type, object instance, params object[] extraInstances);
+
+        /// <summary>Attempts to mutate an object.</summary>
+        /// <param name="instance">Object to modify.</param>
+        /// <returns>True if modified; false otherwise.</returns>
+        bool Modify(object instance);
     }
 }

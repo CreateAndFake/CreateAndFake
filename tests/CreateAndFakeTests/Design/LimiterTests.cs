@@ -366,7 +366,7 @@ namespace CreateAndFakeTests.Design
         }
 
         /// <summary>Verifies the equality methods work properly.</summary>
-        [Theory, RandomData(Trials = 3)]
+        [Theory, RandomData]
         public static void Equality_MatchesValue(int tries, TimeSpan elapsed)
         {
             Limiter original = new Limiter(tries, elapsed);

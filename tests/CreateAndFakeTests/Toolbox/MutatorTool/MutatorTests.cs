@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Design;
 using CreateAndFake.Toolbox.FakerTool;
@@ -36,12 +37,14 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
 
         /// <summary>Verifies extra values to not equal work.</summary>
         [Theory, RandomData]
-        public static void Variant_ManyValuesWorks(string value1, string value2, string value3)
+        public static void Variant_ManyValuesWorks(int value)
         {
-            string result = Tools.Mutator.Variant(value1, value2, value3);
-            Tools.Asserter.IsNot(value1, result);
-            Tools.Asserter.IsNot(value2, result);
-            Tools.Asserter.IsNot(value3, result);
+            int[] data = Enumerable.Repeat(0, 10000)
+                .Select(v => Tools.Randomizer.Create<int>()).ToArray();
+
+            int result = Tools.Mutator.Variant(value, data);
+            Tools.Asserter.IsNot(value, result);
+            Tools.Asserter.Is(false, data.Contains(result));
         }
 
         /// <summary>Verifies limiter limits attempts.</summary>
@@ -88,6 +91,23 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
                 Tools.Randomizer.Create<DataSample>(),
                 Tools.Randomizer.Create<DataSample>()));
             fakeValuer.VerifyTotalCalls(8);
+        }
+
+        /// <summary>Verifies modifiable objects are valid and change.</summary>
+        [Theory, RandomData]
+        public static void Modify_DataChanged(DataHolderSample data)
+        {
+            DataHolderSample dupe = Tools.Duplicator.Copy(data);
+
+            Tools.Asserter.Is(true, Tools.Mutator.Modify(data));
+            Tools.Asserter.ValuesNotEqual(dupe, data);
+        }
+
+        /// <summary>Verifies unmodifiable objects are valid but won't change.</summary>
+        [Theory, RandomData]
+        public static void Modify_StatelessUnchanged(StatelessSample data)
+        {
+            Tools.Asserter.Is(false, Tools.Mutator.Modify(data));
         }
     }
 }

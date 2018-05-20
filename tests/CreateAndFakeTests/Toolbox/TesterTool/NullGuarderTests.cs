@@ -12,12 +12,12 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
     public static class NullGuarderTests
     {
         /// <summary>Instance to test with.</summary>
-        private static NullGuarder s_ShortTestInstance = new NullGuarder(
+        private static readonly NullGuarder s_ShortTestInstance = new NullGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer),
             Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Instance to test with.</summary>
-        private static NullGuarder s_LongTestInstance = new NullGuarder(
+        private static readonly NullGuarder s_LongTestInstance = new NullGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer),
             Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 10));
 

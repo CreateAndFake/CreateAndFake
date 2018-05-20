@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using CreateAndFake.Design.Randomization;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
@@ -18,7 +19,8 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
                 || type.IsEnum
                 || ValueRandom.ValueTypes.Contains(type)
                 || type == typeof(object)
-                || type == typeof(String))
+                || type == typeof(String)
+                || type.Inherits<IObjectReference>())
             {
                 return (true, source);
             }

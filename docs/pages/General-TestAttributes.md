@@ -21,7 +21,7 @@ Using the following attribute:
 public sealed class RandomDataAttribute : DataAttribute
 {
     /// <summary>Number of times to test the method.</summary>
-    public int Trials { get; set; } = 1;
+    public int Trials { get; set; } = 2;
 
     /// <summary>Generates data for a theory.</summary>
     /// <param name="testMethod">Theory information.</param>
@@ -30,12 +30,13 @@ public sealed class RandomDataAttribute : DataAttribute
     {
         if (testMethod == null) throw new ArgumentNullException(nameof(testMethod));
 
-        object[][] result = new object[Math.Max(Trials, 0)][];
-        for (int i = 0; i < result.Length; i++)
+        for (int i = 0; i < Math.Max(Trials, 0); i++)
         {
-            result[i] = testMethod.GetParameters().Select(p => Tools.Randomizer.Create(p.ParameterType)).ToArray();
+            yield return testMethod
+                .GetParameters()
+                .Select(p => Tools.Randomizer.Create(p.ParameterType))
+                .ToArray();
         }
-        return result;
     }
 }
 ```

@@ -21,12 +21,13 @@ namespace CreateAndFakeTests
         {
             if (testMethod == null) throw new ArgumentNullException(nameof(testMethod));
 
-            object[][] result = new object[Math.Max(Trials, 0)][];
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < Math.Max(Trials, 0); i++)
             {
-                result[i] = testMethod.GetParameters().Select(p => Tools.Randomizer.Create(p.ParameterType)).ToArray();
+                yield return testMethod
+                    .GetParameters()
+                    .Select(p => Tools.Randomizer.Create(p.ParameterType))
+                    .ToArray();
             }
-            return result;
         }
     }
 }

@@ -26,14 +26,10 @@ namespace CreateAndFakeTests.Design.Content
 
         /// <summary>Verifies params works as intended.</summary>
         [Theory, RandomData]
-        public static void GetHashCode_ParamsBehavior(int item1)
+        public static void GetHashCode_ParamsBehavior(int item1, int item2, int item3)
         {
-            int item2 = Tools.Mutator.Variant(item1);
-            int item3 = Tools.Mutator.Variant(item2);
-            List<int> collection = new List<int> { item1, item2, item3 };
-
             Tools.Asserter.Is(
-                ValueComparer.Use.GetHashCode(collection),
+                ValueComparer.Use.GetHashCode(new List<int> { item1, item2, item3 }),
                 ValueComparer.Use.GetHashCode(item1, item2, item3));
         }
 

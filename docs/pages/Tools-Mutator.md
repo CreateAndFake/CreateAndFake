@@ -1,6 +1,6 @@
 # Mutator
 
-The `Mutator` tool provides methods to create variants.
+The `Mutator` tool provides methods to modify objects and create variants.
 
 ## Example
 

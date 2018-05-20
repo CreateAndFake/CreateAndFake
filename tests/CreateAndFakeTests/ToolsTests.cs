@@ -121,6 +121,11 @@ namespace CreateAndFakeTests
                     Tools.Asserter.ValuesNotEqual(
                         Tools.Valuer.GetHashCode(original),
                         Tools.Valuer.GetHashCode(variant), failMessage);
+
+                    if (Tools.Mutator.Modify(original))
+                    {
+                        Tools.Asserter.ValuesNotEqual(dupe, original);
+                    }
                 }
 
                 if (Tools.Faker.Supports(type) && !type.Inherits<IDisposable>())
