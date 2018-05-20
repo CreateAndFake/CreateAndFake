@@ -8,14 +8,11 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     /// <summary>Handles generation of common types for the randomizer.</summary>
     public sealed class CommonSystemCreateHint : CreateHint
     {
-        /// <summary>Random types to use for generation.</summary>
-        private static readonly Type[] s_RandomTypes = new[] { typeof(string), typeof(int), typeof(object) };
-
         /// <summary>Supported types and the methods used to generate them.</summary>
         private static readonly IDictionary<Type, Func<RandomizerChainer, object>> s_Gens
             = new Dictionary<Type, Func<RandomizerChainer, object>>
             {
-                { typeof(Type).GetType(), rand => rand.Gen.NextItem(s_RandomTypes) },
+                { typeof(Type).GetType(), rand => rand.Create<Type>() },
                 { typeof(Type), rand => rand.Gen.NextItem(Assembly.GetExecutingAssembly().GetTypes()) },
                 { typeof(PropertyInfo), rand => FindTypeInfo(rand, t => t.GetProperties()) },
                 { typeof(MethodInfo), rand => FindTypeInfo(rand, t => t.GetMethods()) },
@@ -23,6 +20,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 { typeof(FieldInfo), rand => FindTypeInfo(rand, t => t.GetFields()) },
                 { typeof(CultureInfo), rand => rand.Gen.NextItem(CultureInfo.GetCultures(CultureTypes.AllCultures)) },
                 { typeof(TimeSpan), rand => new TimeSpan(rand.Gen.Next<long>()) },
+                { typeof(Assembly), rand => rand.Gen.NextItem(AppDomain.CurrentDomain.GetAssemblies()) },
+                { typeof(AssemblyName), rand => rand.Create<Assembly>().GetName() }
             };
 
         /// <summary>Tries to create a random instance of the given type.</summary>
