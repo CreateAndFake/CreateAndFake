@@ -1,6 +1,6 @@
 # Randomizer
 
-The `Randomizer` tool provides methods to create instances populated with random data.
+The `Randomizer` tool provides methods to create instances populated with random data, as well as injection behavior.
 
 ## Example
 
@@ -17,6 +17,10 @@ public void FindFirstChild_NullChildrenThrows()
     Tools.Asserter.Throws<ArgumentNullException>(() => item.FindFirstChild());
 }
 ```
+
+## Injection
+
+Using the inject functionality, the `Randomizer` can create a type using provided values and falling back to randomization for any necessary data not provided.
 
 ## Creation & Customization
 
