@@ -32,10 +32,7 @@ public sealed class RandomDataAttribute : DataAttribute
 
         for (int i = 0; i < Math.Max(Trials, 0); i++)
         {
-            yield return testMethod
-                .GetParameters()
-                .Select(p => Tools.Randomizer.Create(p.ParameterType))
-                .ToArray();
+            yield return Tools.Randomizer.CreateFor(testMethod);
         }
     }
 }

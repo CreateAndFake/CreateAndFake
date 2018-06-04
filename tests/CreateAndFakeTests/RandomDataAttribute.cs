@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using CreateAndFake;
 using Xunit.Sdk;
@@ -23,10 +22,7 @@ namespace CreateAndFakeTests
 
             for (int i = 0; i < Math.Max(Trials, 0); i++)
             {
-                yield return testMethod
-                    .GetParameters()
-                    .Select(p => Tools.Randomizer.Create(p.ParameterType))
-                    .ToArray();
+                yield return Tools.Randomizer.CreateFor(testMethod);
             }
         }
     }

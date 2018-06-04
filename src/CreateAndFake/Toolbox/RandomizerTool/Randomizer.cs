@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
@@ -106,6 +107,85 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 throw new NotSupportedException(
                     $"Type '{type.FullName}' not supported by the randomizer. " +
                     "Create a hint to generate the type and pass it to the randomizer.");
+            }
+        }
+
+        /// <summary>
+        ///     Constructs the parameters for a method.
+        ///     Randomizes types by default.
+        ///     Earlier fakes will be used to construct later types if possible.
+        ///     Those types will be additionally populated with random fakes.
+        /// </summary>
+        /// <param name="method">Method to create parameters for.</param>
+        /// <returns>Parameter arguments in order.</returns>
+        public object[] CreateFor(MethodBase method)
+        {
+            if (method == null) throw new ArgumentNullException(nameof(method));
+
+            Stack<object> args = new Stack<object>(method.GetParameters().Length);
+
+            foreach (ParameterInfo param in method.GetParameters())
+            {
+                args.Push(Inject(param.ParameterType, args.Where(a => a is Fake).ToArray()));
+            }
+
+            return args.Reverse().ToArray();
+        }
+
+        /// <summary>Creates an instance using the values or random data as needed.</summary>
+        /// <typeparam name="T">Type to create.</typeparam>
+        /// <param name="values">Values to inject into the instance.</param>
+        /// <returns>The created instance.</returns>
+        public T Inject<T>(params object[] values)
+        {
+            return (T)Inject(typeof(T), values);
+        }
+
+        /// <summary>Creates an instance using the values or random data as needed.</summary>
+        /// <param name="type">Type to create.</param>
+        /// <param name="values">Values to inject into the instance.</param>
+        /// <returns>The created instance.</returns>
+        public object Inject(Type type, params object[] values)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            IDictionary<Type, object> data = (values ?? Array.Empty<object>())
+                .Where(v => v != null)
+                .Select(v => (v is Fake fake) ? fake.Dummy : v)
+                .GroupBy(v => v.GetType())
+                .ToDictionary(g => g.Key, g => g.Last());
+
+            // Finds the contructor with the most matches then by fewest parameters.
+            ConstructorInfo maker = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public)
+                .GroupBy(c => c.GetParameters().Count(p => data.Keys.Any(t => t.Inherits(p.ParameterType))))
+                .Where(g => g.Key > 0)
+                .OrderByDescending(g => g.Key)
+                .FirstOrDefault()
+                ?.OrderBy(c => c.GetParameters())
+                .FirstOrDefault();
+
+            if (maker != null && !type.Inherits<Fake>())
+            {
+                ParameterInfo[] info = maker.GetParameters();
+                object[] args = new object[info.Length];
+                for (int i = 0; i < args.Length; i++)
+                {
+                    Type key = data.Keys.FirstOrDefault(t => t.Inherits(info[i].ParameterType));
+                    if (key != null)
+                    {
+                        args[i] = data[key];
+                        data.Remove(key);
+                    }
+                    else
+                    {
+                        args[i] = Create(info[i].ParameterType);
+                    }
+                }
+                return maker.Invoke(args);
+            }
+            else
+            {
+                return Create(type);
             }
         }
 

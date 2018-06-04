@@ -3,6 +3,7 @@ using CreateAndFake;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
+using CreateAndFakeTests.TestSamples;
 using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool
@@ -86,6 +87,13 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
                 () => new Randomizer(Tools.Faker, new FastRandom(), false, hint.Dummy).Create(type));
 
             Tools.Asserter.Is(true, e.Message.Contains(type.Name));
+        }
+
+        /// <summary>Verifies fakes are injected into the given type.</summary>
+        [Theory, RandomData]
+        public static void Inject_FakesAreInjected(Fake<DataSample> fake, InjectSample holder)
+        {
+            Tools.Asserter.ReferenceEqual(fake.Dummy, holder.Data);
         }
     }
 }
