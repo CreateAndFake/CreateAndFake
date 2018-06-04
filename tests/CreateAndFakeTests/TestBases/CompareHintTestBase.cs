@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using CreateAndFake;
-using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using Xunit;
 
@@ -39,16 +38,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [Theory, RandomData]
-        public void TryCompare_SupportsSameValidTypes(Fake<IValuer> valuer)
+        [Fact]
+        public void TryCompare_SupportsSameValidTypes()
         {
-            valuer.Setup(
-                m => m.Compare(Arg.Any<object>(), Arg.Any<object>()),
-                Behavior.Returns(Enumerable.Empty<Difference>()));
-            valuer.Setup(
-                m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
-                Behavior.Returns(true));
-
             foreach (Type type in m_ValidTypes)
             {
                 object data = Tools.Randomizer.Create(type);
@@ -66,14 +58,6 @@ namespace CreateAndFakeTests.TestBases
         [Fact]
         public virtual void TryCompare_SupportsDifferentValidTypes()
         {
-            Fake<IValuer> valuer = Tools.Faker.Mock<IValuer>();
-            valuer.Setup(
-                m => m.Compare(Arg.Any<object>(), Arg.Any<object>()),
-                Behavior.Returns(Tools.Randomizer.Create<IEnumerable<Difference>>()));
-            valuer.Setup(
-                m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
-                Behavior.Returns(false));
-
             foreach (Type type in m_ValidTypes)
             {
                 object one = Tools.Randomizer.Create(type);
@@ -89,8 +73,8 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint doesn't support the wrong types.</summary>
-        [Theory, RandomData]
-        public void TryCompare_InvalidTypesFail(Fake<IValuer> valuer)
+        [Fact]
+        public void TryCompare_InvalidTypesFail()
         {
             foreach (Type type in m_InvalidTypes)
             {
@@ -100,18 +84,13 @@ namespace CreateAndFakeTests.TestBases
                 Tools.Asserter.Is((false, (IEnumerable<Difference>)null),
                     TestInstance.TryCompare(one, two, CreateChainer()),
                     $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
-                valuer.Verify(Times.Never);
             }
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [Theory, RandomData]
-        public void TryGetHashCode_SupportsSameValidTypes(Fake<IValuer> valuer)
+        [Fact]
+        public void TryGetHashCode_SupportsSameValidTypes()
         {
-            valuer.Setup(
-                m => m.GetHashCode(Arg.Any<object>()),
-                Behavior.Returns(Tools.Randomizer.Create<int>()));
-
             foreach (Type type in m_ValidTypes)
             {
                 object data = null, dataCopy = null;
@@ -137,13 +116,9 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [Theory, RandomData]
-        public void TryGetHashCode_SupportsDifferentValidTypes(Fake<IValuer> valuer)
+        [Fact]
+        public void TryGetHashCode_SupportsDifferentValidTypes()
         {
-            valuer.Setup(
-                m => m.GetHashCode(Arg.Any<object>()),
-                Behavior.Set(() => Tools.Randomizer.Create<int>()));
-
             foreach (Type type in m_ValidTypes)
             {
                 object data = null, dataDiffer = null;
@@ -167,15 +142,14 @@ namespace CreateAndFakeTests.TestBases
         }
 
         /// <summary>Verifies the hint doesn't support the wrong types.</summary>
-        [Theory, RandomData]
-        public void TryGetHashCode_InvalidTypesFail(Fake<IValuer> valuer)
+        [Fact]
+        public void TryGetHashCode_InvalidTypesFail()
         {
             foreach (Type type in m_InvalidTypes)
             {
                 Tools.Asserter.Is((false, default(int)),
                     TestInstance.TryGetHashCode(Tools.Randomizer.Create(type), CreateChainer()),
                     $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
-                valuer.Verify(Times.Never);
             }
         }
 

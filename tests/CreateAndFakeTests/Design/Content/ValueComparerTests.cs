@@ -34,12 +34,10 @@ namespace CreateAndFakeTests.Design.Content
         }
 
         /// <summary>Verifies the type works as intended.</summary>
-        [Fact]
-        public static void ValueComparer_ValueEquatableBehavior()
+        [Theory, RandomData]
+        public static void ValueComparer_ValueEquatableBehavior(
+            Fake<IValueEquatable> stub1, Fake<IValueEquatable> stub2)
         {
-            Fake<IValueEquatable> stub1 = Tools.Faker.Stub<IValueEquatable>();
-            Fake<IValueEquatable> stub2 = Tools.Faker.Stub<IValueEquatable>();
-
             ValueComparer.Use.Equals(stub1.Dummy, stub2.Dummy);
             stub1.Verify(1, m => m.ValuesEqual(stub2.Dummy));
             stub1.VerifyTotalCalls(1);
