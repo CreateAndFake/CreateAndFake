@@ -83,7 +83,6 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 
             Fake mock = randomizer.Stub(target);
             mock.Dummy.FakeMeta.Identifier = randomizer.Create<int>(typeof(IFaked));
-            mock.ThrowByDefault = true;
 
             // Generic returns have to just use stub behavior.
             foreach (MethodInfo method in target
@@ -91,6 +90,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 .Where(m => m.IsAbstract || (m.IsVirtual && !m.IsFinal))
                 .Where(m => !m.IsPrivate)
                 .Where(m => !m.ReturnType.IsGenericParameter)
+                .Where(m => !m.ReturnType.ContainsGenericParameters)
                 .Where(m => m.Name != "Finalize"))
             {
                 Type[] generics = (method.IsGenericMethod)
