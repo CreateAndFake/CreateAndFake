@@ -39,24 +39,28 @@ namespace CreateAndFakeTests.Design.Content
             Fake<IValueEquatable> stub1, Fake<IValueEquatable> stub2)
         {
             ValueComparer.Use.Equals(stub1.Dummy, stub2.Dummy);
-            stub1.Verify(1, m => m.ValuesEqual(stub2.Dummy));
-            stub1.VerifyTotalCalls(1);
-            stub2.VerifyTotalCalls(0);
+            Tools.Asserter.CheckAll(
+                () => stub1.Verify(1, m => m.ValuesEqual(stub2.Dummy)),
+                () => stub1.VerifyTotalCalls(1),
+                () => stub2.VerifyTotalCalls(0));
 
             ValueComparer.Use.Equals((object)stub1.Dummy, stub2.Dummy);
-            stub1.Verify(2, m => m.ValuesEqual(stub2.Dummy));
-            stub1.VerifyTotalCalls(2);
-            stub2.VerifyTotalCalls(0);
+            Tools.Asserter.CheckAll(
+                () => stub1.Verify(2, m => m.ValuesEqual(stub2.Dummy)),
+                () => stub1.VerifyTotalCalls(2),
+                () => stub2.VerifyTotalCalls(0));
 
             ValueComparer.Use.Compare(stub1.Dummy, stub2.Dummy);
-            stub1.Verify(1, m => m.GetValueHash());
-            stub1.VerifyTotalCalls(3);
-            stub2.Verify(1, m => m.GetValueHash());
-            stub2.VerifyTotalCalls(1);
+            Tools.Asserter.CheckAll(
+                () => stub1.Verify(1, m => m.GetValueHash()),
+                () => stub1.VerifyTotalCalls(3),
+                () => stub2.Verify(1, m => m.GetValueHash()),
+                () => stub2.VerifyTotalCalls(1));
 
             ValueComparer.Use.GetHashCode((object)stub1.Dummy);
-            stub1.Verify(2, m => m.GetValueHash());
-            stub1.VerifyTotalCalls(4);
+            Tools.Asserter.CheckAll(
+                () => stub1.Verify(2, m => m.GetValueHash()),
+                () => stub1.VerifyTotalCalls(4));
         }
 
         /// <summary>Verifies the type works as intended.</summary>
