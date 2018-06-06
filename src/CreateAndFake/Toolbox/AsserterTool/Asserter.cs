@@ -20,6 +20,34 @@ namespace CreateAndFake.Toolbox.AsserterTool
             Valuer = valuer ?? throw new ArgumentNullException(nameof(valuer));
         }
 
+        /// <summary>Runs each case and aggregates exceptions.</summary>
+        /// <param name="cases">Assert cases.</param>
+        public virtual void CheckAll(params Action[] cases)
+        {
+            if (cases == null) return;
+
+            Exception[] errors = new Exception[cases.Length];
+            for (int i = 0; i < errors.Length; i++)
+            {
+                try
+                {
+                    cases[i].Invoke();
+                    errors[i] = null;
+                }
+                catch (Exception e)
+                {
+                    errors[i] = e;
+                }
+            }
+
+            if (errors.Any(e => e != null))
+            {
+                throw new AggregateException("Cases failed: " +
+                    String.Join(", ", Enumerable.Range(0, errors.Length).Where(i => errors[i] != null)),
+                    errors.Where(e => e != null));
+            }
+        }
+
         /// <summary>Throws an assert exception.</summary>
         /// <param name="details">Optional failure details.</param>
         public virtual void Fail(string details = null)
