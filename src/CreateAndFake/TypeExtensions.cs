@@ -10,11 +10,16 @@ namespace CreateAndFake.Toolbox
     /// <summary>Extensions for types.</summary>
     public static class TypeExtensions
     {
+        /// <summary>Keeps track of type inheritance.</summary>
+        private static IDictionary<Type, HashSet<Type>> s_ChildCache = new Dictionary<Type, HashSet<Type>>();
+
         /// <summary>Finds subclasses of a type in the type's assembly.</summary>
         /// <param name="type">Type to locate subclasses for.</param>
         /// <returns>Found createable subclasses.</returns>
         public static IEnumerable<Type> FindLocalSubclasses(this Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return type.Assembly.GetTypes()
                 .Where(t => !t.IsAbstract)
                 .Where(t => t.Inherits(type));
@@ -25,6 +30,8 @@ namespace CreateAndFake.Toolbox
         /// <returns>Found createable subclasses.</returns>
         public static IEnumerable<Type> FindLoadedSubclasses(this Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => !a.ReflectionOnly)
                 .Where(a => !a.IsDynamic)
@@ -54,6 +61,9 @@ namespace CreateAndFake.Toolbox
         /// <returns>True if visible; false otherwise.</returns>
         public static bool IsVisibleTo(this Type type, AssemblyName assembly)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+
             return type.IsVisible || type.Assembly
                 .GetCustomAttributes<InternalsVisibleToAttribute>()
                 .Any(a => a.AssemblyName == assembly.Name);
@@ -64,6 +74,8 @@ namespace CreateAndFake.Toolbox
         /// <returns>Casted type if generic; null otherwise.</returns>
         public static Type AsGenericType(this Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return (type.IsGenericType ? type.GetGenericTypeDefinition() : null);
         }
 
@@ -100,13 +112,45 @@ namespace CreateAndFake.Toolbox
         /// <returns>True if inherited; false otherwise.</returns>
         public static bool IsInheritedBy(this Type child, Type parent)
         {
-            return child != null
-                && parent != null
-                && (child == parent
-                    || child == AsGenericType(parent)
-                    || Nullable.GetUnderlyingType(child) == parent
-                    || parent.GetInterfaces().Any(t => IsInheritedBy(child, t))
-                    || IsInheritedBy(child, parent.BaseType));
+            if (!s_ChildCache.ContainsKey(parent))
+            {
+                lock (s_ChildCache)
+                {
+                    if (!s_ChildCache.ContainsKey(parent))
+                    {
+                        s_ChildCache[parent] = new HashSet<Type>(FindChildren(parent).Distinct());
+                    }
+                }
+            }
+
+            HashSet<Type> children = s_ChildCache[parent];
+            return children.Contains(child)
+                || children.Contains(Nullable.GetUnderlyingType(child));
+        }
+
+        /// <summary>Finds all types the given type inherits.</summary>
+        /// <param name="type">Type to check.</param>
+        /// <returns>Found types.</returns>
+        private static IEnumerable<Type> FindChildren(Type type)
+        {
+            if (type == null) yield break;
+
+            yield return type;
+
+            if (type.IsGenericType)
+            {
+                yield return type.GetGenericTypeDefinition();
+            }
+
+            foreach (Type child in type.GetInterfaces().SelectMany(t => FindChildren(t)))
+            {
+                yield return child;
+            }
+
+            foreach (Type child in FindChildren(type.BaseType))
+            {
+                yield return child;
+            }
         }
     }
 }
