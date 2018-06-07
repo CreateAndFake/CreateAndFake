@@ -18,6 +18,8 @@ namespace CreateAndFake.Toolbox
         /// <returns>Found createable subclasses.</returns>
         public static IEnumerable<Type> FindLocalSubclasses(this Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return type.Assembly.GetTypes()
                 .Where(t => !t.IsAbstract)
                 .Where(t => t.Inherits(type));
@@ -28,6 +30,8 @@ namespace CreateAndFake.Toolbox
         /// <returns>Found createable subclasses.</returns>
         public static IEnumerable<Type> FindLoadedSubclasses(this Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => !a.ReflectionOnly)
                 .Where(a => !a.IsDynamic)
@@ -57,6 +61,9 @@ namespace CreateAndFake.Toolbox
         /// <returns>True if visible; false otherwise.</returns>
         public static bool IsVisibleTo(this Type type, AssemblyName assembly)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+
             return type.IsVisible || type.Assembly
                 .GetCustomAttributes<InternalsVisibleToAttribute>()
                 .Any(a => a.AssemblyName == assembly.Name);
@@ -67,6 +74,8 @@ namespace CreateAndFake.Toolbox
         /// <returns>Casted type if generic; null otherwise.</returns>
         public static Type AsGenericType(this Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             return (type.IsGenericType ? type.GetGenericTypeDefinition() : null);
         }
 
