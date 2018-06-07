@@ -27,7 +27,7 @@ public void Setup_ObjectEquality()
     Tools.Asserter.Is(false, fake.Dummy.Equals(new object()));
     Tools.Asserter.Is(true, fake.Dummy.Equals(data));
 
-    fake.Verify(Times.Exactly(2));
+    fake.VerifyAll(Times.Exactly(2));
 }
 ```
 
@@ -45,8 +45,8 @@ The `Faker` requires a `Valuer` to be given at creation, which controls value eq
 
 There are a variety of options to verify methods were called as expected:
 
-* `Fake.Verify()` - Automatically checks methods based upon `Times` in each Behavior.
-* `Fake.Verify(Times)` - Does the above and that the total matches the provided `Times`.
+* `Fake.VerifyAll()` - Automatically checks methods based upon `Times` in each Behavior.
+* `Fake.VerifyAll(Times)` - Does the above and that the total matches the provided `Times`.
 * `Fake.Verify(Times, delegate)` - Verifies the given delegate was called the given `Times`.
 * `Fake.VerifyTotalCalls(Times)` - Only verifies the total number of calls made.
 
