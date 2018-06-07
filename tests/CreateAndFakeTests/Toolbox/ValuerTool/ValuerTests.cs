@@ -65,7 +65,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
                 Behavior.Returns(result, Times.Once));
 
             Tools.Asserter.Is(result, new Valuer(false, hint.Dummy).GetHashCode(data));
-            hint.Verify(Times.Exactly(2));
+            hint.VerifyAll(Times.Exactly(2));
         }
 
         /// <summary>Verifies an exception throws when no hint matches.</summary>
@@ -99,7 +99,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
 
             Tools.Asserter.Is(true, new Valuer(false, hint.Dummy).Equals(data1, data2));
 
-            hint.Verify(Times.Exactly(2));
+            hint.VerifyAll(Times.Exactly(2));
         }
 
         /// <summary>Verifies differences means unequal.</summary>
@@ -115,7 +115,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
 
             Tools.Asserter.Is(false, new Valuer(false, hint.Dummy).Equals(data1, data2));
 
-            hint.Verify(Times.Exactly(2));
+            hint.VerifyAll(Times.Exactly(2));
         }
 
         /// <summary>Verifies an infinite loop exception is caught and given details.</summary>

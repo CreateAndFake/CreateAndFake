@@ -38,7 +38,7 @@ namespace CreateAndFakeTests
             Tools.Asserter.Is(true, faked.Dummy.HasNested(original),
                 "Value equality did not work for args.");
 
-            faked.Verify(Times.Once);
+            faked.VerifyAll(Times.Once);
         }
 
         /// <summary>Verifies the tools have limits.</summary>

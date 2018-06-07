@@ -58,7 +58,7 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
 
             Tools.Asserter.CheckAll(
                 () => Tools.Asserter.Is(data, result),
-                () => hint.Verify(Times.Once));
+                () => hint.VerifyAll(Times.Once));
         }
 
         /// <summary>Verifies an infinite loop exception is caught and given details.</summary>
