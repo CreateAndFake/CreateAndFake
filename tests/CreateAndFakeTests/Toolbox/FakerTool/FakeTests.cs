@@ -14,7 +14,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         [Fact]
         public static void Verify_NoTotalValid()
         {
-            Tools.Faker.Mock<object>().Verify();
+            Tools.Faker.Mock<object>().VerifyAll();
         }
 
         /// <summary>Verifies protected methods are supported.</summary>

@@ -2,6 +2,7 @@
 
 The `Asserter` tool provides methods to verify common test scenarios:
 
+* `CheckAll` - Verifies multiple cases and aggregates failure.
 * `Throws` - Verifies an exception is thrown.
 * `IsEmpty` - Verifies a collection has no elements.
 * `IsNotEmpty` - Verifies a collection has elements.

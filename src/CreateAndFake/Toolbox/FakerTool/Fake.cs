@@ -54,9 +54,9 @@ namespace CreateAndFake.Toolbox.FakerTool
             Dummy.FakeMeta.SetCallBehavior(new CallData(methodName, generics, args, Valuer), callback);
         }
 
-        /// <summary>Verifies behavior with associated times were called as expected.</summary>
+        /// <summary>Verifies all behaviors with associated times were called as expected.</summary>
         /// <param name="total">Expected total number of calls to test as well.</param>
-        public void Verify(Times total = null)
+        public void VerifyAll(Times total = null)
         {
             Dummy.FakeMeta.Verify();
             if (total != null)

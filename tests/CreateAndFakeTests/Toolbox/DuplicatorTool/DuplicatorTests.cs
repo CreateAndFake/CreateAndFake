@@ -54,8 +54,11 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
                 m => m.TryCopy(data, Arg.Any<DuplicatorChainer>()),
                 Behavior.Returns((true, data), Times.Once));
 
-            Tools.Asserter.Is(data, new Duplicator(Tools.Asserter, false, hint.Dummy).Copy(data));
-            hint.Verify(Times.Once);
+            object result = new Duplicator(Tools.Asserter, false, hint.Dummy).Copy(data);
+
+            Tools.Asserter.CheckAll(
+                () => Tools.Asserter.Is(data, result),
+                () => hint.VerifyAll(Times.Once));
         }
 
         /// <summary>Verifies an infinite loop exception is caught and given details.</summary>

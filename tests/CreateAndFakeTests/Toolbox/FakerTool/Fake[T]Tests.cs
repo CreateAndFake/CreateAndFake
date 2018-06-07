@@ -70,7 +70,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             fake.Dummy.ReturnVoid(out string value);
 
             Tools.Asserter.Is(data, value);
-            fake.Verify(Times.Once);
+            fake.VerifyAll(Times.Once);
         }
 
         /// <summary>Verifies faking works with ref arguments.</summary>
@@ -86,7 +86,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             fake.Dummy.ReturnVoid(ref value);
 
             Tools.Asserter.Is(data, value);
-            fake.Verify(Times.Once);
+            fake.VerifyAll(Times.Once);
         }
 
         /// <summary>Verifies faking works with generics.</summary>
@@ -105,7 +105,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Asserter.Is(true, fake.Dummy.Run<DataSample, bool>(text, sample));
             Tools.Asserter.Is(5, fake.Dummy.Run<DataSample, int>(text, sample));
 
-            fake.Verify(Times.Exactly(2));
+            fake.VerifyAll(Times.Exactly(2));
 
             Tools.Asserter.Throws<FakeCallException>(
                 () => fake.Dummy.Run<DataSample, object>(text, sample));

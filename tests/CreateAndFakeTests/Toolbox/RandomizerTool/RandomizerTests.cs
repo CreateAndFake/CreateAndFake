@@ -55,7 +55,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
             Tools.Asserter.Throws<NotSupportedException>(
                 () => new Randomizer(Tools.Faker, new FastRandom(), false, hint.Dummy).Create<string>());
 
-            hint.Verify(Times.Once);
+            hint.VerifyAll(Times.Once);
         }
 
         /// <summary>Verifies hint behavior works.</summary>
@@ -72,7 +72,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
             Tools.Asserter.Is(data, new Randomizer(Tools.Faker,
                 new FastRandom(), false, hint.Dummy).Create<string>());
 
-            hint.Verify(Times.Once);
+            hint.VerifyAll(Times.Once);
         }
 
         /// <summary>Verifies an infinite loop exception is caught and given details.</summary>

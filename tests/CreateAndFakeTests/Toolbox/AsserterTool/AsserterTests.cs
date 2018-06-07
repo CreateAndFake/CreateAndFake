@@ -51,6 +51,48 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             Tools.Tester.PreventsParameterMutation<Asserter>();
         }
 
+        /// <summary>Verifies each case is run.</summary>
+        [Fact]
+        public void CheckAll_ValidRunsAll()
+        {
+            bool ran1 = false;
+            bool ran2 = false;
+
+            m_TestInstance.CheckAll(
+                () => ran1 = true,
+                () => ran2 = true);
+
+            Tools.Asserter.Is(true, ran1);
+            Tools.Asserter.Is(true, ran2);
+        }
+
+        /// <summary>Verifies only one error is thrown.</summary>
+        [Theory, RandomData]
+        public void CheckAll_SingleErrorThrows(Exception error)
+        {
+            bool ran2 = false;
+
+            AggregateException result = Tools.Asserter.Throws<AggregateException>(
+                () => m_TestInstance.CheckAll(
+                    () => throw error,
+                    () => ran2 = true));
+
+            Tools.Asserter.Is(true, ran2);
+            Tools.Asserter.Is(result.InnerExceptions.ToArray(), new[] { error });
+        }
+
+        /// <summary>Verifies each case is run.</summary>
+        [Theory, RandomData]
+        public void CheckAll_ErrorRunsAll(Exception error1, Exception error2)
+        {
+            AggregateException result = Tools.Asserter.Throws<AggregateException>(
+                () => m_TestInstance.CheckAll(
+                    () => throw error1,
+                    () => throw error2));
+
+            Tools.Asserter.Is(result.InnerExceptions.ToArray(), new[] { error1, error2 });
+        }
+
         /// <summary>Verifies fail will throw.</summary>
         [Fact]
         public static void Fail_Throws()
@@ -141,7 +183,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             Tools.Asserter.Throws<AssertException>(
                 () => m_TestInstance.Throws<Exception>(() => disposable.Dummy));
 
-            disposable.Verify(Times.Once);
+            disposable.VerifyAll(Times.Once);
         }
 
         /// <summary>Verifies aggregate exception wrapping is ignored.</summary>
@@ -241,7 +283,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             Tools.Asserter.Throws<AssertException>(
                 () => m_TestInstance.ReferenceEqual(fake.Dummy, Tools.Duplicator.Copy(fake.Dummy)));
 
-            fake.Verify(Times.Never);
+            fake.VerifyAll(Times.Never);
         }
 
         /// <summary>Verifies equality comparison is not used.</summary>
@@ -256,7 +298,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             Tools.Asserter.Throws<AssertException>(
                 () => m_TestInstance.ReferenceNotEqual(fake.Dummy, fake.Dummy));
 
-            fake.Verify(Times.Never);
+            fake.VerifyAll(Times.Never);
         }
 
         /// <summary>Verifies valid when no differences are found.</summary>
@@ -269,7 +311,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
 
             m_TestInstance.ValuesEqual(new object(), new object());
 
-            m_FakeValuer.Verify(Times.Once);
+            m_FakeValuer.VerifyAll(Times.Once);
         }
 
         /// <summary>Verifies invalid when differences are found.</summary>
@@ -288,7 +330,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             Tools.Asserter.Throws<AssertException>(
                 () => m_TestInstance.ValuesEqual(null, new object()));
 
-            m_FakeValuer.Verify(Times.Exactly(2));
+            m_FakeValuer.VerifyAll(Times.Exactly(2));
         }
 
         /// <summary>Verifies invalid when no differences are found.</summary>
@@ -307,7 +349,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             Tools.Asserter.Throws<AssertException>(
                 () => m_TestInstance.ValuesNotEqual(null, new object()));
 
-            m_FakeValuer.Verify(Times.Exactly(2));
+            m_FakeValuer.VerifyAll(Times.Exactly(2));
         }
 
         /// <summary>Verifies invalid when differences are found.</summary>
@@ -320,7 +362,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
 
             m_TestInstance.ValuesNotEqual(new object(), new object());
 
-            m_FakeValuer.Verify(Times.Once);
+            m_FakeValuer.VerifyAll(Times.Once);
         }
     }
 }
