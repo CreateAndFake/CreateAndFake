@@ -4,6 +4,8 @@
     <Rule Id="S4142" Action="Hidden" />
     <Rule Id="S2365" Action="Hidden" />
     <Rule Id="S3443" Action="Hidden" />
+    <Rule Id="S1125" Action="Hidden" />
+    <Rule Id="S4457" Action="Hidden" />
   </Rules>
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1001" Action="Warning" />

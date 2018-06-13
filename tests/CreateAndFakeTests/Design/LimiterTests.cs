@@ -332,7 +332,7 @@ namespace CreateAndFakeTests.Design
             int ResetBehavior()
             {
                 return (++attempt == tries) ? result : throw exception;
-            };
+            }
 
             Tools.Asserter.Is(result, await new Limiter(tries).Retry(ResetBehavior, () => resetAttempt++));
             Tools.Asserter.Is(tries, attempt);

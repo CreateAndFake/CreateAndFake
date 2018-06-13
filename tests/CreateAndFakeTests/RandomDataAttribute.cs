@@ -18,8 +18,6 @@ namespace CreateAndFakeTests
         /// <returns>The generated data.</returns>
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
-            if (testMethod == null) throw new ArgumentNullException(nameof(testMethod));
-
             for (int i = 0; i < Math.Max(Trials, 0); i++)
             {
                 yield return Tools.Randomizer.CreateFor(testMethod);

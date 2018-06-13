@@ -54,6 +54,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Matches any instance but null of the given type.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <returns>Default instance of T for the fake setup.</returns>
+        [SuppressMessage("Sonar", "S3400:ReplaceWithConstant", Justification = "Not possible.")]
         public static T NotNull<T>() where T : class
         {
             return default;
