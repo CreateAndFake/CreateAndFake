@@ -41,9 +41,14 @@
 
   <ItemGroup Condition="'$(Configuration)|$(Platform)'!='Travis|AnyCPU'">
     <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.7.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.0" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="6.8.2.4717" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.8.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.1" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.2.0.5463" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
 </Project>
