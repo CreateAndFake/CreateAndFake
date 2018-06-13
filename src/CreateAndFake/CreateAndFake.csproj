@@ -39,7 +39,7 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'!='Travis|AnyCPU'">
     <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="2.8.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.1" PrivateAssets="All" />
