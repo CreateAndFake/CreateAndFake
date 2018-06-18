@@ -1,51 +1,118 @@
-﻿using System;
-using System.Linq;
-using Nuke.Common;
-using Nuke.Common.Git;
-using Nuke.Common.Tools.GitVersion;
-using static Nuke.Common.EnvironmentInfo;
-using static Nuke.Common.IO.FileSystemTasks;
+﻿using Nuke.Common;
+using Nuke.Common.IO;
+using Nuke.Common.ProjectModel;
+using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.NuGet;
+using Nuke.Common.Tools.OpenCover;
+using Nuke.Common.Tools.ReportGenerator;
 using static Nuke.Common.IO.PathConstruction;
-using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-class Build : NukeBuild
+/// <summary>Manages build behavior for the solution.</summary>
+internal class Build : NukeBuild
 {
+    /// <summary>Output folder for the solution.</summary>
+    private AbsolutePath ArtifactDir => SolutionDirectory / "artifacts";
+
+    /// <summary>Artifact output folder for tests.</summary>
+    private AbsolutePath TestingDir => ArtifactDir / "testing";
+
+    /// <summary>Artifact output folder for test coverage.</summary>
+    private AbsolutePath CoverageDir => ArtifactDir / "coverage";
+
+    /// <summary>Target file for raw test coverage data.</summary>
+    private AbsolutePath RawCoverageFile => CoverageDir / "CoverageRaw.xml";
+
+    /// <summary>Settings file used for testing.</summary>
+    private AbsolutePath TestSettingsFile => SolutionDirectory / "tests" / "TestSettings.runsettings";
+
     // Console application entry point. Also defines the default target.
-    public static int Main () => Execute<Build>(x => x.Compile);
+    public static int Main() => Execute<Build>(x => x.Compile);
 
-    // Auto-injection fields:
+    /// <summary>Provides access to the structure of the solution.</summary>
+    [Solution]
+    private readonly Solution s_Solution;
 
-    // [GitVersion] readonly GitVersion GitVersion;
-    // Semantic versioning. Must have 'GitVersion.CommandLine' referenced.
+    /// <summary>Deletes output folders.</summary>
+    internal Target Clean => _ => _
+        .Executes(() =>
+        {
+            FileSystemTasks.DeleteDirectory(ArtifactDir / "obj");
+            FileSystemTasks.DeleteDirectory(ArtifactDir / "bin");
+            FileSystemTasks.DeleteDirectory(TestingDir);
+            FileSystemTasks.DeleteDirectory(CoverageDir);
+        });
 
-    // [GitRepository] readonly GitRepository GitRepository;
-    // Parses origin, branch name and head from git config.
+    /// <summary>Builds the solution.</summary>
+    internal Target Compile => _ => _
+        .DependsOn(Clean)
+        .Executes(() =>
+        {
+            DotNetTasks.DotNetBuild(s => s
+                .SetConfiguration("Debug")
+                .SetProjectFile(SolutionFile));
 
-    // [Parameter] readonly string MyGetApiKey;
-    // Returns command-line arguments and environment variables.
+            DotNetTasks.DotNetBuild(s => s
+                .SetConfiguration("Release")
+                .SetProjectFile(SolutionFile));
 
-    // [Solution] readonly Solution Solution;
-    // Provides access to the structure of the solution.
+            DotNetTasks.DotNetBuild(s => s
+                .SetConfiguration("Full")
+                .SetProjectFile(SolutionFile));
+        });
 
-    Target Clean => _ => _
-            .OnlyWhen(() => false) // Disabled for safety.
-            .Executes(() =>
+    /// <summary>Builds and tests the solution.</summary>
+    internal Target Test => _ => _
+        .DependsOn(Compile)
+        .Executes(() =>
+        {
+            foreach (Project proj in s_Solution.GetProjects("*Tests"))
             {
-                DeleteDirectories(GlobDirectories(SourceDirectory, "**/bin", "**/obj"));
-                EnsureCleanDirectory(OutputDirectory);
-            });
+                DotNetTasks.DotNetTest(s => s
+                    .SetConfiguration("Debug")
+                    .SetProjectFile(proj.Path)
+                    .SetSettingsFile(TestSettingsFile)
+                    .SetNoBuild(true)
+                    .SetNoRestore(true));
 
-    Target Restore => _ => _
-            .DependsOn(Clean)
-            .Executes(() =>
-            {
-                DotNetRestore(s => DefaultDotNetRestore);
-            });
+                DotNetTasks.DotNetTest(s => s
+                    .SetConfiguration("Release")
+                    .SetProjectFile(proj.Path)
+                    .SetSettingsFile(TestSettingsFile)
+                    .SetNoBuild(true)
+                    .SetNoRestore(true));
+            }
+        });
 
-    Target Compile => _ => _
-            .DependsOn(Restore)
-            .Executes(() =>
+    /// <summary>Builds and analyzes test code coverage.</summary>
+    internal Target Coverage => _ => _
+        .DependsOn(Compile)
+        .Executes(() =>
+        {
+            foreach (Project proj in s_Solution.GetProjects("*Tests"))
             {
-                DotNetBuild(s => DefaultDotNetBuild);
-            });
+                OpenCoverTasks.OpenCover(s => s
+                    .SetTargetArguments($"test {proj.Path} -c Full -s {TestSettingsFile} --no-build --no-restore")
+                    .SetSearchDirectories($"{TestingDir / "Full"}")
+                    .SetOutput(RawCoverageFile)
+                    .SetFilters("+[*]* -[*Tests]*")
+                    .SetRegistration(RegistrationType.User)
+                    .SetHideSkippedKinds(OpenCoverSkipping.Filter)
+                    .SetMergeOutput(true)
+                    .SetOldStyle(true));
+            }
+
+            ReportGeneratorTasks.ReportGenerator(s => s
+                .SetReports(RawCoverageFile)
+                .SetTargetDirectory(CoverageDir));
+        });
+
+    /// <summary>Legacy hook for building, testing, and analyzing code coverage.</summary>
+    internal Target Legacy => _ => _
+        .Executes(() =>
+        {
+            ProcessTasks.StartProcess(
+                SolutionDirectory / "build" / "legacy" / "buildWithCoverage.cmd",
+                "-chain");
+        });
 }
