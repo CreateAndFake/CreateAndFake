@@ -6,7 +6,7 @@ build_script:
     .\build\build.cmd Coverage
 test_script:
 - cmd: >-
-	choco install codecov
+    choco install codecov
 
     codecov -f .\artifacts\coverage\CoverageRaw.xml
 artifacts:
