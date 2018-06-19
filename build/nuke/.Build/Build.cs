@@ -86,11 +86,6 @@ internal class Build : NukeBuild
         {
             FileSystemTasks.EnsureCleanDirectory(CoverageDir);
 
-            if (IsServerBuild)
-            {
-                GlobFiles(SolutionDirectory, "Nuget.config");
-            }
-
             DotNetTasks.DotNetBuild(s => s
                 .SetConfiguration("Full")
                 .SetProjectFile(SolutionFile));

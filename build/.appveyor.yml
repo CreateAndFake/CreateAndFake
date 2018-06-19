@@ -1,6 +1,8 @@
 image: Visual Studio 2017
 build_script:
 - cmd: >-
+    del /f Nuget.config
+
     .\build\build.cmd Test
 
     .\build\build.cmd Coverage
