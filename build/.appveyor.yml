@@ -1,13 +1,14 @@
 image: Visual Studio 2017
 build_script:
 - cmd: >-
-  cd build
-  build.cmd Test
-  build.cmd Coverage
+- cmd: >-
+    cd build
+    build.cmd Test
+    build.cmd Coverage
 test_script:
 - cmd: >-
-  choco install codecov
-  codecov -f .\artifacts\coverage\CoverageRaw.xml
+    choco install codecov
+    codecov -f .\artifacts\coverage\CoverageRaw.xml
 artifacts:
 - path: artifacts
   name: AllArtifacts
