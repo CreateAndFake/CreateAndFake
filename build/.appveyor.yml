@@ -3,7 +3,7 @@ build_script:
 - cmd: >-
     choco install OpenCover
 
-    choco install ReportGenerator
+    choco install ReportGenerator.portable
 
     choco install codecov
 test_script:
