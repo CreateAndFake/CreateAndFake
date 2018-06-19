@@ -84,8 +84,7 @@ internal class Build : NukeBuild
         .OnlyWhen(() => EnvironmentInfo.IsWin)
         .Executes(() =>
         {
-            FileSystemTasks.DeleteDirectory(CoverageDir);
-            FileSystemTasks.EnsureExistingDirectory(CoverageDir);
+            FileSystemTasks.EnsureCleanDirectory(CoverageDir);
 
             DotNetTasks.DotNetBuild(s => s
                 .SetConfiguration("Full")
