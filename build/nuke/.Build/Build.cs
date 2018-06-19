@@ -1,7 +1,6 @@
 ﻿using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Tools.OpenCover;
@@ -26,12 +25,12 @@ internal class Build : NukeBuild
     /// <summary>Settings file used for testing.</summary>
     private AbsolutePath TestSettingsFile => SolutionDirectory / "tests" / "TestSettings.runsettings";
 
-    // Console application entry point. Also defines the default target.
-    public static int Main() => Execute<Build>(x => x.Compile);
-
     /// <summary>Provides access to the structure of the solution.</summary>
     [Solution]
     private readonly Solution s_Solution;
+
+    // Console application entry point. Also defines the default target.
+    public static int Main() => Execute<Build>(x => x.Compile);
 
     /// <summary>Deletes output folders.</summary>
     internal Target Clean => _ => _
@@ -54,10 +53,6 @@ internal class Build : NukeBuild
 
             DotNetTasks.DotNetBuild(s => s
                 .SetConfiguration("Release")
-                .SetProjectFile(SolutionFile));
-
-            DotNetTasks.DotNetBuild(s => s
-                .SetConfiguration("Full")
                 .SetProjectFile(SolutionFile));
         });
 
@@ -86,12 +81,20 @@ internal class Build : NukeBuild
 
     /// <summary>Builds and analyzes test code coverage.</summary>
     internal Target Coverage => _ => _
-        .DependsOn(Compile)
+        .OnlyWhen(() => EnvironmentInfo.IsWin)
         .Executes(() =>
         {
+            FileSystemTasks.DeleteDirectory(CoverageDir);
+            FileSystemTasks.EnsureExistingDirectory(CoverageDir);
+
+            DotNetTasks.DotNetBuild(s => s
+                .SetConfiguration("Full")
+                .SetProjectFile(SolutionFile));
+
             foreach (Project proj in s_Solution.GetProjects("*Tests"))
             {
                 OpenCoverTasks.OpenCover(s => s
+                    .SetTargetPath(DotNetTasks.DotNetPath)
                     .SetTargetArguments($"test {proj.Path} -c Full -s {TestSettingsFile} --no-build --no-restore")
                     .SetSearchDirectories($"{TestingDir / "Full"}")
                     .SetOutput(RawCoverageFile)
@@ -107,12 +110,18 @@ internal class Build : NukeBuild
                 .SetTargetDirectory(CoverageDir));
         });
 
-    /// <summary>Legacy hook for building, testing, and analyzing code coverage.</summary>
-    internal Target Legacy => _ => _
+    /// <summary>Build process for Travis.</summary>
+    internal Target OnTravis => _ => _
+        .OnlyWhen(() => IsServerBuild)
         .Executes(() =>
         {
-            ProcessTasks.StartProcess(
-                SolutionDirectory / "build" / "legacy" / "buildWithCoverage.cmd",
-                "-chain");
+            foreach (Project proj in s_Solution.GetProjects("*Tests"))
+            {
+                DotNetTasks.DotNetTest(s => s
+                    .SetConfiguration("Travis")
+                    .SetFramework("netcoreapp2.0")
+                    .SetProjectFile(proj.Path)
+                    .SetSettingsFile(TestSettingsFile));
+            }
         });
 }
