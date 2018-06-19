@@ -1,7 +1,7 @@
 image: Visual Studio 2017
 build_script:
 - cmd: >-
-  cd build
+  cd .\build
   .\build.cmd Test
   .\build.cmd Coverage
 test_script:
