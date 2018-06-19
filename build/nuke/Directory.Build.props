@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <!--<BaseIntermediateOutputPath>..\..\..\artifacts\nuke\obj\</BaseIntermediateOutputPath>-->
+    <BaseIntermediateOutputPath>..\..\..\artifacts\nuke\obj\</BaseIntermediateOutputPath>
     <!--<OutputPath>..\..\..\artifacts\nuke\bin\$(Configuration)\</OutputPath>-->
   </PropertyGroup>
 </Project>

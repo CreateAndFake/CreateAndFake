@@ -1,8 +1,9 @@
 image: Visual Studio 2017
 build_script:
 - cmd: >-
-  .\build\build.cmd Test
-  .\build\build.cmd Coverage
+  cd build
+  .\build.cmd Test
+  .\build.cmd Coverage
 test_script:
 - cmd: >-
   choco install codecov
