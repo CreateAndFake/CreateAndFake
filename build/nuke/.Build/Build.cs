@@ -90,6 +90,12 @@ internal class Build : NukeBuild
                 .SetConfiguration("Full")
                 .SetProjectFile(SolutionFile));
 
+            if (IsServerBuild)
+            {
+                NuGetTasks.NuGetRestore(s => s
+                    .SetSource("OpenCover", "ReportGenerator"));
+            }
+
             foreach (Project proj in s_Solution.GetProjects("*Tests"))
             {
                 OpenCoverTasks.OpenCover(s => s
