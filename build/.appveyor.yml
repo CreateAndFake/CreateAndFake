@@ -1,16 +1,12 @@
 image: Visual Studio 2017
 build_script:
 - cmd: >-
-    choco install OpenCover
-
-    choco install ReportGenerator.portable
-
-    choco install codecov
-test_script:
-- cmd: >-
     .\build\build.cmd Test
 
     .\build\build.cmd Coverage
+test_script:
+- cmd: >-
+	choco install codecov
 
     codecov -f .\artifacts\coverage\CoverageRaw.xml
 artifacts:
