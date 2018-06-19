@@ -1,12 +1,13 @@
 image: Visual Studio 2017
 build_script:
 - cmd: >-
-- cmd: >-
-    cd build
+    .\build\build.cmd Test
 
-    build.cmd Test
+    choco install OpenCover
 
-    build.cmd Coverage
+    choco install ReportGenerator
+
+    .\build\build.cmd Coverage
 test_script:
 - cmd: >-
     choco install codecov
