@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
+using System.Reflection;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 {
@@ -20,5 +23,20 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 
         /// <summary>Sets up the tests.</summary>
         public FakedCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+
+        /// <summary>Verifies the hint supports the correct types.</summary>
+        [Fact]
+        public override void TryCompare_SupportsDifferentValidTypes()
+        {
+            try
+            {
+                base.TryCompare_SupportsDifferentValidTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                throw new InvalidOperationException(
+                    "Reflection failure:" + ex.LoaderExceptions.Select(e => e.Message), ex);
+            }
+        }
     }
 }
