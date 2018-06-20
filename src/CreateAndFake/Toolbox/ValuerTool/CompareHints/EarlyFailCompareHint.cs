@@ -33,11 +33,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <returns>Found differences.</returns>
         protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
         {
-            if (expected == null && actual == null)
-            {
-                yield break;
-            }
-            else if (expected == null || actual == null)
+            if (expected == null && actual == null) yield break;
+
+            if (expected == null || actual == null)
             {
                 yield return new Difference(expected, actual);
             }

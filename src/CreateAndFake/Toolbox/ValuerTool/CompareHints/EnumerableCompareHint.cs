@@ -20,6 +20,17 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             if (actual == null) throw new ArgumentNullException(nameof(actual));
             if (valuer == null) throw new ArgumentNullException(nameof(valuer));
 
+            return LazyCompare(expected, actual, valuer);
+        }
+
+        /// <summary>Finds the differences between two objects.</summary>
+        /// <param name="expected">First object to compare.</param>
+        /// <param name="actual">Second object to compare.</param>
+        /// <param name="valuer">Handles callback behavior for child values.</param>
+        /// <returns>Found differences.</returns>
+        private static IEnumerable<Difference> LazyCompare(
+            IEnumerable expected, IEnumerable actual, ValuerChainer valuer)
+        {
             IEnumerator expectedEnumerator = expected.GetEnumerator();
             IEnumerator actualEnumerator = actual.GetEnumerator();
             int index = 0;
