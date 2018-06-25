@@ -91,11 +91,11 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         }
 
         /// <summary>Verifies the condition is followed.</summary>
-        [Theory, RandomData]
-        public static void Create_ConditionMatchReturned(DateTime time)
+        [Fact]
+        public static void Create_ConditionMatchReturned()
         {
-            DateTime result = Tools.Randomizer.Create<DateTime>(d => d < time);
-            Tools.Asserter.Is(true, result < time);
+            int result = Tools.Randomizer.Create<int>(v => v < 0);
+            Tools.Asserter.Is(true, result < 0);
         }
 
         /// <summary>Verifies the condition is followed.</summary>
