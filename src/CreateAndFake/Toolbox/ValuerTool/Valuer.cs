@@ -51,6 +51,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="y">Second object to compare.</param>
         /// <returns>True if equal; false otherwise.</returns>
         /// <exception cref="NotSupportedException">If no hint supports comparing the objects.</exception>
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
         public new bool Equals(object x, object y)
         {
             return !Compare(x, y).Any();
@@ -60,6 +61,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="item">Object to generate a code for.</param>
         /// <returns>The generated hash.</returns>
         /// <exception cref="NotSupportedException">If no hint supports hashing the object.</exception>
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
         [SuppressMessage("Microsoft.Design",
             "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Forwarded.")]
         public int GetHashCode(object item)
@@ -102,6 +104,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="items">Objects to generate a code for.</param>
         /// <returns>The generated hash.</returns>
         /// <exception cref="NotSupportedException">If no hint supports hashing an object.</exception>
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
         public int GetHashCode(params object[] items)
         {
             return GetHashCode((object)items);
@@ -112,6 +115,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="actual">Second object to compare.</param>
         /// <returns>Found differences.</returns>
         /// <exception cref="NotSupportedException">If no hint supports comparing the objects.</exception>
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
         public IEnumerable<Difference> Compare(object expected, object actual)
         {
             try

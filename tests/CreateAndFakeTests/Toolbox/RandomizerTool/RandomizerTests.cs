@@ -1,5 +1,6 @@
 ﻿using System;
 using CreateAndFake;
+using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
@@ -29,8 +30,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         [Fact]
         public static void New_NullHintsValid()
         {
-            Tools.Asserter.IsNot(null, new Randomizer(Tools.Faker, new FastRandom(), true, null));
-            Tools.Asserter.IsNot(null, new Randomizer(Tools.Faker, new FastRandom(), false, null));
+            Tools.Asserter.IsNot(null, new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, true, null));
+            Tools.Asserter.IsNot(null, new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false, null));
         }
 
         /// <summary>Verifies an exception throws when no hint matches.</summary>
@@ -38,7 +39,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         public static void Create_NoRulesThrows()
         {
             Tools.Asserter.Throws<NotSupportedException>(
-                () => new Randomizer(Tools.Faker, new FastRandom(), false).Create<object>());
+                () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false).Create<object>());
         }
 
         /// <summary>Verifies hint behavior works.</summary>
@@ -53,7 +54,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
                 Behavior.Returns((false, (object)null), Times.Once));
 
             Tools.Asserter.Throws<NotSupportedException>(
-                () => new Randomizer(Tools.Faker, new FastRandom(), false, hint.Dummy).Create<string>());
+                () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false, hint.Dummy).Create<string>());
 
             hint.VerifyAll(Times.Once);
         }
@@ -69,8 +70,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
                 m => m.TryCreate(data.GetType(), Arg.Any<RandomizerChainer>()),
                 Behavior.Returns((true, (object)data), Times.Once));
 
-            Tools.Asserter.Is(data, new Randomizer(Tools.Faker,
-                new FastRandom(), false, hint.Dummy).Create<string>());
+            Tools.Asserter.Is(data, new Randomizer(Tools.Faker, new FastRandom(),
+                Limiter.Dozen, false, hint.Dummy).Create<string>());
 
             hint.VerifyAll(Times.Once);
         }
@@ -84,9 +85,25 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
                 Behavior.Throw<InsufficientExecutionStackException>(Times.Once));
 
             InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
-                () => new Randomizer(Tools.Faker, new FastRandom(), false, hint.Dummy).Create(type));
+                () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false, hint.Dummy).Create(type));
 
             Tools.Asserter.Is(true, e.Message.Contains(type.Name));
+        }
+
+        /// <summary>Verifies the condition is followed.</summary>
+        [Fact]
+        public static void Create_ConditionMatchReturned()
+        {
+            int result = Tools.Randomizer.Create<int>(v => v < 0);
+            Tools.Asserter.Is(true, result < 0);
+        }
+
+        /// <summary>Verifies the condition is followed.</summary>
+        [Fact]
+        public static void Create_ConditionTimesOut()
+        {
+            Tools.Asserter.Throws<TimeoutException>(
+                () => Tools.Randomizer.Create<DateTime>(d => d < DateTime.MinValue));
         }
 
         /// <summary>Verifies fakes are injected into the given type.</summary>

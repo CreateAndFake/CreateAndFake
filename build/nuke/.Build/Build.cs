@@ -63,19 +63,14 @@ internal class Build : NukeBuild
         {
             foreach (Project proj in s_Solution.GetProjects("*Tests"))
             {
-                DotNetTasks.DotNetTest(s => s
-                    .SetConfiguration("Debug")
+                DotNetTestSettings Set(DotNetTestSettings s) => s
                     .SetProjectFile(proj.Path)
                     .SetSettingsFile(TestSettingsFile)
                     .SetNoBuild(true)
-                    .SetNoRestore(true));
+                    .SetNoRestore(true);
 
-                DotNetTasks.DotNetTest(s => s
-                    .SetConfiguration("Release")
-                    .SetProjectFile(proj.Path)
-                    .SetSettingsFile(TestSettingsFile)
-                    .SetNoBuild(true)
-                    .SetNoRestore(true));
+                DotNetTasks.DotNetTest(s => Set(s).SetConfiguration("Debug"));
+                DotNetTasks.DotNetTest(s => Set(s).SetConfiguration("Release"));
             }
         });
 
@@ -92,16 +87,19 @@ internal class Build : NukeBuild
 
             foreach (Project proj in s_Solution.GetProjects("*Tests"))
             {
-                OpenCoverTasks.OpenCover(s => s
+                OpenCoverSettings Set(OpenCoverSettings s, string f) => s
                     .SetTargetPath(DotNetTasks.DotNetPath)
-                    .SetTargetArguments($"test {proj.Path} -c Full -s {TestSettingsFile} --no-build --no-restore")
-                    .SetSearchDirectories($"{TestingDir / "Full"}")
+                    .SetTargetArguments($"test {proj.Path} -c Full -s {TestSettingsFile} -f {f} --no-build --no-restore")
+                    .SetSearchDirectories($"{TestingDir / "Full" / f}")
                     .SetOutput(RawCoverageFile)
                     .SetFilters("+[*]* -[*Tests]*")
                     .SetRegistration(RegistrationType.User)
                     .SetHideSkippedKinds(OpenCoverSkipping.Filter)
                     .SetMergeOutput(true)
-                    .SetOldStyle(true));
+                    .SetOldStyle(true);
+
+                OpenCoverTasks.OpenCover(s => Set(s, "netcoreapp2.0"));
+                OpenCoverTasks.OpenCover(s => Set(s, "net471"));
             }
 
             ReportGeneratorTasks.ReportGenerator(s => s
