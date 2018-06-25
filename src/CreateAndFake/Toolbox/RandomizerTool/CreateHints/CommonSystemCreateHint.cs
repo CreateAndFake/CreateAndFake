@@ -15,6 +15,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             {
                 { typeof(CultureInfo), rand => rand.Gen.NextItem(CultureInfo.GetCultures(CultureTypes.AllCultures)) },
                 { typeof(TimeSpan), rand => new TimeSpan(rand.Gen.Next<long>()) },
+                { typeof(DateTime), rand => new DateTime(rand.Gen.Next(DateTime.MinValue.Ticks, DateTime.MaxValue.Ticks)) },
 
                 { typeof(Assembly), rand => rand.Gen.NextItem(AppDomain.CurrentDomain.GetAssemblies()) },
                 { typeof(AssemblyName), rand => rand.Create<Assembly>().GetName() },

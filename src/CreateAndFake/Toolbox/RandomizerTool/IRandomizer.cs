@@ -8,15 +8,20 @@ namespace CreateAndFake.Toolbox.RandomizerTool
     {
         /// <summary>Creates a randomized instance.</summary>
         /// <typeparam name="T">Type to create.</typeparam>
+        /// <param name="condition">Optional condition for the instance to match.</param>
         /// <returns>The created instance.</returns>
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
-        T Create<T>();
+        /// <exception cref="TimeoutException">If an instance couldn't be created to match the condition.</exception>
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        T Create<T>(Func<T, bool> condition = null);
 
         /// <summary>Creates a randomized instance.</summary>
+        /// <param name="condition">Optional condition for the instance to match.</param>
         /// <param name="type">Type to create.</param>
         /// <returns>The created instance.</returns>
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
-        object Create(Type type);
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        object Create(Type type, Func<object, bool> condition = null);
 
         /// <summary>
         ///     Constructs the parameters for a method.

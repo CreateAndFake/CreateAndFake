@@ -53,6 +53,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         /// <param name="source">Object to clone.</param>
         /// <returns>The duplicate.</returns>
         /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
         public T Copy<T>(T source)
         {
             try

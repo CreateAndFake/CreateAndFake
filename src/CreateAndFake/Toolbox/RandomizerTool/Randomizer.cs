@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
@@ -38,15 +39,21 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <summary>Value generator used for base randomization.</summary>
         private readonly IRandom m_Gen;
 
+        /// <summary>Limits attempts at matching conditions.</summary>
+        private readonly Limiter m_Limiter;
+
         /// <summary>Sets up the randomizer capabilities.</summary>
         /// <param name="faker">Provides stubs.</param>
         /// <param name="gen">Value generator to use for base randomization.</param>
         /// <param name="includeDefaultHints">If the default set of hints should be added.</param>
         /// <param name="hints">Generators used to randomize specific types.</param>
-        public Randomizer(IFaker faker, IRandom gen, bool includeDefaultHints = true, params CreateHint[] hints)
+        /// <param name="limiter">Limits attempts at matching conditions.</param>
+        public Randomizer(IFaker faker, IRandom gen, Limiter limiter,
+            bool includeDefaultHints = true, params CreateHint[] hints)
         {
             m_Faker = faker ?? throw new ArgumentNullException(nameof(faker));
             m_Gen = gen ?? throw new ArgumentNullException(nameof(gen));
+            m_Limiter = limiter ?? throw new ArgumentNullException(nameof(limiter));
 
             var inputHints = hints ?? Enumerable.Empty<CreateHint>();
             if (includeDefaultHints)
@@ -61,28 +68,55 @@ namespace CreateAndFake.Toolbox.RandomizerTool
 
         /// <summary>Creates a randomized instance.</summary>
         /// <typeparam name="T">Type to create.</typeparam>
+        /// <param name="condition">Optional condition for the instance to match.</param>
         /// <returns>The created instance.</returns>
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
-        public T Create<T>()
+        /// <exception cref="TimeoutException">If an instance couldn't be created to match the condition.</exception>
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        public T Create<T>(Func<T, bool> condition = null)
         {
-            return (T)Create(typeof(T));
+            return (T)Create(typeof(T), o => condition?.Invoke((T)o) ?? true);
         }
 
         /// <summary>Creates a randomized instance.</summary>
         /// <param name="type">Type to create.</param>
+        /// <param name="condition">Optional condition for the instance to match.</param>
         /// <returns>The created instance.</returns>
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
-        public object Create(Type type)
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        public object Create(Type type, Func<object, bool> condition = null)
         {
+            object result = default;
             try
             {
-                return Create(type, new RandomizerChainer(m_Faker, m_Gen, Create));
+                m_Limiter.StallUntil(
+                    () => result = Create(type, new RandomizerChainer(m_Faker, m_Gen, Create)),
+                    () => condition?.Invoke(result) ?? true).Wait();
             }
-            catch (InsufficientExecutionStackException)
+            catch (AggregateException e)
             {
-                throw new InsufficientExecutionStackException(
-                    $"Ran into infinite generation trying to randomize type '{type.Name}'.");
+                if (e.InnerException is InsufficientExecutionStackException)
+                {
+                    throw new InsufficientExecutionStackException(
+                        $"Ran into infinite generation trying to randomize type '{type.Name}'.");
+                }
+                else if (e.InnerException is TimeoutException)
+                {
+                    throw new TimeoutException(
+                        $"Could not create instance of type '{type}' matching condition.", e);
+                }
+                else if (e.InnerException is InfiniteLoopException
+                    || e.InnerException is NotSupportedException)
+                {
+                    throw e.InnerException;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Encountered issue creating instance of type '{type}'.", e);
+                }
             }
+            return result;
         }
 
         /// <summary>Creates a randomized instance.</summary>
@@ -199,8 +233,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
-            return new Randomizer(duplicator.Copy(m_Faker),
-                duplicator.Copy(m_Gen), false, duplicator.Copy(m_Hints).ToArray());
+            return new Randomizer(duplicator.Copy(m_Faker), duplicator.Copy(m_Gen),
+                duplicator.Copy(m_Limiter), false, duplicator.Copy(m_Hints).ToArray());
         }
     }
 }
