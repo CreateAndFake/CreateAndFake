@@ -52,7 +52,7 @@ public static class Tool
     public static IFaker Faker { get; } = new Faker(Valuer);
 
     /// <summary>Creates objects and populates them with random values.</summary>
-    public static IRandomizer Randomizer { get; } = new Randomizer(Faker, Gen);
+    public static IRandomizer Randomizer { get; } = new Randomizer(Faker, Gen, Limiter.Dozen);
 
     /// <summary>Changes the value of objects or creates alternatives.</summary>
     public static IMutator Mutator { get; } = new Mutator(Randomizer, Valuer, Limiter.Dozen);
