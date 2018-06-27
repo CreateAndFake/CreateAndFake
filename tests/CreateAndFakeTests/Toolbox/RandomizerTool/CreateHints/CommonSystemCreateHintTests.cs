@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] s_ValidTypes = new[]
         {
-            typeof(CultureInfo), typeof(TimeSpan), typeof(DateTime), typeof(Assembly), typeof(AssemblyName),
+            typeof(CultureInfo), typeof(TimeSpan), typeof(DateTime), typeof(Assembly), typeof(AssemblyName), typeof(Guid),
             typeof(Type), typeof(Type).GetType(), typeof(ConstructorInfo), typeof(PropertyInfo), typeof(MethodInfo),
             typeof(MemberInfo), typeof(MemberInfo), typeof(FieldInfo), typeof(ParameterInfo), typeof(MethodBase)
         };
