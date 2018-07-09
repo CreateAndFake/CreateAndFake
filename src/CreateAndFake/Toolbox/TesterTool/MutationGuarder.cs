@@ -33,7 +33,8 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <summary>Verifies mutations are prevented on constructors.</summary>
         /// <param name="type">Type to verify.</param>
         /// <param name="callAllMethods">Run instance methods to validate constructor parameters.</param>
-        internal void PreventsMutationOnConstructors(Type type, bool callAllMethods)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        internal void PreventsMutationOnConstructors(Type type, bool callAllMethods, params object[] injectionValues)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
@@ -42,13 +43,14 @@ namespace CreateAndFake.Toolbox.TesterTool
                 .Where(c => c.IsPublic || c.IsAssembly || c.IsFamily || c.IsFamilyOrAssembly)
                 .Where(c => !c.IsPrivate))
             {
-                PreventsMutation(null, constructor, callAllMethods);
+                PreventsMutation(null, constructor, callAllMethods, injectionValues);
             }
         }
 
         /// <summary>Verifies mutations are prevented on methods.</summary>
         /// <param name="instance">Instance to test the methods on.</param>
-        internal void PreventsMutationOnMethods(object instance)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        internal void PreventsMutationOnMethods(object instance, params object[] injectionValues)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
@@ -58,14 +60,15 @@ namespace CreateAndFake.Toolbox.TesterTool
                 .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
                 .Where(m => !m.IsPrivate))
             {
-                PreventsMutation(instance, Fixer.FixMethod(method), false);
+                PreventsMutation(instance, Fixer.FixMethod(method), false, injectionValues);
             }
         }
 
         /// <summary>Verifies mutations are prevented on methods.</summary>
         /// <param name="type">Type to verify.</param>
         /// <param name="callAllMethods">Run instance methods to validate factory parameters.</param>
-        internal void PreventsMutationOnStatics(Type type, bool callAllMethods)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        internal void PreventsMutationOnStatics(Type type, bool callAllMethods, params object[] injectionValues)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
@@ -75,7 +78,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 .Where(m => !m.IsPrivate))
             {
                 PreventsMutation(null, Fixer.FixMethod(method),
-                    callAllMethods && method.ReturnType.Inherits(type));
+                    callAllMethods && method.ReturnType.Inherits(type), injectionValues);
             }
         }
 
@@ -83,10 +86,14 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="instance">Instance with the method under test.</param>
         /// <param name="method">Method under test.</param>
         /// <param name="callAllMethods">If all instance methods should be called after the method.</param>
-        private void PreventsMutation(object instance, MethodBase method, bool callAllMethods)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        private void PreventsMutation(object instance,
+            MethodBase method, bool callAllMethods, object[] injectionValues)
         {
             object[] data = method.GetParameters()
-                .Select(p => (!p.ParameterType.IsByRef) ? Randomizer.Create(p.ParameterType) : null)
+                .Select(p => (!p.ParameterType.IsByRef)
+                    ? Randomizer.Inject(p.ParameterType, injectionValues)
+                    : null)
                 .ToArray();
             object[] copy = m_Duplicator.Copy(data);
 
@@ -102,7 +109,7 @@ namespace CreateAndFake.Toolbox.TesterTool
 
             if (result != null && callAllMethods)
             {
-                CallAllMethods(method, null, result);
+                CallAllMethods(method, null, result, injectionValues);
             }
             (result as IDisposable)?.Dispose();
 

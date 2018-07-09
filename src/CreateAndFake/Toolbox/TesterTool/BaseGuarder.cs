@@ -34,7 +34,9 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="testOrigin">Method under test.</param>
         /// <param name="testParam">Parameter being set to null.</param>
         /// <param name="instance">Instance whose methods to test.</param>
-        protected void CallAllMethods(MethodBase testOrigin, ParameterInfo testParam, object instance)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        protected void CallAllMethods(MethodBase testOrigin,
+            ParameterInfo testParam, object instance, object[] injectionValues)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
@@ -45,8 +47,9 @@ namespace CreateAndFake.Toolbox.TesterTool
                 .Where(m => !m.IsPrivate)
                 .Select(m => Fixer.FixMethod(m)))
             {
-                (RunCheck(testOrigin, testParam, () => method.Invoke(instance, method.GetParameters()
-                    .Select(p => Randomizer.Create(p.ParameterType)).ToArray())) as IDisposable)?.Dispose();
+                (RunCheck(testOrigin, testParam,
+                    () => method.Invoke(instance, method.GetParameters().Select(
+                        p => Randomizer.Inject(p.ParameterType, injectionValues)).ToArray())) as IDisposable)?.Dispose();
             }
         }
 
