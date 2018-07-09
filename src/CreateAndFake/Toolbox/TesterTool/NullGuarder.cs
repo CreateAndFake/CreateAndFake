@@ -30,7 +30,9 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// </summary>
         /// <param name="type">Type to verify.</param>
         /// <param name="callAllMethods">Run instance methods to validate constructor parameters.</param>
-        internal void PreventsNullRefExceptionOnConstructors(Type type, bool callAllMethods)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        internal void PreventsNullRefExceptionOnConstructors(
+            Type type, bool callAllMethods, params object[] injectionValues)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
@@ -39,7 +41,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 .Where(c => c.IsPublic || c.IsAssembly || c.IsFamily || c.IsFamilyOrAssembly)
                 .Where(c => !c.IsPrivate))
             {
-                PreventsNullRefException(null, constructor, callAllMethods);
+                PreventsNullRefException(null, constructor, callAllMethods, injectionValues);
             }
         }
 
@@ -49,7 +51,8 @@ namespace CreateAndFake.Toolbox.TesterTool
         ///     Ignores any exception besides NullReferenceException and moves on.
         /// </summary>
         /// <param name="instance">Instance to test the methods on.</param>
-        internal void PreventsNullRefExceptionOnMethods(object instance)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        internal void PreventsNullRefExceptionOnMethods(object instance, params object[] injectionValues)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
@@ -59,7 +62,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
                 .Where(m => !m.IsPrivate))
             {
-                PreventsNullRefException(instance, Fixer.FixMethod(method), false);
+                PreventsNullRefException(instance, Fixer.FixMethod(method), false, injectionValues);
             }
         }
 
@@ -70,7 +73,9 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// </summary>
         /// <param name="type">Type to verify.</param>
         /// <param name="callAllMethods">Run instance methods to validate factory parameters.</param>
-        internal void PreventsNullRefExceptionOnStatics(Type type, bool callAllMethods)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        internal void PreventsNullRefExceptionOnStatics(
+            Type type, bool callAllMethods, params object[] injectionValues)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
@@ -80,7 +85,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 .Where(m => !m.IsPrivate))
             {
                 PreventsNullRefException(null, Fixer.FixMethod(method),
-                    callAllMethods && method.ReturnType.Inherits(type));
+                    callAllMethods && method.ReturnType.Inherits(type), injectionValues);
             }
         }
 
@@ -88,10 +93,12 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="instance">Instance with the method under test.</param>
         /// <param name="method">Method under test.</param>
         /// <param name="callAllMethods">If all instance methods should be called after the method.</param>
-        private void PreventsNullRefException(object instance, MethodBase method, bool callAllMethods)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        private void PreventsNullRefException(object instance,
+            MethodBase method, bool callAllMethods, object[] injectionValues)
         {
             object[] data = method.GetParameters()
-                .Select(p => (!p.ParameterType.IsByRef) ? Randomizer.Create(p.ParameterType) : null)
+                .Select(p => (!p.ParameterType.IsByRef) ? Randomizer.Inject(p.ParameterType, injectionValues) : null)
                 .ToArray();
 
             for (int i = 0; i < data.Length; i++)
@@ -118,7 +125,7 @@ namespace CreateAndFake.Toolbox.TesterTool
 
                 if (result != null && callAllMethods)
                 {
-                    CallAllMethods(method, param, result);
+                    CallAllMethods(method, param, result, injectionValues);
                 }
                 (result as IDisposable)?.Dispose();
 

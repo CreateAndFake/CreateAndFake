@@ -55,9 +55,10 @@ namespace CreateAndFake.Toolbox.TesterTool
         ///     Ignores any exception besides NullReferenceException and moves on.
         /// </summary>
         /// <typeparam name="T">Type to verify.</typeparam>
-        public virtual void PreventsNullRefException<T>()
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        public virtual void PreventsNullRefException<T>(params object[] injectionValues)
         {
-            PreventsNullRefException(typeof(T));
+            PreventsNullRefException(typeof(T), injectionValues);
         }
 
         /// <summary>
@@ -67,13 +68,14 @@ namespace CreateAndFake.Toolbox.TesterTool
         ///     Ignores any exception besides NullReferenceException and moves on.
         /// </summary>
         /// <param name="type">Type to verify.</param>
-        public virtual void PreventsNullRefException(Type type)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        public virtual void PreventsNullRefException(Type type, params object[] injectionValues)
         {
             NullGuarder checker = new NullGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Asserter, m_Timeout);
 
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsNullRefExceptionOnConstructors(type, true)).Wait();
+                () => checker.PreventsNullRefExceptionOnConstructors(type, true, injectionValues)).Wait();
 
             if (!(type.IsAbstract && type.IsSealed))
             {
@@ -82,7 +84,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                     object instance = Randomizer.Create(type);
                     try
                     {
-                        checker.PreventsNullRefExceptionOnMethods(instance);
+                        checker.PreventsNullRefExceptionOnMethods(instance, injectionValues);
                     }
                     finally
                     {
@@ -92,7 +94,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             }
 
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsNullRefExceptionOnStatics(type, true)).Wait();
+                () => checker.PreventsNullRefExceptionOnStatics(type, true, injectionValues)).Wait();
         }
 
         /// <summary>
@@ -103,17 +105,18 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// </summary>
         /// <typeparam name="T">Type to verify.</typeparam>
         /// <param name="instance">Instance to test the methods on.</param>
-        public virtual void PreventsNullRefException<T>(T instance)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        public virtual void PreventsNullRefException<T>(T instance, params object[] injectionValues)
         {
             NullGuarder checker = new NullGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Asserter, m_Timeout);
 
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsNullRefExceptionOnConstructors(typeof(T), false)).Wait();
+                () => checker.PreventsNullRefExceptionOnConstructors(typeof(T), false, injectionValues)).Wait();
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsNullRefExceptionOnMethods(instance)).Wait();
+                () => checker.PreventsNullRefExceptionOnMethods(instance, injectionValues)).Wait();
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsNullRefExceptionOnStatics(typeof(T), false)).Wait();
+                () => checker.PreventsNullRefExceptionOnStatics(typeof(T), false, injectionValues)).Wait();
         }
 
         /// <summary>
@@ -122,9 +125,10 @@ namespace CreateAndFake.Toolbox.TesterTool
         ///     Ignores any exception and moves on.
         /// </summary>
         /// <typeparam name="T">Type to verify.</typeparam>
-        public virtual void PreventsParameterMutation<T>()
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        public virtual void PreventsParameterMutation<T>(params object[] injectionValues)
         {
-            PreventsParameterMutation(typeof(T));
+            PreventsParameterMutation(typeof(T), injectionValues);
         }
 
         /// <summary>
@@ -133,13 +137,14 @@ namespace CreateAndFake.Toolbox.TesterTool
         ///     Ignores any exception and moves on.
         /// </summary>
         /// <param name="type">Type to verify.</param>
-        public virtual void PreventsParameterMutation(Type type)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        public virtual void PreventsParameterMutation(Type type, params object[] injectionValues)
         {
             MutationGuarder checker = new MutationGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, m_Timeout);
 
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsMutationOnConstructors(type, true)).Wait();
+                () => checker.PreventsMutationOnConstructors(type, true, injectionValues)).Wait();
 
             if (!(type.IsAbstract && type.IsSealed))
             {
@@ -148,7 +153,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                     object instance = Randomizer.Create(type);
                     try
                     {
-                        checker.PreventsMutationOnMethods(instance);
+                        checker.PreventsMutationOnMethods(instance, injectionValues);
                     }
                     finally
                     {
@@ -158,7 +163,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             }
 
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsMutationOnStatics(type, true)).Wait();
+                () => checker.PreventsMutationOnStatics(type, true, injectionValues)).Wait();
         }
 
         /// <summary>
@@ -168,17 +173,18 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// </summary>
         /// <typeparam name="T">Type to verify.</typeparam>
         /// <param name="instance">Instance to test the methods on.</param>
-        public virtual void PreventsParameterMutation<T>(T instance)
+        /// <param name="injectionValues">Values to inject into the method.</param>
+        public virtual void PreventsParameterMutation<T>(T instance, params object[] injectionValues)
         {
             MutationGuarder checker = new MutationGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, m_Timeout);
 
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsMutationOnConstructors(typeof(T), false)).Wait();
+                () => checker.PreventsMutationOnConstructors(typeof(T), false, injectionValues)).Wait();
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsMutationOnMethods(instance)).Wait();
+                () => checker.PreventsMutationOnMethods(instance, injectionValues)).Wait();
             s_Limiter.Retry<TimeoutException>(
-                () => checker.PreventsMutationOnStatics(typeof(T), false)).Wait();
+                () => checker.PreventsMutationOnStatics(typeof(T), false, injectionValues)).Wait();
         }
     }
 }
