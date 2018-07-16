@@ -97,9 +97,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         private void PreventsNullRefException(object instance,
             MethodBase method, bool callAllMethods, object[] injectionValues)
         {
-            object[] data = method.GetParameters()
-                .Select(p => (!p.ParameterType.IsByRef) ? Randomizer.Inject(p.ParameterType, injectionValues) : null)
-                .ToArray();
+            object[] data = Randomizer.CreateFor(method, injectionValues);
 
             for (int i = 0; i < data.Length; i++)
             {

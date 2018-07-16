@@ -151,8 +151,9 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         ///     Those types will be additionally populated with random fakes.
         /// </summary>
         /// <param name="method">Method to create parameters for.</param>
+        /// <param name="values">Starting values to inject into the instance.</param>
         /// <returns>Parameter arguments in order.</returns>
-        public object[] CreateFor(MethodBase method)
+        public object[] CreateFor(MethodBase method, params object[] values)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
 
@@ -160,7 +161,15 @@ namespace CreateAndFake.Toolbox.RandomizerTool
 
             foreach (ParameterInfo param in method.GetParameters())
             {
-                args.Push(Inject(param.ParameterType, args.Where(a => a is Fake).ToArray()));
+                if (!param.IsOut)
+                {
+                    args.Push(Inject(param.ParameterType,
+                        args.Where(a => a is Fake).Concat(values ?? Enumerable.Empty<object>()).ToArray()));
+                }
+                else
+                {
+                    args.Push(null);
+                }
             }
 
             return args.Reverse().ToArray();

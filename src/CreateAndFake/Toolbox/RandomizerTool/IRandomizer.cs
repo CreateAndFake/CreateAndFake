@@ -29,8 +29,9 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         ///     Earlier types will be used to construct later types if possible.
         /// </summary>
         /// <param name="method">Method to create parameters for.</param>
+        /// <param name="values">Starting values to inject into the instance.</param>
         /// <returns>Parameter arguments in order.</returns>
-        object[] CreateFor(MethodBase method);
+        object[] CreateFor(MethodBase method, params object[] values);
 
         /// <summary>Creates an instance using the values or random data as needed.</summary>
         /// <typeparam name="T">Type to create.</typeparam>

@@ -90,11 +90,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         private void PreventsMutation(object instance,
             MethodBase method, bool callAllMethods, object[] injectionValues)
         {
-            object[] data = method.GetParameters()
-                .Select(p => (!p.ParameterType.IsByRef)
-                    ? Randomizer.Inject(p.ParameterType, injectionValues)
-                    : null)
-                .ToArray();
+            object[] data = Randomizer.CreateFor(method, injectionValues);
             object[] copy = m_Duplicator.Copy(data);
 
             object result;
