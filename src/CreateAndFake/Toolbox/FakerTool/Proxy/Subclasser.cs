@@ -107,7 +107,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             if (invalidInterfaces.Any())
             {
                 throw new ArgumentException("Given interfaces not actually interfaces: '" +
-                    String.Join("', '", invalidInterfaces.Select(t => t.Name)) + "'.");
+                    string.Join("', '", invalidInterfaces.Select(t => t.Name)) + "'.");
             }
 
             return FindOrBuildType(realParent, allInterfaces.Distinct().ToArray());

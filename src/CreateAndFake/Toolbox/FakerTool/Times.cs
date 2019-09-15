@@ -98,22 +98,34 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Sets the expected bounds to a single value.</summary>
         /// <param name="count">Upper and lower bound.</param>
         /// <returns>Representation of the bounds.</returns>
-        public static Times Exactly(int count) => new Times(count);
+        public static Times Exactly(int count)
+        {
+            return new Times(count);
+        }
 
         /// <summary>Sets the bounds to the given values.</summary>
         /// <param name="min">Lower bound.</param>
         /// <param name="max">Upper bound.</param>
         /// <returns>Representation of the bounds.</returns>
-        public static Times Between(int min, int max) => new Times(min, max);
+        public static Times Between(int min, int max)
+        {
+            return new Times(min, max);
+        }
 
         /// <summary>Sets the expected bounds to anything above the given value.</summary>
         /// <param name="count">Lower bound.</param>
         /// <returns>Representation of the bounds.</returns>
-        public static Times Min(int count) => Between(count, int.MaxValue);
+        public static Times Min(int count)
+        {
+            return Between(count, int.MaxValue);
+        }
 
         /// <summary>Sets the expected bounds to anything below the given value.</summary>
         /// <param name="count">Upper bound.</param>
         /// <returns>Representation of the bounds.</returns>
-        public static Times Max(int count) => Between(0, count);
+        public static Times Max(int count)
+        {
+            return Between(0, count);
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace CreateAndFake.Toolbox
     public static class TypeExtensions
     {
         /// <summary>Keeps track of type inheritance.</summary>
-        private static IDictionary<Type, HashSet<Type>> s_ChildCache = new Dictionary<Type, HashSet<Type>>();
+        private static readonly IDictionary<Type, HashSet<Type>> s_ChildCache = new Dictionary<Type, HashSet<Type>>();
 
         /// <summary>Finds subclasses of a type in the type's assembly.</summary>
         /// <param name="type">Type to locate subclasses for.</param>

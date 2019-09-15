@@ -13,6 +13,7 @@ Make sure to refer to and follow the [code of conduct](CODE_OF_CONDUCT.md).
 * Proper comments.
 * Updated documentation.
 * Follow the project code style.
+* No #region.
 
 Pull requests will be reviewed thoroughly and harshly to maintain project quality. Expect to make additional changes before approval.
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net471</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;net461</TargetFrameworks>
     <Configurations>Debug;Release;Full;Travis</Configurations>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>

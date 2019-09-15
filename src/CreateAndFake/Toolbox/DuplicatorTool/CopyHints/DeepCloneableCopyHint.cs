@@ -1,5 +1,4 @@
-﻿using System;
-using CreateAndFake.Design.Content;
+﻿using CreateAndFake.Design.Content;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 {

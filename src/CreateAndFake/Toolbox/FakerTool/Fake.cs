@@ -16,8 +16,8 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Determines behavior when missing set behavior for a call.</summary>
         public bool ThrowByDefault
         {
-            get { return Dummy.FakeMeta.ThrowByDefault; }
-            set { Dummy.FakeMeta.ThrowByDefault = value; }
+            get => Dummy.FakeMeta.ThrowByDefault;
+            set => Dummy.FakeMeta.ThrowByDefault = value;
         }
 
         /// <summary>Sets up the fake harness.</summary>

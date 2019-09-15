@@ -55,7 +55,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             m_Gen = gen ?? throw new ArgumentNullException(nameof(gen));
             m_Limiter = limiter ?? throw new ArgumentNullException(nameof(limiter));
 
-            var inputHints = hints ?? Enumerable.Empty<CreateHint>();
+            IEnumerable<CreateHint> inputHints = hints ?? Enumerable.Empty<CreateHint>();
             if (includeDefaultHints)
             {
                 m_Hints = inputHints.Concat(s_DefaultHints).ToArray();

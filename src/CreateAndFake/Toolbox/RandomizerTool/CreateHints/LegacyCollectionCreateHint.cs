@@ -11,7 +11,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     {
         /// <summary>Supported types and the methods used to generate them.</summary>
         private static readonly (Type, Func<string[], RandomizerChainer, object>)[] s_Creators
-            = new(Type, Func<string[], RandomizerChainer, object>)[]
+            = new (Type, Func<string[], RandomizerChainer, object>)[]
             {
                 (typeof(Hashtable), CreateDict<Hashtable>),
                 (typeof(SortedList), CreateDict<SortedList>),

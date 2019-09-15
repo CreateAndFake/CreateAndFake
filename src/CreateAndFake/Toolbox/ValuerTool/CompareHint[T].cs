@@ -12,7 +12,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="actual">Second object under question.</param>
         /// <param name="valuer">Handles callback behavior for child values.</param>
         /// <returns>True if the objects can be compared; false otherwise.</returns>
-        protected override sealed bool Supports(object expected, object actual, ValuerChainer valuer)
+        protected sealed override bool Supports(object expected, object actual, ValuerChainer valuer)
         {
             if (expected == null) throw new ArgumentNullException(nameof(expected));
             if (actual == null) throw new ArgumentNullException(nameof(actual));
@@ -26,7 +26,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="actual">Second object to compare.</param>
         /// <param name="valuer">Handles callback behavior for child values.</param>
         /// <returns>Found differences.</returns>
-        protected override sealed IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
+        protected sealed override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
         {
             return Compare((T)expected, (T)actual, valuer);
         }
@@ -35,7 +35,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="item">Object to generate a code for.</param>
         /// <param name="valuer">Handles callback behavior for child values.</param>
         /// <returns>The generated hash.</returns>
-        protected override sealed int GetHashCode(object item, ValuerChainer valuer)
+        protected sealed override int GetHashCode(object item, ValuerChainer valuer)
         {
             return GetHashCode((T)item, valuer);
         }

@@ -35,7 +35,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="hints">Hints used to compare specific types.</param>
         public Valuer(bool includeDefaultHints = true, params CompareHint[] hints)
         {
-            var inputHints = hints ?? Enumerable.Empty<CompareHint>();
+            IEnumerable<CompareHint> inputHints = hints ?? Enumerable.Empty<CompareHint>();
             if (includeDefaultHints)
             {
                 m_Hints = inputHints.Concat(s_DefaultHints).ToArray();

@@ -43,7 +43,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
             if (errors.Any(e => e != null))
             {
                 throw new AggregateException("Cases failed: " +
-                    String.Join(", ", Enumerable.Range(0, errors.Length).Where(i => errors[i] != null)) + " -",
+                    string.Join(", ", Enumerable.Range(0, errors.Length).Where(i => errors[i] != null)) + " -",
                     errors.Where(e => e != null));
             }
         }

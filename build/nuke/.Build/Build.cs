@@ -30,7 +30,10 @@ internal class Build : NukeBuild
     private readonly Solution s_Solution;
 
     // Console application entry point. Also defines the default target.
-    public static int Main() => Execute<Build>(x => x.Compile);
+    public static int Main()
+    {
+        return Execute<Build>(x => x.Compile);
+    }
 
     /// <summary>Deletes output folders.</summary>
     internal Target Clean => _ => _
@@ -63,11 +66,13 @@ internal class Build : NukeBuild
         {
             foreach (Project proj in s_Solution.GetProjects("*Tests"))
             {
-                DotNetTestSettings Set(DotNetTestSettings s) => s
-                    .SetProjectFile(proj.Path)
-                    .SetSettingsFile(TestSettingsFile)
-                    .SetNoBuild(true)
-                    .SetNoRestore(true);
+                DotNetTestSettings Set(DotNetTestSettings s)
+                {
+                    return s.SetProjectFile(proj.Path)
+                        .SetSettingsFile(TestSettingsFile)
+                        .SetNoBuild(true)
+                        .SetNoRestore(true);
+                }
 
                 DotNetTasks.DotNetTest(s => Set(s).SetConfiguration("Debug"));
                 DotNetTasks.DotNetTest(s => Set(s).SetConfiguration("Release"));
@@ -87,16 +92,19 @@ internal class Build : NukeBuild
 
             foreach (Project proj in s_Solution.GetProjects("*Tests"))
             {
-                OpenCoverSettings Set(OpenCoverSettings s, string f) => s
-                    .SetTargetPath(DotNetTasks.DotNetPath)
-                    .SetTargetArguments($"test {proj.Path} -c Full -s {TestSettingsFile} -f {f} --no-build --no-restore")
-                    .SetSearchDirectories($"{TestingDir / "Full" / f}")
-                    .SetOutput(RawCoverageFile)
-                    .SetFilters("+[*]* -[*Tests]*")
-                    .SetRegistration(RegistrationType.User)
-                    .SetHideSkippedKinds(OpenCoverSkipping.Filter)
-                    .SetMergeOutput(true)
-                    .SetOldStyle(true);
+                OpenCoverSettings Set(OpenCoverSettings s, string f)
+                {
+                    return s
+                        .SetTargetPath(DotNetTasks.DotNetPath)
+                        .SetTargetArguments($"test {proj.Path} -c Full -s {TestSettingsFile} -f {f} --no-build --no-restore")
+                        .SetSearchDirectories($"{TestingDir / "Full" / f}")
+                        .SetOutput(RawCoverageFile)
+                        .SetFilters("+[*]* -[*Tests]*")
+                        .SetRegistration(RegistrationType.User)
+                        .SetHideSkippedKinds(OpenCoverSkipping.Filter)
+                        .SetMergeOutput(true)
+                        .SetOldStyle(true);
+                }
 
                 OpenCoverTasks.OpenCover(s => Set(s, "netcoreapp2.0"));
                 OpenCoverTasks.OpenCover(s => Set(s, "net471"));

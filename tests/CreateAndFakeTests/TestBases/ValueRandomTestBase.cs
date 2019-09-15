@@ -13,7 +13,7 @@ namespace CreateAndFakeTests.TestBases
     public abstract class ValueRandomTestBase<T> where T : ValueRandom
     {
         /// <summary>Instance to test with.</summary>
-        private static ValueRandom s_TestInstance = Tools.Randomizer.Create<T>();
+        private static readonly ValueRandom s_TestInstance = Tools.Randomizer.Create<T>();
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]

@@ -37,7 +37,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         {
             m_Asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
 
-            var inputHints = hints ?? Enumerable.Empty<CopyHint>();
+            IEnumerable<CopyHint> inputHints = hints ?? Enumerable.Empty<CopyHint>();
             if (includeDefaultHints)
             {
                 m_Hints = inputHints.Concat(s_DefaultHints).ToArray();

@@ -34,7 +34,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             if (behavior == null) throw new ArgumentNullException(nameof(behavior));
             if (log == null) throw new ArgumentNullException(nameof(log));
 
-            foreach (var set in behavior)
+            foreach ((CallData, Behavior) set in behavior)
             {
                 m_Behavior.Push(set);
             }
@@ -78,7 +78,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <summary>Verifies behavior with associated times were called as expected.</summary>
         internal void Verify()
         {
-            var invalids = m_Behavior.Where(t => !t.Item2.HasExpectedCalls()).ToArray();
+            (CallData, Behavior)[] invalids = m_Behavior.Where(t => !t.Item2.HasExpectedCalls()).ToArray();
             if (invalids.Any())
             {
                 throw new FakeVerifyException(invalids, m_Log);
@@ -137,7 +137,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             CallData data = new CallData(name, generics, args, null);
             m_Log.Add(data);
 
-            var match = m_Behavior.FirstOrDefault(t => t.Item1.MatchesCall(data));
+            (CallData, Behavior) match = m_Behavior.FirstOrDefault(t => t.Item1.MatchesCall(data));
             if (match.Equals(default))
             {
                 m_DefaultCalls++;

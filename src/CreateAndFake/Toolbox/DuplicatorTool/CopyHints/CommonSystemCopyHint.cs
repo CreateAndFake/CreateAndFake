@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <param name="source">Object to clone.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>If the type could be cloned and the cloned instance.</returns>
-        protected internal override sealed (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
+        protected internal sealed override (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
             if (source == null) return (true, null);
