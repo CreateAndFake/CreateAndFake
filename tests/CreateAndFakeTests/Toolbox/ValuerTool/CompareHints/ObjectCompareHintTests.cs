@@ -27,9 +27,8 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         /// <summary>Sets up the tests.</summary>
         public ObjectCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies the hint finds differences comparing different objects.</summary>
         [Fact]
-        public void Compare_DifferentObjectsDifferences()
+        internal void Compare_DifferentObjectsDifferences()
         {
             var expected = new { Value = Tools.Randomizer.Create<string>() };
             var actual = new { Value = Tools.Randomizer.Create<string>() };

@@ -6,7 +6,8 @@ using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
-    /// <summary>Verifies behavior.</summary>
+    /// <summary>Handles testing copy hints.</summary>
+    /// <typeparam name="T">Copy hint to test.</typeparam>
     public abstract class CopyHintTestBase<T> where T : CopyHint, new()
     {
         /// <summary>Instance to test with.</summary>

@@ -19,9 +19,8 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
         /// <summary>Sets up the tests.</summary>
         public CommonSystemCopyHintTests() : base(_ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies the hint can handle members.</summary>
         [Theory, RandomData]
-        public static void TryCopy_HandlesMemberInfo(MemberInfo data)
+        internal static void TryCopy_HandlesMemberInfo(MemberInfo data)
         {
             (bool, object) result = new CommonSystemCopyHint().TryCopy(data, CreateChainer());
 

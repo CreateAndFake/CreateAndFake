@@ -11,9 +11,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
     /// <summary>Verifies behavior.</summary>
     public static class BehaviorTests
     {
-        /// <summary>Verifies default instances are not null.</summary>
         [Fact]
-        public static void Set_BehaviorWorks()
+        internal static void Set_BehaviorWorks()
         {
             foreach (MethodInfo info in typeof(Behavior)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
@@ -46,53 +45,46 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             }
         }
 
-        /// <summary>Verifies behavior behavior.</summary>
         [Fact]
-        public static void None_BehaviorWorks()
+        internal static void None_BehaviorWorks()
         {
             Behavior.None().Invoke(Array.Empty<object>());
         }
 
-        /// <summary>Verifies behavior behavior.</summary>
         [Fact]
-        public static void Error_BehaviorWorks()
+        internal static void Error_BehaviorWorks()
         {
             Tools.Asserter.Throws<NotImplementedException>(
                 () => Behavior.Error().Invoke(Array.Empty<object>()));
         }
 
-        /// <summary>Verifies behavior behavior.</summary>
         [Fact]
-        public static void Null_BehaviorWorks()
+        internal static void Null_BehaviorWorks()
         {
             Tools.Asserter.Is(null, Behavior.Null<string>().Invoke(Array.Empty<object>()));
         }
 
-        /// <summary>Verifies behavior behavior.</summary>
         [Fact]
-        public static void Default_BehaviorWorks()
+        internal static void Default_BehaviorWorks()
         {
             Tools.Asserter.Is(default(int), Behavior.Default<int>().Invoke(Array.Empty<object>()));
         }
 
-        /// <summary>Verifies behavior behavior.</summary>
         [Fact]
-        public static void Throw_BehaviorWorks()
+        internal static void Throw_BehaviorWorks()
         {
             Tools.Asserter.Throws<InvalidOperationException>(
                 () => Behavior.Throw<InvalidOperationException>().Invoke(Array.Empty<object>()));
         }
 
-        /// <summary>Verifies behavior behavior.</summary>
         [Theory, RandomData]
-        public static void Returns_BehaviorWorks(int value)
+        internal static void Returns_BehaviorWorks(int value)
         {
             Tools.Asserter.Is(value, Behavior.Returns(value).Invoke(Array.Empty<object>()));
         }
 
-        /// <summary>Verifies behavior behavior.</summary>
         [Fact]
-        public static void Series_BehaviorWorks()
+        internal static void Series_BehaviorWorks()
         {
             Behavior behavior = Behavior.Series(false, true, false);
             Tools.Asserter.Is(false, behavior.Invoke(Array.Empty<object>()));
@@ -103,9 +95,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
                 () => behavior.Invoke(Array.Empty<object>()));
         }
 
-        /// <summary>Verifies times is passed through.</summary>
         [Theory, RandomData]
-        public static void ToExpectedCalls_MatchesTimes(Times times)
+        internal static void ToExpectedCalls_MatchesTimes(Times times)
         {
             Tools.Asserter.Is(null, Behavior.None().ToExpectedCalls());
             Tools.Asserter.Is(times.ToString(), Behavior.None(times).ToExpectedCalls());

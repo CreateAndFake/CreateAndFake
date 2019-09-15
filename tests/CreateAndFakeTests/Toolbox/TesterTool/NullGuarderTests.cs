@@ -21,47 +21,41 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
             new GenericFixer(Tools.Gen, Tools.Randomizer),
             Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 10));
 
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void NullGuarder_GuardsNulls()
+        internal static void NullGuarder_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException(_ShortTestInstance);
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void NullGuarder_NoParameterMutation()
+        internal static void NullGuarder_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation(_ShortTestInstance);
         }
 
-        /// <summary>Verifies long methods time out.</summary>
         [Fact]
-        public static void NullCheck_TimesOut()
+        internal static void NullCheck_TimesOut()
         {
             Tools.Asserter.Throws<TimeoutException>(() => _ShortTestInstance
                 .PreventsNullRefExceptionOnStatics(typeof(LongMethodSample), false));
         }
 
-        /// <summary>Verifies null reference exceptions fail the test.</summary>
         [Fact]
-        public static void NullCheck_NullReferenceThrows()
+        internal static void NullCheck_NullReferenceThrows()
         {
             Tools.Asserter.Throws<AssertException>(() => _ShortTestInstance
                 .PreventsNullRefExceptionOnConstructors(typeof(NullReferenceSample), true));
         }
 
-        /// <summary>Verifies wrong parameter names on the guard fail the test.</summary>
         [Fact]
-        public static void NullCheck_MismatchParamNameThrows()
+        internal static void NullCheck_MismatchParamNameThrows()
         {
             Tools.Asserter.Throws<AssertException>(() => _ShortTestInstance
                 .PreventsNullRefExceptionOnConstructors(typeof(MismatchParamNameSample), false));
         }
 
-        /// <summary>Verifies disposables are properly disposed.</summary>
         [Fact]
-        public static void PreventsNullRefExceptionOnConstructors_Disposes()
+        internal static void PreventsNullRefExceptionOnConstructors_Disposes()
         {
             lock (MockDisposableSample.Lock)
             {
@@ -76,9 +70,8 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
             }
         }
 
-        /// <summary>Verifies disposables are properly disposed.</summary>
         [Fact]
-        public static void PreventsNullRefExceptionOnMethods_Disposes()
+        internal static void PreventsNullRefExceptionOnMethods_Disposes()
         {
             lock (MockDisposableSample.Lock)
             {

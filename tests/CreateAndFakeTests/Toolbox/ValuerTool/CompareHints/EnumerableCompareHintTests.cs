@@ -27,9 +27,8 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         /// <summary>Sets up the tests.</summary>
         public EnumerableCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies mismatched list sizes aren't equal.</summary>
         [Theory, RandomData]
-        public void Compare_SizeMismatchOutOfBounds(List<string> original)
+        internal void Compare_SizeMismatchOutOfBounds(List<string> original)
         {
             List<string> variant = Tools.Duplicator.Copy(original);
             variant.RemoveAt(variant.Count - 1);

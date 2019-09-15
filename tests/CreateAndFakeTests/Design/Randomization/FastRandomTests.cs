@@ -12,32 +12,30 @@ namespace CreateAndFakeTests.Randomization
     public sealed class FastRandomTests : ValueRandomTestBase<FastRandom>
     {
         /// <summary>Invalid values to test for.</summary>
-        private static readonly double[] badDoubles = new[] {
+        private static readonly double[] _BadDoubles = new[] {
             double.NaN, double.NegativeInfinity, double.PositiveInfinity };
 
         /// <summary>Invalid values to test for.</summary>
-        private static readonly float[] badFloats = new[] {
+        private static readonly float[] _BadFloats = new[] {
             float.NaN, float.NegativeInfinity, float.PositiveInfinity };
 
-        /// <summary>Verifies invalid values are creatable.</summary>
         [Fact]
-        public static async Task Create_InvalidValuesPossible()
+        internal static async Task Create_InvalidValuesPossible()
         {
             IRandom random = new FastRandom(false);
 
             Limiter limiter = new Limiter(15000);
-            await limiter.StallUntil(() => badDoubles.Contains(random.Next<double>()));
-            await limiter.StallUntil(() => badFloats.Contains(random.Next<float>()));
+            await limiter.StallUntil(() => _BadDoubles.Contains(random.Next<double>()));
+            await limiter.StallUntil(() => _BadFloats.Contains(random.Next<float>()));
         }
 
-        /// <summary>Verifies invalid values can be prevented.</summary>
         [Fact]
-        public static async Task Create_OnlyValidValuesPreventsInvalids()
+        internal static async Task Create_OnlyValidValuesPreventsInvalids()
         {
             IRandom random = new FastRandom(true);
 
-            await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false, badDoubles.Contains(random.Next<double>())));
-            await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false, badFloats.Contains(random.Next<float>())));
+            await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false, _BadDoubles.Contains(random.Next<double>())));
+            await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false, _BadFloats.Contains(random.Next<float>())));
         }
     }
 }

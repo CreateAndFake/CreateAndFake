@@ -9,7 +9,8 @@ using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
-    /// <summary>Verifies behavior.</summary>
+    /// <summary>Handles testing value random classes.</summary>
+    /// <typeparam name="T">Value random type to test.</typeparam>
     public abstract class ValueRandomTestBase<T> where T : ValueRandom
     {
         /// <summary>Instance to test with.</summary>

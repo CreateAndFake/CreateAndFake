@@ -20,31 +20,27 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
             new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
 
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void MutationGuarder_GuardsNulls()
+        internal static void MutationGuarder_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException(_ShortTestInstance);
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void MutationGuarder_NoParameterMutation()
+        internal static void MutationGuarder_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation(_ShortTestInstance);
         }
 
-        /// <summary>Verifies long methods time out.</summary>
         [Fact]
-        public static void CallMethod_TimesOut()
+        internal static void CallMethod_TimesOut()
         {
             Tools.Asserter.Throws<TimeoutException>(() => _ShortTestInstance
                 .PreventsMutationOnStatics(typeof(LongMethodSample), false));
         }
 
-        /// <summary>Verifies disposables are properly disposed.</summary>
         [Fact]
-        public static void PreventsMutationOnConstructors_Disposes()
+        internal static void PreventsMutationOnConstructors_Disposes()
         {
             lock (MockDisposableSample.Lock)
             {
@@ -59,9 +55,8 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
             }
         }
 
-        /// <summary>Verifies disposables are properly disposed.</summary>
         [Fact]
-        public static void PreventsMutationOnMethods_Disposes()
+        internal static void PreventsMutationOnMethods_Disposes()
         {
             lock (MockDisposableSample.Lock)
             {

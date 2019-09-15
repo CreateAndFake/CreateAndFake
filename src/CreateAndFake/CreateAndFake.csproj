@@ -26,7 +26,7 @@
     <Version>1.6.5</Version>
     <Authors>CreateAndFake Contributors</Authors>
     <Description>A C# class library that handles mocking, test data generation, and validation.</Description>
-    <PackageLicenseUrl>https://mozilla.org/MPL/2.0/</PackageLicenseUrl>
+    <PackageLicense>https://mozilla.org/MPL/2.0/</PackageLicense>
     <PackageProjectUrl>https://github.com/CreateAndFake/CreateAndFake</PackageProjectUrl>
     <RepositoryUrl>https://github.com/CreateAndFake/CreateAndFake</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>

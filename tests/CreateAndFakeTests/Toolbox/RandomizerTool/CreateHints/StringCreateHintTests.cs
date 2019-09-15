@@ -22,9 +22,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         /// <summary>Sets up the tests.</summary>
         public StringCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies the hint creates strings within bounds.</summary>
         [Fact]
-        public static void TryCreate_SizeConstraintsWork()
+        internal static void TryCreate_SizeConstraintsWork()
         {
             int minSize = 2;
             int range = 3;
@@ -39,9 +38,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
             }
         }
 
-        /// <summary>Verifies the hint creates strings with the chars specified.</summary>
         [Fact]
-        public static void TryCreate_UsesCharSet()
+        internal static void TryCreate_UsesCharSet()
         {
             StringCreateHint hint = new StringCreateHint(3, 0, "a");
             for (int i = 0; i < 100; i++)

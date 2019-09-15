@@ -27,9 +27,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         /// <summary>Sets up the tests.</summary>
         public CommonSystemCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies the hint keeps trying.</summary>
         [Fact]
-        public static void TryCreate_ContinuesUntilMemberFound()
+        internal static void TryCreate_ContinuesUntilMemberFound()
         {
             for (int i = 0; i < 50; i++)
             {

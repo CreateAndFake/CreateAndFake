@@ -5,7 +5,6 @@ using System.Reflection;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 {
@@ -25,7 +24,6 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         public FakedCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
-        [Fact]
         public override void TryCompare_SupportsDifferentValidTypes()
         {
             try

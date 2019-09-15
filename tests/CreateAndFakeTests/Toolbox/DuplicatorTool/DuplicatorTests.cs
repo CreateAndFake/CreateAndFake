@@ -9,46 +9,40 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
     /// <summary>Verifies behavior.</summary>
     public static class DuplicatorTests
     {
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void Duplicator_GuardsNulls()
+        internal static void Duplicator_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException<Duplicator>();
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void Duplicator_NoParameterMutation()
+        internal static void Duplicator_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation<Duplicator>();
         }
 
-        /// <summary>Verifies nulls are valid.</summary>
         [Fact]
-        public static void New_NullHintsValid()
+        internal static void New_NullHintsValid()
         {
             Tools.Asserter.IsNot(null, new Duplicator(Tools.Asserter, true, null));
             Tools.Asserter.IsNot(null, new Duplicator(Tools.Asserter, false, null));
         }
 
-        /// <summary>Verifies an exception throws when no hint matches.</summary>
         [Fact]
-        public static void Copy_MissingMatchThrows()
+        internal static void Copy_MissingMatchThrows()
         {
             Tools.Asserter.Throws<NotSupportedException>(
                 () => new Duplicator(Tools.Asserter, false).Copy(new object()));
         }
 
-        /// <summary>Verifies the duplicator can copy null.</summary>
         [Fact]
-        public static void Copy_NullWorks()
+        internal static void Copy_NullWorks()
         {
             Tools.Asserter.Is(null, new Duplicator(Tools.Asserter, false).Copy<object>(null));
         }
 
-        /// <summary>Verifies hint behavior works.</summary>
         [Theory, RandomData]
-        public static void Copy_ValidHintWorks(object data, Fake<CopyHint> hint)
+        internal static void Copy_ValidHintWorks(object data, Fake<CopyHint> hint)
         {
             hint.Setup(
                 m => m.TryCopy(data, Arg.Any<DuplicatorChainer>()),
@@ -61,9 +55,8 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
                 () => hint.VerifyAll(Times.Once));
         }
 
-        /// <summary>Verifies an infinite loop exception is caught and given details.</summary>
         [Theory, RandomData]
-        public static void Copy_InfiniteLoopDetails(object instance, Fake<CopyHint> hint)
+        internal static void Copy_InfiniteLoopDetails(object instance, Fake<CopyHint> hint)
         {
             hint.Setup(
                 m => m.TryCopy(instance, Arg.Any<DuplicatorChainer>()),

@@ -21,9 +21,8 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
         /// <summary>Sets up the tests.</summary>
         public BasicCopyHintTests() : base(_ValidTypes, _InvalidTypes, true) { }
 
-        /// <summary>Verifies the hint can handle just plain objects.</summary>
         [Fact]
-        public static void TryCopy_HandlesBaseObject()
+        internal static void TryCopy_HandlesBaseObject()
         {
             object data = new object();
             (bool, object) result = new BasicCopyHint().TryCopy(data, CreateChainer());

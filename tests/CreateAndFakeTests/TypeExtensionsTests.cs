@@ -12,23 +12,20 @@ namespace CreateAndFakeTests
     /// <summary>Verifies behavior.</summary>
     public static class TypeExtensionsTests
     {
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void TypeExtensions_GuardsNulls()
+        internal static void TypeExtensions_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException(typeof(TypeExtensions));
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void TypeExtensions_NoParameterMutation()
+        internal static void TypeExtensions_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation(typeof(TypeExtensions));
         }
 
-        /// <summary>Verifies no ill effects from cache lock race.</summary>
         [Fact]
-        public static void Inherits_RaceConditionPrevented()
+        internal static void Inherits_RaceConditionPrevented()
         {
             Type testType = Tools.Faker.Stub<object>(Assembly.GetExecutingAssembly()
                 .GetTypes().Where(t => t.IsInterface).ToArray()).GetType();

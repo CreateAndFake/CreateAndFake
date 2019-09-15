@@ -7,7 +7,8 @@ using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
-    /// <summary>Verifies behavior.</summary>
+    /// <summary>Handles testing compare hints.</summary>
+    /// <typeparam name="T">Compare hint to test.</typeparam>
     public abstract class CompareHintTestBase<T> where T : CompareHint
     {
         /// <summary>Instance to test with.</summary>

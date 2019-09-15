@@ -26,7 +26,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         [SuppressMessage("Sonar", "S1481:RemoveUnusedLocals", Justification = "Required for cast check.")]
         public Fake(Fake baseFake) : base(baseFake)
         {
-            T check = (T)base.Dummy;
+            _ = (T)base.Dummy;
         }
 
         /// <summary>Ties a set method call to fake behavior.</summary>

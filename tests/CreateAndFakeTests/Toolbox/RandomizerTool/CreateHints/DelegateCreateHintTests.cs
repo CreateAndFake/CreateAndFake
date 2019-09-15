@@ -69,9 +69,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         /// <summary>Sets up the tests.</summary>
         public DelegateCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies every func and action type are handled.</summary>
         [Fact]
-        public static void Create_HandlesAllDelegates()
+        internal static void Create_HandlesAllDelegates()
         {
             foreach (Type type in _ActionTypes.Concat(_FuncTypes))
             {
@@ -79,9 +78,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
             }
         }
 
-        /// <summary>Verifies out is supported through OutRef.</summary>
         [Fact]
-        public static void Create_HandlesOut()
+        internal static void Create_HandlesOutRef()
         {
             (bool, object) result = _TestInstance.TryCreate(typeof(Action<IOutRef>), CreateChainer());
             Tools.Asserter.Is(true, result.Item1);

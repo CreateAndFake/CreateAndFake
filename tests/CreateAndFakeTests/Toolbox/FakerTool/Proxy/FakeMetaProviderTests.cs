@@ -9,23 +9,20 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
     /// <summary>Verifies behavior.</summary>
     public static class FakeMetaProviderTests
     {
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void FakeMetaProvider_GuardsNulls()
+        internal static void FakeMetaProvider_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException<FakeMetaProvider>();
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void FakeMetaProvider_NoParameterMutation()
+        internal static void FakeMetaProvider_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation<FakeMetaProvider>();
         }
 
-        /// <summary>Verifies the provided value is matched by calls.</summary>
         [Theory, RandomData]
-        public static void Verify_PresetOutOfRangeThrows(string name)
+        internal static void Verify_PresetOutOfRangeThrows(string name)
         {
             FakeMetaProvider provider = new FakeMetaProvider
             {
@@ -47,9 +44,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify());
         }
 
-        /// <summary>Verifies the provided value is matched by calls.</summary>
         [Theory, RandomData]
-        public static void Verify_CustomOutOfRangeThrows(string name)
+        internal static void Verify_CustomOutOfRangeThrows(string name)
         {
             FakeMetaProvider provider = new FakeMetaProvider
             {
@@ -74,9 +70,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             provider.Verify(2, data);
         }
 
-        /// <summary>Verifies the provided value is matched by calls.</summary>
         [Fact]
-        public static void VerifyTotalCalls_OutOfRangeThrows()
+        internal static void VerifyTotalCalls_OutOfRangeThrows()
         {
             FakeMetaProvider provider = new FakeMetaProvider
             {
@@ -95,9 +90,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             provider.VerifyTotalCalls(2);
         }
 
-        /// <summary>Verifies matched call has no return.</summary>
         [Theory, RandomData]
-        public static void CallVoid_ReturnValueThrows(string name)
+        internal static void CallVoid_ReturnValueThrows(string name)
         {
             FakeMetaProvider provider = new FakeMetaProvider();
 

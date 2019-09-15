@@ -8,7 +8,8 @@ using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
-    /// <summary>Verifies behavior.</summary>
+    /// <summary>Handles testing create hints.</summary>
+    /// <typeparam name="T">Create hint to test.</typeparam>
     public abstract class CreateHintTestBase<T> where T : CreateHint
     {
         /// <summary>Instance to test with.</summary>

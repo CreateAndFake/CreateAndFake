@@ -11,7 +11,7 @@ namespace CreateAndFakeTests
     public sealed class RandomDataAttribute : DataAttribute
     {
         /// <summary>Number of times to test the method.</summary>
-        public int Trials { get; set; } = 2;
+        public int Trials { get; set; } = 1;
 
         /// <summary>Generates data for a theory.</summary>
         /// <param name="testMethod">Theory information.</param>

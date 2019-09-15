@@ -10,32 +10,28 @@ namespace CreateAndFakeTests.Design.Content
     /// <summary>Verifies behavior.</summary>
     public static class ValueComparerTests
     {
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void ValueComparer_GuardsNulls()
+        internal static void ValueComparer_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException<ValueComparer>();
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void ValueComparer_NoParameterMutation()
+        internal static void ValueComparer_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation<ValueComparer>();
         }
 
-        /// <summary>Verifies params works as intended.</summary>
         [Theory, RandomData]
-        public static void GetHashCode_ParamsBehavior(int item1, int item2, int item3)
+        internal static void GetHashCode_SupportsParams(int item1, int item2, int item3)
         {
             Tools.Asserter.Is(
                 ValueComparer.Use.GetHashCode(new List<int> { item1, item2, item3 }),
                 ValueComparer.Use.GetHashCode(item1, item2, item3));
         }
 
-        /// <summary>Verifies the type works as intended.</summary>
         [Theory, RandomData]
-        public static void ValueComparer_ValueEquatableBehavior(
+        internal static void ValueComparer_SupportsValueEquatable(
             Fake<IValueEquatable> stub1, Fake<IValueEquatable> stub2)
         {
             ValueComparer.Use.Equals(stub1.Dummy, stub2.Dummy);
@@ -63,17 +59,15 @@ namespace CreateAndFakeTests.Design.Content
                 () => stub1.VerifyTotalCalls(4));
         }
 
-        /// <summary>Verifies the type works as intended.</summary>
         [Fact]
-        public static void ValueComparer_ObjectBehavior()
+        internal static void ValueComparer_SupportsObject()
         {
             TestBehavior<int, object>(ValueComparer.Use, ValueComparer.Use);
             TestBehavior<string, object>(ValueComparer.Use, ValueComparer.Use);
         }
 
-        /// <summary>Verifies the type works as intended.</summary>
         [Fact]
-        public static void ValueComparer_IEnumerableBehavior()
+        internal static void ValueComparer_SupportsIEnumerable()
         {
             TestBehavior<IEnumerable<int>, object>(ValueComparer.Use, ValueComparer.Use);
             TestBehavior<IEnumerable<int>, IEnumerable>(ValueComparer.Use, ValueComparer.Use);
@@ -82,9 +76,8 @@ namespace CreateAndFakeTests.Design.Content
             TestBehavior<IEnumerable<string>, IEnumerable>(ValueComparer.Use, ValueComparer.Use);
         }
 
-        /// <summary>Verifies the type works as intended.</summary>
         [Fact]
-        public static void ValueComparer_IDictionaryBehavior()
+        internal static void ValueComparer_SupportsIDictionary()
         {
             TestBehavior<IDictionary<int, int>, object>(ValueComparer.Use, ValueComparer.Use);
             TestBehavior<IDictionary<int, int>, IEnumerable>(ValueComparer.Use, ValueComparer.Use);

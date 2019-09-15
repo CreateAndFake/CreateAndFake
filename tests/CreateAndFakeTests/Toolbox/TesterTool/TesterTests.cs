@@ -20,9 +20,8 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         private static readonly Tester _LongTestInstance = new Tester(Tools.Gen, Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
 
-        /// <summary>Verifies openness for custom individual behavior by inheritance.</summary>
         [Fact]
-        public static void Tester_AllMethodsVirtual()
+        internal static void Tester_AllMethodsVirtual()
         {
             Tools.Asserter.IsEmpty(typeof(Tester)
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
@@ -30,23 +29,20 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 .Select(m => m.Name));
         }
 
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void Tester_GuardsNulls()
+        internal static void Tester_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException(_ShortTestInstance);
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void Tester_NoParameterMutation()
+        internal static void Tester_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation(_ShortTestInstance);
         }
 
-        /// <summary>Verifies disposables are properly disposed.</summary>
         [Fact]
-        public static void PreventsNullRefException_Disposes()
+        internal static void PreventsNullRefException_Disposes()
         {
             lock (MockDisposableSample.Lock)
             {
@@ -61,9 +57,8 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
             }
         }
 
-        /// <summary>Verifies disposables are properly disposed.</summary>
         [Fact]
-        public static void PreventsParameterMutation_Disposes()
+        internal static void PreventsParameterMutation_Disposes()
         {
             lock (MockDisposableSample.Lock)
             {

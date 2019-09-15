@@ -9,16 +9,14 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
     /// <summary>Verifies behavior.</summary>
     public sealed class AssertExceptionTests : ExceptionTestBase<AssertException>
     {
-        /// <summary>Verifies a null message defaults.</summary>
         [Fact]
-        public static void AssertException_UnknownMessage()
+        internal static void AssertException_UnknownMessageDefault()
         {
             Tools.Asserter.Is("Unknown assert failure.", new AssertException(null, null).Message);
         }
 
-        /// <summary>Verifies included data.</summary>
         [Theory, RandomData]
-        public static void AssertException_MessageFormat(string message, string details, string content)
+        internal static void AssertException_MessageFormat(string message, string details, string content)
         {
             string nl = Environment.NewLine;
 

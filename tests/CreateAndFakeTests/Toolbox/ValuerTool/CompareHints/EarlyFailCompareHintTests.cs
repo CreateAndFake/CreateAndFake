@@ -27,9 +27,8 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
         /// <summary>Sets up the tests.</summary>
         public EarlyFailCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies the hint supports nulls.</summary>
         [Fact]
-        public void TryCompare_NullBehaviorCheck()
+        internal void TryCompare_NullBehaviorCheck()
         {
             Tools.Asserter.Is(true, TestInstance.TryCompare(null, new object(), CreateChainer()).Item1);
             Tools.Asserter.IsNotEmpty(TestInstance.TryCompare(null, new object(), CreateChainer()).Item2);
@@ -42,9 +41,8 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
                 new object(), null, CreateChainer()).Item2.ToArray());
         }
 
-        /// <summary>Verifies the hint handles nulls properly.</summary>
         [Fact]
-        public void TryGetHashCode_NullBehaviorCheck()
+        internal void TryGetHashCode_NullBehaviorCheck()
         {
             Tools.Asserter.Is(true, TestInstance.TryGetHashCode(null, CreateChainer()).Item1);
             Tools.Asserter.Is(ValueComparer.NullHash, TestInstance.TryGetHashCode(null, CreateChainer()).Item2);

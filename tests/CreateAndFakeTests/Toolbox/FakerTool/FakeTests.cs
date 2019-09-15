@@ -10,16 +10,14 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
     /// <summary>Verifies behavior.</summary>
     public static class FakeTests
     {
-        /// <summary>Verifies a total does not been to be specified.</summary>
         [Fact]
-        public static void Verify_NoTotalValid()
+        internal static void Verify_NoTotalValid()
         {
             Tools.Faker.Mock<object>().VerifyAll();
         }
 
-        /// <summary>Verifies protected methods are supported.</summary>
         [Fact]
-        public static void SetupVerify_WorksProtectedMethods()
+        internal static void SetupVerify_WorksProtectedMethods()
         {
             MethodInfo method = typeof(ProtectedSample)
                 .GetMethod("ChildMethod", BindingFlags.Instance | BindingFlags.NonPublic);
