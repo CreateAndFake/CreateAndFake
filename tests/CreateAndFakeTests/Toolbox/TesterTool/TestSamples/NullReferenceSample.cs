@@ -6,18 +6,18 @@ namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples
     public sealed class NullReferenceSample
     {
         /// <summary>For testing.</summary>
-        private readonly IValueEquatable m_Data;
+        private readonly IValueEquatable _data;
 
         /// <summary>For testing.</summary>
         public NullReferenceSample(IValueEquatable data)
         {
-            m_Data = data;
+            _data = data;
         }
 
         /// <summary>For testing.</summary>
         public override string ToString()
         {
-            return m_Data.ToString();
+            return _data.ToString();
         }
     }
 }

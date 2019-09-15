@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     public sealed class ObjectCreateHint : CreateHint
     {
         /// <summary>Caches found subclasses for types.</summary>
-        private static readonly IDictionary<Type, Type[]> s_SubclassCache = new Dictionary<Type, Type[]>
+        private static readonly IDictionary<Type, Type[]> _SubclassCache = new Dictionary<Type, Type[]>
         {
             { typeof(object), new[] { typeof(object) } }
         };
@@ -143,12 +143,12 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         private static Type FindTypeToCreate(Type type, RandomizerChainer randomizer)
         {
             Type[] subclasses;
-            lock (s_SubclassCache)
+            lock (_SubclassCache)
             {
-                if (!s_SubclassCache.TryGetValue(type, out subclasses))
+                if (!_SubclassCache.TryGetValue(type, out subclasses))
                 {
                     subclasses = FindSubclasses(type);
-                    s_SubclassCache.Add(type, subclasses);
+                    _SubclassCache.Add(type, subclasses);
                 }
             }
 

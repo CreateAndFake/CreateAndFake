@@ -11,12 +11,12 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
     public static class MutationGuarderTests
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly MutationGuarder s_ShortTestInstance = new MutationGuarder(
+        private static readonly MutationGuarder _ShortTestInstance = new MutationGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Instance to test with.</summary>
-        private static readonly MutationGuarder s_LongTestInstance = new MutationGuarder(
+        private static readonly MutationGuarder _LongTestInstance = new MutationGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
 
@@ -24,21 +24,21 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         [Fact]
         public static void MutationGuarder_GuardsNulls()
         {
-            Tools.Tester.PreventsNullRefException(s_ShortTestInstance);
+            Tools.Tester.PreventsNullRefException(_ShortTestInstance);
         }
 
         /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
         public static void MutationGuarder_NoParameterMutation()
         {
-            Tools.Tester.PreventsParameterMutation(s_ShortTestInstance);
+            Tools.Tester.PreventsParameterMutation(_ShortTestInstance);
         }
 
         /// <summary>Verifies long methods time out.</summary>
         [Fact]
         public static void CallMethod_TimesOut()
         {
-            Tools.Asserter.Throws<TimeoutException>(() => s_ShortTestInstance
+            Tools.Asserter.Throws<TimeoutException>(() => _ShortTestInstance
                 .PreventsMutationOnStatics(typeof(LongMethodSample), false));
         }
 
@@ -52,7 +52,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 MockDisposableSample.FinalizerDisposes = 0;
                 MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
 
-                s_LongTestInstance.PreventsMutationOnConstructors(typeof(MockDisposableSample), true);
+                _LongTestInstance.PreventsMutationOnConstructors(typeof(MockDisposableSample), true);
                 Tools.Asserter.Is(2, MockDisposableSample.ClassDisposes);
                 Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
                 MockDisposableSample.Fake.Verify(Times.Once, d => d.Dispose());
@@ -71,7 +71,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
 
                 using (MockDisposableSample sample = new MockDisposableSample(null))
                 {
-                    s_LongTestInstance.PreventsMutationOnMethods(sample);
+                    _LongTestInstance.PreventsMutationOnMethods(sample);
                     Tools.Asserter.Is(1, MockDisposableSample.ClassDisposes);
                     Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
                     MockDisposableSample.Fake.Verify(Times.Once, d => d.Dispose());

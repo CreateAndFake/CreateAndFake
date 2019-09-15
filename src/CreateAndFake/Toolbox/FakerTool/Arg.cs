@@ -8,13 +8,13 @@ namespace CreateAndFake.Toolbox.FakerTool
     public sealed class Arg : IDeepCloneable
     {
         /// <summary>Condition to compare with.</summary>
-        private readonly Func<object, bool> m_Matcher;
+        private readonly Func<object, bool> _matcher;
 
         /// <summary>Creates a matcher arg.</summary>
         /// <param name="matcher">Condition to compare with.</param>
         private Arg(Func<object, bool> matcher)
         {
-            m_Matcher = matcher;
+            _matcher = matcher;
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Clone that is equal in value to the current instance.</returns>
         public IDeepCloneable DeepClone()
         {
-            return new Arg(m_Matcher);
+            return new Arg(_matcher);
         }
 
         /// <summary>Determines if the condition is matched.</summary>
@@ -32,7 +32,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>True if matched; false otherwise.</returns>
         internal bool Matches(object arg)
         {
-            return m_Matcher(arg);
+            return _matcher(arg);
         }
 
         /// <summary>Matches any instance of the given type.</summary>

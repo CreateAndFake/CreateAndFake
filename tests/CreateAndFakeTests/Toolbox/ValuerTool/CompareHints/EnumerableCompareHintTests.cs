@@ -14,18 +14,18 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class EnumerableCompareHintTests : CompareHintTestBase<EnumerableCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly EnumerableCompareHint s_TestInstance = new EnumerableCompareHint();
+        private static readonly EnumerableCompareHint _TestInstance = new EnumerableCompareHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes
+        private static readonly Type[] _ValidTypes
             = new[] { typeof(IList), typeof(List<string>), typeof(List<KeyValuePair<int, int>>) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes
+        private static readonly Type[] _InvalidTypes
             = new[] { typeof(object), typeof(int) };
 
         /// <summary>Sets up the tests.</summary>
-        public EnumerableCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public EnumerableCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
         /// <summary>Verifies mismatched list sizes aren't equal.</summary>
         [Theory, RandomData]

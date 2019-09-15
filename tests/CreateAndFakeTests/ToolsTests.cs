@@ -17,7 +17,7 @@ namespace CreateAndFakeTests
     public static class ToolsTests
     {
         /// <summary>Flags representing mutable data.</summary>
-        private const BindingFlags s_Mutable = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+        private const BindingFlags _Mutable = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
         /// <summary>Verifies that the tools integrate together.</summary>
         [Fact]
@@ -114,7 +114,7 @@ namespace CreateAndFakeTests
                     Tools.Valuer.GetHashCode(original),
                     Tools.Valuer.GetHashCode(dupe), $"Hashcode {failMessage}");
 
-                if (type.GetProperties(s_Mutable).Any() || type.GetFields(s_Mutable).Any())
+                if (type.GetProperties(_Mutable).Any() || type.GetFields(_Mutable).Any())
                 {
                     variant = Tools.Mutator.Variant(type, original);
                     Tools.Asserter.ValuesNotEqual(original, variant, failMessage);

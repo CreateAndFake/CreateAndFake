@@ -10,16 +10,16 @@ namespace CreateAndFake.Toolbox.ValuerTool
     public sealed class ValuerChainer
     {
         /// <summary>Callback to valuer to handle child values.</summary>
-        private readonly Func<object, ValuerChainer, int> m_Hasher;
+        private readonly Func<object, ValuerChainer, int> _hasher;
 
         /// <summary>Callback to valuer to handle child values.</summary>
-        private readonly Func<object, object, ValuerChainer, IEnumerable<Difference>> m_Comparer;
+        private readonly Func<object, object, ValuerChainer, IEnumerable<Difference>> _comparer;
 
         /// <summary>History of hashes to match up references.</summary>
-        private readonly IDictionary<int, object> m_HashHistory;
+        private readonly IDictionary<int, object> _hashHistory;
 
         /// <summary>History of comparisons to match up references.</summary>
-        private readonly ICollection<(int, int)> m_CompareHistory;
+        private readonly ICollection<(int, int)> _compareHistory;
 
         /// <summary>Reference to the actual valuer.</summary>
         internal IValuer Valuer { get; }
@@ -32,11 +32,11 @@ namespace CreateAndFake.Toolbox.ValuerTool
             Func<object, object, ValuerChainer, IEnumerable<Difference>> comparer)
         {
             Valuer = valuer ?? throw new ArgumentNullException(nameof(valuer));
-            m_Hasher = hasher ?? throw new ArgumentNullException(nameof(hasher));
-            m_Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
+            _hasher = hasher ?? throw new ArgumentNullException(nameof(hasher));
+            _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
 
-            m_CompareHistory = new HashSet<(int, int)>();
-            m_HashHistory = new Dictionary<int, object>();
+            _compareHistory = new HashSet<(int, int)>();
+            _hashHistory = new Dictionary<int, object>();
         }
 
         /// <summary>Finds the differences between two objects.</summary>
@@ -49,17 +49,17 @@ namespace CreateAndFake.Toolbox.ValuerTool
             RuntimeHelpers.EnsureSufficientExecutionStack();
             if (!CanTrack(expected) || !CanTrack(actual))
             {
-                return m_Comparer.Invoke(expected, actual, this);
+                return _comparer.Invoke(expected, actual, this);
             }
 
             (int, int) refHash = (RuntimeHelpers.GetHashCode(expected), RuntimeHelpers.GetHashCode(actual));
-            if (m_CompareHistory.Contains(refHash))
+            if (_compareHistory.Contains(refHash))
             {
                 return Enumerable.Empty<Difference>();
             }
 
-            m_CompareHistory.Add(refHash);
-            return m_Comparer.Invoke(expected, actual, this);
+            _compareHistory.Add(refHash);
+            return _comparer.Invoke(expected, actual, this);
         }
 
         /// <summary>Determines whether the specified objects are equal.</summary>
@@ -81,20 +81,20 @@ namespace CreateAndFake.Toolbox.ValuerTool
             RuntimeHelpers.EnsureSufficientExecutionStack();
             if (!CanTrack(item))
             {
-                return m_Hasher.Invoke(item, this);
+                return _hasher.Invoke(item, this);
             }
 
             int refHash = RuntimeHelpers.GetHashCode(item);
-            if (m_HashHistory.TryGetValue(refHash, out object stored)
+            if (_hashHistory.TryGetValue(refHash, out object stored)
                 && ReferenceEquals(item, stored))
             {
                 return 0;
             }
 
-            m_HashHistory[refHash] = item;
+            _hashHistory[refHash] = item;
 
-            int hash = m_Hasher.Invoke(item, this);
-            m_HashHistory.Remove(refHash);
+            int hash = _hasher.Invoke(item, this);
+            _hashHistory.Remove(refHash);
             return hash;
         }
 

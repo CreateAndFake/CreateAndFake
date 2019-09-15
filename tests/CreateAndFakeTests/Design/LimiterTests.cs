@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.Design
     public static class LimiterTests
     {
         /// <summary>Small delay to test with.</summary>
-        private static readonly TimeSpan s_SmallDelay = new TimeSpan(0, 0, 0, 0, 20);
+        private static readonly TimeSpan _SmallDelay = new TimeSpan(0, 0, 0, 0, 20);
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
@@ -113,8 +113,8 @@ namespace CreateAndFakeTests.Design
         public static async Task Repeat_TimeoutLimited()
         {
             Stopwatch watch = Stopwatch.StartNew();
-            await new Limiter(s_SmallDelay).Repeat(() => { });
-            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= s_SmallDelay.TotalMilliseconds - 1);
+            await new Limiter(_SmallDelay).Repeat(() => { });
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - 1);
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
@@ -124,8 +124,8 @@ namespace CreateAndFakeTests.Design
             Stopwatch watch = Stopwatch.StartNew();
 
             Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(s_SmallDelay).StallUntil(() => { }, () => false).Wait());
-            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= s_SmallDelay.TotalMilliseconds - 1);
+                () => new Limiter(_SmallDelay).StallUntil(() => { }, () => false).Wait());
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - 1);
         }
 
         /// <summary>Verifies limiter actually limits.</summary>
@@ -135,8 +135,8 @@ namespace CreateAndFakeTests.Design
             Stopwatch watch = Stopwatch.StartNew();
 
             Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
-                () => new Limiter(s_SmallDelay).Retry(() => { throw exception; }).Wait()).InnerException);
-            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= s_SmallDelay.TotalMilliseconds - 1);
+                () => new Limiter(_SmallDelay).Retry(() => { throw exception; }).Wait()).InnerException);
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - 1);
         }
 
         /// <summary>Verifies limiter delays between attempts.</summary>
@@ -147,9 +147,9 @@ namespace CreateAndFakeTests.Design
         public static async Task Repeat_DelayOccurs(int tries)
         {
             Stopwatch watch = Stopwatch.StartNew();
-            await new Limiter(tries, s_SmallDelay).Repeat(() => { });
+            await new Limiter(tries, _SmallDelay).Repeat(() => { });
             Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >=
-                (s_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
+                (_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
         }
 
         /// <summary>Verifies limiter delays between attempts.</summary>
@@ -162,9 +162,9 @@ namespace CreateAndFakeTests.Design
             int attempts = 0;
 
             Stopwatch watch = Stopwatch.StartNew();
-            await new Limiter(tries, s_SmallDelay).StallUntil(() => ++attempts == tries);
+            await new Limiter(tries, _SmallDelay).StallUntil(() => ++attempts == tries);
             Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >=
-                (s_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
+                (_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
         }
 
         /// <summary>Verifies limiter delays between attempts.</summary>
@@ -178,9 +178,9 @@ namespace CreateAndFakeTests.Design
             int attempts = 0;
 
             Stopwatch watch = Stopwatch.StartNew();
-            await new Limiter(tries, s_SmallDelay).Retry(() => { if (++attempts != tries) throw exception; });
+            await new Limiter(tries, _SmallDelay).Retry(() => { if (++attempts != tries) throw exception; });
             Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >=
-                (s_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
+                (_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
         }
 
         /// <summary>Verifies the task can be canceled.</summary>

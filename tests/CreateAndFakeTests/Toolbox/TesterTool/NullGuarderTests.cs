@@ -12,12 +12,12 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
     public static class NullGuarderTests
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly NullGuarder s_ShortTestInstance = new NullGuarder(
+        private static readonly NullGuarder _ShortTestInstance = new NullGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer),
             Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Instance to test with.</summary>
-        private static readonly NullGuarder s_LongTestInstance = new NullGuarder(
+        private static readonly NullGuarder _LongTestInstance = new NullGuarder(
             new GenericFixer(Tools.Gen, Tools.Randomizer),
             Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 10));
 
@@ -25,21 +25,21 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         [Fact]
         public static void NullGuarder_GuardsNulls()
         {
-            Tools.Tester.PreventsNullRefException(s_ShortTestInstance);
+            Tools.Tester.PreventsNullRefException(_ShortTestInstance);
         }
 
         /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
         public static void NullGuarder_NoParameterMutation()
         {
-            Tools.Tester.PreventsParameterMutation(s_ShortTestInstance);
+            Tools.Tester.PreventsParameterMutation(_ShortTestInstance);
         }
 
         /// <summary>Verifies long methods time out.</summary>
         [Fact]
         public static void NullCheck_TimesOut()
         {
-            Tools.Asserter.Throws<TimeoutException>(() => s_ShortTestInstance
+            Tools.Asserter.Throws<TimeoutException>(() => _ShortTestInstance
                 .PreventsNullRefExceptionOnStatics(typeof(LongMethodSample), false));
         }
 
@@ -47,7 +47,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         [Fact]
         public static void NullCheck_NullReferenceThrows()
         {
-            Tools.Asserter.Throws<AssertException>(() => s_ShortTestInstance
+            Tools.Asserter.Throws<AssertException>(() => _ShortTestInstance
                 .PreventsNullRefExceptionOnConstructors(typeof(NullReferenceSample), true));
         }
 
@@ -55,7 +55,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         [Fact]
         public static void NullCheck_MismatchParamNameThrows()
         {
-            Tools.Asserter.Throws<AssertException>(() => s_ShortTestInstance
+            Tools.Asserter.Throws<AssertException>(() => _ShortTestInstance
                 .PreventsNullRefExceptionOnConstructors(typeof(MismatchParamNameSample), false));
         }
 
@@ -69,7 +69,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 MockDisposableSample.FinalizerDisposes = 0;
                 MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
 
-                s_LongTestInstance.PreventsNullRefExceptionOnConstructors(typeof(MockDisposableSample), true);
+                _LongTestInstance.PreventsNullRefExceptionOnConstructors(typeof(MockDisposableSample), true);
                 Tools.Asserter.Is(2, MockDisposableSample.ClassDisposes);
                 Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
                 MockDisposableSample.Fake.Verify(Times.Once, d => d.Dispose());
@@ -88,7 +88,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
 
                 using (MockDisposableSample sample = new MockDisposableSample(null))
                 {
-                    s_LongTestInstance.PreventsNullRefExceptionOnMethods(sample);
+                    _LongTestInstance.PreventsNullRefExceptionOnMethods(sample);
                     Tools.Asserter.Is(0, MockDisposableSample.ClassDisposes);
                     Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
                     MockDisposableSample.Fake.Verify(Times.Once, d => d.Dispose());

@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     public sealed class FakeCreateHint : CreateHint
     {
         /// <summary>Possible action types to use.</summary>
-        private static readonly Type[] s_ActionTypes = new[]
+        private static readonly Type[] _ActionTypes = new[]
         {
             typeof(Action),
             typeof(Action<>),
@@ -32,7 +32,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         };
 
         /// <summary>Possible func types to use.</summary>
-        private static readonly Type[] s_FuncTypes = new[]
+        private static readonly Type[] _FuncTypes = new[]
         {
             null,
             typeof(Func<>),
@@ -120,12 +120,12 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 return (Behavior)typeof(Behavior<>)
                     .MakeGenericType(method.ReturnType)
                     .GetConstructor(new[] { typeof(Delegate), typeof(Times) })
-                    .Invoke(new[] { randomizer.Create(s_FuncTypes[withOut.Length].MakeGenericType(withOut)), null });
+                    .Invoke(new[] { randomizer.Create(_FuncTypes[withOut.Length].MakeGenericType(withOut)), null });
             }
             else if (args.Length != 0)
             {
                 return new Behavior<VoidType>((Delegate)randomizer
-                    .Create(s_ActionTypes[args.Length].MakeGenericType(args)));
+                    .Create(_ActionTypes[args.Length].MakeGenericType(args)));
             }
             else
             {

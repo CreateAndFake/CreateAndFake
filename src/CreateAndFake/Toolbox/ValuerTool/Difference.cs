@@ -8,14 +8,14 @@ namespace CreateAndFake.Toolbox.ValuerTool
     public sealed class Difference : IValueEquatable, IDeepCloneable
     {
         /// <summary>Message stating the difference.</summary>
-        private readonly Lazy<string> m_Message;
+        private readonly Lazy<string> _message;
 
         /// <summary>Details a difference of types.</summary>
         /// <param name="expected">Type of the first object being compared.</param>
         /// <param name="actual">Type of the second object being compared.</param>
         public Difference(Type expected, Type actual)
         {
-            m_Message = new Lazy<string>(
+            _message = new Lazy<string>(
                 () => $" -> Expected type:<{expected}>, Actual type:<{actual}>");
         }
 
@@ -24,7 +24,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <param name="actual">Second value being compared.</param>
         public Difference(object expected, object actual)
         {
-            m_Message = new Lazy<string>(() => $" -> Expected:<{expected}>, Actual:<{actual}>");
+            _message = new Lazy<string>(() => $" -> Expected:<{expected}>, Actual:<{actual}>");
         }
 
         /// <summary>Details a difference on a member.</summary>
@@ -50,14 +50,14 @@ namespace CreateAndFake.Toolbox.ValuerTool
             if (access == null) throw new ArgumentNullException(nameof(access));
             if (difference == null) throw new ArgumentNullException(nameof(difference));
 
-            m_Message = new Lazy<string>(() => access + difference);
+            _message = new Lazy<string>(() => access + difference);
         }
 
         /// <summary>Details a difference.</summary>
         /// <param name="message">Message stating the difference.</param>
         public Difference(string message)
         {
-            m_Message = new Lazy<string>(() => message);
+            _message = new Lazy<string>(() => message);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <returns>Clone that is equal in value to the current instance.</returns>
         public IDeepCloneable DeepClone()
         {
-            return new Difference(m_Message.Value);
+            return new Difference(_message.Value);
         }
 
         /// <summary>Compares by value.</summary>
@@ -77,20 +77,20 @@ namespace CreateAndFake.Toolbox.ValuerTool
         {
             return other != null
                 && GetType() == other.GetType()
-                && m_Message.Value == ((Difference)other).m_Message.Value;
+                && _message.Value == ((Difference)other)._message.Value;
         }
 
         /// <summary>Generates a hash based upon value.</summary>
         /// <returns>The generated hash code.</returns>
         public int GetValueHash()
         {
-            return ValueComparer.Use.GetHashCode(m_Message.Value);
+            return ValueComparer.Use.GetHashCode(_message.Value);
         }
 
         /// <returns>String representation of the difference.</returns>
         public override string ToString()
         {
-            return m_Message.Value;
+            return _message.Value;
         }
     }
 }

@@ -8,7 +8,7 @@ namespace CreateAndFake.Design.Randomization
     public abstract class ValueRandom : IRandom
     {
         /// <summary>Supported types and the methods used to generate them.</summary>
-        private static readonly IDictionary<Type, Func<ValueRandom, object>> s_Gens
+        private static readonly IDictionary<Type, Func<ValueRandom, object>> _Gens
             = new Dictionary<Type, Func<ValueRandom, object>>
             {
                 { typeof(double), gen => Create(gen, BitConverter.ToDouble, 8,
@@ -49,7 +49,7 @@ namespace CreateAndFake.Design.Randomization
         }
 
         /// <summary>All default value types.</summary>
-        public static ICollection<Type> ValueTypes { get; } = s_Gens.Keys;
+        public static ICollection<Type> ValueTypes { get; } = _Gens.Keys;
 
         /// <summary>Option to prevent generating invalid values.</summary>
         protected bool OnlyValidValues { get; }
@@ -79,7 +79,7 @@ namespace CreateAndFake.Design.Randomization
         /// <returns>True if supported; false otherwise.</returns>
         public bool Supports(Type type)
         {
-            return s_Gens.ContainsKey(type);
+            return _Gens.ContainsKey(type);
         }
 
         /// <summary>Generates a random value of the given value type.</summary>
@@ -103,7 +103,7 @@ namespace CreateAndFake.Design.Randomization
             }
             else
             {
-                return s_Gens[type].Invoke(this);
+                return _Gens[type].Invoke(this);
             }
         }
 

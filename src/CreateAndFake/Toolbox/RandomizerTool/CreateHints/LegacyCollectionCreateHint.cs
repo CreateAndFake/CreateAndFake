@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     public sealed class LegacyCollectionCreateHint : CreateHint
     {
         /// <summary>Supported types and the methods used to generate them.</summary>
-        private static readonly (Type, Func<string[], RandomizerChainer, object>)[] s_Creators
+        private static readonly (Type, Func<string[], RandomizerChainer, object>)[] _Creators
             = new (Type, Func<string[], RandomizerChainer, object>)[]
             {
                 (typeof(Hashtable), CreateDict<Hashtable>),
@@ -39,18 +39,18 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             };
 
         /// <summary>Collections that the hint will create.</summary>
-        internal static IEnumerable<Type> PotentialCollections => s_Creators.Select(i => i.Item1);
+        internal static IEnumerable<Type> PotentialCollections => _Creators.Select(i => i.Item1);
 
         /// <summary>Size details for created collections.</summary>
-        private readonly int m_MinSize, m_Range;
+        private readonly int _minSize, _range;
 
         /// <summary>Specifies the size of generated collections.</summary>
         /// <param name="minSize">Min size for created collections.</param>
         /// <param name="range">Size variance for created collections.</param>
         public LegacyCollectionCreateHint(int minSize = 1, int range = 3)
         {
-            m_MinSize = minSize;
-            m_Range = range;
+            _minSize = minSize;
+            _range = range;
         }
 
         /// <summary>Tries to create a random instance of the given type.</summary>
@@ -78,7 +78,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <returns>All possible matches.</returns>
         private static IEnumerable<(Type, Func<string[], RandomizerChainer, object>)> FindMatches(Type type)
         {
-            return s_Creators.Where(m => type.IsInheritedBy(m.Item1));
+            return _Creators.Where(m => type.IsInheritedBy(m.Item1));
         }
 
         /// <summary>Creates the type and populates it with data.</summary>
@@ -101,7 +101,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <returns>Data populated with random values.</returns>
         private string[] CreateInternalData(RandomizerChainer randomizer)
         {
-            string[] data = new string[m_MinSize + randomizer.Gen.Next(m_Range)];
+            string[] data = new string[_minSize + randomizer.Gen.Next(_range)];
             for (int i = 0; i < data.Length; i++)
             {
                 data.SetValue(randomizer.Create<string>(), i);

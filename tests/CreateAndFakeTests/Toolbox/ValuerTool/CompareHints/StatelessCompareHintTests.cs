@@ -10,17 +10,17 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class StatelessCompareHintTests : CompareHintTestBase<StatelessCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly StatelessCompareHint s_TestInstance = new StatelessCompareHint();
+        private static readonly StatelessCompareHint _TestInstance = new StatelessCompareHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[] { typeof(StatelessSample) };
+        private static readonly Type[] _ValidTypes = new[] { typeof(StatelessSample) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes
+        private static readonly Type[] _InvalidTypes
             = new[] { typeof(object), typeof(string), typeof(IList), typeof(int) };
 
         /// <summary>Sets up the tests.</summary>
-        public StatelessCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public StatelessCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
         /// <summary>Verifies the hint supports the correct types.</summary>
         public override void TryCompare_SupportsDifferentValidTypes()

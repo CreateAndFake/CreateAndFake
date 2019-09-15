@@ -9,15 +9,15 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class FakedCreateHintTests : CreateHintTestBase<FakedCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly FakedCreateHint s_TestInstance = new FakedCreateHint();
+        private static readonly FakedCreateHint _TestInstance = new FakedCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[] { typeof(IFaked) };
+        private static readonly Type[] _ValidTypes = new[] { typeof(IFaked) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public FakedCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public FakedCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
     }
 }

@@ -14,16 +14,16 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
     public sealed class AsserterTests
     {
         /// <summary>Instance to test with.</summary>
-        private readonly Asserter m_TestInstance;
+        private readonly Asserter _testInstance;
 
         /// <summary>Faked valuer to test with.</summary>
-        private readonly Fake<IValuer> m_FakeValuer;
+        private readonly Fake<IValuer> _fakeValuer;
 
         /// <summary>Sets up the test instance.</summary>
         public AsserterTests()
         {
-            m_FakeValuer = Tools.Faker.Mock<IValuer>();
-            m_TestInstance = new Asserter(m_FakeValuer.Dummy);
+            _fakeValuer = Tools.Faker.Mock<IValuer>();
+            _testInstance = new Asserter(_fakeValuer.Dummy);
         }
 
         /// <summary>Verifies openness for custom individual behavior by inheritance.</summary>
@@ -58,7 +58,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             bool ran1 = false;
             bool ran2 = false;
 
-            m_TestInstance.CheckAll(
+            _testInstance.CheckAll(
                 () => ran1 = true,
                 () => ran2 = true);
 
@@ -73,7 +73,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             bool ran2 = false;
 
             AggregateException result = Tools.Asserter.Throws<AggregateException>(
-                () => m_TestInstance.CheckAll(
+                () => _testInstance.CheckAll(
                     () => throw error,
                     () => ran2 = true));
 
@@ -86,7 +86,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         public void CheckAll_ErrorRunsAll(Exception error1, Exception error2)
         {
             AggregateException result = Tools.Asserter.Throws<AggregateException>(
-                () => m_TestInstance.CheckAll(
+                () => _testInstance.CheckAll(
                     () => throw error1,
                     () => throw error2));
 
@@ -112,7 +112,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         [Fact]
         public void Throws_ActionThrowsSuccess()
         {
-            m_TestInstance.Throws<InvalidOperationException>((Action)
+            _testInstance.Throws<InvalidOperationException>((Action)
                 (() => throw new InvalidOperationException()));
         }
 
@@ -121,7 +121,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         public void Throws_ActionTypeMismatch()
         {
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.Throws<ArgumentException>(
+                () => _testInstance.Throws<ArgumentException>(
                     (Action)(() => throw new NotImplementedException())));
         }
 
@@ -130,7 +130,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         public void Throws_ActionNoThrowFail()
         {
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.Throws<InvalidOperationException>(() => { }));
+                () => _testInstance.Throws<InvalidOperationException>(() => { }));
         }
 
         /// <summary>Verifies failure when null actions don't throw an exception.</summary>
@@ -138,14 +138,14 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         public void Throws_ActionNullCase()
         {
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.Throws<InvalidOperationException>((Action)null));
+                () => _testInstance.Throws<InvalidOperationException>((Action)null));
         }
 
         /// <summary>Verifies success when funcs throw.</summary>
         [Fact]
         public void Throws_FuncThrowsSuccess()
         {
-            m_TestInstance.Throws<InvalidOperationException>(
+            _testInstance.Throws<InvalidOperationException>(
                 () => throw new InvalidOperationException());
         }
 
@@ -154,7 +154,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         public void Throws_FuncTypeMismatch()
         {
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.Throws<ArgumentException>(
+                () => _testInstance.Throws<ArgumentException>(
                     () => throw new NotImplementedException()));
         }
 
@@ -163,7 +163,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         public void Throws_FuncNoThrowFail()
         {
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.Throws<InvalidOperationException>(() => true));
+                () => _testInstance.Throws<InvalidOperationException>(() => true));
         }
 
         /// <summary>Verifies failure when null funcs don't throw an exception.</summary>
@@ -171,7 +171,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         public void Throws_FuncNullCase()
         {
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.Throws<InvalidOperationException>(null));
+                () => _testInstance.Throws<InvalidOperationException>(null));
         }
 
         /// <summary>Verifies disposable behavior upon failure case.</summary>
@@ -181,7 +181,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             disposable.Setup(m => m.Dispose(), Behavior.None(Times.Once));
 
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.Throws<Exception>(() => disposable.Dummy));
+                () => _testInstance.Throws<Exception>(() => disposable.Dummy));
 
             disposable.VerifyAll(Times.Once);
         }
@@ -192,7 +192,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         {
             AggregateException ex = new AggregateException(new InvalidOperationException());
 
-            m_TestInstance.Throws<InvalidOperationException>(() => throw ex);
+            _testInstance.Throws<InvalidOperationException>(() => throw ex);
         }
 
         /// <summary>Verifies aggregate exception still fails if internals aren't expected.</summary>
@@ -203,7 +203,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
                 new InvalidOperationException(), new InvalidCastException());
 
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.Throws<InvalidOperationException>(() => throw ex));
+                () => _testInstance.Throws<InvalidOperationException>(() => throw ex));
         }
 
         /// <summary>Verifies aggregate exception still fails if internals aren't expected.</summary>
@@ -213,29 +213,29 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             AggregateException ex = new AggregateException(new InvalidOperationException());
 
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.Throws<InvalidCastException>(() => throw ex));
+                () => _testInstance.Throws<InvalidCastException>(() => throw ex));
         }
 
         /// <summary>Verifies the expected cases.</summary>
         [Fact]
         public void IsEmpty_Works()
         {
-            m_TestInstance.IsEmpty(Array.Empty<string>());
+            _testInstance.IsEmpty(Array.Empty<string>());
 
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.IsEmpty(null));
+                () => _testInstance.IsEmpty(null));
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.IsEmpty(Tools.Randomizer.Create<string[]>()));
+                () => _testInstance.IsEmpty(Tools.Randomizer.Create<string[]>()));
         }
 
         /// <summary>Verifies the expected cases.</summary>
         [Fact]
         public void IsNotEmpty_Works()
         {
-            m_FakeValuer.Setup(
+            _fakeValuer.Setup(
                 m => m.Equals(true, true),
                 Behavior.Returns(true));
-            m_FakeValuer.Setup(
+            _fakeValuer.Setup(
                 m => m.Compare(true, Arg.Any<bool?>()),
                 Behavior.Set((object o1, object o2) =>
                 {
@@ -249,26 +249,26 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
                     }
                 }));
 
-            m_TestInstance.IsNotEmpty(Tools.Randomizer.Create<string[]>());
+            _testInstance.IsNotEmpty(Tools.Randomizer.Create<string[]>());
 
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.IsNotEmpty(null));
+                () => _testInstance.IsNotEmpty(null));
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.IsNotEmpty(Array.Empty<string>()));
+                () => _testInstance.IsNotEmpty(Array.Empty<string>()));
         }
 
         /// <summary>Verifies the expected cases.</summary>
         [Theory, RandomData]
         public void HasCount_Works(IEnumerable<string> data)
         {
-            m_TestInstance.HasCount(data.Count(), data);
+            _testInstance.HasCount(data.Count(), data);
 
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.HasCount(data.Count(), null));
+                () => _testInstance.HasCount(data.Count(), null));
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.HasCount(data.Count() - 1, data));
+                () => _testInstance.HasCount(data.Count() - 1, data));
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.HasCount(data.Count() + 1, data));
+                () => _testInstance.HasCount(data.Count() + 1, data));
         }
 
         /// <summary>Verifies equality comparison is not used.</summary>
@@ -279,9 +279,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
                 m => m.Equals(Arg.Any<object>()),
                 Behavior.Returns(true, Times.Never));
 
-            m_TestInstance.ReferenceEqual(fake.Dummy, fake.Dummy);
+            _testInstance.ReferenceEqual(fake.Dummy, fake.Dummy);
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.ReferenceEqual(fake.Dummy, Tools.Duplicator.Copy(fake.Dummy)));
+                () => _testInstance.ReferenceEqual(fake.Dummy, Tools.Duplicator.Copy(fake.Dummy)));
 
             fake.VerifyAll(Times.Never);
         }
@@ -294,9 +294,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
                 m => m.Equals(Arg.Any<object>()),
                 Behavior.Returns(false, Times.Never));
 
-            m_TestInstance.ReferenceNotEqual(fake.Dummy, Tools.Duplicator.Copy(fake.Dummy));
+            _testInstance.ReferenceNotEqual(fake.Dummy, Tools.Duplicator.Copy(fake.Dummy));
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.ReferenceNotEqual(fake.Dummy, fake.Dummy));
+                () => _testInstance.ReferenceNotEqual(fake.Dummy, fake.Dummy));
 
             fake.VerifyAll(Times.Never);
         }
@@ -305,64 +305,64 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         [Fact]
         public void ValuesEqual_EqualValid()
         {
-            m_FakeValuer.Setup(
+            _fakeValuer.Setup(
                 m => m.Compare(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Returns(Enumerable.Empty<Difference>(), Times.Once));
 
-            m_TestInstance.ValuesEqual(new object(), new object());
+            _testInstance.ValuesEqual(new object(), new object());
 
-            m_FakeValuer.VerifyAll(Times.Once);
+            _fakeValuer.VerifyAll(Times.Once);
         }
 
         /// <summary>Verifies invalid when differences are found.</summary>
         [Fact]
         public void ValuesEqual_UnequalInvalid()
         {
-            m_FakeValuer.Setup(
+            _fakeValuer.Setup(
                 m => m.Compare(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Returns(Tools.Randomizer.Create<IEnumerable<Difference>>(), Times.Once));
-            m_FakeValuer.Setup(
+            _fakeValuer.Setup(
                 m => m.Compare(null, Arg.Any<object>()),
                 Behavior.Returns(Tools.Randomizer.Create<IEnumerable<Difference>>(), Times.Once));
 
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.ValuesEqual(new object(), new object()));
+                () => _testInstance.ValuesEqual(new object(), new object()));
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.ValuesEqual(null, new object()));
+                () => _testInstance.ValuesEqual(null, new object()));
 
-            m_FakeValuer.VerifyAll(Times.Exactly(2));
+            _fakeValuer.VerifyAll(Times.Exactly(2));
         }
 
         /// <summary>Verifies invalid when no differences are found.</summary>
         [Fact]
         public void ValuesNotEqual_EqualInvalid()
         {
-            m_FakeValuer.Setup(
+            _fakeValuer.Setup(
                 m => m.Compare(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Returns(Enumerable.Empty<Difference>(), Times.Once));
-            m_FakeValuer.Setup(
+            _fakeValuer.Setup(
                 m => m.Compare(null, Arg.Any<object>()),
                 Behavior.Returns(Enumerable.Empty<Difference>(), Times.Once));
 
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.ValuesNotEqual(new object(), new object()));
+                () => _testInstance.ValuesNotEqual(new object(), new object()));
             Tools.Asserter.Throws<AssertException>(
-                () => m_TestInstance.ValuesNotEqual(null, new object()));
+                () => _testInstance.ValuesNotEqual(null, new object()));
 
-            m_FakeValuer.VerifyAll(Times.Exactly(2));
+            _fakeValuer.VerifyAll(Times.Exactly(2));
         }
 
         /// <summary>Verifies invalid when differences are found.</summary>
         [Fact]
         public void ValuesNotEqual_UnequalValid()
         {
-            m_FakeValuer.Setup(
+            _fakeValuer.Setup(
                 m => m.Compare(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Returns(Tools.Randomizer.Create<IEnumerable<Difference>>(), Times.Once));
 
-            m_TestInstance.ValuesNotEqual(new object(), new object());
+            _testInstance.ValuesNotEqual(new object(), new object());
 
-            m_FakeValuer.VerifyAll(Times.Once);
+            _fakeValuer.VerifyAll(Times.Once);
         }
     }
 }

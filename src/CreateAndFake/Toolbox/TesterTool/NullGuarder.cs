@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.TesterTool
     internal sealed class NullGuarder : BaseGuarder
     {
         /// <summary>Handles common test scenarios.</summary>
-        private readonly Asserter m_Asserter;
+        private readonly Asserter _asserter;
 
         /// <summary>Sets up the guarder capabilities.</summary>
         /// <param name="fixer">Handles generic resolution.</param>
@@ -20,7 +20,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         internal NullGuarder(GenericFixer fixer, IRandomizer randomizer, Asserter asserter, TimeSpan timeout)
             : base(fixer, randomizer, timeout)
         {
-            m_Asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
+            _asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
         }
 
         /// <summary>
@@ -153,12 +153,12 @@ namespace CreateAndFake.Toolbox.TesterTool
             if (actual is ArgumentNullException inner
                 && testOrigin.Name == inner.TargetSite.Name)
             {
-                m_Asserter.Is(testParam.Name, inner.ParamName,
+                _asserter.Is(testParam.Name, inner.ParamName,
                     $"Incorrect name provided for exception {details}.");
             }
             else
             {
-                m_Asserter.Is(false, actual is NullReferenceException,
+                _asserter.Is(false, actual is NullReferenceException,
                     $"Null reference exception encountered {details}.");
             }
         }

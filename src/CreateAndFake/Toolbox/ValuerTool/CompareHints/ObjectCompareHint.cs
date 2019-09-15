@@ -10,13 +10,13 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
     public sealed class ObjectCompareHint : CompareHint
     {
         /// <summary>Flags used to find properties and fields.</summary>
-        private readonly BindingFlags m_Scope;
+        private readonly BindingFlags _scope;
 
         /// <summary>Sets up what to compare.</summary>
         /// <param name="scope">Flags used to find properties and fields.</param>
         public ObjectCompareHint(BindingFlags scope)
         {
-            m_Scope = scope;
+            _scope = scope;
         }
 
         /// <summary>Determines if the objects are supported by the hint.</summary>
@@ -30,8 +30,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             if (actual == null) throw new ArgumentNullException(nameof(actual));
 
             Type type = expected.GetType();
-            return type.GetProperties(m_Scope).Any(p => p.CanRead)
-                || type.GetFields(m_Scope).Any();
+            return type.GetProperties(_scope).Any(p => p.CanRead)
+                || type.GetFields(_scope).Any();
         }
 
         /// <summary>Finds the differences between two objects.</summary>
@@ -57,7 +57,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         {
             Type type = expected.GetType();
 
-            foreach (PropertyInfo property in type.GetProperties(m_Scope).Where(p => p.CanRead))
+            foreach (PropertyInfo property in type.GetProperties(_scope).Where(p => p.CanRead))
             {
                 foreach (Difference diff in valuer.Compare(property.GetValue(expected), property.GetValue(actual)))
                 {
@@ -65,7 +65,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
                 }
             }
 
-            foreach (FieldInfo field in expected.GetType().GetFields(m_Scope))
+            foreach (FieldInfo field in expected.GetType().GetFields(_scope))
             {
                 foreach (Difference diff in valuer.Compare(field.GetValue(expected), field.GetValue(actual)))
                 {
@@ -86,12 +86,12 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             Type type = item.GetType();
             int hash = ValueComparer.BaseHash + type.GetHashCode();
 
-            foreach (PropertyInfo property in type.GetProperties(m_Scope).Where(p => p.CanRead))
+            foreach (PropertyInfo property in type.GetProperties(_scope).Where(p => p.CanRead))
             {
                 hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(property.GetValue(item));
             }
 
-            foreach (FieldInfo field in type.GetFields(m_Scope))
+            foreach (FieldInfo field in type.GetFields(_scope))
             {
                 hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(field.GetValue(item));
             }

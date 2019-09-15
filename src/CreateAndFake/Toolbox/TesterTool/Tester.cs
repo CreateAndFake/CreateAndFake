@@ -11,10 +11,10 @@ namespace CreateAndFake.Toolbox.TesterTool
     public class Tester
     {
         /// <summary>Default for how long to wait for methods to complete.</summary>
-        private static readonly TimeSpan s_DefaultTimeout = new TimeSpan(0, 0, 3);
+        private static readonly TimeSpan _DefaultTimeout = new TimeSpan(0, 0, 3);
 
         /// <summary>Retries tests if timeout is reached.</summary>
-        private static readonly Limiter s_Limiter = Limiter.Few;
+        private static readonly Limiter _Limiter = Limiter.Few;
 
         /// <summary>Core value random handler.</summary>
         protected IRandom Gen { get; }
@@ -29,7 +29,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         protected Asserter Asserter { get; }
 
         /// <summary>How long to wait for tests to complete.</summary>
-        private readonly TimeSpan m_Timeout;
+        private readonly TimeSpan _timeout;
 
         /// <summary>Sets up the tester capabilities.</summary>
         /// <param name="gen">Core value random handler.</param>
@@ -45,7 +45,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
             Duplicator = duplicator ?? throw new ArgumentNullException(nameof(duplicator));
             Asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
-            m_Timeout = timeout ?? s_DefaultTimeout;
+            _timeout = timeout ?? _DefaultTimeout;
         }
 
         /// <summary>
@@ -72,14 +72,14 @@ namespace CreateAndFake.Toolbox.TesterTool
         public virtual void PreventsNullRefException(Type type, params object[] injectionValues)
         {
             NullGuarder checker = new NullGuarder(
-                new GenericFixer(Gen, Randomizer), Randomizer, Asserter, m_Timeout);
+                new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout);
 
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsNullRefExceptionOnConstructors(type, true, injectionValues)).Wait();
 
             if (!(type.IsAbstract && type.IsSealed))
             {
-                s_Limiter.Retry<TimeoutException>(() =>
+                _Limiter.Retry<TimeoutException>(() =>
                 {
                     object instance = Randomizer.Create(type);
                     try
@@ -93,7 +93,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 }).Wait();
             }
 
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsNullRefExceptionOnStatics(type, true, injectionValues)).Wait();
         }
 
@@ -109,13 +109,13 @@ namespace CreateAndFake.Toolbox.TesterTool
         public virtual void PreventsNullRefException<T>(T instance, params object[] injectionValues)
         {
             NullGuarder checker = new NullGuarder(
-                new GenericFixer(Gen, Randomizer), Randomizer, Asserter, m_Timeout);
+                new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout);
 
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsNullRefExceptionOnConstructors(typeof(T), false, injectionValues)).Wait();
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsNullRefExceptionOnMethods(instance, injectionValues)).Wait();
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsNullRefExceptionOnStatics(typeof(T), false, injectionValues)).Wait();
         }
 
@@ -141,14 +141,14 @@ namespace CreateAndFake.Toolbox.TesterTool
         public virtual void PreventsParameterMutation(Type type, params object[] injectionValues)
         {
             MutationGuarder checker = new MutationGuarder(
-                new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, m_Timeout);
+                new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, _timeout);
 
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsMutationOnConstructors(type, true, injectionValues)).Wait();
 
             if (!(type.IsAbstract && type.IsSealed))
             {
-                s_Limiter.Retry<TimeoutException>(() =>
+                _Limiter.Retry<TimeoutException>(() =>
                 {
                     object instance = Randomizer.Create(type);
                     try
@@ -162,7 +162,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 }).Wait();
             }
 
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsMutationOnStatics(type, true, injectionValues)).Wait();
         }
 
@@ -177,13 +177,13 @@ namespace CreateAndFake.Toolbox.TesterTool
         public virtual void PreventsParameterMutation<T>(T instance, params object[] injectionValues)
         {
             MutationGuarder checker = new MutationGuarder(
-                new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, m_Timeout);
+                new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, _timeout);
 
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsMutationOnConstructors(typeof(T), false, injectionValues)).Wait();
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsMutationOnMethods(instance, injectionValues)).Wait();
-            s_Limiter.Retry<TimeoutException>(
+            _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsMutationOnStatics(typeof(T), false, injectionValues)).Wait();
         }
     }

@@ -10,17 +10,17 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class GenericCreateHintTests : CreateHintTestBase<GenericCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly GenericCreateHint s_TestInstance = new GenericCreateHint();
+        private static readonly GenericCreateHint _TestInstance = new GenericCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes
+        private static readonly Type[] _ValidTypes
             = new[] { typeof(IList<>), typeof(KeyValuePair<,>), typeof(GenericSample<>), typeof(ConstraintSample<,>) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes
+        private static readonly Type[] _InvalidTypes
             = new[] { typeof(object), typeof(IList<string>), typeof(KeyValuePair<int, int>) };
 
         /// <summary>Sets up the tests.</summary>
-        public GenericCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public GenericCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
     }
 }

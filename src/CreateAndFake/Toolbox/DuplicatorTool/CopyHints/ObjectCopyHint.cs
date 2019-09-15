@@ -9,7 +9,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
     public sealed class ObjectCopyHint : CopyHint
     {
         /// <summary>Flags used to identify members.</summary>
-        private const BindingFlags s_MemberFlags = BindingFlags.Public
+        private const BindingFlags _MemberFlags = BindingFlags.Public
             | BindingFlags.NonPublic | BindingFlags.Instance;
 
         /// <summary>Tries to deep clone an object.</summary>
@@ -69,10 +69,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             }
             else
             {
-                PropertyInfo[] props = type.GetProperties(s_MemberFlags).Where(p => p.CanRead).ToArray();
-                FieldInfo[] fields = type.GetFields(s_MemberFlags).ToArray();
+                PropertyInfo[] props = type.GetProperties(_MemberFlags).Where(p => p.CanRead).ToArray();
+                FieldInfo[] fields = type.GetFields(_MemberFlags).ToArray();
 
-                return type.GetConstructors(s_MemberFlags)
+                return type.GetConstructors(_MemberFlags)
                     .Where(c => !c.IsPrivate)
                     .OrderByDescending(c => c.GetParameters().Length)
                     .Select(c => TryCreate(source, duplicator, c, props, fields))

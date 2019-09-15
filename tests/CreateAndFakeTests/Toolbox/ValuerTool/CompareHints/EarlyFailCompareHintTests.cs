@@ -14,18 +14,18 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class EarlyFailCompareHintTests : CompareHintTestBase<EarlyFailCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly EarlyFailCompareHint s_TestInstance = new EarlyFailCompareHint();
+        private static readonly EarlyFailCompareHint _TestInstance = new EarlyFailCompareHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes
+        private static readonly Type[] _ValidTypes
             = new[] { typeof(int), typeof(string), typeof(BindingFlags), typeof(Type), typeof(Delegate) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes
+        private static readonly Type[] _InvalidTypes
             = new[] { typeof(IDictionary), typeof(IEnumerable) };
 
         /// <summary>Sets up the tests.</summary>
-        public EarlyFailCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public EarlyFailCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
         /// <summary>Verifies the hint supports nulls.</summary>
         [Fact]

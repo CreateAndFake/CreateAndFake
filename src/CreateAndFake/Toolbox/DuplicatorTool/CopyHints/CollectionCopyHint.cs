@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
     public sealed class CollectionCopyHint : CopyHint<IEnumerable>
     {
         /// <summary>Special cases where the data needs to be reversed.</summary>
-        private static readonly Type[] s_ReverseCases = new[]
+        private static readonly Type[] _ReverseCases = new[]
         {
             typeof(ConcurrentStack<>),
             typeof(Stack<>),
@@ -58,7 +58,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             Type genericType = type.AsGenericType();
 
             object[] data;
-            if (s_ReverseCases.Contains(genericType ?? type))
+            if (_ReverseCases.Contains(genericType ?? type))
             {
                 data = CopyContentsHelper(source, duplicator).Reverse().ToArray();
             }

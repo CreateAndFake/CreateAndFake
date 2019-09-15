@@ -9,16 +9,16 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
     internal sealed class CallData : IDuplicatable
     {
         /// <summary>Name tied to the call.</summary>
-        private readonly string m_MethodName;
+        private readonly string _methodName;
 
         /// <summary>Generics tied to the call.</summary>
-        private readonly Type[] m_Generics;
+        private readonly Type[] _generics;
 
         /// <summary>Args tied to the call.</summary>
-        private readonly object[] m_Args;
+        private readonly object[] _args;
 
         /// <summary>How to compare call data.</summary>
-        private readonly IValuer m_Valuer;
+        private readonly IValuer _valuer;
 
         /// <summary>Populates the details.</summary>
         /// <param name="methodName">Name tied to the call.</param>
@@ -27,10 +27,10 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <param name="valuer">How to compare call data.</param>
         internal CallData(string methodName, Type[] generics, object[] args, IValuer valuer)
         {
-            m_MethodName = methodName ?? throw new ArgumentNullException(nameof(methodName));
-            m_Generics = generics ?? throw new ArgumentNullException(nameof(generics));
-            m_Args = args ?? throw new ArgumentNullException(nameof(args));
-            m_Valuer = valuer;
+            _methodName = methodName ?? throw new ArgumentNullException(nameof(methodName));
+            _generics = generics ?? throw new ArgumentNullException(nameof(generics));
+            _args = args ?? throw new ArgumentNullException(nameof(args));
+            _valuer = valuer;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
-            return new CallData(m_MethodName, m_Generics.ToArray(), duplicator.Copy(m_Args), duplicator.Copy(m_Valuer));
+            return new CallData(_methodName, _generics.ToArray(), duplicator.Copy(_args), duplicator.Copy(_valuer));
         }
 
         /// <summary>Determines if behavior is intended for a call.</summary>
@@ -53,9 +53,9 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
-            return (m_MethodName == input.m_MethodName)
-                && GenericsMatch(input.m_Generics)
-                && ArgsMatch(input.m_Args);
+            return (_methodName == input._methodName)
+                && GenericsMatch(input._generics)
+                && ArgsMatch(input._args);
         }
 
         /// <summary>Determines if the call generics match the expected ones.</summary>
@@ -63,13 +63,13 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>True if matched; false otherwise.</returns>
         private bool GenericsMatch(Type[] inputGenerics)
         {
-            bool matches = (inputGenerics.Length == m_Generics.Length);
+            bool matches = (inputGenerics.Length == _generics.Length);
 
             for (int i = 0; matches && i < inputGenerics.Length; i++)
             {
-                if (m_Generics[i] != typeof(AnyGeneric))
+                if (_generics[i] != typeof(AnyGeneric))
                 {
-                    matches &= m_Generics[i] == inputGenerics[i];
+                    matches &= _generics[i] == inputGenerics[i];
                 }
             }
             return matches;
@@ -80,21 +80,21 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>True if matched; false otherwise.</returns>
         private bool ArgsMatch(object[] inputArgs)
         {
-            bool matches = (inputArgs.Length == m_Args.Length);
+            bool matches = (inputArgs.Length == _args.Length);
 
             for (int i = 0; matches && i < inputArgs.Length; i++)
             {
-                if (m_Args[i] is Arg exp)
+                if (_args[i] is Arg exp)
                 {
                     matches &= exp.Matches(inputArgs[i]);
                 }
-                else if (m_Valuer != null)
+                else if (_valuer != null)
                 {
-                    matches &= m_Valuer.Equals(inputArgs[i], m_Args[i]);
+                    matches &= _valuer.Equals(inputArgs[i], _args[i]);
                 }
                 else
                 {
-                    matches &= Equals(inputArgs[i], m_Args[i]);
+                    matches &= Equals(inputArgs[i], _args[i]);
                 }
             }
             return matches;
@@ -103,10 +103,10 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>String representation of the call.</returns>
         public override string ToString()
         {
-            string gen = (m_Generics.Any()
-                ? "<" + string.Join(", ", m_Generics.Select(g => g.Name)) + ">"
+            string gen = (_generics.Any()
+                ? "<" + string.Join(", ", _generics.Select(g => g.Name)) + ">"
                 : "");
-            return m_MethodName + gen + "(" + string.Join(", ", m_Args.Select(i => i ?? "'null'")) + ")";
+            return _methodName + gen + "(" + string.Join(", ", _args.Select(i => i ?? "'null'")) + ")";
         }
     }
 }

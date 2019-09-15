@@ -27,7 +27,7 @@ internal class Build : NukeBuild
 
     /// <summary>Provides access to the structure of the solution.</summary>
     [Solution]
-    private readonly Solution s_Solution;
+    private readonly Solution _solution;
 
     // Console application entry point. Also defines the default target.
     public static int Main()
@@ -64,7 +64,7 @@ internal class Build : NukeBuild
         .DependsOn(Compile)
         .Executes(() =>
         {
-            foreach (Project proj in s_Solution.GetProjects("*Tests"))
+            foreach (Project proj in _solution.GetProjects("*Tests"))
             {
                 DotNetTestSettings Set(DotNetTestSettings s)
                 {
@@ -90,7 +90,7 @@ internal class Build : NukeBuild
                 .SetConfiguration("Full")
                 .SetProjectFile(SolutionFile));
 
-            foreach (Project proj in s_Solution.GetProjects("*Tests"))
+            foreach (Project proj in _solution.GetProjects("*Tests"))
             {
                 OpenCoverSettings Set(OpenCoverSettings s, string f)
                 {
@@ -120,7 +120,7 @@ internal class Build : NukeBuild
         .OnlyWhen(() => IsServerBuild)
         .Executes(() =>
         {
-            foreach (Project proj in s_Solution.GetProjects("*Tests"))
+            foreach (Project proj in _solution.GetProjects("*Tests"))
             {
                 DotNetTasks.DotNetTest(s => s
                     .SetConfiguration("Travis")

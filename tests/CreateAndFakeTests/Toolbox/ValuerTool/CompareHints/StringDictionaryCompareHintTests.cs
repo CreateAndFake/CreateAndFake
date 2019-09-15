@@ -10,15 +10,15 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class StringDictionaryCompareHintTests : CompareHintTestBase<StringDictionaryCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly StringDictionaryCompareHint s_TestInstance = new StringDictionaryCompareHint();
+        private static readonly StringDictionaryCompareHint _TestInstance = new StringDictionaryCompareHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[] { typeof(StringDictionary) };
+        private static readonly Type[] _ValidTypes = new[] { typeof(StringDictionary) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(IDictionary), typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(IDictionary), typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public StringDictionaryCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public StringDictionaryCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
     }
 }

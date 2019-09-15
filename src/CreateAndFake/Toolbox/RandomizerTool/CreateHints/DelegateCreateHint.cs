@@ -15,7 +15,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     public sealed class DelegateCreateHint : CreateHint
     {
         /// <summary>Methods used to match delegates.</summary>
-        private static readonly MethodInfo[] s_Delegators = typeof(Delegator)
+        private static readonly MethodInfo[] _Delegators = typeof(Delegator)
             .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
             .Where(m => m.Name == "AutoDelegate")
             .ToArray();
@@ -54,7 +54,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             MethodInfo info = type.GetMethod("Invoke");
             bool hasReturn = info.ReturnType != typeof(void);
 
-            MethodInfo match = s_Delegators
+            MethodInfo match = _Delegators
                 .Where(m => m.GetParameters().Length == info.GetParameters().Length)
                 .Single(m => (m.ReturnType != typeof(void)) == hasReturn);
 
@@ -81,13 +81,13 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         private sealed class Delegator
         {
             /// <summary>Creates random results.</summary>
-            private readonly RandomizerChainer m_Randomizer;
+            private readonly RandomizerChainer _randomizer;
 
             /// <summary>Sets up the randomization.</summary>
             /// <param name="randomizer">Creates random results.</param>
             internal Delegator(RandomizerChainer randomizer)
             {
-                m_Randomizer = randomizer;
+                _randomizer = randomizer;
             }
 
             /// <summary>Randomizes any OutRef inputs.</summary>
@@ -100,7 +100,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                     if (inputType.Inherits<IOutRef>())
                     {
                         FieldInfo valueField = inputType.GetField(nameof(OutRef<object>.Var));
-                        valueField.SetValue(outRef, m_Randomizer.Create(valueField.FieldType));
+                        valueField.SetValue(outRef, _randomizer.Create(valueField.FieldType));
                     }
                 }
             }
@@ -112,7 +112,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             private T HandleInAndOut<T>(params object[] inputs)
             {
                 HandleIn(inputs);
-                return (T)m_Randomizer.Create(typeof(T), typeof(Delegate));
+                return (T)_randomizer.Create(typeof(T), typeof(Delegate));
             }
 
             /// <summary>Matches to delegate with same number of inputs and output.</summary>

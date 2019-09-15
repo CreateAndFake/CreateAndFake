@@ -12,25 +12,25 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class CollectionCreateHintTests : CreateHintTestBase<CollectionCreateHint>
     {
         /// <summary>Potential item types to test with.</summary>
-        private static readonly Type[] s_ItemTypes
+        private static readonly Type[] _ItemTypes
             = new[] { typeof(string), typeof(object), typeof(int), typeof(double), typeof(KeyValuePair<string, int>) };
 
         /// <summary>Instance to test with.</summary>
-        private static readonly CollectionCreateHint s_TestInstance = new CollectionCreateHint();
+        private static readonly CollectionCreateHint _TestInstance = new CollectionCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = CollectionCreateHint.PotentialCollections
+        private static readonly Type[] _ValidTypes = CollectionCreateHint.PotentialCollections
             .Concat(new[] { typeof(IEnumerable<>), typeof(IList<>), typeof(ISet<>), typeof(IDictionary<,>) })
             .Concat(new[] { typeof(IReadOnlyCollection<>), typeof(IReadOnlyList<>), typeof(IReadOnlyDictionary<,>) })
             .Concat(new[] { typeof(int[]), typeof(string[]), typeof(object[]) })
             .Select(t => MakeDefined(t)).ToArray();
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes
+        private static readonly Type[] _InvalidTypes
             = new[] { typeof(object), typeof(IEnumerable), typeof(IEnumerable<>) };
 
         /// <summary>Sets up the tests.</summary>
-        public CollectionCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public CollectionCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
         /// <summary>Populates generics with types if present.</summary>
         /// <param name="type">Potential generic type to define.</param>
@@ -41,7 +41,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
             {
                 IRandom random = new FastRandom();
                 return type.MakeGenericType(type.GetGenericArguments().Select(
-                    t => random.NextItem(s_ItemTypes)).ToArray());
+                    t => random.NextItem(_ItemTypes)).ToArray());
             }
             else
             {

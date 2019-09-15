@@ -6,15 +6,15 @@ namespace CreateAndFake.Design.Randomization
     public sealed class SeededRandom : ValueRandom
     {
         /// <summary>Lock to prevent thread collision with seeds.</summary>
-        private readonly object m_Lock = new object();
+        private readonly object _lock = new object();
 
         /// <summary>Current seed to be used for the next randomized value.</summary>
-        private int m_Seed;
+        private int _seed;
 
         /// <summary>Current seed to be used for the next randomized value.</summary>
         public int Seed
         {
-            get { lock (m_Lock) { return m_Seed; } }
+            get { lock (_lock) { return _seed; } }
         }
 
         /// <summary>Initial seed used by the instance.</summary>
@@ -30,7 +30,7 @@ namespace CreateAndFake.Design.Randomization
         public SeededRandom(bool onlyValidValues, int? seed = null) : base(onlyValidValues)
         {
             InitialSeed = seed ?? Environment.TickCount;
-            m_Seed = InitialSeed;
+            _seed = InitialSeed;
         }
 
         /// <summary>Generates a byte array filled with random bytes.</summary>
@@ -39,10 +39,10 @@ namespace CreateAndFake.Design.Randomization
         protected override byte[] NextBytes(short length)
         {
             Random gen;
-            lock (m_Lock)
+            lock (_lock)
             {
-                gen = new Random(m_Seed);
-                m_Seed = gen.Next();
+                gen = new Random(_seed);
+                _seed = gen.Next();
             }
 
             byte[] buffer = new byte[length];

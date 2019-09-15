@@ -16,33 +16,33 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         public static AssemblyName AssemblyName { get; } = new AssemblyName("FakerTypes");
 
         /// <summary>Flags used to find members to implement.</summary>
-        private const BindingFlags s_MemberFinder = BindingFlags.FlattenHierarchy |
+        private const BindingFlags _MemberFinder = BindingFlags.FlattenHierarchy |
             BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
         /// <summary>Underlying type managing implementation details.</summary>
         private static readonly Type
-            s_FakeType = typeof(IFaked),
-            s_MetaType = typeof(FakeMetaProvider);
+            _FakeType = typeof(IFaked),
+            _MetaType = typeof(FakeMetaProvider);
 
         /// <summary>Methods called to chain fake calls.</summary>
         private static readonly MethodInfo
-            s_VoidChainer = s_MetaType.GetMethod(
+            _VoidChainer = _MetaType.GetMethod(
                 nameof(FakeMetaProvider.CallVoid),
                 BindingFlags.Instance | BindingFlags.NonPublic),
-            s_ResultChainer = s_MetaType.GetMethod(
+            _ResultChainer = _MetaType.GetMethod(
                 nameof(FakeMetaProvider.CallRet),
                 BindingFlags.Instance | BindingFlags.NonPublic),
-            s_TypeResolver = typeof(Type).GetMethod(
+            _TypeResolver = typeof(Type).GetMethod(
                 nameof(Type.GetTypeFromHandle),
                 BindingFlags.Static | BindingFlags.Public);
 
         /// <summary>Module storing the faked types.</summary>
-        private static readonly ModuleBuilder s_Module = AssemblyBuilder
+        private static readonly ModuleBuilder _Module = AssemblyBuilder
             .DefineDynamicAssembly(AssemblyName, AssemblyBuilderAccess.RunAndCollect)
             .DefineDynamicModule("FakerTypesModule");
 
         /// <summary>Cache of already created types.</summary>
-        private static readonly IDictionary<TypeInfo, Type[]> s_TypeCache
+        private static readonly IDictionary<TypeInfo, Type[]> _TypeCache
             = new Dictionary<TypeInfo, Type[]>();
 
         /// <summary>Determines if the type can be faked.</summary>
@@ -77,7 +77,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         public static IFaked Create(Type parent, params Type[] interfaces)
         {
             return (IFaked)CreateInfo(parent, interfaces).AsType()
-                .GetConstructor(new[] { s_MetaType })
+                .GetConstructor(new[] { _MetaType })
                 .Invoke(new[] { new FakeMetaProvider() });
         }
 
@@ -88,7 +88,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         internal static TypeInfo CreateInfo(Type parent, params Type[] interfaces)
         {
             IList<Type> allInterfaces = interfaces?.ToList() ?? new List<Type>();
-            allInterfaces.Add(s_FakeType);
+            allInterfaces.Add(_FakeType);
 
             Type realParent = parent ?? typeof(object);
             if (realParent.IsInterface)
@@ -155,9 +155,9 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>The cached or created child type.</returns>
         private static TypeInfo FindOrBuildType(Type parent, Type[] interfaces)
         {
-            lock (s_TypeCache)
+            lock (_TypeCache)
             {
-                TypeInfo cachedType = s_TypeCache
+                TypeInfo cachedType = _TypeCache
                     .Where(t => t.Key.BaseType == parent)
                     .SingleOrDefault(t => !t.Value
                         .Except(interfaces)
@@ -172,7 +172,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 else
                 {
                     TypeInfo newType = BuildType(parent, interfaces);
-                    s_TypeCache.Add(newType, interfaces);
+                    _TypeCache.Add(newType, interfaces);
                     return newType;
                 }
             }
@@ -184,7 +184,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>Dynamic type with behavior faked.</returns>
         private static TypeInfo BuildType(Type parent, Type[] interfaces)
         {
-            TypeBuilder newType = s_Module.DefineType(
+            TypeBuilder newType = _Module.DefineType(
                 "Fake[" + string.Join("|", interfaces.Prepend(parent).Select(i => i.Name)) + "]-" + Guid.NewGuid(),
                 TypeAttributes.NotPublic | TypeAttributes.Sealed, parent, interfaces);
 
@@ -238,7 +238,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             return interfaces
                 .Where(t => t != typeof(IFaked))
                 .SelectMany(i => i
-                    .GetProperties(s_MemberFinder)
+                    .GetProperties(_MemberFinder)
                     .Where(p => IsVisible(p.GetMethod))
                     .Concat(FindImplementableProperties(i.GetInterfaces())))
                 .Distinct();
@@ -252,7 +252,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             return interfaces
                 .Where(t => t != typeof(IFaked))
                 .SelectMany(i => i
-                    .GetMethods(s_MemberFinder)
+                    .GetMethods(_MemberFinder)
                     .Where(m => m.IsAbstract || (m.IsVirtual && !m.IsFinal))
                     .Where(m => IsVisible(m))
                     .Where(m => m.Name != "Finalize")
@@ -334,7 +334,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 gen.Emit(OpCodes.Ldloc, types);
                 gen.Emit(OpCodes.Ldc_I4, i);
                 gen.Emit(OpCodes.Ldtoken, generics[i]);
-                gen.Emit(OpCodes.Call, s_TypeResolver);
+                gen.Emit(OpCodes.Call, _TypeResolver);
                 gen.Emit(OpCodes.Stelem_Ref);
             }
 
@@ -346,11 +346,11 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             gen.Emit(OpCodes.Ldloc, args);
             if (method.ReturnType != typeof(void))
             {
-                gen.Emit(OpCodes.Call, s_ResultChainer.MakeGenericMethod(method.ReturnType));
+                gen.Emit(OpCodes.Call, _ResultChainer.MakeGenericMethod(method.ReturnType));
             }
             else
             {
-                gen.Emit(OpCodes.Call, s_VoidChainer);
+                gen.Emit(OpCodes.Call, _VoidChainer);
             }
 
             // params[0..x] = ((OutRef)args[0..x]).Var;
@@ -380,15 +380,15 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         private static MethodInfo SetupFakeMetaProvider(TypeBuilder newType, Type parent)
         {
             ConstructorInfo baseConstuctor = parent
-                .GetConstructors(s_MemberFinder)
+                .GetConstructors(_MemberFinder)
                 .SingleOrDefault(c => !c.GetParameters().Any());
 
             FieldBuilder backingField = newType.DefineField(
-                newType.Name + ".m_" + nameof(IFaked.FakeMeta), s_MetaType,
+                newType.Name + ".m_" + nameof(IFaked.FakeMeta), _MetaType,
                 FieldAttributes.Private | FieldAttributes.InitOnly);
 
             ConstructorBuilder constructor = newType.DefineConstructor(
-                MethodAttributes.Public, CallingConventions.HasThis, new[] { s_MetaType });
+                MethodAttributes.Public, CallingConventions.HasThis, new[] { _MetaType });
             {
                 // base();
                 ILGenerator newGenerator = constructor.GetILGenerator();
@@ -405,11 +405,11 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 newGenerator.Emit(OpCodes.Ret);
             }
 
-            PropertyInfo propInfo = s_FakeType.GetProperty(nameof(IFaked.FakeMeta));
+            PropertyInfo propInfo = _FakeType.GetProperty(nameof(IFaked.FakeMeta));
             MethodInfo getterInfo = propInfo.GetGetMethod();
 
             MethodBuilder getMetaMethod = newType.DefineMethod(nameof(IFaked) + "." + getterInfo.Name,
-                getterInfo.Attributes & ~MethodAttributes.Abstract, s_MetaType, Type.EmptyTypes);
+                getterInfo.Attributes & ~MethodAttributes.Abstract, _MetaType, Type.EmptyTypes);
             {
                 // return this.m_FakeMeta;
                 ILGenerator getGenerator = getMetaMethod.GetILGenerator();
@@ -419,7 +419,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             }
 
             newType.DefineProperty(nameof(IFaked) + "." + propInfo.Name,
-                propInfo.Attributes, s_MetaType, Type.EmptyTypes).SetGetMethod(getMetaMethod);
+                propInfo.Attributes, _MetaType, Type.EmptyTypes).SetGetMethod(getMetaMethod);
 
             newType.DefineMethodOverride(getMetaMethod, getterInfo);
             return getterInfo;

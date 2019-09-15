@@ -7,7 +7,7 @@ namespace CreateAndFake.Toolbox.FakerTool
     public sealed class Times : IEquatable<Times>, IDeepCloneable
     {
         /// <summary>Expected bounds.</summary>
-        private readonly int m_Min, m_Max;
+        private readonly int _min, _max;
 
         /// <summary>Sets the expected bounds to a single value.</summary>
         /// <param name="count">Upper and lower bound.</param>
@@ -18,8 +18,8 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="max">Upper bound.</param>
         private Times(int min, int max)
         {
-            m_Min = min;
-            m_Max = max;
+            _min = min;
+            _max = max;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Clone that is equal in value to the current instance.</returns>
         public IDeepCloneable DeepClone()
         {
-            return new Times(m_Min, m_Max);
+            return new Times(_min, _max);
         }
 
         /// <summary>Checks if a count is in expected range.</summary>
@@ -37,7 +37,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>True if in range; false otherwise.</returns>
         internal bool IsInRange(int count)
         {
-            return m_Min <= count && count <= m_Max;
+            return _min <= count && count <= _max;
         }
 
         /// <summary>Checks for value equality.</summary>
@@ -54,24 +54,24 @@ namespace CreateAndFake.Toolbox.FakerTool
         public bool Equals(Times other)
         {
             return other != null
-                && m_Min == other.m_Min
-                && m_Max == other.m_Max;
+                && _min == other._min
+                && _max == other._max;
         }
 
         /// <returns>Hash code based upon value identifying the object.</returns>
         public override int GetHashCode()
         {
-            return ValueComparer.Use.GetHashCode(m_Min, m_Max);
+            return ValueComparer.Use.GetHashCode(_min, _max);
         }
 
         /// <returns>String representation.</returns>
         public override string ToString()
         {
-            string maxValue = (m_Max != int.MaxValue)
-                ? $"{m_Max}"
+            string maxValue = (_max != int.MaxValue)
+                ? $"{_max}"
                 : "*";
-            return (m_Min != m_Max)
-                ? $"[{m_Min}-{maxValue}]"
+            return (_min != _max)
+                ? $"[{_min}-{maxValue}]"
                 : maxValue;
         }
 

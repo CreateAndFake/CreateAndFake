@@ -11,16 +11,16 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class ValuerEquatableCompareHintTests : CompareHintTestBase<ValuerEquatableCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly ValuerEquatableCompareHint s_TestInstance = new ValuerEquatableCompareHint();
+        private static readonly ValuerEquatableCompareHint _TestInstance = new ValuerEquatableCompareHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes
+        private static readonly Type[] _ValidTypes
             = new[] { typeof(IValuerEquatable), typeof(ValuerEquatableSample), typeof(PrivateValuerEquatableSample) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(IDictionary), typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(IDictionary), typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public ValuerEquatableCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public ValuerEquatableCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
     }
 }

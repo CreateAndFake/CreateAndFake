@@ -14,7 +14,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
     public sealed class Randomizer : IRandomizer, IDuplicatable
     {
         /// <summary>Default set of hints to use for randomization.</summary>
-        private static readonly CreateHint[] s_DefaultHints = new CreateHint[]
+        private static readonly CreateHint[] _DefaultHints = new CreateHint[]
         {
             new ValueCreateHint(),
             new EnumCreateHint(),
@@ -31,16 +31,16 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         };
 
         /// <summary>Provides stubs.</summary>
-        private readonly IFaker m_Faker;
+        private readonly IFaker _faker;
 
         /// <summary>Generators used to randomize specific types.</summary>
-        private readonly IEnumerable<CreateHint> m_Hints;
+        private readonly IEnumerable<CreateHint> _hints;
 
         /// <summary>Value generator used for base randomization.</summary>
-        private readonly IRandom m_Gen;
+        private readonly IRandom _gen;
 
         /// <summary>Limits attempts at matching conditions.</summary>
-        private readonly Limiter m_Limiter;
+        private readonly Limiter _limiter;
 
         /// <summary>Sets up the randomizer capabilities.</summary>
         /// <param name="faker">Provides stubs.</param>
@@ -51,18 +51,18 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         public Randomizer(IFaker faker, IRandom gen, Limiter limiter,
             bool includeDefaultHints = true, params CreateHint[] hints)
         {
-            m_Faker = faker ?? throw new ArgumentNullException(nameof(faker));
-            m_Gen = gen ?? throw new ArgumentNullException(nameof(gen));
-            m_Limiter = limiter ?? throw new ArgumentNullException(nameof(limiter));
+            _faker = faker ?? throw new ArgumentNullException(nameof(faker));
+            _gen = gen ?? throw new ArgumentNullException(nameof(gen));
+            _limiter = limiter ?? throw new ArgumentNullException(nameof(limiter));
 
             IEnumerable<CreateHint> inputHints = hints ?? Enumerable.Empty<CreateHint>();
             if (includeDefaultHints)
             {
-                m_Hints = inputHints.Concat(s_DefaultHints).ToArray();
+                _hints = inputHints.Concat(_DefaultHints).ToArray();
             }
             else
             {
-                m_Hints = inputHints.ToArray();
+                _hints = inputHints.ToArray();
             }
         }
 
@@ -89,8 +89,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             object result = default;
             try
             {
-                m_Limiter.StallUntil(
-                    () => result = Create(type, new RandomizerChainer(m_Faker, m_Gen, Create)),
+                _limiter.StallUntil(
+                    () => result = Create(type, new RandomizerChainer(_faker, _gen, Create)),
                     () => condition?.Invoke(result) ?? true).Wait();
             }
             catch (AggregateException e)
@@ -128,7 +128,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            (bool, object) result = m_Hints
+            (bool, object) result = _hints
                 .Select(h => h.TryCreate(type, chainer))
                 .FirstOrDefault(r => r.Item1);
 
@@ -242,8 +242,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
-            return new Randomizer(duplicator.Copy(m_Faker), duplicator.Copy(m_Gen),
-                duplicator.Copy(m_Limiter), false, duplicator.Copy(m_Hints).ToArray());
+            return new Randomizer(duplicator.Copy(_faker), duplicator.Copy(_gen),
+                duplicator.Copy(_limiter), false, duplicator.Copy(_hints).ToArray());
         }
     }
 }

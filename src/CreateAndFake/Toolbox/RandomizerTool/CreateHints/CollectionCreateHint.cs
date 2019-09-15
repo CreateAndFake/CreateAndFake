@@ -11,7 +11,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     public sealed class CollectionCreateHint : CreateHint
     {
         /// <summary>Collections able to be randomized.</summary>
-        private static readonly Type[] s_Collections = new[]
+        private static readonly Type[] _Collections = new[]
         {
             typeof(List<>),
             typeof(Dictionary<,>),
@@ -27,18 +27,18 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         };
 
         /// <summary>Collections that the hint will create.</summary>
-        internal static IEnumerable<Type> PotentialCollections => s_Collections.Select(i => i);
+        internal static IEnumerable<Type> PotentialCollections => _Collections.Select(i => i);
 
         /// <summary>Size details for created collections.</summary>
-        private readonly int m_MinSize, m_Range;
+        private readonly int _minSize, _range;
 
         /// <summary>Specifies the size of generated collections.</summary>
         /// <param name="minSize">Min size for created collections.</param>
         /// <param name="range">Size variance for created collections.</param>
         public CollectionCreateHint(int minSize = 1, int range = 3)
         {
-            m_MinSize = minSize;
-            m_Range = range;
+            _minSize = minSize;
+            _range = range;
         }
 
         /// <summary>Tries to create a random instance of the given type.</summary>
@@ -143,7 +143,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 yield return typeof(Array);
             }
 
-            foreach (Type match in s_Collections.Where(c => typeAsGeneric.IsInheritedBy(c)))
+            foreach (Type match in _Collections.Where(c => typeAsGeneric.IsInheritedBy(c)))
             {
                 if (!match.Inherits<IDictionary>() || itemType.Inherits(typeof(KeyValuePair<,>)))
                 {
@@ -159,7 +159,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <returns>Data populated with random values.</returns>
         private Array CreateInternalData(Type itemType, IRandom gen, Func<Type, object> randomizer)
         {
-            Array data = Array.CreateInstance(itemType, m_MinSize + gen.Next(m_Range));
+            Array data = Array.CreateInstance(itemType, _minSize + gen.Next(_range));
             for (int i = 0; i < data.Length; i++)
             {
                 data.SetValue(randomizer.Invoke(itemType), i);

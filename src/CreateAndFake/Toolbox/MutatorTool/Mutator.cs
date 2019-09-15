@@ -12,13 +12,13 @@ namespace CreateAndFake.Toolbox.MutatorTool
     public sealed class Mutator : IMutator
     {
         /// <summary>Handles randomization.</summary>
-        private readonly IRandomizer m_Randomizer;
+        private readonly IRandomizer _randomizer;
 
         /// <summary>Ensures object variance.</summary>
-        private readonly IValuer m_Valuer;
+        private readonly IValuer _valuer;
 
         /// <summary>Limits attempts at creating variants.</summary>
-        private readonly Limiter m_Limiter;
+        private readonly Limiter _limiter;
 
         /// <summary>Sets up the randiffer capabilities.</summary>
         /// <param name="randomizer">Handles randomization.</param>
@@ -26,9 +26,9 @@ namespace CreateAndFake.Toolbox.MutatorTool
         /// <param name="limiter">Limits attempts at creating variants.</param>
         public Mutator(IRandomizer randomizer, IValuer valuer, Limiter limiter)
         {
-            m_Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
-            m_Valuer = valuer ?? throw new ArgumentNullException(nameof(valuer));
-            m_Limiter = limiter;
+            _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
+            _valuer = valuer ?? throw new ArgumentNullException(nameof(valuer));
+            _limiter = limiter;
         }
 
         /// <summary>Creates an object with different values.</summary>
@@ -53,9 +53,9 @@ namespace CreateAndFake.Toolbox.MutatorTool
             object result = default;
             try
             {
-                m_Limiter.StallUntil(
-                    () => result = m_Randomizer.Create(type),
-                    () => values.All(o => !m_Valuer.Equals(result, o))).Wait();
+                _limiter.StallUntil(
+                    () => result = _randomizer.Create(type),
+                    () => values.All(o => !_valuer.Equals(result, o))).Wait();
             }
             catch (AggregateException e)
             {

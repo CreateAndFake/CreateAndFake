@@ -11,18 +11,18 @@ namespace CreateAndFake.Toolbox.TesterTool
     internal sealed class GenericFixer
     {
         /// <summary>Core value random handler.</summary>
-        private readonly IRandom m_Gen;
+        private readonly IRandom _gen;
 
         /// <summary>Creates objects and populates them with random values.</summary>
-        private readonly IRandomizer m_Randomizer;
+        private readonly IRandomizer _randomizer;
 
         /// <summary>Sets up the fixer capabilities.</summary>
         /// <param name="gen">Core value random handler.</param>
         /// <param name="randomizer">Creates objects and populates them with random values.</param>
         internal GenericFixer(IRandom gen, IRandomizer randomizer)
         {
-            m_Gen = gen ?? throw new ArgumentNullException(nameof(gen));
-            m_Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
+            _gen = gen ?? throw new ArgumentNullException(nameof(gen));
+            _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
         }
 
         /// <summary>Defines any generics in a method.</summary>
@@ -49,7 +49,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             if (type.GenericParameterAttributes.HasFlag(
                 GenericParameterAttributes.NotNullableValueTypeConstraint))
             {
-                arg = m_Gen.NextItem(ValueRandom.ValueTypes);
+                arg = _gen.NextItem(ValueRandom.ValueTypes);
             }
             else if (newNeeded)
             {
@@ -67,7 +67,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 while (!constraints.All(c => arg.Inherits(c))
                     && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null))
                 {
-                    arg = m_Randomizer.Create(m_Gen.NextItem(constraints)).GetType();
+                    arg = _randomizer.Create(_gen.NextItem(constraints)).GetType();
                 }
             }).Wait();
 

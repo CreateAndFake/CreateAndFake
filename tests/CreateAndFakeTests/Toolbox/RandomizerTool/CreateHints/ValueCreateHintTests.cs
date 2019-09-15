@@ -10,15 +10,15 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class ValueCreateHintTests : CreateHintTestBase<ValueCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly ValueCreateHint s_TestInstance = new ValueCreateHint();
+        private static readonly ValueCreateHint _TestInstance = new ValueCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = ValueRandom.ValueTypes.ToArray();
+        private static readonly Type[] _ValidTypes = ValueRandom.ValueTypes.ToArray();
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public ValueCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public ValueCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
     }
 }
