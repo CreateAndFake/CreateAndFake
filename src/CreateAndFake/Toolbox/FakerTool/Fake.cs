@@ -25,13 +25,13 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="valuer">How to compare call data.</param>
         public Fake(IFaked fake, IValuer valuer = null)
         {
-            Dummy = fake;
+            Dummy = fake ?? throw new ArgumentNullException(nameof(fake));
             Valuer = valuer;
         }
 
         /// <summary>For converting fakes to different types.</summary>
         /// <param name="baseFake">Created fake with the extra type.</param>
-        protected Fake(Fake baseFake) : this(baseFake.Dummy, baseFake.Valuer) { }
+        protected Fake(Fake baseFake) : this(baseFake?.Dummy, baseFake?.Valuer) { }
 
         /// <summary>Ties a method call to fake behavior.</summary>
         /// <param name="methodName">Method name of the call.</param>

@@ -71,6 +71,8 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="injectionValues">Values to inject into the method.</param>
         public virtual void PreventsNullRefException(Type type, params object[] injectionValues)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             NullGuarder checker = new NullGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout);
 
@@ -140,6 +142,8 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="injectionValues">Values to inject into the method.</param>
         public virtual void PreventsParameterMutation(Type type, params object[] injectionValues)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             MutationGuarder checker = new MutationGuarder(
                 new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, _timeout);
 

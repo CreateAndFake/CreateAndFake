@@ -126,7 +126,7 @@ namespace CreateAndFakeTests.TestBases
 
                 Tools.Asserter.Is(true, result >= min, "Value lower than min was returned.");
                 Tools.Asserter.Is(true, result < max, "Value higher than max was returned.");
-            });
+            }).ConfigureAwait(false);
         }
 
         /// <summary>Verifies that an invalid type throws.</summary>
@@ -206,7 +206,7 @@ namespace CreateAndFakeTests.TestBases
         [Theory, RandomData]
         public void NextItem_CollectionsWork(ICollection<string> data)
         {
-            Tools.Asserter.Is(true, data.Contains(_TestInstance.NextItem(data)));
+            Tools.Asserter.Is(true, data?.Contains(_TestInstance.NextItem(data)));
         }
 
         /// <summary>Verifies linq enumerables work.</summary>

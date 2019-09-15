@@ -99,7 +99,7 @@ namespace CreateAndFake.Design.Randomization
         {
             if (!Supports(type))
             {
-                throw new NotSupportedException($"Type '{type.Name}' not supported.");
+                throw new NotSupportedException($"Type '{type?.Name}' not supported.");
             }
             else
             {

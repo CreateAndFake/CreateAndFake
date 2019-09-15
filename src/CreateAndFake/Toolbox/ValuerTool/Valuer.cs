@@ -73,7 +73,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             catch (InsufficientExecutionStackException)
             {
                 throw new InsufficientExecutionStackException(
-                    $"Ran into infinite generation trying to hash type '{item.GetType().Name}'.");
+                    $"Ran into infinite generation trying to hash type '{item?.GetType().Name}'.");
             }
         }
 
@@ -125,7 +125,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             catch (InsufficientExecutionStackException)
             {
                 throw new InsufficientExecutionStackException(
-                    $"Ran into infinite generation trying to compare type '{expected.GetType().Name}'.");
+                    $"Ran into infinite generation trying to compare type '{expected?.GetType().Name}'.");
             }
         }
 

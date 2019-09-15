@@ -118,6 +118,8 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Method name, generics, and args.</returns>
         private static (MethodInfo, Type[], object[]) ExtractCall(LambdaExpression method, bool onlySetter)
         {
+            if (method == null) throw new ArgumentNullException(nameof(method));
+
             if (!onlySetter && method.Body is MethodCallExpression methodCall)
             {
                 Type[] generics = (methodCall.Method.IsGenericMethod

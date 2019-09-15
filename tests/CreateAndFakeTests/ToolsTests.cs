@@ -77,6 +77,7 @@ namespace CreateAndFakeTests
                 catch (Exception e)
                 {
                     Tools.Asserter.Fail(e, $"Failed testing type '{type.Name}'.");
+                    throw;
                 }
             }
         }

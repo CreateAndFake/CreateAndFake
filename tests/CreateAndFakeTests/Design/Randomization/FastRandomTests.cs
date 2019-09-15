@@ -25,8 +25,8 @@ namespace CreateAndFakeTests.Randomization
             IRandom random = new FastRandom(false);
 
             Limiter limiter = new Limiter(15000);
-            await limiter.StallUntil(() => _BadDoubles.Contains(random.Next<double>()));
-            await limiter.StallUntil(() => _BadFloats.Contains(random.Next<float>()));
+            await limiter.StallUntil(() => _BadDoubles.Contains(random.Next<double>())).ConfigureAwait(false);
+            await limiter.StallUntil(() => _BadFloats.Contains(random.Next<float>())).ConfigureAwait(false);
         }
 
         [Fact]
@@ -34,8 +34,8 @@ namespace CreateAndFakeTests.Randomization
         {
             IRandom random = new FastRandom(true);
 
-            await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false, _BadDoubles.Contains(random.Next<double>())));
-            await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false, _BadFloats.Contains(random.Next<float>())));
+            await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false, _BadDoubles.Contains(random.Next<double>()))).ConfigureAwait(false);
+            await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false, _BadFloats.Contains(random.Next<float>()))).ConfigureAwait(false);
         }
     }
 }

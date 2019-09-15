@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using CreateAndFake.Toolbox.ValuerTool;
@@ -22,6 +23,8 @@ namespace CreateAndFake.Toolbox.AsserterTool
 
         /// <summary>Runs each case and aggregates exceptions.</summary>
         /// <param name="cases">Assert cases.</param>
+        [SuppressMessage("Microsoft.Design",
+            "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Rethrows all at end.")]
         public virtual void CheckAll(params Action[] cases)
         {
             if (cases == null) return;
@@ -164,8 +167,8 @@ namespace CreateAndFake.Toolbox.AsserterTool
             Difference[] differences = Valuer.Compare(expected, actual).ToArray();
             if (differences.Length > 0)
             {
-                Type rootType = expected?.GetType() ?? actual.GetType();
-                throw new AssertException($"Value equality failed for type '{rootType.Name}'.",
+                Type rootType = expected?.GetType() ?? actual?.GetType();
+                throw new AssertException($"Value equality failed for type '{rootType?.Name}'.",
                     details, string.Join<Difference>(Environment.NewLine, differences));
             }
         }

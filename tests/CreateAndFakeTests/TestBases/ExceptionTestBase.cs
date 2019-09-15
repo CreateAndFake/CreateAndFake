@@ -40,6 +40,8 @@ namespace CreateAndFakeTests.TestBases
         [Theory, RandomData]
         public void Exception_XmlSerializes(T original)
         {
+            if (original == null) throw new ArgumentNullException(nameof(original));
+
             XmlObjectSerializer formatter = new DataContractSerializer(typeof(T),
                 new[] { original.InnerException }.Where(t => t != null).Select(t => t.GetType()));
 
