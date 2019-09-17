@@ -98,9 +98,17 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         }
 
         [Theory, RandomData]
-        internal static void Inject_FakesAreInjected(Fake<DataSample> fake, InjectSample holder)
+        internal static void Inject_SingleFakeInjected(Fake<DataSample> fake, InjectSample holder)
         {
             Tools.Asserter.ReferenceEqual(fake.Dummy, holder.Data);
+            Tools.Asserter.ReferenceNotEqual(fake.Dummy, holder.Data2);
+        }
+
+        [Theory, RandomData]
+        internal static void Inject_DoubleFakeInjected(Fake<DataSample> fake, Fake<DataSample> fake2, InjectSample holder)
+        {
+            Tools.Asserter.ReferenceEqual(fake.Dummy, holder.Data);
+            Tools.Asserter.ReferenceEqual(fake2.Dummy, holder.Data2);
         }
     }
 }

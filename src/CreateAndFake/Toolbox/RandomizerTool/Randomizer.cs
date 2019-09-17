@@ -164,7 +164,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 if (!param.IsOut)
                 {
                     args.Push(Inject(param.ParameterType,
-                        args.Where(a => a is Fake).Concat(values ?? Enumerable.Empty<object>()).ToArray()));
+                        args.Where(a => a is Fake).Reverse().Concat(values ?? Enumerable.Empty<object>()).ToArray()));
                 }
                 else
                 {
@@ -192,15 +192,15 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            IDictionary<Type, object> data = (values ?? Array.Empty<object>())
+            List<Tuple<Type, object>> data = (values ?? Array.Empty<object>())
                 .Where(v => v != null)
                 .Select(v => (v is Fake fake) ? fake.Dummy : v)
-                .GroupBy(v => v.GetType())
-                .ToDictionary(g => g.Key, g => g.Last());
+                .Select(v => Tuple.Create(v.GetType(), v))
+                .ToList();
 
             // Finds the contructor with the most matches then by fewest parameters.
             ConstructorInfo maker = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public)
-                .GroupBy(c => c.GetParameters().Count(p => data.Keys.Any(t => t.Inherits(p.ParameterType))))
+                .GroupBy(c => c.GetParameters().Count(p => data.Any(t => t.Item1.Inherits(p.ParameterType))))
                 .Where(g => g.Key > 0)
                 .OrderByDescending(g => g.Key)
                 .FirstOrDefault()
@@ -213,11 +213,11 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 object[] args = new object[info.Length];
                 for (int i = 0; i < args.Length; i++)
                 {
-                    Type key = data.Keys.FirstOrDefault(t => t.Inherits(info[i].ParameterType));
-                    if (key != null)
+                    Tuple<Type, object> match = data.FirstOrDefault(t => t.Item1.Inherits(info[i].ParameterType));
+                    if (match != default)
                     {
-                        args[i] = data[key];
-                        data.Remove(key);
+                        args[i] = match.Item2;
+                        data.Remove(match);
                     }
                     else
                     {
