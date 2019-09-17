@@ -41,6 +41,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Runs the behavior.</summary>
         /// <param name="args">Expected args for the behavior.</param>
         /// <returns>Result of the call.</returns>
+        [ExcludeFromCodeCoverage]
         internal object Invoke(object[] args)
         {
             Calls++;
