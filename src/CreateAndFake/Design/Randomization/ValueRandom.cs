@@ -97,9 +97,11 @@ namespace CreateAndFake.Design.Randomization
         /// <exception cref="NotSupportedException">If the type isn't supported.</exception>
         public object Next(Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             if (!Supports(type))
             {
-                throw new NotSupportedException($"Type '{type?.Name}' not supported.");
+                throw new NotSupportedException($"Type '{type.Name}' not supported.");
             }
             else
             {

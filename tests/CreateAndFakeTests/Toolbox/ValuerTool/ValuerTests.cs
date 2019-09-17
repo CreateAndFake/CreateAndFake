@@ -133,5 +133,17 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
 
             Tools.Asserter.Is(true, e.Message.Contains(item.GetType().Name));
         }
+
+        [Fact]
+        internal static void GetHashCode_CanNotSupportNull()
+        {
+            Tools.Asserter.Throws<NotSupportedException>(() => new Valuer(false).GetHashCode((object)null));
+        }
+
+        [Fact]
+        internal static void Compare_CanNotSupportNull()
+        {
+            Tools.Asserter.Throws<NotSupportedException>(() => new Valuer(false).Compare(null, new object()));
+        }
     }
 }
