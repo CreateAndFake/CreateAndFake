@@ -167,8 +167,8 @@ namespace CreateAndFake.Toolbox.AsserterTool
             Difference[] differences = Valuer.Compare(expected, actual).ToArray();
             if (differences.Length > 0)
             {
-                Type rootType = expected?.GetType() ?? actual?.GetType();
-                throw new AssertException($"Value equality failed for type '{rootType?.Name}'.",
+                string rootType = (expected ?? actual)?.GetType().Name;
+                throw new AssertException($"Value equality failed for type '{rootType}'.",
                     details, string.Join<Difference>(Environment.NewLine, differences));
             }
         }

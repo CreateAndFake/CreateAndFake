@@ -306,6 +306,19 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             _fakeValuer.VerifyAll(Times.Exactly(2));
         }
 
+        [Theory, RandomData]
+        internal void ValuesEqual_CanHandleNullsNotEqual(IEnumerable<Difference> differences)
+        {
+            _fakeValuer.Setup(
+                f => f.Compare(null, null),
+                Behavior.Returns(differences, Times.Once));
+
+            Tools.Asserter.Throws<AssertException>(
+                () => _testInstance.ValuesEqual(null, null));
+
+            _fakeValuer.VerifyAll(Times.Once);
+        }
+
         [Fact]
         internal void ValuesNotEqual_EqualInvalid()
         {
