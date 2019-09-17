@@ -41,7 +41,6 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Runs the behavior.</summary>
         /// <param name="args">Expected args for the behavior.</param>
         /// <returns>Result of the call.</returns>
-        [ExcludeFromCodeCoverage]
         internal object Invoke(object[] args)
         {
             Calls++;
@@ -58,7 +57,10 @@ namespace CreateAndFake.Toolbox.FakerTool
             }
             catch (TargetInvocationException e)
             {
-                ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                if (e.InnerException != null)
+                {
+                    ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                }
                 throw;
             }
         }
@@ -114,7 +116,17 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Throw<T>(Times times = null) where T : Exception, new()
         {
-            return Set(() => throw new T(), times);
+            return Throw(new T(), times);
+        }
+
+        /// <summary>Specifies a specific exception behavior for a fake.</summary>
+        /// <typeparam name="T">Exception type to throw if called.</typeparam>
+        /// <param name="exception">Exception to throw.</param>
+        /// <param name="times">Behavior call limit.</param>
+        /// <returns>Instance to set up the mock with.</returns>
+        public static Behavior<VoidType> Throw<T>(T exception, Times times = null) where T : Exception
+        {
+            return Set(() => throw exception, times);
         }
 
         /// <summary>Specifies behavior returning a value for a fake.</summary>

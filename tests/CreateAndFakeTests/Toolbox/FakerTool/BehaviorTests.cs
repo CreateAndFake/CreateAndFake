@@ -101,5 +101,12 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Asserter.Is(null, Behavior.None().ToExpectedCalls());
             Tools.Asserter.Is(times.ToString(), Behavior.None(times).ToExpectedCalls());
         }
+
+        [Fact]
+        internal static void Invoke_ThrowsWithNoInnerException()
+        {
+            Tools.Asserter.Throws<TargetInvocationException>(
+                () => Behavior.Throw(new TargetInvocationException(null)).Invoke(Array.Empty<object>()));
+        }
     }
 }
