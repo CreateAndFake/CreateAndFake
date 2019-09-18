@@ -103,10 +103,10 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         [Fact]
-        internal static void Invoke_ThrowsWithNoInnerException()
+        internal static void Invoke_ThrowsWithWrongArgs()
         {
-            Tools.Asserter.Throws<TargetInvocationException>(
-                () => Behavior.Throw(new TargetInvocationException(null)).Invoke(Array.Empty<object>()));
+            Tools.Asserter.Throws<TargetParameterCountException>(
+                () => Behavior.Set((int _) => { }).Invoke(Array.Empty<object>()));
         }
     }
 }

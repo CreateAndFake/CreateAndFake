@@ -55,9 +55,9 @@ namespace CreateAndFake.Toolbox.FakerTool
                     return Implementation.DynamicInvoke(args);
                 }
             }
-            catch (TargetInvocationException e)
+            catch (Exception e)
             {
-                if (e.InnerException != null)
+                if (e is TargetInvocationException)
                 {
                     ExceptionDispatchInfo.Capture(e.InnerException).Throw();
                 }
