@@ -57,10 +57,11 @@ namespace CreateAndFake.Toolbox.FakerTool
             }
             catch (Exception e)
             {
-                if (e is TargetInvocationException)
-                {
-                    ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                }
+                ExceptionDispatchInfo info = (e is TargetInvocationException)
+                    ? ExceptionDispatchInfo.Capture(e.InnerException)
+                    : null;
+
+                info?.Throw();
                 throw;
             }
         }
