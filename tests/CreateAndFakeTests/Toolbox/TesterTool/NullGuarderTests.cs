@@ -71,34 +71,34 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         [Fact]
         internal static void PreventsNullRefExceptionOnConstructors_Disposes()
         {
-            lock (MockDisposableSample.Lock)
+            lock (MockDisposableSample._Lock)
             {
-                MockDisposableSample.ClassDisposes = 0;
-                MockDisposableSample.FinalizerDisposes = 0;
-                MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
+                MockDisposableSample._ClassDisposes = 0;
+                MockDisposableSample._FinalizerDisposes = 0;
+                MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
 
                 _LongTestInstance.PreventsNullRefExceptionOnConstructors(typeof(MockDisposableSample), true);
-                Tools.Asserter.Is(2, MockDisposableSample.ClassDisposes);
-                Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
-                MockDisposableSample.Fake.Verify(Times.Once, d => d.Dispose());
+                Tools.Asserter.Is(2, MockDisposableSample._ClassDisposes);
+                Tools.Asserter.Is(0, MockDisposableSample._FinalizerDisposes);
+                MockDisposableSample._Fake.Verify(Times.Once, d => d.Dispose());
             }
         }
 
         [Fact]
         internal static void PreventsNullRefExceptionOnMethods_Disposes()
         {
-            lock (MockDisposableSample.Lock)
+            lock (MockDisposableSample._Lock)
             {
-                MockDisposableSample.ClassDisposes = 0;
-                MockDisposableSample.FinalizerDisposes = 0;
-                MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
+                MockDisposableSample._ClassDisposes = 0;
+                MockDisposableSample._FinalizerDisposes = 0;
+                MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
 
                 using (MockDisposableSample sample = new MockDisposableSample(null))
                 {
                     _LongTestInstance.PreventsNullRefExceptionOnMethods(sample);
-                    Tools.Asserter.Is(0, MockDisposableSample.ClassDisposes);
-                    Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
-                    MockDisposableSample.Fake.Verify(Times.Once, d => d.Dispose());
+                    Tools.Asserter.Is(0, MockDisposableSample._ClassDisposes);
+                    Tools.Asserter.Is(0, MockDisposableSample._FinalizerDisposes);
+                    MockDisposableSample._Fake.Verify(Times.Once, d => d.Dispose());
                 }
             }
         }

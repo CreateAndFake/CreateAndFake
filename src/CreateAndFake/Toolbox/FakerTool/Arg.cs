@@ -66,6 +66,8 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Default instance of T for the fake setup.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters",
             Justification = "Taken and used through lambdas for setup replacement behavior.")]
+        [SuppressMessage("IDE", "IDE0060:RemoveUnusedParameters",
+            Justification = "Taken and used through lambdas for setup replacement behavior.")]
         public static T Where<T>(Func<T, bool> condition)
         {
             return default;
@@ -76,6 +78,8 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="condition">Condition to verify.</param>
         /// <returns>Container for the reference.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters",
+            Justification = "Taken and used through lambdas for setup replacement behavior.")]
+        [SuppressMessage("IDE", "IDE0060:RemoveUnusedParameters",
             Justification = "Taken and used through lambdas for setup replacement behavior.")]
         public static OutRef<T> WhereRef<T>(Func<T, bool> condition)
         {

@@ -13,37 +13,39 @@ namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples
     public sealed class MockDisposableSample : IDisposable
     {
         /// <summary>For testing.</summary>
-        internal static readonly object Lock = new object();
+        internal static readonly object _Lock = new object();
 
         /// <summary>For testing.</summary>
-        internal static Fake<IDisposable> Fake = Tools.Faker.Stub<IDisposable>();
+        internal static Fake<IDisposable> _Fake = Tools.Faker.Stub<IDisposable>();
 
         /// <summary>For testing.</summary>
-        internal static int ClassDisposes = 0;
+        internal static int _ClassDisposes = 0;
 
         /// <summary>For testing.</summary>
-        internal static int FinalizerDisposes = 0;
+        internal static int _FinalizerDisposes = 0;
 
         /// <summary>For testing.</summary>
+        [SuppressMessage("IDE", "IDE0060:RemoveUnusedParameters", Justification = "For testing.")]
         public MockDisposableSample(object value) { }
 
         /// <summary>For testing.</summary>
         ~MockDisposableSample()
         {
-            FinalizerDisposes++;
+            _FinalizerDisposes++;
         }
 
         /// <summary>For testing.</summary>
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-            ClassDisposes++;
+            _ClassDisposes++;
         }
 
         /// <summary>For testing.</summary>
+        [SuppressMessage("IDE", "IDE0060:RemoveUnusedParameters", Justification = "For testing.")]
         public IDisposable DisposePass(object value)
         {
-            return Fake.Dummy;
+            return _Fake.Dummy;
         }
     }
 }

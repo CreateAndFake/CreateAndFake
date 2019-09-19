@@ -44,32 +44,32 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         [Fact]
         internal static void PreventsNullRefException_Disposes()
         {
-            lock (MockDisposableSample.Lock)
+            lock (MockDisposableSample._Lock)
             {
-                MockDisposableSample.ClassDisposes = 0;
-                MockDisposableSample.FinalizerDisposes = 0;
-                MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
+                MockDisposableSample._ClassDisposes = 0;
+                MockDisposableSample._FinalizerDisposes = 0;
+                MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
 
                 _LongTestInstance.PreventsNullRefException<MockDisposableSample>();
-                Tools.Asserter.Is(3, MockDisposableSample.ClassDisposes);
-                Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
-                MockDisposableSample.Fake.Verify(Times.Exactly(2), d => d.Dispose());
+                Tools.Asserter.Is(3, MockDisposableSample._ClassDisposes);
+                Tools.Asserter.Is(0, MockDisposableSample._FinalizerDisposes);
+                MockDisposableSample._Fake.Verify(Times.Exactly(2), d => d.Dispose());
             }
         }
 
         [Fact]
         internal static void PreventsParameterMutation_Disposes()
         {
-            lock (MockDisposableSample.Lock)
+            lock (MockDisposableSample._Lock)
             {
-                MockDisposableSample.ClassDisposes = 0;
-                MockDisposableSample.FinalizerDisposes = 0;
-                MockDisposableSample.Fake = Tools.Faker.Stub<IDisposable>();
+                MockDisposableSample._ClassDisposes = 0;
+                MockDisposableSample._FinalizerDisposes = 0;
+                MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
 
                 _LongTestInstance.PreventsParameterMutation<MockDisposableSample>();
-                Tools.Asserter.Is(4, MockDisposableSample.ClassDisposes);
-                Tools.Asserter.Is(0, MockDisposableSample.FinalizerDisposes);
-                MockDisposableSample.Fake.Verify(Times.Exactly(2), d => d.Dispose());
+                Tools.Asserter.Is(4, MockDisposableSample._ClassDisposes);
+                Tools.Asserter.Is(0, MockDisposableSample._FinalizerDisposes);
+                MockDisposableSample._Fake.Verify(Times.Exactly(2), d => d.Dispose());
             }
         }
     }
