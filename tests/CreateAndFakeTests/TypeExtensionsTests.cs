@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -31,6 +32,15 @@ namespace CreateAndFakeTests
                 .GetTypes().Where(t => t.IsInterface).ToArray()).GetType();
 
             Parallel.For(0, 10, i => testType.Inherits<object>());
+        }
+
+        [Theory, RandomData]
+        internal static void Inherits_RaceConditionPrevented2(IEnumerable<Type> types)
+        {
+            foreach (Type testType in types)
+            {
+                Parallel.For(0, 10, i => testType.Inherits<object>());
+            }
         }
     }
 }

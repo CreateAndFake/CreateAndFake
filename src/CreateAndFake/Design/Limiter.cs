@@ -247,15 +247,17 @@ namespace CreateAndFake.Design
             Stopwatch watch = Stopwatch.StartNew();
             for (int i = 1; true; i++)
             {
+                TException lastError;
                 try
                 {
                     return action.Invoke();
                 }
                 catch (TException error)
                 {
-                    resetState?.Invoke();
-                    await DelayOrFault(watch.Elapsed, i, canceler, error).ConfigureAwait(false);
+                    lastError = error;
                 }
+                resetState?.Invoke();
+                await DelayOrFault(watch.Elapsed, i, canceler, lastError).ConfigureAwait(false);
             }
         }
 

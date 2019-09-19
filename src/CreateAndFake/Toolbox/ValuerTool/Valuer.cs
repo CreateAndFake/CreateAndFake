@@ -66,6 +66,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Forwarded.")]
         public int GetHashCode(object item)
         {
+            string typeName = item?.GetType().Name;
             try
             {
                 return GetHashCode(item, new ValuerChainer(this, GetHashCode, Compare));
@@ -73,7 +74,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             catch (InsufficientExecutionStackException)
             {
                 throw new InsufficientExecutionStackException(
-                    $"Ran into infinite generation trying to hash type '{item?.GetType().Name}'.");
+                    $"Ran into infinite generation trying to hash type '{typeName}'.");
             }
         }
 
@@ -118,6 +119,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
         public IEnumerable<Difference> Compare(object expected, object actual)
         {
+            string typeName = (expected ?? actual)?.GetType().Name;
             try
             {
                 return Compare(expected, actual, new ValuerChainer(this, GetHashCode, Compare));
@@ -125,7 +127,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             catch (InsufficientExecutionStackException)
             {
                 throw new InsufficientExecutionStackException(
-                    $"Ran into infinite generation trying to compare type '{expected?.GetType().Name}'.");
+                    $"Ran into infinite generation trying to compare type '{typeName}'.");
             }
         }
 

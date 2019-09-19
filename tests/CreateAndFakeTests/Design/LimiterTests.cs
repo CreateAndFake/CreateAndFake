@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.Design
     public static class LimiterTests
     {
         /// <summary>Small delay to test with.</summary>
-        private static readonly TimeSpan _SmallDelay = new TimeSpan(0, 0, 0, 0, 20);
+        private static readonly TimeSpan _SmallDelay = new TimeSpan(0, 0, 0, 0, 50);
 
         [Fact]
         internal static void Limiter_GuardsNulls()
