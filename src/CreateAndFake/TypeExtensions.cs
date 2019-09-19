@@ -112,18 +112,15 @@ namespace CreateAndFake.Toolbox
         /// <returns>True if inherited; false otherwise.</returns>
         public static bool IsInheritedBy(this Type child, Type parent)
         {
-            if (!_ChildCache.ContainsKey(parent))
+            HashSet<Type> children;
+            lock (_ChildCache)
             {
-                lock (_ChildCache)
+                if (!_ChildCache.TryGetValue(parent, out children))
                 {
-                    if (!_ChildCache.ContainsKey(parent))
-                    {
-                        _ChildCache[parent] = new HashSet<Type>(FindChildren(parent).Distinct());
-                    }
+                    _ChildCache[parent] = children = new HashSet<Type>(FindChildren(parent).Distinct());
                 }
             }
 
-            HashSet<Type> children = _ChildCache[parent];
             return children.Contains(child)
                 || children.Contains(Nullable.GetUnderlyingType(child));
         }

@@ -38,10 +38,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            foreach (ConstructorInfo constructor in type
-                .GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(c => c.IsPublic || c.IsAssembly || c.IsFamily || c.IsFamilyOrAssembly)
-                .Where(c => !c.IsPrivate))
+            foreach (ConstructorInfo constructor in FindAllConstructors(type))
             {
                 PreventsMutation(null, constructor, callAllMethods, injectionValues);
             }
@@ -54,11 +51,8 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
-            foreach (MethodInfo method in instance.GetType()
-                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
-                .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
-                .Where(m => !m.IsPrivate))
+            foreach (MethodInfo method in FindAllMethods(instance.GetType(), BindingFlags.Instance)
+                .Where(m => m.Name != "Finalize" && m.Name != "Dispose"))
             {
                 PreventsMutation(instance, Fixer.FixMethod(method), false, injectionValues);
             }
@@ -72,10 +66,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            foreach (MethodInfo method in type
-                .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
-                .Where(m => !m.IsPrivate))
+            foreach (MethodInfo method in FindAllMethods(type, BindingFlags.Static))
             {
                 PreventsMutation(null, Fixer.FixMethod(method),
                     callAllMethods && method.ReturnType.Inherits(type), injectionValues);

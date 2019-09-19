@@ -12,6 +12,12 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
     public static class Fake_T_Tests
     {
         [Fact]
+        internal static void Fake_GuardsNulls()
+        {
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Fake<object>(null));
+        }
+
+        [Fact]
         internal static void Setup_GuardsNulls()
         {
             Tools.Asserter.Throws<ArgumentNullException>(

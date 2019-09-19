@@ -23,7 +23,6 @@ namespace CreateAndFake.Toolbox.FakerTool
 
         /// <summary>Switches the fake to a different type.</summary>
         /// <param name="baseFake">Created fake with the extra type.</param>
-        [SuppressMessage("Sonar", "S1481:RemoveUnusedLocals", Justification = "Required for cast check.")]
         public Fake(Fake baseFake) : base(baseFake)
         {
             _ = (T)base.Dummy;

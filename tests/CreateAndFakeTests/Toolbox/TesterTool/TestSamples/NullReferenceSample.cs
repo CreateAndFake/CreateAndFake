@@ -9,7 +9,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples
         private readonly IValueEquatable _data;
 
         /// <summary>For testing.</summary>
-        public NullReferenceSample(IValueEquatable data)
+        internal NullReferenceSample(IValueEquatable data)
         {
             _data = data;
         }

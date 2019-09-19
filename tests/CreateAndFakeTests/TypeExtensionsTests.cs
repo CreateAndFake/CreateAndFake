@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -31,16 +30,7 @@ namespace CreateAndFakeTests
             Type testType = Tools.Faker.Stub<object>(Assembly.GetExecutingAssembly()
                 .GetTypes().Where(t => t.IsInterface).ToArray()).GetType();
 
-            Parallel.For(0, 10, i => testType.Inherits<object>());
-        }
-
-        [Theory, RandomData]
-        internal static void Inherits_RaceConditionPrevented2(IEnumerable<Type> types)
-        {
-            foreach (Type testType in types)
-            {
-                Parallel.For(0, 10, i => testType.Inherits<object>());
-            }
+            Tools.Asserter.Is(true, Parallel.For(0, 10, i => testType.Inherits<object>()).IsCompleted);
         }
     }
 }

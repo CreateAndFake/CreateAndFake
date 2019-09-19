@@ -1,7 +1,9 @@
 ﻿using System;
 using CreateAndFake;
+using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.TesterTool;
+using CreateAndFakeTests.TestSamples;
 using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 using Xunit;
 
@@ -30,6 +32,19 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         internal static void MutationGuarder_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation(_ShortTestInstance);
+        }
+
+        [Fact]
+        internal static void PreventsParameterMutation_OnStatics()
+        {
+            Tools.Asserter.Throws<AssertException>(() =>
+                Tools.Tester.PreventsParameterMutation(typeof(StaticMutationSample)));
+        }
+
+        [Fact]
+        internal static void PreventsParameterMutation_StatelessFine()
+        {
+            Tools.Tester.PreventsParameterMutation<StatelessSample>();
         }
 
         [Fact]

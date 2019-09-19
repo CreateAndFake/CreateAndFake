@@ -3,6 +3,7 @@ using CreateAndFake;
 using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.TesterTool;
+using CreateAndFakeTests.TestSamples;
 using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 using Xunit;
 
@@ -52,6 +53,19 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         {
             Tools.Asserter.Throws<AssertException>(() => _ShortTestInstance
                 .PreventsNullRefExceptionOnConstructors(typeof(MismatchParamNameSample), false));
+        }
+
+        [Fact]
+        internal static void PreventsNullRefException_OnStatics()
+        {
+            Tools.Asserter.Throws<AssertException>(() =>
+                Tools.Tester.PreventsNullRefException(typeof(StaticMutationSample)));
+        }
+
+        [Fact]
+        internal static void PreventsNullRefException_StatelessFine()
+        {
+            Tools.Tester.PreventsNullRefException<StatelessSample>();
         }
 
         [Fact]
