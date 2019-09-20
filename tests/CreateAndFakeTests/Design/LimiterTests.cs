@@ -15,8 +15,11 @@ namespace CreateAndFakeTests.Design
     /// <summary>Verifies behavior.</summary>
     public static class LimiterTests
     {
+        /// <summary>Accuracy of wait resolution for delays.</summary>
+        private static readonly int _WaitAccuracy = 15;
+
         /// <summary>Small delay to test with.</summary>
-        private static readonly TimeSpan _SmallDelay = new TimeSpan(0, 0, 0, 0, 50);
+        private static readonly TimeSpan _SmallDelay = new TimeSpan(0, 0, 0, 0, 60);
 
         [Fact]
         internal static void Limiter_GuardsNulls()
@@ -106,7 +109,7 @@ namespace CreateAndFakeTests.Design
         {
             Stopwatch watch = Stopwatch.StartNew();
             await new Limiter(_SmallDelay).Repeat(() => { }).ConfigureAwait(false);
-            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - 1);
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - _WaitAccuracy);
         }
 
         [Fact]
@@ -116,7 +119,7 @@ namespace CreateAndFakeTests.Design
 
             Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(_SmallDelay).StallUntil(() => { }, () => false).Wait());
-            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - 1);
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - _WaitAccuracy);
         }
 
         [Theory, RandomData]
@@ -126,7 +129,7 @@ namespace CreateAndFakeTests.Design
 
             Tools.Asserter.Is(exception, Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(_SmallDelay).Retry(() => { throw exception; }).Wait()).InnerException);
-            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - 1);
+            Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - _WaitAccuracy);
         }
 
         [Theory,
@@ -138,7 +141,7 @@ namespace CreateAndFakeTests.Design
             Stopwatch watch = Stopwatch.StartNew();
             await new Limiter(tries, _SmallDelay).Repeat(() => { }).ConfigureAwait(false);
             Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >=
-                (_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
+                (_SmallDelay.TotalMilliseconds - _WaitAccuracy) * (tries - 1));
         }
 
         [Theory,
@@ -152,7 +155,7 @@ namespace CreateAndFakeTests.Design
             Stopwatch watch = Stopwatch.StartNew();
             await new Limiter(tries, _SmallDelay).StallUntil(() => ++attempts == tries).ConfigureAwait(false);
             Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >=
-                (_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
+                (_SmallDelay.TotalMilliseconds - _WaitAccuracy) * (tries - 1));
         }
 
         [Theory,
@@ -167,7 +170,7 @@ namespace CreateAndFakeTests.Design
             Stopwatch watch = Stopwatch.StartNew();
             await new Limiter(tries, _SmallDelay).Retry(() => { if (++attempts != tries) throw exception; }).ConfigureAwait(false);
             Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >=
-                (_SmallDelay.TotalMilliseconds - 1) * (tries - 1));
+                (_SmallDelay.TotalMilliseconds - _WaitAccuracy) * (tries - 1));
         }
 
         [Fact]
