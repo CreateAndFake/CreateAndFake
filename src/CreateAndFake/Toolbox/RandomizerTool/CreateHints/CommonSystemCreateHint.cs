@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     public sealed class CommonSystemCreateHint : CreateHint
     {
         /// <summary>Supported types and the methods used to generate them.</summary>
-        private static readonly IDictionary<Type, Func<RandomizerChainer, object>> s_Gens
+        private static readonly IDictionary<Type, Func<RandomizerChainer, object>> _Gens
             = new Dictionary<Type, Func<RandomizerChainer, object>>
             {
                 { typeof(CultureInfo), rand => rand.Gen.NextItem(CultureInfo.GetCultures(CultureTypes.AllCultures)) },
@@ -43,7 +43,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));
 
-            if (s_Gens.TryGetValue(type, out Func<RandomizerChainer, object> gen))
+            if (_Gens.TryGetValue(type, out Func<RandomizerChainer, object> gen))
             {
                 return (true, gen.Invoke(randomizer));
             }

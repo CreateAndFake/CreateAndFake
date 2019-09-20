@@ -13,7 +13,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class DelegateCreateHintTests : CreateHintTestBase<DelegateCreateHint>
     {
         /// <summary>Possible action types to use.</summary>
-        private static readonly Type[] s_ActionTypes = new[]
+        private static readonly Type[] _ActionTypes = new[]
         {
             typeof(Action),
             typeof(Action<>),
@@ -35,7 +35,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         };
 
         /// <summary>Possible func types to use.</summary>
-        private static readonly Type[] s_FuncTypes = new[]
+        private static readonly Type[] _FuncTypes = new[]
         {
             typeof(Func<>),
             typeof(Func<,>),
@@ -57,33 +57,31 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         };
 
         /// <summary>Instance to test with.</summary>
-        private static readonly DelegateCreateHint s_TestInstance = new DelegateCreateHint();
+        private static readonly DelegateCreateHint _TestInstance = new DelegateCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[] { typeof(Delegate),
+        private static readonly Type[] _ValidTypes = new[] { typeof(Delegate),
             typeof(Action), typeof(Action<string, object, int>), typeof(Func<int, string, object>) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public DelegateCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public DelegateCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies every func and action type are handled.</summary>
         [Fact]
-        public static void Create_HandlesAllDelegates()
+        internal static void Create_HandlesAllDelegates()
         {
-            foreach (Type type in s_ActionTypes.Concat(s_FuncTypes))
+            foreach (Type type in _ActionTypes.Concat(_FuncTypes))
             {
-                Tools.Asserter.Is(true, s_TestInstance.TryCreate(type, CreateChainer()).Item1);
+                Tools.Asserter.Is(true, _TestInstance.TryCreate(type, CreateChainer()).Item1);
             }
         }
 
-        /// <summary>Verifies out is supported through OutRef.</summary>
         [Fact]
-        public static void Create_HandlesOut()
+        internal static void Create_HandlesOutRef()
         {
-            (bool, object) result = s_TestInstance.TryCreate(typeof(Action<IOutRef>), CreateChainer());
+            (bool, object) result = _TestInstance.TryCreate(typeof(Action<IOutRef>), CreateChainer());
             Tools.Asserter.Is(true, result.Item1);
 
             Action<IOutRef> action = (Action<IOutRef>)result.Item2;

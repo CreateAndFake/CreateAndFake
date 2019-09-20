@@ -8,17 +8,18 @@ using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
-    /// <summary>Verifies behavior.</summary>
+    /// <summary>Handles testing create hints.</summary>
+    /// <typeparam name="T">Create hint to test.</typeparam>
     public abstract class CreateHintTestBase<T> where T : CreateHint
     {
         /// <summary>Instance to test with.</summary>
         protected T TestInstance { get; }
 
         /// <summary>Types that can be created by the hint.</summary>
-        private readonly IEnumerable<Type> m_ValidTypes;
+        private readonly IEnumerable<Type> _validTypes;
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private readonly IEnumerable<Type> m_InvalidTypes;
+        private readonly IEnumerable<Type> _invalidTypes;
 
         /// <summary>Sets up the tests.</summary>
         /// <param name="testInstance">Instance to test with.</param>
@@ -27,8 +28,8 @@ namespace CreateAndFakeTests.TestBases
         protected CreateHintTestBase(T testInstance, IEnumerable<Type> validTypes, IEnumerable<Type> invalidTypes)
         {
             TestInstance = testInstance;
-            m_ValidTypes = validTypes ?? Type.EmptyTypes;
-            m_InvalidTypes = invalidTypes ?? Type.EmptyTypes;
+            _validTypes = validTypes ?? Type.EmptyTypes;
+            _invalidTypes = invalidTypes ?? Type.EmptyTypes;
         }
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>
@@ -42,7 +43,7 @@ namespace CreateAndFakeTests.TestBases
         [Fact]
         public void TryCreate_SupportsValidTypes()
         {
-            foreach (Type type in m_ValidTypes)
+            foreach (Type type in _validTypes)
             {
                 (bool, object) result = TestInstance.TryCreate(type, CreateChainer());
 
@@ -65,7 +66,7 @@ namespace CreateAndFakeTests.TestBases
         [Fact]
         public void TryCreate_InvalidTypesFail()
         {
-            foreach (Type type in m_InvalidTypes)
+            foreach (Type type in _invalidTypes)
             {
                 Tools.Asserter.Is((false, (object)null), TestInstance.TryCreate(type, CreateChainer()),
                     "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");

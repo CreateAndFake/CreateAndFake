@@ -15,7 +15,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         protected override bool Supports(object expected, object actual, ValuerChainer valuer)
         {
             Type objectType = expected?.GetType();
-            return expected == null
+            return objectType == null
                 || actual == null
                 || objectType != actual.GetType()
                 || objectType.IsPrimitive

@@ -11,20 +11,19 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class StringCreateHintTests : CreateHintTestBase<StringCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly StringCreateHint s_TestInstance = new StringCreateHint();
+        private static readonly StringCreateHint _TestInstance = new StringCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[] { typeof(string) };
+        private static readonly Type[] _ValidTypes = new[] { typeof(string) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public StringCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public StringCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies the hint creates strings within bounds.</summary>
         [Fact]
-        public static void TryCreate_SizeConstraintsWork()
+        internal static void TryCreate_SizeConstraintsWork()
         {
             int minSize = 2;
             int range = 3;
@@ -39,14 +38,13 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
             }
         }
 
-        /// <summary>Verifies the hint creates strings with the chars specified.</summary>
         [Fact]
-        public static void TryCreate_UsesCharSet()
+        internal static void TryCreate_UsesCharSet()
         {
             StringCreateHint hint = new StringCreateHint(3, 0, "a");
             for (int i = 0; i < 100; i++)
             {
-                Tools.Asserter.Is((true, (object)"aaa"), hint.TryCreate(typeof(string), CreateChainer()));
+                Tools.Asserter.Is((true, "aaa" as object), hint.TryCreate(typeof(string), CreateChainer()));
             }
 
             StringCreateHint hint2 = new StringCreateHint(3, 0, "ab");

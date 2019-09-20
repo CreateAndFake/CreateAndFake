@@ -6,7 +6,7 @@ namespace CreateAndFake.Design.Randomization
     public sealed class SecureRandom : ValueRandom
     {
         /// <summary>Source generator used for random bytes.</summary>
-        private static readonly RandomNumberGenerator s_Gen = RandomNumberGenerator.Create();
+        private static readonly RandomNumberGenerator _Gen = RandomNumberGenerator.Create();
 
         /// <summary>Sets up the randomizer.</summary>
         /// <param name="onlyValidValues">Option to prevent generating invalid values.</param>
@@ -18,7 +18,7 @@ namespace CreateAndFake.Design.Randomization
         protected override byte[] NextBytes(short length)
         {
             byte[] buffer = new byte[length];
-            s_Gen.GetBytes(buffer);
+            _Gen.GetBytes(buffer);
             return buffer;
         }
     }

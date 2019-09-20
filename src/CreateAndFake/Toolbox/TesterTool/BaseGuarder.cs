@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -28,6 +29,29 @@ namespace CreateAndFake.Toolbox.TesterTool
             Fixer = fixer ?? throw new ArgumentNullException(nameof(fixer));
             Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
             Timeout = timeout;
+        }
+
+        /// <summary>Gets all testable constructors on a type.</summary>
+        /// <param name="type">Type with the constructors to test.</param>
+        /// <returns>Found contructors.</returns>
+        protected static IEnumerable<ConstructorInfo> FindAllConstructors(Type type)
+        {
+            return type
+                .GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(c => c.IsPublic || c.IsAssembly || c.IsFamilyOrAssembly)
+                .Where(c => !c.IsPrivate);
+        }
+
+        /// <summary>Gets all testable methods on a type.</summary>
+        /// <param name="type">Type with the methods to test.</param>
+        /// <param name="kind">Instance, static, or both.</param>
+        /// <returns>Found methods.</returns>
+        protected static IEnumerable<MethodInfo> FindAllMethods(Type type, BindingFlags kind)
+        {
+            return type
+                .GetMethods(kind | BindingFlags.Public | BindingFlags.NonPublic)
+                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+                .Where(m => !m.IsPrivate);
         }
 
         /// <summary>Calls all methods to test parameter being set to null.</summary>
@@ -70,7 +94,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                     if (result is IEnumerable collection)
                     {
                         // Required to run through yield return methods.
-                        return collection?.OfType<object>().ToArray();
+                        return collection.OfType<object>().ToArray();
                     }
                     else
                     {

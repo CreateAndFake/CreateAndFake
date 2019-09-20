@@ -9,11 +9,12 @@ using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
-    /// <summary>Verifies behavior.</summary>
+    /// <summary>Handles testing value random classes.</summary>
+    /// <typeparam name="T">Value random type to test.</typeparam>
     public abstract class ValueRandomTestBase<T> where T : ValueRandom
     {
         /// <summary>Instance to test with.</summary>
-        private static ValueRandom s_TestInstance = Tools.Randomizer.Create<T>();
+        private static readonly ValueRandom _TestInstance = Tools.Randomizer.Create<T>();
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
@@ -33,83 +34,83 @@ namespace CreateAndFakeTests.TestBases
         [Fact]
         public void Supports_TypeCoverage()
         {
-            Tools.Asserter.Is(true, s_TestInstance.Supports<double>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<ushort>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<ulong>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<float>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<short>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<uint>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<long>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<char>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<int>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<byte>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<sbyte>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<bool>());
-            Tools.Asserter.Is(true, s_TestInstance.Supports<decimal>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<double>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<ushort>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<ulong>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<float>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<short>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<uint>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<long>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<char>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<int>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<byte>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<sbyte>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<bool>());
+            Tools.Asserter.Is(true, _TestInstance.Supports<decimal>());
         }
 
         /// <summary>Verifies an invalid type is not supported.</summary>
         [Fact]
         public void Supports_InvalidTypeFalse()
         {
-            Tools.Asserter.Is(false, s_TestInstance.Supports(typeof(object)));
+            Tools.Asserter.Is(false, _TestInstance.Supports(typeof(object)));
         }
 
         /// <summary>Verifies intended value types work.</summary>
         [Fact]
         public void Next_TypeCoverage()
         {
-            s_TestInstance.Next<double>();
-            s_TestInstance.Next<ushort>();
-            s_TestInstance.Next<ulong>();
-            s_TestInstance.Next<float>();
-            s_TestInstance.Next<short>();
-            s_TestInstance.Next<uint>();
-            s_TestInstance.Next<long>();
-            s_TestInstance.Next<char>();
-            s_TestInstance.Next<int>();
-            s_TestInstance.Next<byte>();
-            s_TestInstance.Next<sbyte>();
-            s_TestInstance.Next<decimal>();
-            s_TestInstance.Next<bool>();
+            _TestInstance.Next<double>();
+            _TestInstance.Next<ushort>();
+            _TestInstance.Next<ulong>();
+            _TestInstance.Next<float>();
+            _TestInstance.Next<short>();
+            _TestInstance.Next<uint>();
+            _TestInstance.Next<long>();
+            _TestInstance.Next<char>();
+            _TestInstance.Next<int>();
+            _TestInstance.Next<byte>();
+            _TestInstance.Next<sbyte>();
+            _TestInstance.Next<decimal>();
+            _TestInstance.Next<bool>();
         }
 
         /// <summary>Verifies intended value types work.</summary>
         [Fact]
         public void Next_MaxTypeCoverage()
         {
-            s_TestInstance.Next(double.MaxValue);
-            s_TestInstance.Next(ushort.MaxValue);
-            s_TestInstance.Next(ulong.MaxValue);
-            s_TestInstance.Next(float.MaxValue);
-            s_TestInstance.Next(short.MaxValue);
-            s_TestInstance.Next(uint.MaxValue);
-            s_TestInstance.Next(long.MaxValue);
-            s_TestInstance.Next(char.MaxValue);
-            s_TestInstance.Next(int.MaxValue);
-            s_TestInstance.Next(byte.MaxValue);
-            s_TestInstance.Next(sbyte.MaxValue);
-            s_TestInstance.Next(decimal.MaxValue);
-            s_TestInstance.Next(true);
+            _TestInstance.Next(double.MaxValue);
+            _TestInstance.Next(ushort.MaxValue);
+            _TestInstance.Next(ulong.MaxValue);
+            _TestInstance.Next(float.MaxValue);
+            _TestInstance.Next(short.MaxValue);
+            _TestInstance.Next(uint.MaxValue);
+            _TestInstance.Next(long.MaxValue);
+            _TestInstance.Next(char.MaxValue);
+            _TestInstance.Next(int.MaxValue);
+            _TestInstance.Next(byte.MaxValue);
+            _TestInstance.Next(sbyte.MaxValue);
+            _TestInstance.Next(decimal.MaxValue);
+            _TestInstance.Next(true);
         }
 
         /// <summary>Verifies intended value types work.</summary>
         [Fact]
         public void Next_MinTypeCoverage()
         {
-            s_TestInstance.Next(double.MinValue, double.MaxValue);
-            s_TestInstance.Next(ushort.MinValue, ushort.MaxValue);
-            s_TestInstance.Next(ulong.MinValue, ulong.MaxValue);
-            s_TestInstance.Next(float.MinValue, float.MaxValue);
-            s_TestInstance.Next(short.MinValue, short.MaxValue);
-            s_TestInstance.Next(uint.MinValue, uint.MaxValue);
-            s_TestInstance.Next(long.MinValue, long.MaxValue);
-            s_TestInstance.Next(char.MinValue, char.MaxValue);
-            s_TestInstance.Next(int.MinValue, int.MaxValue);
-            s_TestInstance.Next(byte.MinValue, byte.MaxValue);
-            s_TestInstance.Next(sbyte.MinValue, sbyte.MaxValue);
-            s_TestInstance.Next(decimal.MinValue, decimal.MaxValue);
-            s_TestInstance.Next(false, true);
+            _TestInstance.Next(double.MinValue, double.MaxValue);
+            _TestInstance.Next(ushort.MinValue, ushort.MaxValue);
+            _TestInstance.Next(ulong.MinValue, ulong.MaxValue);
+            _TestInstance.Next(float.MinValue, float.MaxValue);
+            _TestInstance.Next(short.MinValue, short.MaxValue);
+            _TestInstance.Next(uint.MinValue, uint.MaxValue);
+            _TestInstance.Next(long.MinValue, long.MaxValue);
+            _TestInstance.Next(char.MinValue, char.MaxValue);
+            _TestInstance.Next(int.MinValue, int.MaxValue);
+            _TestInstance.Next(byte.MinValue, byte.MaxValue);
+            _TestInstance.Next(sbyte.MinValue, sbyte.MaxValue);
+            _TestInstance.Next(decimal.MinValue, decimal.MaxValue);
+            _TestInstance.Next(false, true);
         }
 
         /// <summary>Verifies backup stumble behavior works.</summary>
@@ -121,11 +122,11 @@ namespace CreateAndFakeTests.TestBases
 
             await Limiter.Myriad.Repeat(() =>
             {
-                int result = s_TestInstance.Next(min, max);
+                int result = _TestInstance.Next(min, max);
 
                 Tools.Asserter.Is(true, result >= min, "Value lower than min was returned.");
                 Tools.Asserter.Is(true, result < max, "Value higher than max was returned.");
-            });
+            }).ConfigureAwait(false);
         }
 
         /// <summary>Verifies that an invalid type throws.</summary>
@@ -133,21 +134,21 @@ namespace CreateAndFakeTests.TestBases
         public void Next_InvalidTypeThrows()
         {
             Tools.Asserter.Throws<NotSupportedException>(
-                () => s_TestInstance.Next(typeof(object)));
+                () => _TestInstance.Next(typeof(object)));
         }
 
         /// <summary>Verifies the same min and max can be used.</summary>
         [Fact]
         public void Next_SameMinMaxWorks()
         {
-            Tools.Asserter.Is(0, s_TestInstance.Next(0, 0));
+            Tools.Asserter.Is(0, _TestInstance.Next(0, 0));
         }
 
         /// <summary>Verifies different values are generated.</summary>
         [Fact]
         public void Next_Variation()
         {
-            Tools.Asserter.IsNot(s_TestInstance.Next<long>(), s_TestInstance.Next<long>());
+            Tools.Asserter.IsNot(_TestInstance.Next<long>(), _TestInstance.Next<long>());
         }
 
         /// <summary>Verifies unsupported types don't work.</summary>
@@ -155,10 +156,10 @@ namespace CreateAndFakeTests.TestBases
         public void Next_UnsupportedTypeThrows()
         {
             Tools.Asserter.Throws<NotSupportedException>(
-                () => s_TestInstance.Next<StructSample>());
+                () => _TestInstance.Next<StructSample>());
 
             Tools.Asserter.Throws<NotSupportedException>(
-                () => s_TestInstance.Next(Tools.Randomizer.Create<StructSample>()));
+                () => _TestInstance.Next(Tools.Randomizer.Create<StructSample>()));
         }
 
         /// <summary>Verifies max is excluded as a possible result.</summary>
@@ -170,7 +171,7 @@ namespace CreateAndFakeTests.TestBases
 
             for (int i = 0; i < 25000; i++)
             {
-                double result = s_TestInstance.Next(min, max);
+                double result = _TestInstance.Next(min, max);
 
                 Tools.Asserter.Is(true, result >= min, "Value lower than min was returned.");
                 Tools.Asserter.Is(true, result < max, "Value higher than max was returned.");
@@ -186,7 +187,7 @@ namespace CreateAndFakeTests.TestBases
 
             for (int i = 0; i < 25000; i++)
             {
-                decimal result = s_TestInstance.Next(min, max);
+                decimal result = _TestInstance.Next(min, max);
 
                 Tools.Asserter.Is(true, result >= min, "Value lower than min was returned.");
                 Tools.Asserter.Is(true, result < max, "Value higher than max was returned.");
@@ -198,23 +199,23 @@ namespace CreateAndFakeTests.TestBases
         public void Next_MinGreaterMaxThrows()
         {
             Tools.Asserter.Throws<ArgumentOutOfRangeException>(
-                () => s_TestInstance.Next(0, -1));
+                () => _TestInstance.Next(0, -1));
         }
 
         /// <summary>Verifies collections work.</summary>
         [Theory, RandomData]
         public void NextItem_CollectionsWork(ICollection<string> data)
         {
-            Tools.Asserter.Is(true, data.Contains(s_TestInstance.NextItem(data)));
+            Tools.Asserter.Is(true, data?.Contains(_TestInstance.NextItem(data)));
         }
 
         /// <summary>Verifies linq enumerables work.</summary>
         [Fact]
         public void NextItem_YieldWorks()
         {
-            Tools.Asserter.IsNot(null, s_TestInstance.NextItem(CreateEnum(1)));
-            Tools.Asserter.IsNot(null, s_TestInstance.NextItem(CreateEnum(2)));
-            Tools.Asserter.IsNot(null, s_TestInstance.NextItem(CreateEnum(3)));
+            Tools.Asserter.IsNot(null, _TestInstance.NextItem(CreateEnum(1)));
+            Tools.Asserter.IsNot(null, _TestInstance.NextItem(CreateEnum(2)));
+            Tools.Asserter.IsNot(null, _TestInstance.NextItem(CreateEnum(3)));
         }
 
         /// <summary>Verifies empty enumerables throw.</summary>
@@ -222,10 +223,10 @@ namespace CreateAndFakeTests.TestBases
         public void NextItem_EmptyThrows()
         {
             Tools.Asserter.Throws<ArgumentOutOfRangeException>(
-                () => s_TestInstance.NextItem(Array.Empty<object>()));
+                () => _TestInstance.NextItem(Array.Empty<object>()));
 
             Tools.Asserter.Throws<InvalidOperationException>(
-                () => s_TestInstance.NextItem(CreateEnum(0)));
+                () => _TestInstance.NextItem(CreateEnum(0)));
         }
 
         /// <summary>Helper for creating linq enumerables.</summary>

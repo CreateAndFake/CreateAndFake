@@ -6,20 +6,21 @@ using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
-    /// <summary>Verifies behavior.</summary>
+    /// <summary>Handles testing copy hints.</summary>
+    /// <typeparam name="T">Copy hint to test.</typeparam>
     public abstract class CopyHintTestBase<T> where T : CopyHint, new()
     {
         /// <summary>Instance to test with.</summary>
         protected T TestInstance { get; } = new T();
 
         /// <summary>Types that can be copied by the hint.</summary>
-        private readonly IEnumerable<Type> m_ValidTypes;
+        private readonly IEnumerable<Type> _validTypes;
 
         /// <summary>Types that can't be copied by the hint.</summary>
-        private readonly IEnumerable<Type> m_InvalidTypes;
+        private readonly IEnumerable<Type> _invalidTypes;
 
         /// <summary>If the hint copies by reference instead for value types.</summary>
-        private readonly bool m_CopiesByRef;
+        private readonly bool _copiesByRef;
 
         /// <summary>Sets up the tests.</summary>
         /// <param name="validTypes">Types that can be copied by the hint.</param>
@@ -27,9 +28,9 @@ namespace CreateAndFakeTests.TestBases
         /// <param name="copiesByRef">If the hint copies by reference instead for value types.</param>
         protected CopyHintTestBase(IEnumerable<Type> validTypes, IEnumerable<Type> invalidTypes, bool copiesByRef = false)
         {
-            m_ValidTypes = validTypes ?? Type.EmptyTypes;
-            m_InvalidTypes = invalidTypes ?? Type.EmptyTypes;
-            m_CopiesByRef = copiesByRef;
+            _validTypes = validTypes ?? Type.EmptyTypes;
+            _invalidTypes = invalidTypes ?? Type.EmptyTypes;
+            _copiesByRef = copiesByRef;
         }
 
         /// <summary>Verifies null reference exceptions are prevented.</summary>
@@ -43,7 +44,7 @@ namespace CreateAndFakeTests.TestBases
         [Fact]
         public void TryCopy_SupportsValidTypes()
         {
-            foreach (Type type in m_ValidTypes)
+            foreach (Type type in _validTypes)
             {
                 object data = Tools.Randomizer.Create(type);
                 (bool, object) result = TestInstance.TryCopy(data, CreateChainer());
@@ -51,7 +52,7 @@ namespace CreateAndFakeTests.TestBases
                 Tools.Asserter.Is((true, data), result,
                     "Hint '" + typeof(T).Name + "' failed to clone type '" + type.Name + "'.");
 
-                if (m_CopiesByRef || data is string)
+                if (_copiesByRef || data is string)
                 {
                     Tools.Asserter.ReferenceEqual(data, result.Item2,
                         "Hint '" + typeof(T).Name + "' expected to copy value types by ref of type '" + type.Name + "'.");
@@ -71,7 +72,7 @@ namespace CreateAndFakeTests.TestBases
         [Fact]
         public void TryCopy_InvalidTypesFail()
         {
-            foreach (Type type in m_InvalidTypes)
+            foreach (Type type in _invalidTypes)
             {
                 object data = Tools.Randomizer.Create(type);
                 (bool, object) result = TestInstance.TryCopy(data, CreateChainer());

@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.TesterTool
     internal sealed class NullGuarder : BaseGuarder
     {
         /// <summary>Handles common test scenarios.</summary>
-        private readonly Asserter m_Asserter;
+        private readonly Asserter _asserter;
 
         /// <summary>Sets up the guarder capabilities.</summary>
         /// <param name="fixer">Handles generic resolution.</param>
@@ -20,7 +20,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         internal NullGuarder(GenericFixer fixer, IRandomizer randomizer, Asserter asserter, TimeSpan timeout)
             : base(fixer, randomizer, timeout)
         {
-            m_Asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
+            _asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
         }
 
         /// <summary>
@@ -36,10 +36,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            foreach (ConstructorInfo constructor in type
-                .GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(c => c.IsPublic || c.IsAssembly || c.IsFamily || c.IsFamilyOrAssembly)
-                .Where(c => !c.IsPrivate))
+            foreach (ConstructorInfo constructor in FindAllConstructors(type))
             {
                 PreventsNullRefException(null, constructor, callAllMethods, injectionValues);
             }
@@ -56,11 +53,8 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
-            foreach (MethodInfo method in instance.GetType()
-                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
-                .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
-                .Where(m => !m.IsPrivate))
+            foreach (MethodInfo method in FindAllMethods(instance.GetType(), BindingFlags.Instance)
+                .Where(m => m.Name != "Finalize" && m.Name != "Dispose"))
             {
                 PreventsNullRefException(instance, Fixer.FixMethod(method), false, injectionValues);
             }
@@ -79,10 +73,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            foreach (MethodInfo method in type
-                .GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
-                .Where(m => !m.IsPrivate))
+            foreach (MethodInfo method in FindAllMethods(type, BindingFlags.Static))
             {
                 PreventsNullRefException(null, Fixer.FixMethod(method),
                     callAllMethods && method.ReturnType.Inherits(type), injectionValues);
@@ -153,12 +144,12 @@ namespace CreateAndFake.Toolbox.TesterTool
             if (actual is ArgumentNullException inner
                 && testOrigin.Name == inner.TargetSite.Name)
             {
-                m_Asserter.Is(testParam.Name, inner.ParamName,
+                _asserter.Is(testParam.Name, inner.ParamName,
                     $"Incorrect name provided for exception {details}.");
             }
             else
             {
-                m_Asserter.Is(false, actual is NullReferenceException,
+                _asserter.Is(false, actual is NullReferenceException,
                     $"Null reference exception encountered {details}.");
             }
         }

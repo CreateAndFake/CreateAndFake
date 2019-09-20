@@ -9,7 +9,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
     public sealed class StatelessCompareHint : CompareHint
     {
         /// <summary>Flags used to find properties and fields.</summary>
-        private const BindingFlags s_Scope = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+        private const BindingFlags _Scope = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
         /// <summary>Determines if the objects are supported by the hint.</summary>
         /// <param name="expected">First object under question.</param>
@@ -22,8 +22,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             if (actual == null) throw new ArgumentNullException(nameof(actual));
 
             Type type = expected.GetType();
-            return !type.GetProperties(s_Scope).Any(p => p.CanRead)
-                && !type.GetFields(s_Scope).Any();
+            return !type.GetProperties(_Scope).Any(p => p.CanRead)
+                && !type.GetFields(_Scope).Any();
         }
 
         /// <summary>Finds the differences between two objects.</summary>

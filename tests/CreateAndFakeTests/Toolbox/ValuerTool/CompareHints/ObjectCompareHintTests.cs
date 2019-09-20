@@ -14,22 +14,21 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class ObjectCompareHintTests : CompareHintTestBase<ObjectCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly ObjectCompareHint s_TestInstance
+        private static readonly ObjectCompareHint _TestInstance
             = new ObjectCompareHint(BindingFlags.Public | BindingFlags.Instance);
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes
+        private static readonly Type[] _ValidTypes
             = new[] { typeof(object), typeof(DataHolderSample), typeof(FieldSample) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = Type.EmptyTypes;
+        private static readonly Type[] _InvalidTypes = Type.EmptyTypes;
 
         /// <summary>Sets up the tests.</summary>
-        public ObjectCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public ObjectCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies the hint finds differences comparing different objects.</summary>
         [Fact]
-        public void Compare_DifferentObjectsDifferences()
+        internal void Compare_DifferentObjectsDifferences()
         {
             var expected = new { Value = Tools.Randomizer.Create<string>() };
             var actual = new { Value = Tools.Randomizer.Create<string>() };

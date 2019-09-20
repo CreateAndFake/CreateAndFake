@@ -12,7 +12,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
     public sealed class Valuer : IValuer, IDuplicatable
     {
         /// <summary>Default set of hints to use for comparisons.</summary>
-        private static readonly CompareHint[] s_DefaultHints = new CompareHint[]
+        private static readonly CompareHint[] _DefaultHints = new CompareHint[]
         {
             new EarlyFailCompareHint(),
             new FakedCompareHint(),
@@ -28,21 +28,21 @@ namespace CreateAndFake.Toolbox.ValuerTool
         };
 
         /// <summary>Hints used to compare specific types.</summary>
-        private readonly IEnumerable<CompareHint> m_Hints;
+        private readonly IEnumerable<CompareHint> _hints;
 
         /// <summary>Sets up the valuer capabilities.</summary>
         /// <param name="includeDefaultHints">If the default set of hints should be added.</param>
         /// <param name="hints">Hints used to compare specific types.</param>
         public Valuer(bool includeDefaultHints = true, params CompareHint[] hints)
         {
-            var inputHints = hints ?? Enumerable.Empty<CompareHint>();
+            IEnumerable<CompareHint> inputHints = hints ?? Enumerable.Empty<CompareHint>();
             if (includeDefaultHints)
             {
-                m_Hints = inputHints.Concat(s_DefaultHints).ToArray();
+                _hints = inputHints.Concat(_DefaultHints).ToArray();
             }
             else
             {
-                m_Hints = inputHints.ToArray();
+                _hints = inputHints.ToArray();
             }
         }
 
@@ -66,6 +66,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Forwarded.")]
         public int GetHashCode(object item)
         {
+            string typeName = item?.GetType().Name;
             try
             {
                 return GetHashCode(item, new ValuerChainer(this, GetHashCode, Compare));
@@ -73,7 +74,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             catch (InsufficientExecutionStackException)
             {
                 throw new InsufficientExecutionStackException(
-                    $"Ran into infinite generation trying to hash type '{item.GetType().Name}'.");
+                    $"Ran into infinite generation trying to hash type '{typeName}'.");
             }
         }
 
@@ -84,7 +85,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <exception cref="NotSupportedException">If no hint supports hashing the object.</exception>
         private int GetHashCode(object item, ValuerChainer chainer)
         {
-            (bool, int) result = m_Hints
+            (bool, int) result = _hints
                 .Select(h => h.TryGetHashCode(item, chainer))
                 .FirstOrDefault(r => r.Item1);
 
@@ -118,6 +119,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
         public IEnumerable<Difference> Compare(object expected, object actual)
         {
+            string typeName = (expected ?? actual)?.GetType().Name;
             try
             {
                 return Compare(expected, actual, new ValuerChainer(this, GetHashCode, Compare));
@@ -125,7 +127,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             catch (InsufficientExecutionStackException)
             {
                 throw new InsufficientExecutionStackException(
-                    $"Ran into infinite generation trying to compare type '{expected.GetType().Name}'.");
+                    $"Ran into infinite generation trying to compare type '{typeName}'.");
             }
         }
 
@@ -142,7 +144,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
                 return Enumerable.Empty<Difference>();
             }
 
-            (bool, IEnumerable<Difference>) result = m_Hints
+            (bool, IEnumerable<Difference>) result = _hints
                 .Select(h => h.TryCompare(expected, actual, chainer))
                 .FirstOrDefault(r => r.Item1);
 
@@ -168,7 +170,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
-            return new Valuer(false, duplicator.Copy(m_Hints).ToArray());
+            return new Valuer(false, duplicator.Copy(_hints).ToArray());
         }
     }
 }

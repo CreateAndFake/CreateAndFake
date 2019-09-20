@@ -11,13 +11,13 @@ namespace CreateAndFake.Toolbox.RandomizerTool
     public sealed class RandomizerChainer
     {
         /// <summary>Callback to the randomizer to create child values.</summary>
-        private readonly Func<Type, RandomizerChainer, object> m_Randomizer;
+        private readonly Func<Type, RandomizerChainer, object> _randomizer;
 
         /// <summary>Types not to create as to prevent infinite recursion.</summary>
-        private readonly IEnumerable<Type> m_History;
+        private readonly IEnumerable<Type> _history;
 
         /// <summary>Provides stubs.</summary>
-        private readonly IFaker m_Faker;
+        private readonly IFaker _faker;
 
         /// <summary>Value generator to use for base randomization.</summary>
         public IRandom Gen { get; }
@@ -28,11 +28,11 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <param name="randomizer">Callback to the randomizer to create child values.</param>
         public RandomizerChainer(IFaker faker, IRandom gen, Func<Type, RandomizerChainer, object> randomizer)
         {
-            m_Faker = faker ?? throw new ArgumentNullException(nameof(faker));
+            _faker = faker ?? throw new ArgumentNullException(nameof(faker));
             Gen = gen ?? throw new ArgumentNullException(nameof(gen));
-            m_Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
+            _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
 
-            m_History = Array.Empty<Type>();
+            _history = Array.Empty<Type>();
         }
 
         /// <summary>Sets up the callback functionality.</summary>
@@ -41,16 +41,16 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         private RandomizerChainer(RandomizerChainer prevChainer, Type createdContainer)
         {
             Gen = prevChainer.Gen;
-            m_Faker = prevChainer.m_Faker;
-            m_Randomizer = prevChainer.m_Randomizer;
+            _faker = prevChainer._faker;
+            _randomizer = prevChainer._randomizer;
 
             if (createdContainer != null)
             {
-                m_History = new HashSet<Type>(prevChainer.m_History.Append(createdContainer));
+                _history = new HashSet<Type>(prevChainer._history.Append(createdContainer));
             }
             else
             {
-                m_History = prevChainer.m_History;
+                _history = prevChainer._history;
             }
         }
 
@@ -67,7 +67,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <returns>True if already created; false otherwise.</returns>
         public bool AlreadyCreated(Type type)
         {
-            return m_History.Contains(type);
+            return _history.Contains(type);
         }
 
         /// <summary>Calls the randomizer to create a random instance.</summary>
@@ -87,11 +87,11 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         {
             if (AlreadyCreated(type))
             {
-                throw new InfiniteLoopException(type, m_History);
+                throw new InfiniteLoopException(type, _history);
             }
 
             RuntimeHelpers.EnsureSufficientExecutionStack();
-            return m_Randomizer.Invoke(type, new RandomizerChainer(this, createdContainer));
+            return _randomizer.Invoke(type, new RandomizerChainer(this, createdContainer));
         }
 
         /// <summary>Calls the faker to create a stub instance.</summary>
@@ -99,7 +99,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <returns>The stubbed instance.</returns>
         public Fake<T> Stub<T>()
         {
-            return m_Faker.Stub<T>();
+            return _faker.Stub<T>();
         }
 
         /// <summary>Calls the faker to create a stub instance.</summary>
@@ -107,7 +107,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <returns>The stubbed instance.</returns>
         public Fake Stub(Type parent)
         {
-            return m_Faker.Stub(parent);
+            return _faker.Stub(parent);
         }
     }
 }

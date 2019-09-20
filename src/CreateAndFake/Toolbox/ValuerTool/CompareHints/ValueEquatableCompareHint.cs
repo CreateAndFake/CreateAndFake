@@ -9,7 +9,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
     public sealed class ValueEquatableCompareHint : CompareHint<IValueEquatable>
     {
         /// <summary>Compares equatables by value as well.</summary>
-        private static readonly ObjectCompareHint s_NestedHint
+        private static readonly ObjectCompareHint _NestedHint
             = new ObjectCompareHint(BindingFlags.Public | BindingFlags.Instance);
 
         /// <summary>Finds the differences between two objects.</summary>
@@ -37,7 +37,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             {
                 yield return new Difference(".ValuesEqual", new Difference(true, false));
 
-                (bool, IEnumerable<Difference>) byValues = s_NestedHint.TryCompare(expected, actual, valuer);
+                (bool, IEnumerable<Difference>) byValues = _NestedHint.TryCompare(expected, actual, valuer);
                 if (byValues.Item1)
                 {
                     foreach (Difference difference in byValues.Item2)

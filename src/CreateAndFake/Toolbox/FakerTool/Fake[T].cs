@@ -23,10 +23,9 @@ namespace CreateAndFake.Toolbox.FakerTool
 
         /// <summary>Switches the fake to a different type.</summary>
         /// <param name="baseFake">Created fake with the extra type.</param>
-        [SuppressMessage("Sonar", "S1481:RemoveUnusedLocals", Justification = "Required for cast check.")]
         public Fake(Fake baseFake) : base(baseFake)
         {
-            T check = (T)base.Dummy;
+            _ = (T)base.Dummy;
         }
 
         /// <summary>Ties a set method call to fake behavior.</summary>
@@ -118,6 +117,8 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Method name, generics, and args.</returns>
         private static (MethodInfo, Type[], object[]) ExtractCall(LambdaExpression method, bool onlySetter)
         {
+            if (method == null) throw new ArgumentNullException(nameof(method));
+
             if (!onlySetter && method.Body is MethodCallExpression methodCall)
             {
                 Type[] generics = (methodCall.Method.IsGenericMethod

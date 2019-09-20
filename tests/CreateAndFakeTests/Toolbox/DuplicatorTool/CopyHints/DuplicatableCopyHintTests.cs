@@ -9,12 +9,12 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
     public sealed class DuplicatableCopyHintTests : CopyHintTestBase<DuplicatableCopyHint>
     {
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[] { typeof(IDuplicatable) };
+        private static readonly Type[] _ValidTypes = new[] { typeof(IDuplicatable) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public DuplicatableCopyHintTests() : base(s_ValidTypes, s_InvalidTypes) { }
+        public DuplicatableCopyHintTests() : base(_ValidTypes, _InvalidTypes) { }
     }
 }

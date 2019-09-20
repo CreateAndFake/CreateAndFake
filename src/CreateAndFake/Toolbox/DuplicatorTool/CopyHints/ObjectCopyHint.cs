@@ -9,14 +9,14 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
     public sealed class ObjectCopyHint : CopyHint
     {
         /// <summary>Flags used to identify members.</summary>
-        private const BindingFlags s_MemberFlags = BindingFlags.Public
+        private const BindingFlags _MemberFlags = BindingFlags.Public
             | BindingFlags.NonPublic | BindingFlags.Instance;
 
         /// <summary>Tries to deep clone an object.</summary>
         /// <param name="source">Object to clone.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>If the type could be cloned and the cloned instance.</returns>
-        protected internal override sealed (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
+        protected internal sealed override (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
             if (source == null) return (true, null);
@@ -69,10 +69,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             }
             else
             {
-                PropertyInfo[] props = type.GetProperties(s_MemberFlags).Where(p => p.CanRead).ToArray();
-                FieldInfo[] fields = type.GetFields(s_MemberFlags).ToArray();
+                PropertyInfo[] props = type.GetProperties(_MemberFlags).Where(p => p.CanRead).ToArray();
+                FieldInfo[] fields = type.GetFields(_MemberFlags).ToArray();
 
-                return type.GetConstructors(s_MemberFlags)
+                return type.GetConstructors(_MemberFlags)
                     .Where(c => !c.IsPrivate)
                     .OrderByDescending(c => c.GetParameters().Length)
                     .Select(c => TryCreate(source, duplicator, c, props, fields))

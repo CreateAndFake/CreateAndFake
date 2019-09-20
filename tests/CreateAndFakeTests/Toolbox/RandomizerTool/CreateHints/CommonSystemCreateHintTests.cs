@@ -11,10 +11,10 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class CommonSystemCreateHintTests : CreateHintTestBase<CommonSystemCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly CommonSystemCreateHint s_TestInstance = new CommonSystemCreateHint();
+        private static readonly CommonSystemCreateHint _TestInstance = new CommonSystemCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[]
+        private static readonly Type[] _ValidTypes = new[]
         {
             typeof(CultureInfo), typeof(TimeSpan), typeof(DateTime), typeof(Assembly), typeof(AssemblyName), typeof(Guid),
             typeof(Type), typeof(Type).GetType(), typeof(ConstructorInfo), typeof(PropertyInfo), typeof(MethodInfo),
@@ -22,18 +22,17 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public CommonSystemCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public CommonSystemCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies the hint keeps trying.</summary>
         [Fact]
-        public static void TryCreate_ContinuesUntilMemberFound()
+        internal static void TryCreate_ContinuesUntilMemberFound()
         {
             for (int i = 0; i < 50; i++)
             {
-                s_TestInstance.TryCreate(typeof(FieldInfo), CreateChainer());
+                _TestInstance.TryCreate(typeof(FieldInfo), CreateChainer());
             }
         }
     }

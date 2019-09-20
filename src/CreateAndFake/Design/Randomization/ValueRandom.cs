@@ -8,7 +8,7 @@ namespace CreateAndFake.Design.Randomization
     public abstract class ValueRandom : IRandom
     {
         /// <summary>Supported types and the methods used to generate them.</summary>
-        private static readonly IDictionary<Type, Func<ValueRandom, object>> s_Gens
+        private static readonly IDictionary<Type, Func<ValueRandom, object>> _Gens
             = new Dictionary<Type, Func<ValueRandom, object>>
             {
                 { typeof(double), gen => Create(gen, BitConverter.ToDouble, 8,
@@ -27,7 +27,7 @@ namespace CreateAndFake.Design.Randomization
                 { typeof(byte), gen => gen.NextBytes(1)[0] },
                 { typeof(sbyte), gen => (sbyte)gen.Next<byte>() },
                 { typeof(bool), gen => (gen.Next<byte>() > byte.MaxValue / 2) },
-                { typeof(decimal), gen => new Decimal(gen.Next<int>(), gen.Next<int>(),
+                { typeof(decimal), gen => new decimal(gen.Next<int>(), gen.Next<int>(),
                     gen.Next<int>(), gen.Next<bool>(), gen.Next<byte>(29)) }
             };
 
@@ -49,7 +49,7 @@ namespace CreateAndFake.Design.Randomization
         }
 
         /// <summary>All default value types.</summary>
-        public static ICollection<Type> ValueTypes { get; } = s_Gens.Keys;
+        public static ICollection<Type> ValueTypes { get; } = _Gens.Keys;
 
         /// <summary>Option to prevent generating invalid values.</summary>
         protected bool OnlyValidValues { get; }
@@ -79,7 +79,7 @@ namespace CreateAndFake.Design.Randomization
         /// <returns>True if supported; false otherwise.</returns>
         public bool Supports(Type type)
         {
-            return s_Gens.ContainsKey(type);
+            return _Gens.ContainsKey(type);
         }
 
         /// <summary>Generates a random value of the given value type.</summary>
@@ -97,13 +97,15 @@ namespace CreateAndFake.Design.Randomization
         /// <exception cref="NotSupportedException">If the type isn't supported.</exception>
         public object Next(Type type)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
             if (!Supports(type))
             {
                 throw new NotSupportedException($"Type '{type.Name}' not supported.");
             }
             else
             {
-                return s_Gens[type].Invoke(this);
+                return _Gens[type].Invoke(this);
             }
         }
 
@@ -169,11 +171,11 @@ namespace CreateAndFake.Design.Randomization
             // Creates a number in the range of 0.0 to 1.0.
             if (typeof(T) != typeof(decimal))
             {
-                percent = (double)Next<uint>() / UInt32.MaxValue;
+                percent = (double)Next<uint>() / uint.MaxValue;
             }
             else
             {
-                percent = (decimal)Next<uint>() / UInt32.MaxValue;
+                percent = (decimal)Next<uint>() / uint.MaxValue;
             }
 
             checked

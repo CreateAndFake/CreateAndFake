@@ -55,9 +55,13 @@ namespace CreateAndFake.Toolbox.FakerTool
                     return Implementation.DynamicInvoke(args);
                 }
             }
-            catch (TargetInvocationException e)
+            catch (Exception e)
             {
-                ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+                ExceptionDispatchInfo info = (e is TargetInvocationException)
+                    ? ExceptionDispatchInfo.Capture(e.InnerException)
+                    : null;
+
+                info?.Throw();
                 throw;
             }
         }
@@ -113,7 +117,17 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Throw<T>(Times times = null) where T : Exception, new()
         {
-            return Set(() => throw new T(), times);
+            return Throw(new T(), times);
+        }
+
+        /// <summary>Specifies a specific exception behavior for a fake.</summary>
+        /// <typeparam name="T">Exception type to throw if called.</typeparam>
+        /// <param name="exception">Exception to throw.</param>
+        /// <param name="times">Behavior call limit.</param>
+        /// <returns>Instance to set up the mock with.</returns>
+        public static Behavior<VoidType> Throw<T>(T exception, Times times = null) where T : Exception
+        {
+            return Set(() => throw exception, times);
         }
 
         /// <summary>Specifies behavior returning a value for a fake.</summary>
@@ -158,7 +172,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set(
             Action implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -166,7 +182,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T>(
             Action<T> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -174,7 +192,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2>(
             Action<T1, T2> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -182,7 +202,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3>(
             Action<T1, T2, T3> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -190,7 +212,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4>(
             Action<T1, T2, T3, T4> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -198,7 +222,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5>(
             Action<T1, T2, T3, T4, T5> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -206,7 +232,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6>(
             Action<T1, T2, T3, T4, T5, T6> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -214,7 +242,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7>(
             Action<T1, T2, T3, T4, T5, T6, T7> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -222,7 +252,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7, T8>(
             Action<T1, T2, T3, T4, T5, T6, T7, T8> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -230,7 +262,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
             Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -238,7 +272,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(
             Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -246,7 +282,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(
             Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -254,7 +292,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(
             Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -262,7 +302,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(
             Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -270,7 +312,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(
             Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -278,7 +322,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>(
             Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -286,7 +332,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<VoidType> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>(
             Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> implementation, Times times = null)
-            => new Behavior<VoidType>(implementation, times);
+        {
+            return new Behavior<VoidType>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -294,7 +342,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<TOut>(
             Func<TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -302,7 +352,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T, TOut>(
             Func<T, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -310,7 +362,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, TOut>(
             Func<T1, T2, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -318,7 +372,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, TOut>(
             Func<T1, T2, T3, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -326,7 +382,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, TOut>(
             Func<T1, T2, T3, T4, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -334,7 +392,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, TOut>(
             Func<T1, T2, T3, T4, T5, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -342,7 +402,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, TOut>(
             Func<T1, T2, T3, T4, T5, T6, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -350,7 +412,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -358,7 +422,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, T8, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, T8, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -366,7 +432,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -374,7 +442,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -382,7 +452,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -390,7 +462,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -398,7 +472,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -406,7 +482,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -414,7 +492,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
 
         /// <summary>Specifies mock behavior for a fake.</summary>
         /// <param name="implementation">Behavior to invoke for calls.</param>
@@ -422,6 +502,8 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Instance to set up the mock with.</returns>
         public static Behavior<TOut> Set<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TOut>(
             Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TOut> implementation, Times times = null)
-            => new Behavior<TOut>(implementation, times);
+        {
+            return new Behavior<TOut>(implementation, times);
+        }
     }
 }

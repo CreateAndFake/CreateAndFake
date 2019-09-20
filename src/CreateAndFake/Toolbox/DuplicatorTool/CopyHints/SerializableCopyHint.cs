@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -9,7 +8,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
     public sealed class SerializableCopyHint : CopyHint
     {
         /// <summary>Handles the serialization process.</summary>
-        private static readonly IFormatter s_Serializer = new BinaryFormatter();
+        private static readonly IFormatter _Serializer = new BinaryFormatter();
 
         /// <summary>Tries to deep clone an object.</summary>
         /// <param name="source">Object to clone.</param>
@@ -23,9 +22,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             {
                 using (Stream stream = new MemoryStream())
                 {
-                    s_Serializer.Serialize(stream, source);
+                    _Serializer.Serialize(stream, source);
                     stream.Seek(0, SeekOrigin.Begin);
-                    return (true, s_Serializer.Deserialize(stream));
+                    return (true, _Serializer.Deserialize(stream));
                 }
             }
             else

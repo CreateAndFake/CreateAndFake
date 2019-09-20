@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
     public sealed class Duplicator : IDuplicator, IDuplicatable
     {
         /// <summary>Default set of hints to use for copying.</summary>
-        private static readonly CopyHint[] s_DefaultHints = new CopyHint[]
+        private static readonly CopyHint[] _DefaultHints = new CopyHint[]
         {
             new CommonSystemCopyHint(),
             new DeepCloneableCopyHint(),
@@ -24,10 +24,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         };
 
         /// <summary>Verifies duplicates are valid.</summary>
-        private readonly Asserter m_Asserter;
+        private readonly Asserter _asserter;
 
         /// <summary>Hints used to copy specific types.</summary>
-        private readonly IEnumerable<CopyHint> m_Hints;
+        private readonly IEnumerable<CopyHint> _hints;
 
         /// <summary>Sets up the duplicator capabilities.</summary>
         /// <param name="asserter">Verifies duplicates are valid.</param>
@@ -35,16 +35,16 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         /// <param name="hints">Hints used to copy specific types.</param>
         public Duplicator(Asserter asserter, bool includeDefaultHints = true, params CopyHint[] hints)
         {
-            m_Asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
+            _asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
 
-            var inputHints = hints ?? Enumerable.Empty<CopyHint>();
+            IEnumerable<CopyHint> inputHints = hints ?? Enumerable.Empty<CopyHint>();
             if (includeDefaultHints)
             {
-                m_Hints = inputHints.Concat(s_DefaultHints).ToArray();
+                _hints = inputHints.Concat(_DefaultHints).ToArray();
             }
             else
             {
-                m_Hints = inputHints.ToArray();
+                _hints = inputHints.ToArray();
             }
         }
 
@@ -77,13 +77,13 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         {
             if (source == null) return default;
 
-            (bool, object) result = m_Hints
+            (bool, object) result = _hints
                 .Select(h => h.TryCopy(source, chainer))
                 .FirstOrDefault(r => r.Item1);
 
             if (!result.Equals(default))
             {
-                m_Asserter.ValuesEqual(source, result.Item2,
+                _asserter.ValuesEqual(source, result.Item2,
                     $"Type '{source.GetType()}' did not clone properly. " +
                     "Verify/create a hint to generate the type and pass it to the duplicator.");
                 return (T)result.Item2;
@@ -106,7 +106,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
-            return new Duplicator(duplicator.Copy(m_Asserter), false, duplicator.Copy(m_Hints).ToArray());
+            return new Duplicator(duplicator.Copy(_asserter), false, duplicator.Copy(_hints).ToArray());
         }
     }
 }

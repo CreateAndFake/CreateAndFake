@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <param name="type">Type to generate.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
         /// <returns>If the type could be created and the created instance.</returns>
-        protected internal override sealed (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+        protected internal sealed override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));

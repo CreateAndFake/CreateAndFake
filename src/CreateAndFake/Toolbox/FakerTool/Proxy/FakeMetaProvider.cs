@@ -9,13 +9,13 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
     public sealed class FakeMetaProvider : IDuplicatable
     {
         /// <summary>Faked behavior.</summary>
-        private readonly Stack<(CallData, Behavior)> m_Behavior = new Stack<(CallData, Behavior)>();
+        private readonly Stack<(CallData, Behavior)> _behavior = new Stack<(CallData, Behavior)>();
 
         /// <summary>Record of calls made.</summary>
-        private readonly IList<CallData> m_Log = new List<CallData>();
+        private readonly IList<CallData> _log = new List<CallData>();
 
         /// <summary>Number of calls made with no associated behavior.</summary>
-        private int m_DefaultCalls = 0;
+        private int _defaultCalls = 0;
 
         /// <summary>Mutatable for value tooling.</summary>
         public int Identifier { get; set; }
@@ -34,13 +34,13 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             if (behavior == null) throw new ArgumentNullException(nameof(behavior));
             if (log == null) throw new ArgumentNullException(nameof(log));
 
-            foreach (var set in behavior)
+            foreach ((CallData, Behavior) set in behavior)
             {
-                m_Behavior.Push(set);
+                _behavior.Push(set);
             }
             foreach (CallData data in log)
             {
-                m_Log.Add(data);
+                _log.Add(data);
             }
         }
 
@@ -55,12 +55,12 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
             return new FakeMetaProvider(
-                m_Behavior.Reverse().Select(t => duplicator.Copy(t)),
-                m_Log.Select(t => duplicator.Copy(t)))
+                _behavior.Reverse().Select(t => duplicator.Copy(t)),
+                _log.Select(t => duplicator.Copy(t)))
             {
                 Identifier = Identifier,
                 ThrowByDefault = ThrowByDefault,
-                m_DefaultCalls = m_DefaultCalls
+                _defaultCalls = _defaultCalls
             };
         }
 
@@ -72,16 +72,16 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             if (callData == null) throw new ArgumentNullException(nameof(callData));
             if (behavior == null) throw new ArgumentNullException(nameof(behavior));
 
-            m_Behavior.Push((callData, behavior));
+            _behavior.Push((callData, behavior));
         }
 
         /// <summary>Verifies behavior with associated times were called as expected.</summary>
         internal void Verify()
         {
-            var invalids = m_Behavior.Where(t => !t.Item2.HasExpectedCalls()).ToArray();
+            (CallData, Behavior)[] invalids = _behavior.Where(t => !t.Item2.HasExpectedCalls()).ToArray();
             if (invalids.Any())
             {
-                throw new FakeVerifyException(invalids, m_Log);
+                throw new FakeVerifyException(invalids, _log);
             }
         }
 
@@ -93,10 +93,10 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             if (times == null) throw new ArgumentNullException(nameof(times));
             if (callData == null) throw new ArgumentNullException(nameof(callData));
 
-            IEnumerable<CallData> calls = m_Log.Where(c => callData.MatchesCall(c)).ToArray();
+            IEnumerable<CallData> calls = _log.Where(c => callData.MatchesCall(c)).ToArray();
             if (!times.IsInRange(calls.Count()))
             {
-                throw new FakeVerifyException(callData, times, calls.Count(), m_Log);
+                throw new FakeVerifyException(callData, times, calls.Count(), _log);
             }
         }
 
@@ -106,9 +106,9 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         {
             if (times == null) throw new ArgumentNullException(nameof(times));
 
-            if (!times.IsInRange(m_Log.Count))
+            if (!times.IsInRange(_log.Count))
             {
-                throw new FakeVerifyException(times, m_Log);
+                throw new FakeVerifyException(times, _log);
             }
         }
 
@@ -135,15 +135,15 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         internal T CallRet<T>(string name, Type[] generics, object[] args)
         {
             CallData data = new CallData(name, generics, args, null);
-            m_Log.Add(data);
+            _log.Add(data);
 
-            var match = m_Behavior.FirstOrDefault(t => t.Item1.MatchesCall(data));
+            (CallData, Behavior) match = _behavior.FirstOrDefault(t => t.Item1.MatchesCall(data));
             if (match.Equals(default))
             {
-                m_DefaultCalls++;
+                _defaultCalls++;
                 if (ThrowByDefault)
                 {
-                    throw new FakeCallException(data, m_Behavior.Select(b => b.Item1));
+                    throw new FakeCallException(data, _behavior.Select(b => b.Item1));
                 }
                 else
                 {

@@ -11,7 +11,7 @@ namespace CreateAndFake.Toolbox
     public static class TypeExtensions
     {
         /// <summary>Keeps track of type inheritance.</summary>
-        private static IDictionary<Type, HashSet<Type>> s_ChildCache = new Dictionary<Type, HashSet<Type>>();
+        private static readonly IDictionary<Type, HashSet<Type>> _ChildCache = new Dictionary<Type, HashSet<Type>>();
 
         /// <summary>Finds subclasses of a type in the type's assembly.</summary>
         /// <param name="type">Type to locate subclasses for.</param>
@@ -112,18 +112,15 @@ namespace CreateAndFake.Toolbox
         /// <returns>True if inherited; false otherwise.</returns>
         public static bool IsInheritedBy(this Type child, Type parent)
         {
-            if (!s_ChildCache.ContainsKey(parent))
+            HashSet<Type> children;
+            lock (_ChildCache)
             {
-                lock (s_ChildCache)
+                if (!_ChildCache.TryGetValue(parent, out children))
                 {
-                    if (!s_ChildCache.ContainsKey(parent))
-                    {
-                        s_ChildCache[parent] = new HashSet<Type>(FindChildren(parent).Distinct());
-                    }
+                    _ChildCache[parent] = children = new HashSet<Type>(FindChildren(parent).Distinct());
                 }
             }
 
-            HashSet<Type> children = s_ChildCache[parent];
             return children.Contains(child)
                 || children.Contains(Nullable.GetUnderlyingType(child));
         }

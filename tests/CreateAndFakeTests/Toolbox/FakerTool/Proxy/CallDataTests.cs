@@ -11,23 +11,20 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
     /// <summary>Verifies behavior.</summary>
     public static class CallDataTests
     {
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void CallData_GuardsNulls()
+        internal static void CallData_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException<CallData>();
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void CallData_NoParameterMutation()
+        internal static void CallData_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation<CallData>();
         }
 
-        /// <summary>Verifies no match with different method names.</summary>
         [Theory, RandomData]
-        public static void MatchesCall_MethodNameMismatch(DataHolderSample[] data, Type[] generics, string name1)
+        internal static void MatchesCall_MethodNameMismatch(DataHolderSample[] data, Type[] generics, string name1)
         {
             string name2 = Tools.Mutator.Variant(name1);
 
@@ -35,9 +32,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
                 .MatchesCall(new CallData(name2, generics, data, null)));
         }
 
-        /// <summary>Verifies no match with different method names.</summary>
         [Theory, RandomData]
-        public static void MatchesCall_GenericsMismatch(DataHolderSample[] data, string name)
+        internal static void MatchesCall_GenericsMismatch(DataHolderSample[] data, string name)
         {
             Type[] generics1 = Tools.Randomizer.Create<Type[]>().Except(new[] { typeof(AnyGeneric) }).ToArray();
             Type[] generics2 = Tools.Mutator.Variant(generics1);
@@ -46,9 +42,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
                 .MatchesCall(new CallData(name, generics2, data, null)));
         }
 
-        /// <summary>Verifies always a match when using AnyGeneric.</summary>
         [Theory, RandomData]
-        public static void MatchesCall_AnyGenericsMatch(DataHolderSample[] data, string name, Type[] generics1)
+        internal static void MatchesCall_AnyGenericMatchesAll(DataHolderSample[] data, string name, Type[] generics1)
         {
             Type[] generics2 = generics1.Select(t => typeof(AnyGeneric)).ToArray();
 
@@ -56,9 +51,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
                 .MatchesCall(new CallData(name, generics1, data, null)));
         }
 
-        /// <summary>Verifies match functionality.</summary>
         [Theory, RandomData]
-        public static void MatchesCall_DataMatchBehavior(string name, Type[] generics, DataHolderSample[] data1)
+        internal static void MatchesCall_DataMatchBehavior(string name, Type[] generics, DataHolderSample[] data1)
         {
             DataHolderSample[] data2 = data1.Select(d => Tools.Duplicator.Copy(d)).ToArray();
 

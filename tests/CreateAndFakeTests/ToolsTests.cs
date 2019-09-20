@@ -17,11 +17,10 @@ namespace CreateAndFakeTests
     public static class ToolsTests
     {
         /// <summary>Flags representing mutable data.</summary>
-        private const BindingFlags s_Mutable = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+        private const BindingFlags _Mutable = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
-        /// <summary>Verifies that the tools integrate together.</summary>
         [Fact]
-        public static void Tools_IntegrationWorks()
+        internal static void Tools_IntegrationWorks()
         {
             DataHolderSample original = Tools.Randomizer.Create<DataHolderSample>();
             DataHolderSample variant = Tools.Mutator.Variant(original);
@@ -41,9 +40,8 @@ namespace CreateAndFakeTests
             faked.VerifyAll(Times.Once);
         }
 
-        /// <summary>Verifies the tools have limits.</summary>
         [Fact]
-        public static void Tools_HandlesInfinites()
+        internal static void Tools_HandlesInfinites()
         {
             Tools.Asserter.Throws<InfiniteLoopException>(
                 () => Tools.Randomizer.Create<InfiniteSample>());
@@ -60,9 +58,8 @@ namespace CreateAndFakeTests
             Tools.Asserter.Is(Tools.Valuer.GetHashCode(sample), Tools.Valuer.GetHashCode(dupe));
         }
 
-        /// <summary>Verifies the tools work on all the introduced types besides static classes.</summary>
         [Fact]
-        public static void Tools_AllCreateAndFakeTypesWork()
+        internal static void Tools_AllCreateAndFakeTypesWork()
         {
             Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType), typeof(AnyGeneric),
                 typeof(DuplicatorChainer), typeof(ValuerChainer), typeof(Behavior), typeof(Behavior<>) };
@@ -80,13 +77,13 @@ namespace CreateAndFakeTests
                 catch (Exception e)
                 {
                     Tools.Asserter.Fail(e, $"Failed testing type '{type.Name}'.");
+                    throw;
                 }
             }
         }
 
-        /// <summary>Verifies the tools work on possible exceptions.</summary>
         [Fact]
-        public static void Tools_ExceptionTypesWork()
+        internal static void Tools_ExceptionTypesWork()
         {
             Type type = typeof(Exception);
 
@@ -114,7 +111,7 @@ namespace CreateAndFakeTests
                     Tools.Valuer.GetHashCode(original),
                     Tools.Valuer.GetHashCode(dupe), $"Hashcode {failMessage}");
 
-                if (type.GetProperties(s_Mutable).Any() || type.GetFields(s_Mutable).Any())
+                if (type.GetProperties(_Mutable).Any() || type.GetFields(_Mutable).Any())
                 {
                     variant = Tools.Mutator.Variant(type, original);
                     Tools.Asserter.ValuesNotEqual(original, variant, failMessage);

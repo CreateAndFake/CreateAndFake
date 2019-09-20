@@ -9,7 +9,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
     public sealed class LegacyCollectionCopyHint : CopyHint
     {
         /// <summary>Supported types and the methods used to generate them.</summary>
-        private static readonly IDictionary<Type, Func<object, DuplicatorChainer, object>> s_Copiers
+        private static readonly IDictionary<Type, Func<object, DuplicatorChainer, object>> _Copiers
             = new Dictionary<Type, Func<object, DuplicatorChainer, object>>
             {
                 { typeof(Hashtable), CreateAndCopy<Hashtable> },
@@ -47,12 +47,12 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <param name="source">Object to clone.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <returns>If the type could be cloned and the cloned instance.</returns>
-        protected internal override sealed (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
+        protected internal sealed override (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
             if (source == null) return (true, null);
 
-            if (s_Copiers.TryGetValue(source.GetType(), out var copier))
+            if (_Copiers.TryGetValue(source.GetType(), out Func<object, DuplicatorChainer, object> copier))
             {
                 return (true, copier.Invoke(source, duplicator));
             }

@@ -12,18 +12,17 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
     public sealed class BasicCopyHintTests : CopyHintTestBase<BasicCopyHint>
     {
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes
+        private static readonly Type[] _ValidTypes
             = new[] { typeof(BindingFlags), typeof(string), typeof(int), typeof(decimal) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(DataHolderSample) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(DataHolderSample) };
 
         /// <summary>Sets up the tests.</summary>
-        public BasicCopyHintTests() : base(s_ValidTypes, s_InvalidTypes, true) { }
+        public BasicCopyHintTests() : base(_ValidTypes, _InvalidTypes, true) { }
 
-        /// <summary>Verifies the hint can handle just plain objects.</summary>
         [Fact]
-        public static void TryCopy_HandlesBaseObject()
+        internal static void TryCopy_HandlesBaseObject()
         {
             object data = new object();
             (bool, object) result = new BasicCopyHint().TryCopy(data, CreateChainer());

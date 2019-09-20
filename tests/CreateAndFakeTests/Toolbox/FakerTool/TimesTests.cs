@@ -7,50 +7,44 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
     /// <summary>Verifies behavior.</summary>
     public static class TimesTests
     {
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void Times_GuardsNulls()
+        internal static void Times_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException<Times>();
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void Times_NoParameterMutation()
+        internal static void Times_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation<Times>();
         }
 
-        /// <summary>Verifies the option works.</summary>
         [Fact]
-        public static void Never_Works()
+        internal static void Never_Works()
         {
             Tools.Asserter.Is(true, Times.Never.IsInRange(0));
             Tools.Asserter.Is(false, Times.Never.IsInRange(1));
             Tools.Asserter.Is(false, Times.Never.IsInRange(2));
         }
 
-        /// <summary>Verifies the option works.</summary>
         [Fact]
-        public static void Once_Works()
+        internal static void Once_Works()
         {
             Tools.Asserter.Is(false, Times.Once.IsInRange(0));
             Tools.Asserter.Is(true, Times.Once.IsInRange(1));
             Tools.Asserter.Is(false, Times.Once.IsInRange(2));
         }
 
-        /// <summary>Verifies the option works.</summary>
         [Theory, RandomData]
-        public static void Exactly_Works(int value)
+        internal static void Exactly_Works(int value)
         {
             Tools.Asserter.Is(false, Times.Exactly(value).IsInRange(value - 1));
             Tools.Asserter.Is(true, Times.Exactly(value).IsInRange(value));
             Tools.Asserter.Is(false, Times.Exactly(value).IsInRange(value + 1));
         }
 
-        /// <summary>Verifies the option works.</summary>
         [Fact]
-        public static void Between_Works()
+        internal static void Between_Works()
         {
             int min, max;
             do
@@ -68,18 +62,16 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Asserter.Is(false, Times.Between(min, max).IsInRange(max + 1));
         }
 
-        /// <summary>Verifies the option works.</summary>
         [Theory, RandomData]
-        public static void Min_Works(int value)
+        internal static void Min_Works(int value)
         {
             Tools.Asserter.Is(false, Times.Min(value).IsInRange(value - 1));
             Tools.Asserter.Is(true, Times.Min(value).IsInRange(value));
             Tools.Asserter.Is(true, Times.Min(value).IsInRange(value + 1));
         }
 
-        /// <summary>Verifies the option works.</summary>
         [Fact]
-        public static void Max_Works()
+        internal static void Max_Works()
         {
             int value;
             do
@@ -92,9 +84,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Asserter.Is(false, Times.Max(value).IsInRange(value + 1));
         }
 
-        /// <summary>Verifies readable strings.</summary>
         [Fact]
-        public static void ToString_Terse()
+        internal static void ToString_Terse()
         {
             Tools.Asserter.Is("0", Times.Never.ToString());
             Tools.Asserter.Is("1", Times.Once.ToString());
@@ -104,9 +95,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Asserter.Is("[1-2]", Times.Between(1, 2).ToString());
         }
 
-        /// <summary>Verifies the equality methods work properly.</summary>
         [Fact]
-        public static void Equality_MatchesValue()
+        internal static void Equality_MatchesValue()
         {
             int min, max;
             do

@@ -1,4 +1,5 @@
-﻿using CreateAndFake.Toolbox.ValuerTool;
+﻿using System;
+using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFakeTests.TestSamples
 {
@@ -21,6 +22,8 @@ namespace CreateAndFakeTests.TestSamples
         /// <returns>True if equal; false otherwise.</returns>
         public virtual bool ValuesEqual(object other, IValuer valuer)
         {
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
             if (other is PrivateValuerEquatableSample sample)
             {
                 return valuer.Equals(StringValue, sample.StringValue);
@@ -36,6 +39,8 @@ namespace CreateAndFakeTests.TestSamples
         /// <returns>The generated hash code.</returns>
         public virtual int GetValueHash(IValuer valuer)
         {
+            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
+
             return valuer.GetHashCode(StringValue);
         }
     }

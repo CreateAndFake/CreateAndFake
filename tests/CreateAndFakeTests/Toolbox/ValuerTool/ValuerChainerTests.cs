@@ -7,16 +7,14 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
     /// <summary>Verifies behavior.</summary>
     public static class ValuerChainerTests
     {
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
         [Fact]
-        public static void ValuerChainer_GuardsNulls()
+        internal static void ValuerChainer_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException<ValuerChainer>();
         }
 
-        /// <summary>Verifies parameters are not mutated.</summary>
         [Fact]
-        public static void ValuerChainer_NoParameterMutation()
+        internal static void ValuerChainer_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation<ValuerChainer>();
         }

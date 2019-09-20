@@ -33,7 +33,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <param name="invalid">Call data with behavior that aren't valid.</param>
         /// <param name="log">Log of all made calls.</param>
         internal FakeVerifyException(IEnumerable<(CallData, Behavior)> invalid, IEnumerable<CallData> log)
-            : base(String.Join(Environment.NewLine, invalid
+            : base(string.Join(Environment.NewLine, invalid
                 .Select(i => BuildMessage(i.Item1, i.Item2.ToExpectedCalls(), i.Item2.Calls, null))
                 .Append(BuildMessage(log))))
         { }

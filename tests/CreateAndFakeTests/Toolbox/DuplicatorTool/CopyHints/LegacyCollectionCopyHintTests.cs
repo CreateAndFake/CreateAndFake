@@ -11,13 +11,13 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
     public sealed class LegacyCollectionCopyHintTests : CopyHintTestBase<LegacyCollectionCopyHint>
     {
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = LegacyCollectionCreateHint.PotentialCollections
+        private static readonly Type[] _ValidTypes = LegacyCollectionCreateHint.PotentialCollections
             .Except(new[] { typeof(ArrayList), typeof(Queue), typeof(Stack), typeof(Array) }).ToArray();
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public LegacyCollectionCopyHintTests() : base(s_ValidTypes, s_InvalidTypes) { }
+        public LegacyCollectionCopyHintTests() : base(_ValidTypes, _InvalidTypes) { }
     }
 }

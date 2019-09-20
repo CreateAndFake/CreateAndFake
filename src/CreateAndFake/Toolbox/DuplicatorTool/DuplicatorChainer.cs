@@ -11,10 +11,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         internal IDuplicator Duplicator { get; }
 
         /// <summary>Callback to the duplicator to handle child values.</summary>
-        private readonly Func<object, DuplicatorChainer, object> m_Callback;
+        private readonly Func<object, DuplicatorChainer, object> _callback;
 
         /// <summary>History of clones to match up references.</summary>
-        private readonly ConditionalWeakTable<object, object> m_History;
+        private readonly ConditionalWeakTable<object, object> _history;
 
         /// <summary>Sets up the callback functionality.</summary>
         /// <param name="duplicator">Reference to the actual duplicator.</param>
@@ -22,8 +22,8 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         public DuplicatorChainer(IDuplicator duplicator, Func<object, DuplicatorChainer, object> callback)
         {
             Duplicator = duplicator ?? throw new ArgumentNullException(nameof(duplicator));
-            m_Callback = callback ?? throw new ArgumentNullException(nameof(callback));
-            m_History = new ConditionalWeakTable<object, object>();
+            _callback = callback ?? throw new ArgumentNullException(nameof(callback));
+            _history = new ConditionalWeakTable<object, object>();
         }
 
         /// <summary>Adds created type to history.</summary>
@@ -33,7 +33,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         {
             if (CanTrack(source))
             {
-                m_History.Add(source, clone);
+                _history.Add(source, clone);
             }
         }
 
@@ -56,18 +56,18 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
             RuntimeHelpers.EnsureSufficientExecutionStack();
             if (!CanTrack(source))
             {
-                return m_Callback.Invoke(source, this);
+                return _callback.Invoke(source, this);
             }
 
-            if (m_History.TryGetValue(source, out object clone))
+            if (_history.TryGetValue(source, out object clone))
             {
                 return clone;
             }
 
-            object result = m_Callback.Invoke(source, this);
-            if (!m_History.TryGetValue(source, out object blank))
+            object result = _callback.Invoke(source, this);
+            if (!_history.TryGetValue(source, out _))
             {
-                m_History.Add(source, result);
+                _history.Add(source, result);
             }
             return result;
         }

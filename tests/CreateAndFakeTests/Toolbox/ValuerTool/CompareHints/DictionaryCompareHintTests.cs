@@ -13,22 +13,21 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class DictionaryCompareHintTests : CompareHintTestBase<DictionaryCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly DictionaryCompareHint s_TestInstance = new DictionaryCompareHint();
+        private static readonly DictionaryCompareHint _TestInstance = new DictionaryCompareHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes
+        private static readonly Type[] _ValidTypes
             = new[] { typeof(IDictionary), typeof(Dictionary<string, int>) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes
+        private static readonly Type[] _InvalidTypes
             = new[] { typeof(object), typeof(string), typeof(IList), typeof(int) };
 
         /// <summary>Sets up the tests.</summary>
-        public DictionaryCompareHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public DictionaryCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-        /// <summary>Verifies the hint supports the correct types.</summary>
         [Theory, RandomData]
-        public void TryCompare_SameKeyDifferentValuesWorks(Dictionary<string, int> data)
+        internal void TryCompare_SameKeyDifferentValuesWorks(Dictionary<string, int> data)
         {
             Dictionary<string, int> dupe = Tools.Duplicator.Copy(data);
             string key = data.First().Key;

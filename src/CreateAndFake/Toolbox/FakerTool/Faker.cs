@@ -8,13 +8,13 @@ namespace CreateAndFake.Toolbox.FakerTool
     public sealed class Faker : IFaker
     {
         /// <summary>Handles comparisons.</summary>
-        private readonly IValuer m_Valuer;
+        private readonly IValuer _valuer;
 
         /// <summary>Sets up the asserter capabilities.</summary>
         /// <param name="valuer">Handles comparisons.</param>
         public Faker(IValuer valuer)
         {
-            m_Valuer = valuer;
+            _valuer = valuer;
         }
 
         /// <summary>Determines if the type can be faked.</summary>
@@ -39,7 +39,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Handler for fake behavior.</returns>
         public Fake<T> Mock<T>(params Type[] interfaces)
         {
-            return new Fake<T>(Subclasser.Create(typeof(T), interfaces), m_Valuer);
+            return new Fake<T>(Subclasser.Create(typeof(T), interfaces), _valuer);
         }
 
         /// <summary>Creates a strict fake where calls fail unless set up.</summary>
@@ -48,7 +48,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Handler for fake behavior.</returns>
         public Fake Mock(Type parent, params Type[] interfaces)
         {
-            return new Fake(Subclasser.Create(parent, interfaces), m_Valuer);
+            return new Fake(Subclasser.Create(parent, interfaces), _valuer);
         }
 
         /// <summary>Creates a loose fake with a base default implementation.</summary>

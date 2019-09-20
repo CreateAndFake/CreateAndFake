@@ -31,13 +31,13 @@ namespace CreateAndFake.Design
             new TimeSpan(0, 0, 5), new TimeSpan(0, 0, 0, 0, 200));
 
         /// <summary>Maximum attempts to try.</summary>
-        private readonly int m_Tries;
+        private readonly int _tries;
 
         /// <summary>Maximum length to attempt for.</summary>
-        private readonly TimeSpan m_Timeout;
+        private readonly TimeSpan _timeout;
 
         /// <summary>Delay between attempts.</summary>
-        private readonly TimeSpan m_Delay;
+        private readonly TimeSpan _delay;
 
         /// <summary>Continues until the given number of attempts.</summary>
         /// <param name="tries">Maximum attempts to try.</param>
@@ -57,9 +57,9 @@ namespace CreateAndFake.Design
         /// <param name="delay">Delay between attempts.</param>
         public Limiter(TimeSpan timeout, int tries, TimeSpan? delay = null)
         {
-            m_Tries = tries;
-            m_Timeout = timeout;
-            m_Delay = delay ?? TimeSpan.Zero;
+            _tries = tries;
+            _timeout = timeout;
+            _delay = delay ?? TimeSpan.Zero;
         }
 
         /// <summary>Repeats an action.</summary>
@@ -247,15 +247,17 @@ namespace CreateAndFake.Design
             Stopwatch watch = Stopwatch.StartNew();
             for (int i = 1; true; i++)
             {
+                TException lastError;
                 try
                 {
                     return action.Invoke();
                 }
                 catch (TException error)
                 {
-                    resetState?.Invoke();
-                    await DelayOrFault(watch.Elapsed, i, canceler, error).ConfigureAwait(false);
+                    lastError = error;
                 }
+                resetState?.Invoke();
+                await DelayOrFault(watch.Elapsed, i, canceler, lastError).ConfigureAwait(false);
             }
         }
 
@@ -266,7 +268,7 @@ namespace CreateAndFake.Design
         /// <returns>True if terminal condition not reached; false otherwise.</returns>
         private async Task<bool> DelayIfNotDone(TimeSpan elapsed, int tries, CancellationToken? canceler)
         {
-            if (tries < m_Tries && elapsed < m_Timeout)
+            if (tries < _tries && elapsed < _timeout)
             {
                 await DelayOrCancel(canceler).ConfigureAwait(false);
                 return true;
@@ -286,13 +288,13 @@ namespace CreateAndFake.Design
         /// <exception cref="TimeoutException">If an attempt limit is reached.</exception>
         private async Task DelayOrFault(TimeSpan elapsed, int tries, CancellationToken? canceler, Exception ex = null)
         {
-            if (tries >= m_Tries)
+            if (tries >= _tries)
             {
-                throw new TimeoutException($"Reached max attempts of '{m_Tries}'.", ex);
+                throw new TimeoutException($"Reached max attempts of '{_tries}'.", ex);
             }
-            else if (elapsed >= m_Timeout)
+            else if (elapsed >= _timeout)
             {
-                throw new TimeoutException($"Reached timeout of '{m_Timeout}'.", ex);
+                throw new TimeoutException($"Reached timeout of '{_timeout}'.", ex);
             }
             else
             {
@@ -306,9 +308,9 @@ namespace CreateAndFake.Design
         private async Task DelayOrCancel(CancellationToken? canceler)
         {
             CancellationToken token = canceler ?? CancellationToken.None;
-            if (m_Delay > TimeSpan.Zero)
+            if (_delay > TimeSpan.Zero)
             {
-                await Task.Delay(m_Delay, token).ConfigureAwait(false);
+                await Task.Delay(_delay, token).ConfigureAwait(false);
             }
             else
             {
@@ -330,21 +332,21 @@ namespace CreateAndFake.Design
         public bool Equals(Limiter other)
         {
             return other != null
-                && m_Delay == other.m_Delay
-                && m_Timeout == other.m_Timeout
-                && m_Tries == other.m_Tries;
+                && _delay == other._delay
+                && _timeout == other._timeout
+                && _tries == other._tries;
         }
 
         /// <returns>Hash code based upon value identifying the object.</returns>
         public override int GetHashCode()
         {
-            return ValueComparer.Use.GetHashCode(m_Tries, m_Timeout, m_Delay);
+            return ValueComparer.Use.GetHashCode(_tries, _timeout, _delay);
         }
 
         /// <returns>String representation of the object.</returns>
         public override string ToString()
         {
-            return $"{m_Tries}-{m_Timeout}-{m_Delay}";
+            return $"{_tries}-{_timeout}-{_delay}";
         }
     }
 }

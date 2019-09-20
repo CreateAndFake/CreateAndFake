@@ -9,7 +9,8 @@ using Xunit;
 
 namespace CreateAndFakeTests.TestBases
 {
-    /// <summary>Verifies behavior.</summary>
+    /// <summary>Handles testing exceptions.</summary>
+    /// <typeparam name="T">Exception type to test.</typeparam>
     public abstract class ExceptionTestBase<T> where T : Exception
     {
         /// <summary>Verifies the default constructor is present for serialization but private.</summary>
@@ -39,6 +40,8 @@ namespace CreateAndFakeTests.TestBases
         [Theory, RandomData]
         public void Exception_XmlSerializes(T original)
         {
+            if (original == null) throw new ArgumentNullException(nameof(original));
+
             XmlObjectSerializer formatter = new DataContractSerializer(typeof(T),
                 new[] { original.InnerException }.Where(t => t != null).Select(t => t.GetType()));
 

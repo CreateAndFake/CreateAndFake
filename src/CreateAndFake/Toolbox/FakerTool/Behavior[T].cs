@@ -48,7 +48,20 @@ namespace CreateAndFake.Toolbox.FakerTool
             Justification = "Distinct behavior per generic intended.")]
         public static new Behavior<T> Throw<TException>(Times times = null) where TException : Exception, new()
         {
-            return Set<T>(() => throw new TException(), times);
+            return Throw(new TException(), times);
+        }
+
+        /// <summary>Specifies a specific exception behavior for a fake.</summary>
+        /// <typeparam name="TException">Exception type to throw if called.</typeparam>
+        /// <param name="exception">Exception to throw.</param>
+        /// <param name="times">Behavior call limit.</param>
+        /// <returns>Instance to set up the mock with.</returns>
+        [SuppressMessage("Microsoft.Design",
+            "CA1000:DoNotDeclareStaticMembersOnGenericTypes",
+            Justification = "Distinct behavior per generic intended.")]
+        public static new Behavior<T> Throw<TException>(TException exception, Times times = null) where TException : Exception
+        {
+            return Set<T>(() => throw exception, times);
         }
     }
 }

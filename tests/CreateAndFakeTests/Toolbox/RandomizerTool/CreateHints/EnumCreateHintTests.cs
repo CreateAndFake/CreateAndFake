@@ -9,15 +9,15 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class EnumCreateHintTests : CreateHintTestBase<EnumCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly EnumCreateHint s_TestInstance = new EnumCreateHint();
+        private static readonly EnumCreateHint _TestInstance = new EnumCreateHint();
 
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] s_ValidTypes = new[] { typeof(BindingFlags) };
+        private static readonly Type[] _ValidTypes = new[] { typeof(BindingFlags) };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] s_InvalidTypes = new[] { typeof(object) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(object) };
 
         /// <summary>Sets up the tests.</summary>
-        public EnumCreateHintTests() : base(s_TestInstance, s_ValidTypes, s_InvalidTypes) { }
+        public EnumCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
     }
 }

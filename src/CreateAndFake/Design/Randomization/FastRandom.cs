@@ -6,7 +6,7 @@ namespace CreateAndFake.Design.Randomization
     public sealed class FastRandom : ValueRandom
     {
         /// <summary>Source generator used for random bytes.</summary>
-        private static readonly Random s_Gen = new Random();
+        private static readonly Random _Gen = new Random();
 
         /// <summary>Sets up the randomizer.</summary>
         /// <param name="onlyValidValues">Option to prevent generating invalid values.</param>
@@ -18,9 +18,9 @@ namespace CreateAndFake.Design.Randomization
         protected override byte[] NextBytes(short length)
         {
             byte[] buffer = new byte[length];
-            lock (s_Gen)
+            lock (_Gen)
             {
-                s_Gen.NextBytes(buffer);
+                _Gen.NextBytes(buffer);
             }
             return buffer;
         }
