@@ -23,7 +23,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.6.5</Version>
+    <Version>1.7.0</Version>
     <Authors>CreateAndFake Contributors</Authors>
     <Description>A C# class library that handles mocking, test data generation, and validation.</Description>
     <PackageLicense>https://mozilla.org/MPL/2.0/</PackageLicense>
