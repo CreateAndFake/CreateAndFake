@@ -157,22 +157,33 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
 
-            Stack<object> args = new Stack<object>(method.GetParameters().Length);
+            List<Tuple<Type, object>> data = (values ?? Array.Empty<object>())
+                .Where(v => v != null)
+                .Select(v => (v is Fake fake) ? fake.Dummy : v)
+                .Select(v => Tuple.Create(v.GetType(), v))
+                .ToList();
+
+            IList<object> args = new List<object>(method.GetParameters().Length);
 
             foreach (ParameterInfo param in method.GetParameters())
             {
-                if (!param.IsOut)
+                Tuple<Type, object> match = data.FirstOrDefault(t => t.Item1.Inherits(param.ParameterType));
+                if (param.IsOut)
                 {
-                    args.Push(Inject(param.ParameterType,
-                        args.Where(a => a is Fake).Reverse().Concat(values ?? Enumerable.Empty<object>()).ToArray()));
+                    args.Add(null);
+                }
+                else if (match != default)
+                {
+                    args.Add(match.Item2);
+                    data.Remove(match);
                 }
                 else
                 {
-                    args.Push(null);
+                    args.Add(Inject(param.ParameterType, args.Where(a => a is Fake).Reverse().ToArray()));
                 }
             }
 
-            return args.Reverse().ToArray();
+            return args.ToArray();
         }
 
         /// <summary>Creates an instance using the values or random data as needed.</summary>

@@ -55,6 +55,18 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 .PreventsNullRefExceptionOnConstructors(typeof(MismatchParamNameSample), false));
         }
 
+        [Theory, RandomData]
+        internal static void PreventsNullRefException_InjectsMultipleValues(Fake<IOnlyMockSample> fake1, Fake<IOnlyMockSample> fake2)
+        {
+            Tools.Tester.PreventsNullRefException<InjectMockSample>(fake1, fake2);
+        }
+
+        [Theory, RandomData]
+        internal static void PreventsNullRefException_InjectsWithMethods(Fake<IOnlyMockSample> fake)
+        {
+            Tools.Tester.PreventsNullRefException<MockMethodPassOnly>(fake);
+        }
+
         [Fact]
         internal static void PreventsNullRefException_OnStatics()
         {
@@ -66,6 +78,12 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         internal static void PreventsNullRefException_StatelessFine()
         {
             Tools.Tester.PreventsNullRefException<StatelessSample>();
+        }
+
+        [Fact]
+        internal static void PreventsNullRefException_NullInjectionsFine()
+        {
+            Tools.Tester.PreventsNullRefException<StatelessSample>((object[])null);
         }
 
         [Fact]
