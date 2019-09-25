@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
@@ -107,8 +108,26 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         [Theory, RandomData]
         internal static void Inject_DoubleFakeInjected(Fake<DataSample> fake, Fake<DataSample> fake2, InjectSample holder)
         {
-            Tools.Asserter.ReferenceEqual(fake.Dummy, holder.Data);
-            Tools.Asserter.ReferenceEqual(fake2.Dummy, holder.Data2);
+            Tools.Asserter.ReferenceEqual(fake.Dummy, holder.Data2);
+            Tools.Asserter.ReferenceEqual(fake2.Dummy, holder.Data);
+        }
+
+        [Theory, RandomData]
+        internal static void Inject_InterfaceFakesInjected(Fake<IOnlyMockSample> fake,
+            Fake<IOnlyMockSample> fake2, InjectMockSample holder)
+        {
+            fake.Verify(Times.Never, f => f.FailIfNotMocked());
+            fake2.Verify(Times.Never, f => f.FailIfNotMocked());
+            holder.TestIfMockedSeparately();
+            fake.Verify(Times.Once, f => f.FailIfNotMocked());
+            fake2.Verify(Times.Once, f => f.FailIfNotMocked());
+        }
+
+        [Theory, RandomData]
+        internal static void CreateFor_InterfaceFakesInjected(Fake<IOnlyMockSample> fake, Fake<IOnlyMockSample> fake2)
+        {
+            Tools.Asserter.Is(new object[] { fake.Dummy, fake2.Dummy }, Tools.Randomizer.CreateFor(
+                typeof(InjectMockSample).GetConstructors().Single(), fake, fake2));
         }
     }
 }

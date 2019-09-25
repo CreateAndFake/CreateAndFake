@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.Design
     public static class LimiterTests
     {
         /// <summary>Accuracy of wait resolution for delays.</summary>
-        private static readonly int _WaitAccuracy = 15;
+        private const int _WaitAccuracy = 15;
 
         /// <summary>Small delay to test with.</summary>
         private static readonly TimeSpan _SmallDelay = new TimeSpan(0, 0, 0, 0, 60);

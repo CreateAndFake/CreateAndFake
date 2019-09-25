@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.AsserterTool;
@@ -83,7 +84,9 @@ namespace CreateAndFake.Toolbox.TesterTool
             {
                 _Limiter.Retry<TimeoutException>(() =>
                 {
-                    object instance = Randomizer.Create(type);
+                    object instance = (injectionValues?.Any() ?? false)
+                        ? Randomizer.Inject(type, injectionValues)
+                        : Randomizer.Create(type);
                     try
                     {
                         checker.PreventsNullRefExceptionOnMethods(instance, injectionValues);
@@ -154,7 +157,9 @@ namespace CreateAndFake.Toolbox.TesterTool
             {
                 _Limiter.Retry<TimeoutException>(() =>
                 {
-                    object instance = Randomizer.Create(type);
+                    object instance = (injectionValues?.Any() ?? false)
+                        ? Randomizer.Inject(type, injectionValues)
+                        : Randomizer.Create(type);
                     try
                     {
                         checker.PreventsMutationOnMethods(instance, injectionValues);

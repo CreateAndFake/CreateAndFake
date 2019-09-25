@@ -48,6 +48,24 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         }
 
         [Fact]
+        internal static void PreventsParameterMutation_NullInjectionsFine()
+        {
+            Tools.Tester.PreventsParameterMutation<StatelessSample>((object[])null);
+        }
+
+        [Theory, RandomData]
+        internal static void PreventsParameterMutation_InjectsMultipleValues(Fake<IOnlyMockSample> fake1, Fake<IOnlyMockSample> fake2)
+        {
+            Tools.Tester.PreventsParameterMutation<InjectMockSample>(fake1, fake2);
+        }
+
+        [Theory, RandomData]
+        internal static void PreventsParameterMutation_InjectsWithMethods(Fake<IOnlyMockSample> fake)
+        {
+            Tools.Tester.PreventsParameterMutation<MockMethodPassOnly>(fake);
+        }
+
+        [Fact]
         internal static void CallMethod_TimesOut()
         {
             Tools.Asserter.Throws<TimeoutException>(() => _ShortTestInstance
