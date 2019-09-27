@@ -127,21 +127,15 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="testParam">Parameter being set to null.</param>
         /// <param name="taskException">Exception encountered.</param>
         protected override void HandleCheckException(MethodBase testOrigin,
-            ParameterInfo testParam, AggregateException taskException)
+            ParameterInfo testParam, Exception taskException)
         {
             if (testOrigin == null) throw new ArgumentNullException(nameof(testOrigin));
             if (testParam == null) throw new ArgumentNullException(nameof(testParam));
             if (taskException == null) throw new ArgumentNullException(nameof(taskException));
 
-            Exception actual = taskException.InnerExceptions.Single();
-            if (actual is TargetInvocationException ex)
-            {
-                actual = ex.InnerException;
-            }
-
             string details = $"on method '{testOrigin.Name}' with parameter '{testParam.Name}'";
 
-            if (actual is ArgumentNullException inner
+            if (taskException is ArgumentNullException inner
                 && testOrigin.Name == inner.TargetSite.Name)
             {
                 _asserter.Is(testParam.Name, inner.ParamName,
@@ -149,7 +143,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             }
             else
             {
-                _asserter.Is(false, actual is NullReferenceException,
+                _asserter.Is(false, taskException is NullReferenceException,
                     $"Null reference exception encountered {details}.");
             }
         }

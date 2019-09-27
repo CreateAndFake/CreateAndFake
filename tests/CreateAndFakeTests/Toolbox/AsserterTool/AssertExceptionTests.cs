@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         }
 
         [Theory, RandomData]
-        internal static void AssertException_MessageFormat(string message, string details, string content)
+        internal static void AssertException_MessageFormat(string message, string details, string content, Exception ex)
         {
             string nl = Environment.NewLine;
 
@@ -25,11 +25,17 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
             Tools.Asserter.Is(message + nl + "Details: " + details,
                 new AssertException(message, details).Message);
 
+            Tools.Asserter.Is(message + nl + "Details: " + details,
+                new AssertException(message, details, ex).Message);
+
             Tools.Asserter.Is(message + nl + "Content: " + nl + content,
                 new AssertException(message, null, content).Message);
 
             Tools.Asserter.Is(message + nl + "Details: " + details + nl + "Content: " + nl + content,
                 new AssertException(message, details, content).Message);
+
+            Tools.Asserter.Is(message + nl + "Details: " + details + nl + "Content: " + nl + content,
+                new AssertException(message, details, content, ex).Message);
         }
     }
 }

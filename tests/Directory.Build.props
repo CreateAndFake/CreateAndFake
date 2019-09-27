@@ -4,5 +4,6 @@
     <OutputPath>..\..\artifacts\testing\$(Configuration)\</OutputPath>
     <DocumentationFile>..\..\artifacts\testing\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\TestRules.ruleset</CodeAnalysisRuleSet>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 </Project>

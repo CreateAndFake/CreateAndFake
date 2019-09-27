@@ -107,9 +107,15 @@ namespace CreateAndFake.Toolbox.TesterTool
                 }
                 return task.Result;
             }
-            catch (AggregateException taskException)
+            catch (AggregateException taskException) when (taskException.InnerExceptions.Count == 1)
             {
-                HandleCheckException(testOrigin, testParam, taskException);
+                Exception actual = taskException.InnerExceptions.Single();
+                if (actual is TargetInvocationException ex)
+                {
+                    actual = ex.InnerException;
+                }
+
+                HandleCheckException(testOrigin, testParam, actual);
                 return null;
             }
         }
@@ -119,6 +125,6 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="testParam">Parameter being set to null.</param>
         /// <param name="taskException">Exception encountered.</param>
         protected abstract void HandleCheckException(MethodBase testOrigin,
-            ParameterInfo testParam, AggregateException taskException);
+            ParameterInfo testParam, Exception taskException);
     }
 }
