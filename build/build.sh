@@ -59,4 +59,4 @@ fi
 echo "Microsoft (R) .NET Core SDK version $("$DOTNET_EXE" --version)"
 
 "$DOTNET_EXE" build "$BUILD_PROJECT_FILE" /nodeReuse:false
-"$DOTNET_EXE" run --project "$BUILD_PROJECT_FILE" --no-build -- "$@"
+"$DOTNET_EXE" run --project "$BUILD_PROJECT_FILE" --no-build -- "$@" --root "$SCRIPT_DIR"

@@ -14,7 +14,7 @@ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 ###########################################################################
 
 $BuildProjectFile = "$PSScriptRoot\nuke\_Build\_Build.csproj"
-$TempDirectory = "$PSScriptRoot\..\.tmp"
+$TempDirectory = "$PSScriptRoot\..\artifacts\.tmp"
 
 $DotNetGlobalFile = "$PSScriptRoot\..\global.json"
 $DotNetInstallUrl = "https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.ps1"
@@ -65,4 +65,4 @@ else {
 Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
 
 ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false }
-ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments }
+ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments --root $PSScriptRoot}
