@@ -88,37 +88,48 @@ namespace CreateAndFake.Toolbox.TesterTool
         private void PreventsNullRefException(object instance,
             MethodBase method, bool callAllMethods, object[] injectionValues)
         {
-            object[] data = Randomizer.CreateFor(method, injectionValues);
-
-            for (int i = 0; i < data.Length; i++)
+            object[] data = null;
+            object result = null;
+            try
             {
-                ParameterInfo param = method.GetParameters()[i];
-                if (param.ParameterType.IsValueType
-                    && Nullable.GetUnderlyingType(param.ParameterType) == null)
-                {
-                    continue;
-                }
+                data = Randomizer.CreateFor(method, injectionValues);
 
-                object original = data[i];
-                data[i] = null;
-
-                object result;
-                if (instance == null && method is ConstructorInfo builder)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    result = RunCheck(method, param, () => builder.Invoke(data));
-                }
-                else
-                {
-                    result = RunCheck(method, param, () => method.Invoke(instance, data));
-                }
+                    ParameterInfo param = method.GetParameters()[i];
+                    if (param.ParameterType.IsValueType
+                        && Nullable.GetUnderlyingType(param.ParameterType) == null)
+                    {
+                        continue;
+                    }
 
-                if (result != null && callAllMethods)
-                {
-                    CallAllMethods(method, param, result, injectionValues);
-                }
-                (result as IDisposable)?.Dispose();
+                    object original = data[i];
+                    data[i] = null;
+                    try
+                    {
+                        if (instance == null && method is ConstructorInfo builder)
+                        {
+                            result = RunCheck(method, param, () => builder.Invoke(data));
+                        }
+                        else
+                        {
+                            result = RunCheck(method, param, () => method.Invoke(instance, data));
+                        }
 
-                data[i] = original;
+                        if (result != null && callAllMethods)
+                        {
+                            CallAllMethods(method, param, result, injectionValues);
+                        }
+                    }
+                    finally
+                    {
+                        data[i] = original;
+                    }
+                }
+            }
+            finally
+            {
+                DisposeAllButInjected(injectionValues, data, result);
             }
         }
 

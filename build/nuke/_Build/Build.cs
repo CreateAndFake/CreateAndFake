@@ -142,9 +142,16 @@ internal class Build : NukeBuild
                 .SetTargetDirectory(CoverageDir));
         });
 
+    /// <summary>Build process for AppVeyor.</summary>
+    internal Target OnAppVeyor => _ => _
+        .Requires(() => IsServerBuild)
+        .DependsOn(Test)
+        .DependsOn(Pack)
+        .DependsOn(Coverage);
+
     /// <summary>Build process for Travis.</summary>
     internal Target OnTravis => _ => _
-        .OnlyWhenDynamic(() => IsServerBuild)
+        .Requires(() => IsServerBuild)
         .Executes(() =>
         {
             DotNetTasks.DotNetTest(s => s
