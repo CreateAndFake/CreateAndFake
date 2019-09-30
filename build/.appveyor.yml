@@ -3,7 +3,9 @@ build_script:
 - cmd: >-
     del /f nuget.config
 
-    .\build\build.cmd Test+Coverage
+    .\build\build.cmd Test
+    
+    .\build\build.cmd Coverage
 test_script:
 - cmd: >-
     choco install codecov
