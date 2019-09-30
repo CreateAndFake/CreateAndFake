@@ -156,7 +156,6 @@ internal class Build : NukeBuild
         {
             DotNetTasks.DotNetTest(s => s
                 .SetProjectFile(_solution)
-                .SetSettingsFile(TestSettingsFile)
                 .SetConfiguration("Travis")
                 .SetFramework("netcoreapp2.0"));
         });
