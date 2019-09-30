@@ -1,6 +1,5 @@
 using Nuke.Common;
 using Nuke.Common.Execution;
-using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
@@ -14,9 +13,6 @@ using static Nuke.Common.IO.PathConstruction;
 [UnsetVisualStudioEnvironmentVariables]
 internal class Build : NukeBuild
 {
-    [GitRepository] private readonly GitRepository _gitRepository;
-    [GitVersion] private readonly GitVersion _gitVersion;
-
     /// <summary>Output folder for the solution.</summary>
     private AbsolutePath ArtifactDir => _solution.Directory / "artifacts";
 
@@ -35,6 +31,10 @@ internal class Build : NukeBuild
     /// <summary>Provides access to the structure of the solution.</summary>
     [Solution]
     private readonly Solution _solution;
+
+    /// <summary>Controls pack versioning.</summary>
+    [GitVersion]
+    private readonly GitVersion _gitVersion;
 
     // Console application entry point. Also defines the default target.
     public static int Main()
@@ -156,8 +156,8 @@ internal class Build : NukeBuild
         {
             DotNetTasks.DotNetTest(s => s
                 .SetProjectFile(_solution)
+                .SetSettingsFile(TestSettingsFile)
                 .SetConfiguration("Travis")
-                .SetFramework("netcoreapp2.0")
-                .SetSettingsFile(TestSettingsFile));
+                .SetFramework("netcoreapp2.0"));
         });
 }

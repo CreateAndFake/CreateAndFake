@@ -1,11 +1,9 @@
 image: Visual Studio 2017
 build_script:
 - cmd: >-
-    del /f Nuget.config
+    del /f nuget.config
 
-    .\build\build.cmd Test
-
-    .\build\build.cmd Coverage
+    .\build\build.cmd Test+Coverage
 test_script:
 - cmd: >-
     choco install codecov
