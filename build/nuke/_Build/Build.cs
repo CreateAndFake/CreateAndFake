@@ -154,9 +154,16 @@ internal class Build : NukeBuild
         .Requires(() => IsServerBuild)
         .Executes(() =>
         {
-            DotNetTasks.DotNetTest(s => s
+            DotNetTasks.DotNetBuild(s => s
                 .SetProjectFile(_solution)
                 .SetConfiguration("Travis")
                 .SetFramework("netcoreapp2.0"));
+
+            DotNetTasks.DotNetTest(s => s
+                .SetProjectFile(_solution)
+                .SetConfiguration("Travis")
+                .SetFramework("netcoreapp2.0")
+                .SetNoRestore(true)
+                .SetNoBuild(true));
         });
 }

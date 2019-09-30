@@ -3,9 +3,7 @@ build_script:
 - cmd: >-
     del /f nuget.config
 
-    .\build\build.cmd Test
-    
-    .\build\build.cmd Coverage
+    .\build\build.cmd OnAppVeyor
 test_script:
 - cmd: >-
     choco install codecov
