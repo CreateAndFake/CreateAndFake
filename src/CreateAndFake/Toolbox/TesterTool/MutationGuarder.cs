@@ -81,26 +81,34 @@ namespace CreateAndFake.Toolbox.TesterTool
         private void PreventsMutation(object instance,
             MethodBase method, bool callAllMethods, object[] injectionValues)
         {
-            object[] data = Randomizer.CreateFor(method, injectionValues);
-            object[] copy = _duplicator.Copy(data);
-
-            object result;
-            if (instance == null && method is ConstructorInfo builder)
+            object[] data = null;
+            object[] copy = null;
+            object result = null;
+            try
             {
-                result = RunCheck(method, null, () => builder.Invoke(data));
-            }
-            else
-            {
-                result = RunCheck(method, null, () => method.Invoke(instance, data));
-            }
+                data = Randomizer.CreateFor(method, injectionValues);
+                copy = _duplicator.Copy(data);
 
-            if (result != null && callAllMethods)
-            {
-                CallAllMethods(method, null, result, injectionValues);
-            }
-            (result as IDisposable)?.Dispose();
+                if (instance == null && method is ConstructorInfo builder)
+                {
+                    result = RunCheck(method, null, () => builder.Invoke(data));
+                }
+                else
+                {
+                    result = RunCheck(method, null, () => method.Invoke(instance, data));
+                }
 
-            _asserter.ValuesEqual(copy, data, $"Parameter data was mutated when testing '{method.Name}'.");
+                if (result != null && callAllMethods)
+                {
+                    CallAllMethods(method, null, result, injectionValues);
+                }
+
+                _asserter.ValuesEqual(copy, data, $"Parameter data was mutated when testing '{method.Name}'.");
+            }
+            finally
+            {
+                DisposeAllButInjected(injectionValues, data, copy, result);
+            }
         }
 
         /// <summary>Handles exceptions encountered by the check.</summary>
@@ -108,7 +116,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="testParam">Parameter being set to null.</param>
         /// <param name="taskException">Exception encountered.</param>
         protected override void HandleCheckException(MethodBase testOrigin,
-            ParameterInfo testParam, AggregateException taskException)
+            ParameterInfo testParam, Exception taskException)
         { }
     }
 }

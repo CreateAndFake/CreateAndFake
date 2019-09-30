@@ -23,16 +23,10 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)|$(Platform)'!='Travis|AnyCPU'">
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.2.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.16.0.8981">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.2.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.16.0.8981" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

@@ -64,16 +64,20 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
-            foreach (MethodInfo method in instance.GetType()
-                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+            foreach (MethodInfo method in FindAllMethods(instance.GetType(), BindingFlags.Instance)
                 .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
-                .Where(m => !m.IsPrivate)
+                .Where(m => !m.IsFamily)
                 .Select(m => Fixer.FixMethod(m)))
             {
-                (RunCheck(testOrigin, testParam,
-                    () => method.Invoke(instance, method.GetParameters().Select(
-                        p => Randomizer.Inject(p.ParameterType, injectionValues)).ToArray())) as IDisposable)?.Dispose();
+                object[] data = Randomizer.CreateFor(method, injectionValues);
+                try
+                {
+                    (RunCheck(testOrigin, testParam, () => method.Invoke(instance, data)) as IDisposable)?.Dispose();
+                }
+                finally
+                {
+                    DisposeAllButInjected(injectionValues, data);
+                }
             }
         }
 
@@ -107,10 +111,34 @@ namespace CreateAndFake.Toolbox.TesterTool
                 }
                 return task.Result;
             }
-            catch (AggregateException taskException)
+            catch (AggregateException taskException) when (taskException.InnerExceptions.Count == 1)
             {
-                HandleCheckException(testOrigin, testParam, taskException);
+                Exception actual = taskException.InnerExceptions.Single();
+                if (actual is TargetInvocationException ex)
+                {
+                    actual = ex.InnerException;
+                }
+
+                HandleCheckException(testOrigin, testParam, actual);
                 return null;
+            }
+        }
+
+        /// <summary>Checks data for disposables and disposes them.</summary>
+        /// <param name="injectedValues">Injected values to ignore.</param>
+        /// <param name="data">Data to check and dispose.</param>
+        protected void DisposeAllButInjected(object[] injectedValues, params object[] data)
+        {
+            foreach (object item in data ?? Array.Empty<object>())
+            {
+                if (item is object[] nested)
+                {
+                    DisposeAllButInjected(injectedValues, nested);
+                }
+                else if (!(injectedValues?.Any(v => ReferenceEquals(item, v)) ?? false))
+                {
+                    (item as IDisposable)?.Dispose();
+                }
             }
         }
 
@@ -119,6 +147,6 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="testParam">Parameter being set to null.</param>
         /// <param name="taskException">Exception encountered.</param>
         protected abstract void HandleCheckException(MethodBase testOrigin,
-            ParameterInfo testParam, AggregateException taskException);
+            ParameterInfo testParam, Exception taskException);
     }
 }

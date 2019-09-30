@@ -22,11 +22,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.7.0</Version>
     <Authors>CreateAndFake Contributors</Authors>
     <Description>A C# class library that handles mocking, test data generation, and validation.</Description>
-    <PackageLicense>https://mozilla.org/MPL/2.0/</PackageLicense>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/CreateAndFake/CreateAndFake</PackageProjectUrl>
     <RepositoryUrl>https://github.com/CreateAndFake/CreateAndFake</RepositoryUrl>
     <RepositoryType>Github</RepositoryType>

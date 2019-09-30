@@ -88,37 +88,48 @@ namespace CreateAndFake.Toolbox.TesterTool
         private void PreventsNullRefException(object instance,
             MethodBase method, bool callAllMethods, object[] injectionValues)
         {
-            object[] data = Randomizer.CreateFor(method, injectionValues);
-
-            for (int i = 0; i < data.Length; i++)
+            object[] data = null;
+            object result = null;
+            try
             {
-                ParameterInfo param = method.GetParameters()[i];
-                if (param.ParameterType.IsValueType
-                    && Nullable.GetUnderlyingType(param.ParameterType) == null)
-                {
-                    continue;
-                }
+                data = Randomizer.CreateFor(method, injectionValues);
 
-                object original = data[i];
-                data[i] = null;
-
-                object result;
-                if (instance == null && method is ConstructorInfo builder)
+                for (int i = 0; i < data.Length; i++)
                 {
-                    result = RunCheck(method, param, () => builder.Invoke(data));
-                }
-                else
-                {
-                    result = RunCheck(method, param, () => method.Invoke(instance, data));
-                }
+                    ParameterInfo param = method.GetParameters()[i];
+                    if (param.ParameterType.IsValueType
+                        && Nullable.GetUnderlyingType(param.ParameterType) == null)
+                    {
+                        continue;
+                    }
 
-                if (result != null && callAllMethods)
-                {
-                    CallAllMethods(method, param, result, injectionValues);
-                }
-                (result as IDisposable)?.Dispose();
+                    object original = data[i];
+                    data[i] = null;
+                    try
+                    {
+                        if (instance == null && method is ConstructorInfo builder)
+                        {
+                            result = RunCheck(method, param, () => builder.Invoke(data));
+                        }
+                        else
+                        {
+                            result = RunCheck(method, param, () => method.Invoke(instance, data));
+                        }
 
-                data[i] = original;
+                        if (result != null && callAllMethods)
+                        {
+                            CallAllMethods(method, param, result, injectionValues);
+                        }
+                    }
+                    finally
+                    {
+                        data[i] = original;
+                    }
+                }
+            }
+            finally
+            {
+                DisposeAllButInjected(injectionValues, data, result);
             }
         }
 
@@ -127,21 +138,15 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="testParam">Parameter being set to null.</param>
         /// <param name="taskException">Exception encountered.</param>
         protected override void HandleCheckException(MethodBase testOrigin,
-            ParameterInfo testParam, AggregateException taskException)
+            ParameterInfo testParam, Exception taskException)
         {
             if (testOrigin == null) throw new ArgumentNullException(nameof(testOrigin));
             if (testParam == null) throw new ArgumentNullException(nameof(testParam));
             if (taskException == null) throw new ArgumentNullException(nameof(taskException));
 
-            Exception actual = taskException.InnerExceptions.Single();
-            if (actual is TargetInvocationException ex)
-            {
-                actual = ex.InnerException;
-            }
-
             string details = $"on method '{testOrigin.Name}' with parameter '{testParam.Name}'";
 
-            if (actual is ArgumentNullException inner
+            if (taskException is ArgumentNullException inner
                 && testOrigin.Name == inner.TargetSite.Name)
             {
                 _asserter.Is(testParam.Name, inner.ParamName,
@@ -149,7 +154,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             }
             else
             {
-                _asserter.Is(false, actual is NullReferenceException,
+                _asserter.Is(false, taskException is NullReferenceException,
                     $"Null reference exception encountered {details}.");
             }
         }

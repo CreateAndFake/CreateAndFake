@@ -30,10 +30,19 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
             {
                 base.TryCompare_SupportsDifferentValidTypes();
             }
-            catch (ReflectionTypeLoadException ex)
+            catch (Exception ex)
             {
-                throw new InvalidOperationException(
-                    "Reflection failure:" + ex.LoaderExceptions.Select(e => e.Message), ex);
+                if (ex is ReflectionTypeLoadException refEx)
+                {
+                    throw new InvalidOperationException(
+                        "Reflection failure:" + refEx.LoaderExceptions.Select(e => e.Message), ex);
+                }
+                else if (ex.InnerException is ReflectionTypeLoadException refExInner)
+                {
+                    throw new InvalidOperationException(
+                        "Reflection failure:" + refExInner.LoaderExceptions.Select(e => e.Message), ex);
+                }
+                throw;
             }
         }
     }

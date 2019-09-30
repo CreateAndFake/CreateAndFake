@@ -29,9 +29,15 @@ namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples
         public MockDisposableSample(object value) { }
 
         /// <summary>For testing.</summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Must ignore in finalizer.")]
+        [SuppressMessage("Sonar", "S108:DoNotCatchGeneralExceptionTypes", Justification = "Must ignore in finalizer.")]
         ~MockDisposableSample()
         {
-            _FinalizerDisposes++;
+            try
+            {
+                _FinalizerDisposes++;
+            }
+            catch { }
         }
 
         /// <summary>For testing.</summary>
