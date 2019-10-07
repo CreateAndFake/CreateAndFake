@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RootNamespace></RootNamespace>
-    <IsPackable>False</IsPackable>
+    <IsPackable>false</IsPackable>
     <NoWarn>CS0649;CS0169</NoWarn>
   </PropertyGroup>
 
