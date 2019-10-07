@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using CreateAndFake;
 using Xunit.Sdk;
 
-namespace CreateAndFakeTests
+namespace CreateAndFake
 {
     /// <summary>Populates theory data with random values.</summary>
+    /// <remarks>Only available when using xUnit.</remarks>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public sealed class RandomDataAttribute : DataAttribute
     {

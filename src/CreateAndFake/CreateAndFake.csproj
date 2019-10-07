@@ -37,6 +37,10 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="xunit.core" Version="2.2.0" PrivateAssets="All" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(Configuration)|$(Platform)'!='Travis|AnyCPU'">
     <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="3.2.1" PrivateAssets="All" />

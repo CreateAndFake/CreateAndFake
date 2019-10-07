@@ -113,6 +113,7 @@ internal class Build : NukeBuild
     /// <summary>Builds and analyzes test code coverage.</summary>
     internal Target Coverage => _ => _
         .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
+        .After(Test)
         .Executes(() =>
         {
             FileSystemTasks.EnsureCleanDirectory(CoverageDir);
