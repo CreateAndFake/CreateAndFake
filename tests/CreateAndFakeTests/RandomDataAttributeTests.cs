@@ -16,7 +16,7 @@ namespace CreateAndFakeTests
         [Fact]
         internal static void GetData_UsesTrials()
         {
-            MethodInfo method = Tools.Randomizer.Create<MethodInfo>();
+            MethodInfo method = Tools.Randomizer.Create<MethodInfo>(m => !m.IsGenericMethod && !m.IsGenericMethodDefinition);
 
             Tools.Asserter.HasCount(0, new RandomDataAttribute() { Trials = 0 }.GetData(method));
             Tools.Asserter.HasCount(1, new RandomDataAttribute() { Trials = 1 }.GetData(method));
