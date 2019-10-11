@@ -1,6 +1,6 @@
 dist: xenial
 language: csharp
 mono: none
-dotnet: 2.2.7
+dotnet: 2.2.100
 script:
  - bash ./build/build.sh OnTravis
