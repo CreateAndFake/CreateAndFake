@@ -39,8 +39,8 @@ View the [license](LICENSE.txt) file for more details.
 ## Acknowledgments
 
 * [xUnit](https://xunit.github.io/): For running tests.
-* [Nuke](https://nuke.build/): For handling building.
-* [OpenCover](https://github.com/OpenCover/opencover): For test coverage.
+* [Nuke](https://nuke.build/): For project building.
+* [Coverlet](https://github.com/tonerdo/coverlet): For test coverage.
 * [ReportGenerator](https://danielpalme.github.io/ReportGenerator/): For readable coverage.
 * [Sonar](https://www.sonarsource.com/products/codeanalyzers/sonarcsharp.html): For code analyzers.
 * [AppVeyor](https://www.appveyor.com/): For Windows continous integration.

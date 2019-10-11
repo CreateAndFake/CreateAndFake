@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
         [Fact]
         internal static void Mutator_GuardsNulls()
         {
-            Tools.Tester.PreventsNullRefException(Tools.Mutator);
+            Tools.Tester.PreventsNullRefException<Mutator>(Tools.Randomizer, Tools.Valuer, Limiter.Dozen);
         }
 
         [Fact]

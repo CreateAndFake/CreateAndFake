@@ -63,7 +63,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             T[] result;
             do
             {
-                result = grabber.Invoke(randomizer.Create<Type>(typeof(T)));
+                result = grabber.Invoke((Type)_Gens[typeof(Type)].Invoke(randomizer));
             } while (result.Length == 0);
 
             return randomizer.Gen.NextItem(result);

@@ -28,7 +28,7 @@ namespace CreateAndFake.Toolbox.MutatorTool
         {
             _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
             _valuer = valuer ?? throw new ArgumentNullException(nameof(valuer));
-            _limiter = limiter;
+            _limiter = limiter ?? throw new ArgumentNullException(nameof(limiter));
         }
 
         /// <summary>Creates an object with different values.</summary>

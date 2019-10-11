@@ -31,6 +31,13 @@ namespace CreateAndFake.Toolbox.ValuerTool
             return Compare((T)expected, (T)actual, valuer);
         }
 
+        /// <summary>Finds the differences between two objects.</summary>
+        /// <param name="expected">First object to compare.</param>
+        /// <param name="actual">Second object to compare.</param>
+        /// <param name="valuer">Handles callback behavior for child values.</param>
+        /// <returns>Found differences.</returns>
+        protected abstract IEnumerable<Difference> Compare(T expected, T actual, ValuerChainer valuer);
+
         /// <summary>Calculates a hash code based upon value.</summary>
         /// <param name="item">Object to generate a code for.</param>
         /// <param name="valuer">Handles callback behavior for child values.</param>
@@ -39,13 +46,6 @@ namespace CreateAndFake.Toolbox.ValuerTool
         {
             return GetHashCode((T)item, valuer);
         }
-
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
-        protected abstract IEnumerable<Difference> Compare(T expected, T actual, ValuerChainer valuer);
 
         /// <summary>Calculates a hash code based upon value.</summary>
         /// <param name="item">Object to generate a code for.</param>
