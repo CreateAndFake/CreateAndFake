@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Xunit.Sdk;
 
@@ -18,10 +19,8 @@ namespace CreateAndFake
         /// <returns>The generated data.</returns>
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
-            for (int i = 0; i < Math.Max(Trials, 0); i++)
-            {
-                yield return Tools.Randomizer.CreateFor(testMethod);
-            }
+            return Enumerable.Range(0, Math.Max(0, Trials))
+                .Select(_ => Tools.Randomizer.CreateFor(testMethod));
         }
     }
 }

@@ -57,15 +57,8 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             Type type = source.GetType();
             Type genericType = type.AsGenericType();
 
-            object[] data;
-            if (_ReverseCases.Contains(genericType ?? type))
-            {
-                data = CopyContentsHelper(source, duplicator).Reverse().ToArray();
-            }
-            else
-            {
-                data = CopyContentsHelper(source, duplicator).ToArray();
-            }
+            object[] data = CopyContentsHelper(source, duplicator,
+                _ReverseCases.Contains(genericType ?? type));
 
             if (genericType != null)
             {
@@ -103,14 +96,24 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <summary>Copies the contents of a collection.</summary>
         /// <param name="source">Collection with contents to copy.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
+        /// <param name="reverse">If the copy process should reverse the order of items from the enumerator.</param>
         /// <returns>Duplicate object.</returns>
-        private static IEnumerable<object> CopyContentsHelper(IEnumerable source, DuplicatorChainer duplicator)
+        private static object[] CopyContentsHelper(IEnumerable source, DuplicatorChainer duplicator, bool reverse)
         {
+            List<object> copy = new List<object>();
+
             IEnumerator enumerator = source.GetEnumerator();
             while (enumerator.MoveNext())
             {
-                yield return duplicator.Copy(enumerator.Current);
+                copy.Add(duplicator.Copy(enumerator.Current));
             }
+
+            if (reverse)
+            {
+                copy.Reverse();
+            }
+
+            return copy.ToArray();
         }
     }
 }

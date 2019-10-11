@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         [Fact]
         internal static void Randomizer_GuardsNulls()
         {
-            Tools.Tester.PreventsNullRefException(Tools.Randomizer);
+            Tools.Tester.PreventsNullRefException<Randomizer>(Tools.Faker, Tools.Gen, Limiter.Few);
         }
 
         [Fact]

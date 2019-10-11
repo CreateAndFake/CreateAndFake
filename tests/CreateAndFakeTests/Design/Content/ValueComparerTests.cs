@@ -22,6 +22,13 @@ namespace CreateAndFakeTests.Design.Content
             Tools.Tester.PreventsParameterMutation<ValueComparer>();
         }
 
+        [Fact]
+        internal static void Equals_MismatchSizeFalse()
+        {
+            Tools.Asserter.Is(false, ValueComparer.Use.Equals(new[] { 0 }, new[] { 0, 0 }));
+            Tools.Asserter.Is(false, ValueComparer.Use.Equals(new[] { 0, 0 }, new[] { 0 }));
+        }
+
         [Theory, RandomData]
         internal static void GetHashCode_SupportsParams(int item1, int item2, int item3)
         {

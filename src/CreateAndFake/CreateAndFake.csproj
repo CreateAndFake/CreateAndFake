@@ -2,23 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.0;netstandard2.0</TargetFrameworks>
-    <Configurations>Debug;Release;Full;Travis</Configurations>
     <LangVersion>latest</LangVersion>
-    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>NETSTANDARD</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Full'">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -41,11 +29,11 @@
     <PackageReference Include="xunit.core" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)|$(Platform)'!='Travis|AnyCPU'">
+  <ItemGroup Condition="'$(OS)'=='Windows_NT'">
     <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.2.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.4" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.16.0.8981" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.3.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.17.0.9346" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

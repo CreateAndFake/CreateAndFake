@@ -1,7 +1,9 @@
+using System.Linq;
 using Nuke.Common;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
+using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.OpenCover;
@@ -18,6 +20,9 @@ internal class Build : NukeBuild
 
     /// <summary>Artifact output folder for tests.</summary>
     private AbsolutePath TestingDir => ArtifactDir / "testing";
+
+    /// <summary>Artifact output folder for packages.</summary>
+    private AbsolutePath PackageDir => ArtifactDir / "releases";
 
     /// <summary>Artifact output folder for test coverage.</summary>
     private AbsolutePath CoverageDir => ArtifactDir / "coverage";
@@ -44,11 +49,13 @@ internal class Build : NukeBuild
 
     /// <summary>Deletes output folders.</summary>
     internal Target Clean => _ => _
+        .Before(Compile)
         .Executes(() =>
         {
             FileSystemTasks.EnsureCleanDirectory(ArtifactDir / "obj");
             FileSystemTasks.EnsureCleanDirectory(ArtifactDir / "bin");
             FileSystemTasks.EnsureCleanDirectory(TestingDir);
+            FileSystemTasks.EnsureCleanDirectory(PackageDir);
             FileSystemTasks.EnsureCleanDirectory(CoverageDir);
         });
 
@@ -59,18 +66,10 @@ internal class Build : NukeBuild
             DotNetBuildSettings Set(DotNetBuildSettings s)
             {
                 return s.SetProjectFile(_solution)
-                    .SetAssemblyVersion(_gitVersion.GetNormalizedAssemblyVersion())
                     .SetFileVersion(_gitVersion.GetNormalizedFileVersion())
-                    .SetInformationalVersion(_gitVersion.InformationalVersion);
+                    .SetInformationalVersion(_gitVersion.InformationalVersion)
+                    .SetAssemblyVersion(_gitVersion.GetNormalizedAssemblyVersion());
             }
-
-            Logger.Info("Version - " + _gitVersion.GetNormalizedAssemblyVersion());
-            Logger.Info("Version - " + _gitVersion.GetNormalizedFileVersion());
-            Logger.Info("Version - " + _gitVersion.InformationalVersion);
-            Logger.Info("Version - " + _gitVersion.NuGetVersionV2);
-            Logger.Info("Version - " + _gitVersion.NuGetVersion);
-            Logger.Info("Version - " + _gitVersion.AssemblySemVer);
-            Logger.Info("Version - " + _gitVersion.FullSemVer);
 
             DotNetTasks.DotNetBuild(s => Set(s).SetConfiguration("Debug"));
             DotNetTasks.DotNetBuild(s => Set(s).SetConfiguration("Release"));
@@ -81,16 +80,13 @@ internal class Build : NukeBuild
         .DependsOn(Compile)
         .Executes(() =>
         {
-            DotNetPackSettings Set(DotNetPackSettings s)
-            {
-                return s.SetProject(_solution)
-                    .SetVersion(_gitVersion.NuGetVersionV2)
-                    .EnableNoRestore()
-                    .EnableNoBuild();
-            }
-
-            DotNetTasks.DotNetPack(s => Set(s).SetConfiguration("Debug"));
-            DotNetTasks.DotNetPack(s => Set(s).SetConfiguration("Release"));
+            DotNetTasks.DotNetPack(s => s
+                .SetVersion(_gitVersion.NuGetVersionV2)
+                .SetOutputDirectory(PackageDir)
+                .SetConfiguration("Release")
+                .SetProject(_solution)
+                .EnableNoRestore()
+                .EnableNoBuild());
         });
 
     /// <summary>Builds and tests the solution.</summary>
@@ -112,35 +108,35 @@ internal class Build : NukeBuild
 
     /// <summary>Builds and analyzes test code coverage.</summary>
     internal Target Coverage => _ => _
-        .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
+        .DependsOn(Compile)
         .After(Test)
         .Executes(() =>
         {
             FileSystemTasks.EnsureCleanDirectory(CoverageDir);
 
-            DotNetTasks.DotNetBuild(s => s
-                .SetProjectFile(_solution)
-                .SetConfiguration("Full"));
-
-            OpenCoverSettings Set(OpenCoverSettings s, string f)
+            CoverletSettings Set(CoverletSettings s, string testAssembly)
             {
-                return s.SetTargetPath(DotNetTasks.DotNetPath)
-                    .SetTargetArguments($"test {_solution.Path} -c Full -s {TestSettingsFile} -f {f} --no-build --no-restore")
-                    .SetSearchDirectories($"{TestingDir / "Full" / f}")
+                return s.SetAssembly(testAssembly)
+                    .SetExclude("[xunit*]*")
                     .SetOutput(RawCoverageFile)
-                    .SetFilters("+[*]* -[*Tests]*")
-                    .SetRegistration(RegistrationType.User)
-                    .SetHideSkippedKinds(OpenCoverSkipping.Filter)
-                    .SetMergeOutput(true)
-                    .SetOldStyle(true);
+                    .SetMergeWith(RawCoverageFile)
+                    .SetTargetSettings(new DotNetTestSettings()
+                        .SetProjectFile(_solution)
+                        .SetSettingsFile(TestSettingsFile)
+                        .SetNoBuild(true));
             }
 
-            OpenCoverTasks.OpenCover(s => Set(s, "netcoreapp2.0"));
-            OpenCoverTasks.OpenCover(s => Set(s, "net461"));
+            AbsolutePath[] testAssemblies = TestingDir.GlobFiles("Debug/**/*Tests.dll").ToArray();
+            for (int i = testAssemblies.Length - 1; i > 0; i--)
+            {
+                CoverletTasks.Coverlet(s => Set(s, testAssemblies[i]));
+            }
+            CoverletTasks.Coverlet(s => Set(s, testAssemblies[0])
+                .SetFormat(CoverletOutputFormat.opencover));
 
             ReportGeneratorTasks.ReportGenerator(s => s
-                .SetReports(RawCoverageFile)
-                .SetTargetDirectory(CoverageDir));
+                .SetTargetDirectory(CoverageDir / "report")
+                .SetReports(RawCoverageFile));
         });
 
     /// <summary>Build process for AppVeyor.</summary>
@@ -153,18 +149,5 @@ internal class Build : NukeBuild
     /// <summary>Build process for Travis.</summary>
     internal Target OnTravis => _ => _
         .Requires(() => IsServerBuild)
-        .Executes(() =>
-        {
-            DotNetTasks.DotNetBuild(s => s
-                .SetProjectFile(_solution)
-                .SetConfiguration("Travis")
-                .SetFramework("netcoreapp2.0"));
-
-            DotNetTasks.DotNetTest(s => s
-                .SetProjectFile(_solution)
-                .SetConfiguration("Travis")
-                .SetFramework("netcoreapp2.0")
-                .SetNoRestore(true)
-                .SetNoBuild(true));
-        });
+        .DependsOn(Test);
 }

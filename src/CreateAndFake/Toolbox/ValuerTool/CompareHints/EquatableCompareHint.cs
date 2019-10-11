@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
@@ -30,18 +31,13 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         {
             if (expected == null) throw new ArgumentNullException(nameof(expected));
 
-            return LazyCompare(expected, actual);
-        }
-
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <returns>Found differences.</returns>
-        private static IEnumerable<Difference> LazyCompare(object expected, object actual)
-        {
             if (!expected.Equals(actual))
             {
-                yield return new Difference(expected, actual);
+                return new[] { new Difference(expected, actual) };
+            }
+            else
+            {
+                return Enumerable.Empty<Difference>();
             }
         }
 

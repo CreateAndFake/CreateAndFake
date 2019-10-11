@@ -10,38 +10,24 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateAndFakeTests", "tests
 		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B} = {F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Build", "build\nuke\_Build\_Build.csproj", "{9B90AD2D-1228-4706-A7FD-0DE034F82922}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_Build", "build\nuke\_Build.csproj", "{F72CA1D2-37C7-4A4E-BBAD-71669E8462A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Full|Any CPU = Full|Any CPU
 		Release|Any CPU = Release|Any CPU
-		Travis|Any CPU = Travis|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Full|Any CPU.ActiveCfg = Full|Any CPU
-		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Full|Any CPU.Build.0 = Full|Any CPU
 		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Travis|Any CPU.ActiveCfg = Travis|Any CPU
-		{F77EEEB8-3D72-4BF9-A8FA-A2A0D136169B}.Travis|Any CPU.Build.0 = Travis|Any CPU
 		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Full|Any CPU.ActiveCfg = Full|Any CPU
-		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Full|Any CPU.Build.0 = Full|Any CPU
 		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Travis|Any CPU.ActiveCfg = Travis|Any CPU
-		{FDB610D5-22AD-41F1-8E10-DFD3F0C7E7B5}.Travis|Any CPU.Build.0 = Travis|Any CPU
-		{9B90AD2D-1228-4706-A7FD-0DE034F82922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B90AD2D-1228-4706-A7FD-0DE034F82922}.Full|Any CPU.ActiveCfg = Release|Any CPU
-		{9B90AD2D-1228-4706-A7FD-0DE034F82922}.Full|Any CPU.Build.0 = Release|Any CPU
-		{9B90AD2D-1228-4706-A7FD-0DE034F82922}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B90AD2D-1228-4706-A7FD-0DE034F82922}.Travis|Any CPU.ActiveCfg = Release|Any CPU
-		{9B90AD2D-1228-4706-A7FD-0DE034F82922}.Travis|Any CPU.Build.0 = Release|Any CPU
+		{F72CA1D2-37C7-4A4E-BBAD-71669E8462A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F72CA1D2-37C7-4A4E-BBAD-71669E8462A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

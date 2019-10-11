@@ -22,6 +22,12 @@ namespace CreateAndFakeTests.TestSamples
         }
 
         /// <summary>For testing.</summary>
+        public int CompareTo(object obj)
+        {
+            return ValueComparer.Use.Compare(this, obj);
+        }
+
+        /// <summary>For testing.</summary>
         public override bool Equals(object obj)
         {
             if (obj is StructSample sample)
@@ -44,12 +50,6 @@ namespace CreateAndFakeTests.TestSamples
         public override int GetHashCode()
         {
             return ValueComparer.Use.GetHashCode(StringValue);
-        }
-
-        /// <summary>For testing.</summary>
-        public int CompareTo(object obj)
-        {
-            return ValueComparer.Use.Compare(this, obj);
         }
 
         /// <summary>For testing.</summary>

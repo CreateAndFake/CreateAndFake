@@ -36,12 +36,6 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
         }
 
         [Fact]
-        internal static void Tester_NoParameterMutation()
-        {
-            Tools.Tester.PreventsParameterMutation(_ShortTestInstance);
-        }
-
-        [Fact]
         internal static void PreventsNullRefException_Disposes()
         {
             lock (MockDisposableSample._Lock)

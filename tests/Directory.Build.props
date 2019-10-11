@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
     <BaseIntermediateOutputPath>..\..\artifacts\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
-    <OutputPath>..\..\artifacts\testing\$(Configuration)\</OutputPath>
-    <DocumentationFile>..\..\artifacts\testing\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+    <OutputPath>..\..\artifacts\testing\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+    <DocumentationFile>..\..\artifacts\testing\$(Configuration)\$(MSBuildProjectName)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\TestRules.ruleset</CodeAnalysisRuleSet>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>

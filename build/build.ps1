@@ -13,7 +13,7 @@ $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 # CONFIGURATION
 ###########################################################################
 
-$BuildProjectFile = "$PSScriptRoot\nuke\_Build\_Build.csproj"
+$BuildProjectFile = "$PSScriptRoot\nuke\_Build.csproj"
 $TempDirectory = "$PSScriptRoot\..\artifacts\.tmp"
 
 $DotNetGlobalFile = "$PSScriptRoot\..\global.json"
@@ -65,4 +65,4 @@ else {
 Write-Output "Microsoft (R) .NET Core SDK version $(& $env:DOTNET_EXE --version)"
 
 ExecSafe { & $env:DOTNET_EXE build $BuildProjectFile /nodeReuse:false }
-ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments --root $PSScriptRoot}
+ExecSafe { & $env:DOTNET_EXE run --project $BuildProjectFile --no-build -- $BuildArguments --root $PSScriptRoot }
