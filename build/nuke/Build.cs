@@ -98,7 +98,6 @@ internal class Build : NukeBuild
             {
                 return s.SetProjectFile(_solution)
                     .SetSettingsFile(TestSettingsFile)
-                    .SetNoRestore(true)
                     .SetNoBuild(true);
             }
 
@@ -149,5 +148,15 @@ internal class Build : NukeBuild
     /// <summary>Build process for Travis.</summary>
     internal Target OnTravis => _ => _
         .Requires(() => IsServerBuild)
-        .DependsOn(Test);
+        .Executes(() =>
+        {
+            DotNetTasks.DotNetBuild(s => s
+                .SetProjectFile(_solution)
+                .SetFramework("netcoreapp2.0"));
+
+            DotNetTasks.DotNetTest(s => s
+                .SetProjectFile(_solution)
+                .SetFramework("netcoreapp2.0")
+                .SetNoBuild(true));
+        });
 }
