@@ -7,9 +7,16 @@
         /// <typeparam name="T">Alternative base to cast to.</typeparam>
         /// <param name="baseFake">Created fake with the extra type.</param>
         /// <returns>Fake to test with.</returns>
-        public static Fake<T> AsFake<T>(this Fake baseFake)
+        public static Fake<T> ToFake<T>(this Fake baseFake)
         {
-            return new Fake<T>(baseFake);
+            if (baseFake is Fake<T> fake)
+            {
+                return fake;
+            }
+            else
+            {
+                return new Fake<T>(baseFake);
+            }
         }
     }
 }

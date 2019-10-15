@@ -109,5 +109,21 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         {
             return _faker.Stub(parent);
         }
+
+        /// <summary>Determines if the type can be faked.</summary>
+        /// <typeparam name="T">Type to check.</typeparam>
+        /// <returns>True if possible; false otherwise.</returns>
+        public bool FakerSupports<T>()
+        {
+            return _faker.Supports<T>();
+        }
+
+        /// <summary>Determines if the type can be faked.</summary>
+        /// <param name="type">Type to check.</param>
+        /// <returns>True if possible; false otherwise.</returns>
+        public bool FakerSupports(Type type)
+        {
+            return _faker.Supports(type);
+        }
     }
 }

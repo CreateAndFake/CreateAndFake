@@ -141,7 +141,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Asserter.Is("Hint", fake.Dummy.Hint);
             fake.Verify(Times.Exactly(2), m => m.Hint);
 
-            Fake<IClashingFakeSample> fake2 = fake.AsFake<IClashingFakeSample>();
+            Fake<IClashingFakeSample> fake2 = fake.ToFake<IClashingFakeSample>();
             fake2.SetupSet(m => m.Text, Arg.LambdaAny<string>(), Behavior.None());
             fake2.VerifySet(Times.Never, m => m.Text, Arg.LambdaAny<string>());
             fake2.Dummy.Text = "What";
