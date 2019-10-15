@@ -24,6 +24,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             new StringCreateHint(),
             new DelegateCreateHint(),
             new CommonSystemCreateHint(),
+            new InjectedCreateHint(),
             new FakeCreateHint(),
             new FakedCreateHint(),
             new ExceptionCreateHint(),

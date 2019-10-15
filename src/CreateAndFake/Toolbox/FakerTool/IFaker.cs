@@ -38,5 +38,17 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="interfaces">Extra interfaces to implement.</param>
         /// <returns>Handler for the fake behavior.</returns>
         Fake Stub(Type parent, params Type[] interfaces);
+
+        /// <summary>Creates an instance injected with mocks.</summary>
+        /// <typeparam name="T">Instance to be created.</typeparam>
+        /// <param name="values">Values to inject instead where possible.</param>
+        /// <returns>The created instance with its fakes.</returns>
+        Injected<T> InjectMocks<T>(params object[] values);
+
+        /// <summary>Creates an instance injected with stubs.</summary>
+        /// <typeparam name="T">Instance to be created.</typeparam>
+        /// <param name="values">Values to inject instead where possible.</param>
+        /// <returns>The created instance with its fakes.</returns>
+        Injected<T> InjectStubs<T>(params object[] values);
     }
 }
