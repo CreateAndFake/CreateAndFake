@@ -19,8 +19,11 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="fakes">Fakes injected into the dummy.</param>
         public Injected(T dummy, IEnumerable<Fake> fakes)
         {
-            Dummy = dummy ?? throw new ArgumentNullException(nameof(dummy));
-            Fakes = fakes?.ToArray() ?? throw new ArgumentNullException(nameof(fakes));
+            if (dummy == null) throw new ArgumentNullException(nameof(dummy));
+            if (fakes == null) throw new ArgumentNullException(nameof(fakes));
+
+            Dummy = dummy;
+            Fakes = fakes.ToArray();
         }
 
         /// <summary>Finds the fake of the given type.</summary>
