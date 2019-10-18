@@ -23,6 +23,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             new LegacyCollectionCreateHint(),
             new StringCreateHint(),
             new DelegateCreateHint(),
+            new TaskCreateHint(),
             new CommonSystemCreateHint(),
             new InjectedCreateHint(),
             new FakeCreateHint(),

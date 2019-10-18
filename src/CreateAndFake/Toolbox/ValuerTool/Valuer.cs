@@ -16,6 +16,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         {
             new EarlyFailCompareHint(),
             new FakedCompareHint(),
+            new TaskCompareHint(),
             new ValueEquatableCompareHint(),
             new ValuerEquatableCompareHint(),
             new EquatableCompareHint(),
