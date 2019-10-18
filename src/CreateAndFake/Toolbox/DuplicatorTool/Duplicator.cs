@@ -13,6 +13,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         private static readonly CopyHint[] _DefaultHints = new CopyHint[]
         {
             new CommonSystemCopyHint(),
+            new TaskCopyHint(),
             new DeepCloneableCopyHint(),
             new DuplicatableCopyHint(),
             new BasicCopyHint(),
