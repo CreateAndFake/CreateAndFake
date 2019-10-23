@@ -211,16 +211,10 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 .Select(v => Tuple.Create(v.GetType(), v))
                 .ToList();
 
-            // Finds the contructor with the most matches then by fewest parameters.
-            ConstructorInfo maker = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public)
-                .GroupBy(c => c.GetParameters().Count(p => data.Any(t => t.Item1.Inherits(p.ParameterType))))
-                .Where(g => g.Key > 0)
-                .OrderByDescending(g => g.Key)
-                .FirstOrDefault()
-                ?.OrderBy(c => c.GetParameters())
-                .FirstOrDefault();
+            ConstructorInfo maker = FindConstructor(type, data, BindingFlags.Public)
+                ?? FindConstructor(type, data, BindingFlags.NonPublic);
 
-            if (maker != null && !type.Inherits<Fake>())
+            if (maker != null && !type.Inherits<Fake>() && !type.Inherits(typeof(Injected<>)))
             {
                 ParameterInfo[] info = maker.GetParameters();
                 object[] args = new object[info.Length];
@@ -243,6 +237,22 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             {
                 return Create(type);
             }
+        }
+
+        /// <summary>Finds the contructor with the most matches then by fewest parameters.</summary>
+        /// <param name="type">Type to find a constructor for.</param>
+        /// <param name="data">Injection data to use.</param>
+        /// <param name="scope">Scope of constructors to find.</param>
+        /// <returns>Constructor if found; null otherwise.</returns>
+        private static ConstructorInfo FindConstructor(Type type, List<Tuple<Type, object>> data, BindingFlags scope)
+        {
+            return type.GetConstructors(BindingFlags.Instance | scope)
+                .GroupBy(c => c.GetParameters().Count(p => data.Any(t => t.Item1.Inherits(p.ParameterType))))
+                .Where(g => g.Key > 0)
+                .OrderByDescending(g => g.Key)
+                .FirstOrDefault()
+                ?.OrderBy(c => c.GetParameters())
+                .FirstOrDefault();
         }
 
         /// <summary>
