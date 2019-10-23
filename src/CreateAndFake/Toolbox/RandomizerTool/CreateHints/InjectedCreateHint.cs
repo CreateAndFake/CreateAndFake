@@ -36,13 +36,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         {
             Type target = type.GetGenericArguments().Single();
 
-            // Finds the contructor with the most class references then by fewest parameters.
-            ConstructorInfo maker = target.GetConstructors(BindingFlags.Instance | BindingFlags.Public)
-                .GroupBy(c => c.GetParameters().Count(p => randomizer.FakerSupports(p.ParameterType)))
-                .OrderByDescending(g => g.Key)
-                .FirstOrDefault()
-                ?.OrderBy(c => c.GetParameters())
-                .FirstOrDefault();
+            ConstructorInfo maker = FindConstructor(target, randomizer, BindingFlags.Public)
+                ?? FindConstructor(target, randomizer, BindingFlags.NonPublic);
 
             if (maker != null)
             {
@@ -72,6 +67,21 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             {
                 throw new InvalidOperationException($"No constructors found on type '{target}'.");
             }
+        }
+
+        /// <summary>Finds the contructor with the most class references then by fewest parameters.</summary>
+        /// <param name="target">Type to find a constructor for.</param>
+        /// <param name="randomizer">Handles callback behavior for child values.</param>
+        /// <param name="scope">Scope of constructors to find.</param>
+        /// <returns>Constructor if found; null otherwise.</returns>
+        private static ConstructorInfo FindConstructor(Type target, RandomizerChainer randomizer, BindingFlags scope)
+        {
+            return target.GetConstructors(BindingFlags.Instance | scope)
+                .GroupBy(c => c.GetParameters().Count(p => randomizer.FakerSupports(p.ParameterType)))
+                .OrderByDescending(g => g.Key)
+                .FirstOrDefault()
+                ?.OrderBy(c => c.GetParameters())
+                .FirstOrDefault();
         }
     }
 }

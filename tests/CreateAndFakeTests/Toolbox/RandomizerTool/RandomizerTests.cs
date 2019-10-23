@@ -129,5 +129,22 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
             Tools.Asserter.Is(new object[] { fake.Dummy, fake2.Dummy }, Tools.Randomizer.CreateFor(
                 typeof(InjectMockSample).GetConstructors().Single(), fake, fake2));
         }
+
+        [Theory, RandomData]
+        internal static void CreateFor_InjectedWorks(Injected<InjectMockSample> injected)
+        {
+            injected.Dummy.TestIfMockedSeparately();
+        }
+
+        [Theory, RandomData]
+        internal static void CreateFor_InjectedNotManuallyInjected(Fake<IOnlyMockSample> inner1,
+            Fake<IOnlyMockSample> inner2, InjectMockSample sample, Injected<InjectMockSample> injected)
+        {
+            Tools.Asserter.IsNot(sample, injected.Dummy);
+            Tools.Asserter.Is(false, injected.Fakes.Contains(inner1));
+            Tools.Asserter.Is(false, injected.Fakes.Contains(inner2));
+
+            injected.Dummy.TestIfMockedSeparately();
+        }
     }
 }

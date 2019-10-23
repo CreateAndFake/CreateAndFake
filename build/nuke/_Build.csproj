@@ -24,10 +24,10 @@
 
   <ItemGroup>
     <None Include="..\*" Link="build\%(Filename)%(Extension)" />
-    <None Include="..\..\*.yml" Link="root\%(Filename)%(Extension)" />
     <None Include="..\..\src\*" Link="src\%(Filename)%(Extension)" />
     <None Include="..\..\tests\*" Link="tests\%(Filename)%(Extension)" />
-    <None Include="..\..\*" Exclude="..\..\..\*.sln" Link="root\%(Filename)%(Extension)" />
+    <None Include="..\..\docs\**" Link="docs\%(RecursiveDir)%(Filename)%(Extension)" />
+    <None Include="..\..\*" Exclude="**\*.sln" Link="root\%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

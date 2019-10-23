@@ -4,6 +4,7 @@ using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.DuplicatorTool;
+using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
 
 namespace CreateAndFake.Toolbox.TesterTool
@@ -194,6 +195,24 @@ namespace CreateAndFake.Toolbox.TesterTool
                 () => checker.PreventsMutationOnMethods(instance, injectionValues)).Wait();
             _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsMutationOnStatics(typeof(T), false, injectionValues)).Wait();
+        }
+
+        /// <summary>Verifies no exceptions are thrown on any method when using injection and random data.</summary>
+        /// <typeparam name="T">Type to verify.</typeparam>
+        /// <param name="injectionValues">Values to inject into called methods.</param>
+        public virtual void PassthroughWithNoExceptions<T>(params object[] injectionValues)
+        {
+            new ExceptionGuarder(new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout)
+                .CallAllMethods(Randomizer.Create<Injected<T>>().Dummy, injectionValues);
+        }
+
+        /// <summary>Verifies no exceptions are thrown on any method.</summary>
+        /// <param name="instance">Instance to test the methods on.</param>
+        /// <param name="injectionValues">Values to inject into called methods.</param>
+        public virtual void PassthroughWithNoExceptions(object instance, params object[] injectionValues)
+        {
+            new ExceptionGuarder(new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout)
+                .CallAllMethods(instance, injectionValues);
         }
     }
 }

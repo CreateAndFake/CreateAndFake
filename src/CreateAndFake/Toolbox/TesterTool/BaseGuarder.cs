@@ -28,7 +28,15 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             Fixer = fixer ?? throw new ArgumentNullException(nameof(fixer));
             Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
-            Timeout = timeout;
+
+            if (timeout.TotalMilliseconds >= -1 && timeout.TotalMilliseconds <= int.MaxValue)
+            {
+                Timeout = timeout;
+            }
+            else
+            {
+                Timeout = TimeSpan.FromMilliseconds(-1);
+            }
         }
 
         /// <summary>Gets all testable constructors on a type.</summary>
@@ -72,7 +80,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 object[] data = Randomizer.CreateFor(method, injectionValues);
                 try
                 {
-                    (RunCheck(testOrigin, testParam, () => method.Invoke(instance, data)) as IDisposable)?.Dispose();
+                    (RunCheck(testOrigin ?? method, testParam, () => method.Invoke(instance, data)) as IDisposable)?.Dispose();
                 }
                 finally
                 {

@@ -131,9 +131,7 @@ internal class Build : NukeBuild
                 CoverletTasks.Coverlet(s => Set(s, testAssemblies[i]));
             }
             CoverletTasks.Coverlet(s => Set(s, testAssemblies[0])
-                .SetFormat(CoverletOutputFormat.opencover)
-                .SetThresholdType(CoverletThresholdType.line)
-                .SetThreshold(100));
+                .SetFormat(CoverletOutputFormat.opencover));
 
             ReportGeneratorTasks.ReportGenerator(s => s
                 .SetTargetDirectory(CoverageDir / "report")
