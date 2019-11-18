@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
+using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.AsserterTool
@@ -73,7 +73,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public void Is(object expected, object actual, string details = null)
         {
-            ValuesEqual(expected, actual, details);
+            new AssertObject(Valuer, actual).Is(expected, details);
         }
 
         /// <summary>Verifies two objects are unequal by value.</summary>
@@ -83,7 +83,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public void IsNot(object expected, object actual, string details = null)
         {
-            ValuesNotEqual(expected, actual, details);
+            new AssertObject(Valuer, actual).IsNot(expected, details);
         }
 
         /// <summary>Verifies a collection is empty.</summary>
@@ -92,7 +92,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual void IsEmpty(IEnumerable collection, string details = null)
         {
-            HasCount(0, collection, details);
+            new AssertCollection(Valuer, collection).IsEmpty(details);
         }
 
         /// <summary>Verifies a collection is not empty.</summary>
@@ -101,7 +101,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual void IsNotEmpty(IEnumerable collection, string details = null)
         {
-            Is(true, collection?.GetEnumerator().MoveNext(), details);
+            new AssertCollection(Valuer, collection).IsNotEmpty(details);
         }
 
         /// <summary>Verifies a collection is of a certain size.</summary>
@@ -111,24 +111,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual void HasCount(int count, IEnumerable collection, string details = null)
         {
-            if (collection == null)
-            {
-                throw new AssertException(
-                    $"Expected collection of '{count}' elements, but was 'null'.", details);
-            }
-
-            StringBuilder contents = new StringBuilder();
-            int i = 0;
-            for (IEnumerator data = collection.GetEnumerator(); data.MoveNext(); i++)
-            {
-                contents.Append("[").Append(i).Append("]:").Append(data.Current).AppendLine();
-            }
-
-            if (i != count)
-            {
-                throw new AssertException(
-                    $"Expected collection of '{count}' elements, but was '{i}'.", details, contents.ToString());
-            }
+            new AssertCollection(Valuer, collection).HasCount(count, details);
         }
 
         /// <summary>Verifies two objects are equal by reference.</summary>
@@ -138,10 +121,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual void ReferenceEqual(object expected, object actual, string details = null)
         {
-            if (!ReferenceEquals(expected, actual))
-            {
-                throw new AssertException("References failed to equal.", details);
-            }
+            new AssertObject(Valuer, actual).ReferenceEqual(expected, details);
         }
 
         /// <summary>Verifies two objects are not equal by reference.</summary>
@@ -151,10 +131,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual void ReferenceNotEqual(object expected, object actual, string details = null)
         {
-            if (ReferenceEquals(expected, actual))
-            {
-                throw new AssertException("References failed to not equal.", details);
-            }
+            new AssertObject(Valuer, actual).ReferenceNotEqual(expected, details);
         }
 
         /// <summary>Verifies two objects are equal by value.</summary>
@@ -164,13 +141,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual void ValuesEqual(object expected, object actual, string details = null)
         {
-            Difference[] differences = Valuer.Compare(expected, actual).ToArray();
-            if (differences.Length > 0)
-            {
-                string rootType = (expected ?? actual)?.GetType().Name;
-                throw new AssertException($"Value equality failed for type '{rootType}'.",
-                    details, string.Join<Difference>(Environment.NewLine, differences));
-            }
+            new AssertObject(Valuer, actual).ValuesEqual(expected, details);
         }
 
         /// <summary>Verifies two objects are unequal by value.</summary>
@@ -180,11 +151,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual void ValuesNotEqual(object expected, object actual, string details = null)
         {
-            if (!Valuer.Compare(expected, actual).Any())
-            {
-                throw new AssertException(
-                    $"Value inequality failed for type '{expected?.GetType().Name}'.", details, expected?.ToString());
-            }
+            new AssertObject(Valuer, actual).ValuesNotEqual(expected, details);
         }
 
         /// <summary>Verifies the given behavior throws an exception.</summary>

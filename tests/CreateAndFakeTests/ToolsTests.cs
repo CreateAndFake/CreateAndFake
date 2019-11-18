@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using CreateAndFake;
 using CreateAndFake.Toolbox;
+using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
@@ -61,8 +62,20 @@ namespace CreateAndFakeTests
         [Fact]
         internal static void Tools_AllCreateAndFakeTypesWork()
         {
-            Type[] ignore = new[] { typeof(Arg), typeof(Fake), typeof(Fake<>), typeof(VoidType), typeof(AnyGeneric),
-                typeof(Injected<>), typeof(DuplicatorChainer), typeof(ValuerChainer), typeof(Behavior), typeof(Behavior<>) };
+            Type[] ignore = new[] {
+                typeof(Arg),
+                typeof(Fake),
+                typeof(Fake<>),
+                typeof(VoidType),
+                typeof(AnyGeneric),
+                typeof(Injected<>),
+                typeof(DuplicatorChainer),
+                typeof(ValuerChainer),
+                typeof(Behavior),
+                typeof(Behavior<>),
+                typeof(AssertObjectBase<>),
+                typeof(AssertCollectionBase<>)
+            };
 
             foreach (Type type in typeof(Tools).Assembly.GetTypes()
                 .Where(t => !(t.IsAbstract && t.IsSealed))
