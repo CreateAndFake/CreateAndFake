@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using CreateAndFake;
 using CreateAndFake.Toolbox.ValuerTool;
 using Xunit;
@@ -44,14 +45,27 @@ namespace CreateAndFakeTests.TestBases
         {
             foreach (Type type in _validTypes)
             {
-                object data = Tools.Randomizer.Create(type);
+                object data = null;
+                try
+                {
+                    data = Tools.Randomizer.Create(type);
 
-                (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(data, data, CreateChainer());
+                    (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(data, data, CreateChainer());
 
-                Tools.Asserter.Is(true, result.Item1,
-                    $"Hint '{typeof(T).Name}' failed to support '{type.Name}'.");
-                Tools.Asserter.IsEmpty(result.Item2,
-                    $"Hint '{typeof(T).Name}' found differences with same '{type.Name}' of '{data.GetType()}'.");
+                    Tools.Asserter.Is(true, result.Item1,
+                        $"Hint '{typeof(T).Name}' failed to support '{type.Name}'.");
+                    Tools.Asserter.IsEmpty(result.Item2,
+                        $"Hint '{typeof(T).Name}' found differences with same '{type.Name}' of '{data.GetType()}'.");
+                }
+                catch (Exception e)
+                {
+                    ExpandReflectionException(e);
+                    throw;
+                }
+                finally
+                {
+                    (data as IDisposable)?.Dispose();
+                }
             }
         }
 
@@ -61,15 +75,29 @@ namespace CreateAndFakeTests.TestBases
         {
             foreach (Type type in _validTypes)
             {
-                object one = Tools.Randomizer.Create(type);
-                object two = Tools.Mutator.Variant(one.GetType(), one);
+                object one = null, two = null;
+                try
+                {
+                    one = Tools.Randomizer.Create(type);
+                    two = Tools.Mutator.Variant(one.GetType(), one);
 
-                (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(one, two, CreateChainer());
+                    (bool, IEnumerable<Difference>) result = TestInstance.TryCompare(one, two, CreateChainer());
 
-                Tools.Asserter.Is(true, result.Item1,
-                    $"Hint '{typeof(T).Name}' failed to support '{type.Name}'.");
-                Tools.Asserter.IsNotEmpty(result.Item2.ToArray(),
-                    $"Hint '{typeof(T).Name}' didn't find differences with two random '{type.Name}'.");
+                    Tools.Asserter.Is(true, result.Item1,
+                        $"Hint '{typeof(T).Name}' failed to support '{type.Name}'.");
+                    Tools.Asserter.IsNotEmpty(result.Item2.ToArray(),
+                        $"Hint '{typeof(T).Name}' didn't find differences with two random '{type.Name}'.");
+                }
+                catch (Exception e)
+                {
+                    ExpandReflectionException(e);
+                    throw;
+                }
+                finally
+                {
+                    (one as IDisposable)?.Dispose();
+                    (two as IDisposable)?.Dispose();
+                }
             }
         }
 
@@ -79,12 +107,26 @@ namespace CreateAndFakeTests.TestBases
         {
             foreach (Type type in _invalidTypes)
             {
-                object one = Tools.Randomizer.Create(type);
-                object two = Tools.Randomizer.Create(one.GetType());
+                object one = null, two = null;
+                try
+                {
+                    one = Tools.Randomizer.Create(type);
+                    two = Tools.Randomizer.Create(one.GetType());
 
-                Tools.Asserter.Is((false, (IEnumerable<Difference>)null),
-                    TestInstance.TryCompare(one, two, CreateChainer()),
-                    $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
+                    Tools.Asserter.Is((false, (IEnumerable<Difference>)null),
+                        TestInstance.TryCompare(one, two, CreateChainer()),
+                        $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
+                }
+                catch (Exception e)
+                {
+                    ExpandReflectionException(e);
+                    throw;
+                }
+                finally
+                {
+                    (one as IDisposable)?.Dispose();
+                    (two as IDisposable)?.Dispose();
+                }
             }
         }
 
@@ -107,6 +149,11 @@ namespace CreateAndFakeTests.TestBases
                         $"Hint '{typeof(T).Name}' generated different hash for same '{type.Name}'.");
                     Tools.Asserter.Is(dataHash, TestInstance.TryGetHashCode(dataCopy, CreateChainer()),
                         $"Hint '{typeof(T).Name}' generated different hash for dupe '{type.Name}'.");
+                }
+                catch (Exception e)
+                {
+                    ExpandReflectionException(e);
+                    throw;
                 }
                 finally
                 {
@@ -134,6 +181,11 @@ namespace CreateAndFakeTests.TestBases
                     Tools.Asserter.IsNot(dataHash, TestInstance.TryGetHashCode(dataDiffer, CreateChainer()),
                         $"Hint '{typeof(T).Name}' generated same hash for different '{type.Name}'.");
                 }
+                catch (Exception e)
+                {
+                    ExpandReflectionException(e);
+                    throw;
+                }
                 finally
                 {
                     (data as IDisposable)?.Dispose();
@@ -148,9 +200,24 @@ namespace CreateAndFakeTests.TestBases
         {
             foreach (Type type in _invalidTypes)
             {
-                Tools.Asserter.Is((false, default(int)),
-                    TestInstance.TryGetHashCode(Tools.Randomizer.Create(type), CreateChainer()),
-                    $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
+                object data = null;
+                try
+                {
+                    data = Tools.Randomizer.Create(type);
+
+                    Tools.Asserter.Is((false, default(int)),
+                        TestInstance.TryGetHashCode(data, CreateChainer()),
+                        $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
+                }
+                catch (Exception e)
+                {
+                    ExpandReflectionException(e);
+                    throw;
+                }
+                finally
+                {
+                    (data as IDisposable)?.Dispose();
+                }
             }
         }
 
@@ -160,6 +227,20 @@ namespace CreateAndFakeTests.TestBases
             return new ValuerChainer(Tools.Valuer,
                 (o, c) => Tools.Valuer.GetHashCode(o),
                 (e, a, c) => Tools.Valuer.Compare(e, a));
+        }
+
+        private void ExpandReflectionException(Exception ex)
+        {
+            if (ex is ReflectionTypeLoadException refEx)
+            {
+                throw new InvalidOperationException(
+                    "Reflection failure:" + refEx.LoaderExceptions.Select(e => e.Message), ex);
+            }
+            else if (ex.InnerException is ReflectionTypeLoadException refExInner)
+            {
+                throw new InvalidOperationException(
+                    "Reflection failure:" + refExInner.LoaderExceptions.Select(e => e.Message), ex);
+            }
         }
     }
 }
