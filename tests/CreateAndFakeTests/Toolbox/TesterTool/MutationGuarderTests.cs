@@ -100,7 +100,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 using (MockDisposableSample sample = new MockDisposableSample(null))
                 {
                     _LongTestInstance.PreventsMutationOnMethods(sample);
-                    Tools.Asserter.Is(1, MockDisposableSample._ClassDisposes);
+                    Tools.Asserter.Is(0, MockDisposableSample._ClassDisposes);
                     Tools.Asserter.Is(0, MockDisposableSample._FinalizerDisposes);
                     MockDisposableSample._Fake.Verify(Times.Once, d => d.Dispose());
                 }

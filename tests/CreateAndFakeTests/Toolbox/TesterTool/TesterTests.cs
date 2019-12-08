@@ -72,7 +72,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
 
                 _LongTestInstance.PreventsParameterMutation<MockDisposableSample>();
-                Tools.Asserter.Is(3, MockDisposableSample._ClassDisposes);
+                Tools.Asserter.Is(2, MockDisposableSample._ClassDisposes);
                 Tools.Asserter.Is(0, MockDisposableSample._FinalizerDisposes);
                 MockDisposableSample._Fake.Verify(Times.Exactly(2), d => d.Dispose());
             }

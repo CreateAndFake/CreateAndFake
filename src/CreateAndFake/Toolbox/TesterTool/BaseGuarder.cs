@@ -59,6 +59,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             return type
                 .GetMethods(kind | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
+                .Where(m => m.DeclaringType == type || m.DeclaringType.IsAbstract)
                 .Where(m => !m.IsPrivate);
         }
 
