@@ -66,10 +66,10 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             foreach (MethodInfo method in FindImplementableMethods(interfaces.Prepend(parent)))
             {
                 MethodBuilder fakedMethod = newType.DefineMethod(
-                    method.DeclaringType.Name + "." + method.Name,
-                    method.Attributes & ~MethodAttributes.Abstract,
-                    method.ReturnType,
-                    method.GetParameters().Select(p => p.ParameterType).ToArray());
+                        method.DeclaringType.Name + "." + method.Name,
+                        method.Attributes & ~MethodAttributes.Abstract,
+                        method.ReturnType,
+                        method.GetParameters().Select(p => p.ParameterType).ToArray());
 
                 if (method.IsGenericMethod)
                 {
@@ -198,23 +198,23 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 gen.Emit(OpCodes.Ldloc, types);
                 gen.Emit(OpCodes.Ldc_I4, i);
                 gen.Emit(OpCodes.Ldtoken, generics[i]);
-                gen.Emit(OpCodes.Call, _TypeResolver);
+                gen.Emit(OpCodes.Callvirt, _TypeResolver);
                 gen.Emit(OpCodes.Stelem_Ref);
             }
 
             // this.FakeMeta.Call('method.Name', types, args);
             gen.Emit(OpCodes.Ldarg_0);
-            gen.Emit(OpCodes.Call, metaGetter);
+            gen.Emit(OpCodes.Callvirt, metaGetter);
             gen.Emit(OpCodes.Ldstr, method.Name);
             gen.Emit(OpCodes.Ldloc, types);
             gen.Emit(OpCodes.Ldloc, args);
             if (method.ReturnType != typeof(void))
             {
-                gen.Emit(OpCodes.Call, _ResultChainer.MakeGenericMethod(method.ReturnType));
+                gen.Emit(OpCodes.Callvirt, _ResultChainer.MakeGenericMethod(method.ReturnType));
             }
             else
             {
-                gen.Emit(OpCodes.Call, _VoidChainer);
+                gen.Emit(OpCodes.Callvirt, _VoidChainer);
             }
 
             // params[0..x] = ((OutRef)args[0..x]).Var;
@@ -248,11 +248,13 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 .SingleOrDefault(c => !c.GetParameters().Any());
 
             FieldBuilder backingField = newType.DefineField(
-                newType.Name + ".m_" + nameof(IFaked.FakeMeta), MetaType,
+                "_" + nameof(IFaked.FakeMeta), MetaType,
                 FieldAttributes.Private | FieldAttributes.InitOnly);
 
             ConstructorBuilder constructor = newType.DefineConstructor(
-                MethodAttributes.Public, CallingConventions.HasThis, new[] { MetaType });
+                MethodAttributes.Public,
+                CallingConventions.HasThis,
+                new[] { MetaType });
             {
                 // base();
                 ILGenerator newGenerator = constructor.GetILGenerator();
@@ -272,10 +274,13 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             PropertyInfo propInfo = FakeType.GetProperty(nameof(IFaked.FakeMeta));
             MethodInfo getterInfo = propInfo.GetGetMethod();
 
-            MethodBuilder getMetaMethod = newType.DefineMethod(nameof(IFaked) + "." + getterInfo.Name,
-                getterInfo.Attributes & ~MethodAttributes.Abstract, MetaType, Type.EmptyTypes);
+            MethodBuilder getMetaMethod = newType.DefineMethod(
+                nameof(IFaked) + "." + getterInfo.Name,
+                getterInfo.Attributes & ~MethodAttributes.Abstract,
+                MetaType,
+                Type.EmptyTypes);
             {
-                // return this.m_FakeMeta;
+                // return this._FakeMeta;
                 ILGenerator getGenerator = getMetaMethod.GetILGenerator();
                 getGenerator.Emit(OpCodes.Ldarg_0);
                 getGenerator.Emit(OpCodes.Ldfld, backingField);
