@@ -49,10 +49,10 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         internal static TypeInfo BuildType(Type parent, Type[] interfaces)
         {
             TypeBuilder newType = _Module.DefineType(
-                "Fake[" + string.Join("|", interfaces.Prepend(parent).Select(i => i.Name)) + "]-" + Guid.NewGuid(),
+                "Fake_" + string.Join("|", interfaces.Prepend(parent).Select(i => i.Name)) + "_" + Guid.NewGuid(),
                 TypeAttributes.NotPublic | TypeAttributes.Sealed, parent, interfaces);
 
-            MethodInfo metaGetter = SetupFakeMetaProvider(newType, parent);
+            MethodInfo metaGetter = SetupFakeMetaProvider(newType, SetupConstructor(newType, parent));
 
             (PropertyInfo, PropertyBuilder)[] props =
                 FindImplementableProperties(interfaces.Prepend(parent))
@@ -198,7 +198,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 gen.Emit(OpCodes.Ldloc, types);
                 gen.Emit(OpCodes.Ldc_I4, i);
                 gen.Emit(OpCodes.Ldtoken, generics[i]);
-                gen.Emit(OpCodes.Callvirt, _TypeResolver);
+                gen.Emit(OpCodes.Call, _TypeResolver);
                 gen.Emit(OpCodes.Stelem_Ref);
             }
 
@@ -237,11 +237,11 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             gen.Emit(OpCodes.Ret);
         }
 
-        /// <summary>Hooks up the fake behavior mechanism for the new type.</summary>
+        /// <summary>Creates the constructor with the backing field for the meta provider.</summary>
         /// <param name="newType">Dynamic type being created.</param>
         /// <param name="parent">Base class inheriting from.</param>
-        /// <returns>Info for the meta provider hook.</returns>
-        private static MethodInfo SetupFakeMetaProvider(TypeBuilder newType, Type parent)
+        /// <returns>Info for the meta provider field.</returns>
+        private static FieldInfo SetupConstructor(TypeBuilder newType, Type parent)
         {
             ConstructorInfo baseConstuctor = parent
                 .GetConstructors(_MemberFinder)
@@ -257,20 +257,29 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 new[] { MetaType });
             {
                 // base();
-                ILGenerator newGenerator = constructor.GetILGenerator();
+                ILGenerator gen = constructor.GetILGenerator();
                 if (baseConstuctor != null)
                 {
-                    newGenerator.Emit(OpCodes.Ldarg_0);
-                    newGenerator.Emit(OpCodes.Call, baseConstuctor);
+                    gen.Emit(OpCodes.Ldarg_0);
+                    gen.Emit(OpCodes.Call, baseConstuctor);
                 }
 
                 // this.m_FakeMeta = params[0];
-                newGenerator.Emit(OpCodes.Ldarg_0);
-                newGenerator.Emit(OpCodes.Ldarg_1);
-                newGenerator.Emit(OpCodes.Stfld, backingField);
-                newGenerator.Emit(OpCodes.Ret);
+                gen.Emit(OpCodes.Ldarg_0);
+                gen.Emit(OpCodes.Ldarg_1);
+                gen.Emit(OpCodes.Stfld, backingField);
+                gen.Emit(OpCodes.Ret);
             }
 
+            return backingField;
+        }
+
+        /// <summary>Hooks up the fake behavior mechanism for the new type.</summary>
+        /// <param name="newType">Dynamic type being created.</param>
+        /// <param name="backingField">Field holding the meta provider.</param>
+        /// <returns>Info for the meta provider get hook.</returns>
+        private static MethodInfo SetupFakeMetaProvider(TypeBuilder newType, FieldInfo backingField)
+        {
             PropertyInfo propInfo = FakeType.GetProperty(nameof(IFaked.FakeMeta));
             MethodInfo getterInfo = propInfo.GetGetMethod();
 
@@ -281,10 +290,10 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 Type.EmptyTypes);
             {
                 // return this._FakeMeta;
-                ILGenerator getGenerator = getMetaMethod.GetILGenerator();
-                getGenerator.Emit(OpCodes.Ldarg_0);
-                getGenerator.Emit(OpCodes.Ldfld, backingField);
-                getGenerator.Emit(OpCodes.Ret);
+                ILGenerator gen = getMetaMethod.GetILGenerator();
+                gen.Emit(OpCodes.Ldarg_0);
+                gen.Emit(OpCodes.Ldfld, backingField);
+                gen.Emit(OpCodes.Ret);
             }
 
             newType.DefineProperty(nameof(IFaked) + "." + propInfo.Name,
