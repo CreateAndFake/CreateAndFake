@@ -7,6 +7,7 @@ using CreateAndFake.Toolbox;
 using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
+using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
@@ -71,6 +72,7 @@ namespace CreateAndFakeTests
                 typeof(Injected<>),
                 typeof(DuplicatorChainer),
                 typeof(ValuerChainer),
+                typeof(Emitter),
                 typeof(Behavior),
                 typeof(Behavior<>),
                 typeof(AssertObjectBase<>),

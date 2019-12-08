@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RootNamespace></RootNamespace>
     <IsPackable>false</IsPackable>
@@ -11,9 +11,9 @@
 
   <ItemGroup>
     <PackageReference Include="Nuke.Common" Version="0.22.2" />
-    <PackageReference Include="GitVersion.CommandLine.DotNetCore" Version="5.0.1" />
+    <PackageReference Include="GitVersion.CommandLine.DotNetCore" Version="5.0.0" PrivateAssets="All" />
     <PackageReference Include="ReportGenerator" Version="4.2.20" />
-    <PackageReference Include="coverlet.console" Version="1.5.1" ExcludeAssets="All" />
+    <PackageReference Include="coverlet.console" Version="1.6.0" ExcludeAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

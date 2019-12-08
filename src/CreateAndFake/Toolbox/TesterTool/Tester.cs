@@ -202,8 +202,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="injectionValues">Values to inject into called methods.</param>
         public virtual void PassthroughWithNoExceptions<T>(params object[] injectionValues)
         {
-            new ExceptionGuarder(new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout)
-                .CallAllMethods(Randomizer.Create<Injected<T>>().Dummy, injectionValues);
+            PassthroughWithNoExceptions(Randomizer.Create<Injected<T>>().Dummy, injectionValues);
         }
 
         /// <summary>Verifies no exceptions are thrown on any method.</summary>

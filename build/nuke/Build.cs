@@ -152,11 +152,11 @@ internal class Build : NukeBuild
         {
             DotNetTasks.DotNetBuild(s => s
                 .SetProjectFile(_solution)
-                .SetFramework("netcoreapp2.0"));
+                .SetFramework("netcoreapp3.0"));
 
             DotNetTasks.DotNetTest(s => s
                 .SetProjectFile(_solution)
-                .SetFramework("netcoreapp2.0")
+                .SetFramework("netcoreapp3.0")
                 .SetNoBuild(true));
         });
 }

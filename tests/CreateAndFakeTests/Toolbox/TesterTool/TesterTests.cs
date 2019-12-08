@@ -2,7 +2,11 @@
 using System.Linq;
 using System.Reflection;
 using CreateAndFake;
+using CreateAndFake.Design.Randomization;
+using CreateAndFake.Toolbox.AsserterTool;
+using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
+using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFake.Toolbox.TesterTool;
 using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 using Xunit;
@@ -29,10 +33,17 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 .Select(m => m.Name));
         }
 
-        [Fact]
-        internal static void Tester_GuardsNulls()
+        [Theory, RandomData]
+        internal static void Tester_GuardsNulls(IRandom gen, IRandomizer randomizer,
+            IDuplicator duplicator, Asserter asserter, TimeSpan? timeout)
         {
-            Tools.Tester.PreventsNullRefException(_ShortTestInstance);
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Tester(null, randomizer, duplicator, asserter, timeout));
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Tester(gen, null, duplicator, asserter, timeout));
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Tester(gen, randomizer, null, asserter, timeout));
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Tester(gen, randomizer, duplicator, null, timeout));
+
+            Tools.Asserter.Throws<ArgumentNullException>(() => _ShortTestInstance.PreventsNullRefException(null));
+            Tools.Asserter.Throws<ArgumentNullException>(() => _ShortTestInstance.PreventsParameterMutation(null));
         }
 
         [Fact]
@@ -61,7 +72,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
 
                 _LongTestInstance.PreventsParameterMutation<MockDisposableSample>();
-                Tools.Asserter.Is(3, MockDisposableSample._ClassDisposes);
+                Tools.Asserter.Is(2, MockDisposableSample._ClassDisposes);
                 Tools.Asserter.Is(0, MockDisposableSample._FinalizerDisposes);
                 MockDisposableSample._Fake.Verify(Times.Exactly(2), d => d.Dispose());
             }
