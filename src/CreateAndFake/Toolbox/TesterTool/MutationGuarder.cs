@@ -86,7 +86,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             object result = null;
             try
             {
-                data = Randomizer.CreateFor(method, injectionValues);
+                data = Randomizer.CreateFor(method, injectionValues).Args.ToArray();
                 copy = _duplicator.Copy(data);
 
                 if (instance == null && method is ConstructorInfo builder)

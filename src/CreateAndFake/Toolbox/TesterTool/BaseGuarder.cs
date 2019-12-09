@@ -78,7 +78,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 .Where(m => !m.IsFamily)
                 .Select(m => Fixer.FixMethod(m)))
             {
-                object[] data = Randomizer.CreateFor(method, injectionValues);
+                object[] data = Randomizer.CreateFor(method, injectionValues).Args.ToArray();
                 try
                 {
                     (RunCheck(testOrigin ?? method, testParam, () => method.Invoke(instance, data)) as IDisposable)?.Dispose();

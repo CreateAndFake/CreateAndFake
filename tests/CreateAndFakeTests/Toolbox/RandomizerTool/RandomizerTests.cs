@@ -16,7 +16,11 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         [Fact]
         internal static void Randomizer_GuardsNulls()
         {
-            Tools.Tester.PreventsNullRefException<Randomizer>(Tools.Faker, Tools.Gen, Limiter.Few);
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Randomizer(null, Tools.Gen, Limiter.Few));
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Randomizer(Tools.Faker, null, Limiter.Few));
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Randomizer(Tools.Faker, Tools.Gen, null));
+
+            Tools.Tester.PreventsNullRefException(Tools.Randomizer);
         }
 
         [Fact]
@@ -127,7 +131,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         internal static void CreateFor_InterfaceFakesInjected(Fake<IOnlyMockSample> fake, Fake<IOnlyMockSample> fake2)
         {
             Tools.Asserter.Is(new object[] { fake.Dummy, fake2.Dummy }, Tools.Randomizer.CreateFor(
-                typeof(InjectMockSample).GetConstructors().Single(), fake, fake2));
+                typeof(InjectMockSample).GetConstructors().Single(), fake, fake2).Args.ToArray());
         }
 
         [Theory, RandomData]

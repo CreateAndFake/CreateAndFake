@@ -20,7 +20,7 @@ namespace CreateAndFake
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
             return Enumerable.Range(0, Math.Max(0, Trials))
-                .Select(_ => Tools.Randomizer.CreateFor(testMethod));
+                .Select(_ => Tools.Randomizer.CreateFor(testMethod).Args.ToArray());
         }
     }
 }
