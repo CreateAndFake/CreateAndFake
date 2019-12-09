@@ -155,7 +155,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <param name="method">Method to create parameters for.</param>
         /// <param name="values">Starting values to inject into the instance.</param>
         /// <returns>Parameter arguments in order.</returns>
-        public object[] CreateFor(MethodBase method, params object[] values)
+        public MethodCallWrapper CreateFor(MethodBase method, params object[] values)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
 
@@ -165,27 +165,35 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 .Select(v => Tuple.Create(v.GetType(), v))
                 .ToList();
 
-            IList<object> args = new List<object>(method.GetParameters().Length);
+            IList<Tuple<string, object>> args = new List<Tuple<string, object>>(method.GetParameters().Length);
+            void AddArg(string name, object data)
+            {
+                args.Add(Tuple.Create(name ?? $"{args.Count}", data));
+            }
 
             foreach (ParameterInfo param in method.GetParameters())
             {
                 Tuple<Type, object> match = data.FirstOrDefault(t => t.Item1.Inherits(param.ParameterType));
                 if (param.IsOut)
                 {
-                    args.Add(null);
+                    AddArg(param.Name, null);
                 }
                 else if (match != default)
                 {
-                    args.Add(match.Item2);
+                    AddArg(param.Name, match.Item2);
                     data.Remove(match);
                 }
                 else
                 {
-                    args.Add(Inject(param.ParameterType, args.Where(a => a is Fake).Reverse().ToArray()));
+                    AddArg(param.Name, Inject(param.ParameterType, args
+                        .Select(a => a.Item2)
+                        .Where(a => a is Fake)
+                        .Reverse()
+                        .ToArray()));
                 }
             }
 
-            return args.ToArray();
+            return new MethodCallWrapper(method, args);
         }
 
         /// <summary>Creates an instance using the values or random data as needed.</summary>

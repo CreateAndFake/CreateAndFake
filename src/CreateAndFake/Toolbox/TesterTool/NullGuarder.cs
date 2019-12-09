@@ -92,7 +92,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             object result = null;
             try
             {
-                data = Randomizer.CreateFor(method, injectionValues);
+                data = Randomizer.CreateFor(method, injectionValues).Args.ToArray();
 
                 for (int i = 0; i < data.Length; i++)
                 {
