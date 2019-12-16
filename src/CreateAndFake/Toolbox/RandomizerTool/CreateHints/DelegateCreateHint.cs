@@ -112,7 +112,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             private T HandleInAndOut<T>(params object[] inputs)
             {
                 HandleIn(inputs);
-                return (T)_randomizer.Create(typeof(T), typeof(Delegate));
+                return (T)_randomizer.Create(typeof(T));
             }
 
             /// <summary>Matches to delegate with same number of inputs and output.</summary>

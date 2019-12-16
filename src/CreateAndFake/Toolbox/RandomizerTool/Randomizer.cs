@@ -107,8 +107,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                     throw new TimeoutException(
                         $"Could not create instance of type '{type}' matching condition.", e);
                 }
-                else if (e.InnerException is InfiniteLoopException
-                    || e.InnerException is NotSupportedException)
+                else if (e.InnerException is NotSupportedException)
                 {
                     throw e.InnerException;
                 }

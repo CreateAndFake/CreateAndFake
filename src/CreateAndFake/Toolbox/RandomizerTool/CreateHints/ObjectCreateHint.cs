@@ -51,13 +51,13 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             foreach (FieldInfo field in dataType.GetFields(BindingFlags.Instance | BindingFlags.Public)
                 .Where(f => !f.IsInitOnly && !f.IsLiteral))
             {
-                field.SetValue(data, randomizer.Create(field.FieldType, dataType));
+                field.SetValue(data, randomizer.Create(field.FieldType, data));
             }
             foreach (PropertyInfo property in dataType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(p => p.CanWrite)
                 .Where(p => p.GetSetMethod() != null))
             {
-                property.SetValue(data, randomizer.Create(property.PropertyType, dataType));
+                property.SetValue(data, randomizer.Create(property.PropertyType, data));
             }
 
             return data;
@@ -83,7 +83,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             if (type == typeof(object))
             {
                 IFaked fake = randomizer.Stub<IFaked>().Dummy;
-                fake.FakeMeta.Identifier = randomizer.Create<int>(type);
+                fake.FakeMeta.Identifier = randomizer.Create<int>();
                 return fake;
             }
             else if (defaultConstructor != null)
@@ -92,22 +92,22 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             }
             else if (FindConstructors(type, BindingFlags.Public, randomizer).Any())
             {
-                return CreateFrom(type, randomizer, (c, d) => c.Invoke(d),
+                return CreateFrom(randomizer, (c, d) => c.Invoke(d),
                     FindConstructors(type, BindingFlags.Public, randomizer));
             }
             else if (FindFactories(type, BindingFlags.Public, randomizer).Any())
             {
-                return CreateFrom(type, randomizer, (c, d) => c.Invoke(null, d),
+                return CreateFrom(randomizer, (c, d) => c.Invoke(null, d),
                     FindFactories(type, BindingFlags.Public, randomizer));
             }
             else if (FindFactories(type, BindingFlags.NonPublic, randomizer).Any())
             {
-                return CreateFrom(type, randomizer, (c, d) => c.Invoke(null, d),
+                return CreateFrom(randomizer, (c, d) => c.Invoke(null, d),
                     FindFactories(type, BindingFlags.NonPublic, randomizer));
             }
             else if (FindConstructors(type, BindingFlags.NonPublic, randomizer).Any())
             {
-                return CreateFrom(type, randomizer, (c, d) => c.Invoke(d),
+                return CreateFrom(randomizer, (c, d) => c.Invoke(d),
                     FindConstructors(type, BindingFlags.NonPublic, randomizer));
             }
             else if (!type.IsSealed)
@@ -122,17 +122,16 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 
         /// <summary>Creates the type.</summary>
         /// <typeparam name="T">Creation method type.</typeparam>
-        /// <param name="type">Type to create.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
         /// <param name="invoker">How to create the type from the creation method.</param>
         /// <param name="creators">Possible creation methods.</param>
         /// <returns>Created instance.</returns>
-        private static object CreateFrom<T>(Type type, RandomizerChainer randomizer,
+        private static object CreateFrom<T>(RandomizerChainer randomizer,
             Func<T, object[], object> invoker, IEnumerable<T> creators) where T : MethodBase
         {
             T creator = randomizer.Gen.NextItem(creators);
             return invoker.Invoke(creator, creator.GetParameters()
-                .Select(p => randomizer.Create(p.ParameterType, type))
+                .Select(p => randomizer.Create(p.ParameterType))
                 .ToArray());
         }
 

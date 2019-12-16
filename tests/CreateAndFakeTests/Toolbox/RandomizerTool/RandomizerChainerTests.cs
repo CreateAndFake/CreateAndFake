@@ -1,5 +1,6 @@
 ﻿using CreateAndFake;
 using CreateAndFake.Toolbox.RandomizerTool;
+using CreateAndFakeTests.TestSamples;
 using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool
@@ -17,6 +18,15 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         internal static void RandomizerChainer_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation<RandomizerChainer>();
+        }
+
+        [Fact]
+        internal static void Create_HandlesInfinites()
+        {
+            RandomizerChainer chainer = null;
+            chainer = new RandomizerChainer(Tools.Faker, Tools.Gen, (t, c) => c.Create<ParentLoopSample>());
+
+            Tools.Asserter.Throws<InfiniteLoopException>(() => chainer.Create(typeof(ChildWithParentSample), new ParentLoopSample()));
         }
     }
 }

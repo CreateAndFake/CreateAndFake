@@ -82,7 +82,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             Type target = type.GetGenericArguments().Single();
 
             Fake mock = randomizer.Stub(target);
-            mock.Dummy.FakeMeta.Identifier = randomizer.Create<int>(typeof(IFaked));
+            mock.Dummy.FakeMeta.Identifier = randomizer.Create<int>();
 
             // Generic returns have to just use stub behavior.
             foreach (MethodInfo method in target
