@@ -14,7 +14,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         private readonly Func<Type, RandomizerChainer, object> _randomizer;
 
         /// <summary>Types not to create as to prevent infinite recursion.</summary>
-        private readonly IEnumerable<Type> _history;
+        private readonly IDictionary<Type, object> _history;
 
         /// <summary>Provides stubs.</summary>
         private readonly IFaker _faker;
@@ -32,21 +32,23 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             Gen = gen ?? throw new ArgumentNullException(nameof(gen));
             _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
 
-            _history = Array.Empty<Type>();
+            _history = new Dictionary<Type, object>();
         }
 
         /// <summary>Sets up the callback functionality.</summary>
         /// <param name="prevChainer">Previous chainer to build upon.</param>
-        /// <param name="createdContainer">Container of the instance just created.</param>
-        private RandomizerChainer(RandomizerChainer prevChainer, Type createdContainer)
+        /// <param name="parent">Container of the instance to create.</param>
+        private RandomizerChainer(RandomizerChainer prevChainer, object parent)
         {
             Gen = prevChainer.Gen;
             _faker = prevChainer._faker;
             _randomizer = prevChainer._randomizer;
 
-            if (createdContainer != null)
+            if (parent != null)
             {
-                _history = new HashSet<Type>(prevChainer._history.Append(createdContainer));
+                _history = prevChainer._history
+                    .Append(new KeyValuePair<Type, object>(parent.GetType(), parent))
+                    .ToDictionary(p => p.Key, p => p.Value);
             }
             else
             {
@@ -67,31 +69,41 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <returns>True if already created; false otherwise.</returns>
         public bool AlreadyCreated(Type type)
         {
-            return _history.Contains(type);
+            return _history.ContainsKey(type);
         }
 
         /// <summary>Calls the randomizer to create a random instance.</summary>
         /// <typeparam name="T">Type to create.</typeparam>
-        /// <param name="createdContainer">Container of the instance to create.</param>
         /// <returns>The created instance.</returns>
-        public T Create<T>(Type createdContainer = null)
+        public T Create<T>()
         {
-            return (T)Create(typeof(T), createdContainer);
+            return (T)Create(typeof(T), null);
         }
 
         /// <summary>Calls the randomizer to create a random instance.</summary>
         /// <param name="type">Type to create.</param>
-        /// <param name="createdContainer">Container of the instance to create.</param>
+        /// <param name="parent">Container of the instance to create.</param>
         /// <returns>The created instance.</returns>
-        public object Create(Type type, Type createdContainer = null)
+        public object Create(Type type, object parent = null)
         {
-            if (AlreadyCreated(type))
+            if (parent != null)
             {
-                throw new InfiniteLoopException(type, _history);
+                if (AlreadyCreated(type))
+                {
+                    return _history[type];
+                }
+                else if (parent.GetType() == type)
+                {
+                    return parent;
+                }
+            }
+            else if (AlreadyCreated(type))
+            {
+                throw new InfiniteLoopException(type, _history.Keys);
             }
 
             RuntimeHelpers.EnsureSufficientExecutionStack();
-            return _randomizer.Invoke(type, new RandomizerChainer(this, createdContainer));
+            return _randomizer.Invoke(type, new RandomizerChainer(this, parent));
         }
 
         /// <summary>Calls the faker to create a stub instance.</summary>

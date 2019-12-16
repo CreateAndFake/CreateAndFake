@@ -35,7 +35,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         private static object Create(Type type, RandomizerChainer randomizer)
         {
             return randomizer.Create(type.MakeGenericType(
-                type.GetGenericArguments().Select(a => CreateArg(a, randomizer)).ToArray()), type);
+                type.GetGenericArguments().Select(a => CreateArg(a, randomizer)).ToArray()));
         }
 
         /// <summary>Creates a concrete arg type from the given generic arg.</summary>
@@ -69,7 +69,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 while (!constraints.All(c => arg.Inherits(c))
                     && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null))
                 {
-                    arg = randomizer.Create(randomizer.Gen.NextItem(constraints), type).GetType();
+                    arg = randomizer.Create(randomizer.Gen.NextItem(constraints)).GetType();
                 }
             }).Wait();
 

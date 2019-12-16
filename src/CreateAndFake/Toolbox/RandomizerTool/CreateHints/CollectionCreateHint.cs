@@ -72,7 +72,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             Type newType = MakeNewType(collection, itemType);
 
             Array internalData = CreateInternalData(itemType,
-                randomizer.Gen, t => randomizer.Create(t, newType));
+                randomizer.Gen, t => randomizer.Create(t));
 
             if (newType == typeof(Array) || newType == internalData.GetType())
             {

@@ -8,7 +8,6 @@ using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
-using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
 using Xunit;
@@ -42,15 +41,9 @@ namespace CreateAndFakeTests
             faked.VerifyAll(Times.Once);
         }
 
-        [Fact]
-        internal static void Tools_HandlesInfinites()
+        [Theory, RandomData]
+        internal static void Tools_HandlesInfinites(InfiniteSample sample)
         {
-            Tools.Asserter.Throws<InfiniteLoopException>(
-                () => Tools.Randomizer.Create<InfiniteSample>());
-
-            InfiniteSample sample = new InfiniteSample();
-            sample.Hole = sample;
-
             Tools.Asserter.Throws<TimeoutException>(
                 () => Tools.Mutator.Variant(sample));
 

@@ -15,7 +15,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));
 
             Fake stub = randomizer.Stub(typeof(object));
-            stub.Dummy.FakeMeta.Identifier = randomizer.Create<int>(typeof(IFaked));
+            stub.Dummy.FakeMeta.Identifier = randomizer.Create<int>();
             return stub.Dummy;
         }
     }
