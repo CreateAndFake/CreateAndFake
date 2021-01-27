@@ -100,7 +100,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                     if (inputType.Inherits<IOutRef>())
                     {
                         FieldInfo valueField = inputType.GetField(nameof(OutRef<object>.Var));
-                        valueField.SetValue(outRef, _randomizer.Create(valueField.FieldType));
+                        valueField.SetValue(outRef, _randomizer.Create(valueField.FieldType, _randomizer.Parent));
                     }
                 }
             }
@@ -112,7 +112,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             private T HandleInAndOut<T>(params object[] inputs)
             {
                 HandleIn(inputs);
-                return (T)_randomizer.Create(typeof(T));
+                return (T)_randomizer.Create(typeof(T), _randomizer.Parent);
             }
 
             /// <summary>Matches to delegate with same number of inputs and output.</summary>
