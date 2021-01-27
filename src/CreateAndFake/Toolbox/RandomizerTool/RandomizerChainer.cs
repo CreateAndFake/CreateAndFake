@@ -22,6 +22,9 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <summary>Value generator to use for base randomization.</summary>
         public IRandom Gen { get; }
 
+        /// <summary>Created object using this instance.</summary>
+        public object Parent { get; }
+
         /// <summary>Sets up the callback functionality.</summary>
         /// <param name="faker">Provides stubs.</param>
         /// <param name="gen">Value generator to use for base randomization.</param>
@@ -33,6 +36,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
 
             _history = new Dictionary<Type, object>();
+            Parent = null;
         }
 
         /// <summary>Sets up the callback functionality.</summary>
@@ -40,6 +44,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <param name="parent">Container of the instance to create.</param>
         private RandomizerChainer(RandomizerChainer prevChainer, object parent)
         {
+            Parent = parent;
             Gen = prevChainer.Gen;
             _faker = prevChainer._faker;
             _randomizer = prevChainer._randomizer;
@@ -103,7 +108,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             }
 
             RuntimeHelpers.EnsureSufficientExecutionStack();
-            return _randomizer.Invoke(type, new RandomizerChainer(this, parent));
+            return _randomizer.Invoke(type, new RandomizerChainer(this, (parent != Parent) ? parent : null));
         }
 
         /// <summary>Calls the faker to create a stub instance.</summary>

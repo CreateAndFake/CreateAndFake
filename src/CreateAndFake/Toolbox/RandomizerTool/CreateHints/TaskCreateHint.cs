@@ -39,7 +39,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 return typeof(Task)
                     .GetMethod(nameof(Task.FromResult))
                     .MakeGenericMethod(content)
-                    .Invoke(null, new[] { randomizer.Create(content) });
+                    .Invoke(null, new[] { randomizer.Create(content, randomizer.Parent) });
             }
             else
             {

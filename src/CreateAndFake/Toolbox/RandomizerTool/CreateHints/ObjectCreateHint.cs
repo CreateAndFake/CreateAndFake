@@ -131,7 +131,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         {
             T creator = randomizer.Gen.NextItem(creators);
             return invoker.Invoke(creator, creator.GetParameters()
-                .Select(p => randomizer.Create(p.ParameterType))
+                .Select(p => randomizer.Create(p.ParameterType, randomizer.Parent))
                 .ToArray());
         }
 
