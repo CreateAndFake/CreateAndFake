@@ -19,6 +19,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             {
                 return (true, new TimeSpan(duplicator.Copy(span.Ticks)));
             }
+            else if(source is Uri link)
+            {
+                return (true, new Uri(link.OriginalString));
+            }
             else if (source is WeakReference reference)
             {
                 return (true, new WeakReference(reference.Target, reference.TrackResurrection));

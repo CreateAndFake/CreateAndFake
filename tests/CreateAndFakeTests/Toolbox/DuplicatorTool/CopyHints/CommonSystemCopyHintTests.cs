@@ -11,7 +11,7 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
     public sealed class CommonSystemCopyHintTests : CopyHintTestBase<CommonSystemCopyHint>
     {
         /// <summary>Types that can be created by the hint.</summary>
-        private static readonly Type[] _ValidTypes = new[] { typeof(TimeSpan), typeof(WeakReference) };
+        private static readonly Type[] _ValidTypes = new[] { typeof(TimeSpan), typeof(WeakReference), typeof(Uri) };
 
         /// <summary>Types that can't be created by the hint.</summary>
         private static readonly Type[] _InvalidTypes = new[] { typeof(object) };
