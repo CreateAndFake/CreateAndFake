@@ -4,8 +4,8 @@ using Xunit;
 
 namespace CreateAndFakeTests.IssueReplication
 {
-    /// <summary>Verifies issue #65.</summary>
-    public static class InfiniteChainTests
+    /// <summary>Verifies issue is resolved.</summary>
+    public static class Issue65Tests
     {
         internal class InfiniteA
         {
@@ -23,19 +23,19 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Tools_HandlesInfiniteChainsA(InfiniteA sample)
+        internal static void Issue_HandlesInfiniteChainsA(InfiniteA sample)
         {
             TestInfiniteSample(sample);
         }
 
         [Theory, RandomData]
-        internal static void Tools_HandlesInfiniteChainsB(InfiniteB sample)
+        internal static void Issue_HandlesInfiniteChainsB(InfiniteB sample)
         {
             TestInfiniteSample(sample);
         }
 
         [Theory, RandomData]
-        internal static void Tools_HandlesInfiniteChainsC(InfiniteC sample)
+        internal static void Issue_HandlesInfiniteChainsC(InfiniteC sample)
         {
             TestInfiniteSample(sample);
         }
