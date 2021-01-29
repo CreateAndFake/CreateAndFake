@@ -59,7 +59,11 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         {
             try
             {
-                return Copy(source, new DuplicatorChainer(this, Copy));
+                T result = Copy(source, new DuplicatorChainer(this, Copy));
+                _asserter.ValuesEqual(source, result,
+                    $"Type '{source?.GetType()}' did not clone properly. " +
+                    "Verify/create a hint to generate the type and pass it to the duplicator.");
+                return result;
             }
             catch (InsufficientExecutionStackException)
             {
@@ -84,9 +88,6 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
 
             if (!result.Equals(default))
             {
-                _asserter.ValuesEqual(source, result.Item2,
-                    $"Type '{source.GetType()}' did not clone properly. " +
-                    "Verify/create a hint to generate the type and pass it to the duplicator.");
                 return (T)result.Item2;
             }
             else
