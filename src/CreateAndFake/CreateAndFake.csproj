@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netcoreapp2.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;netcoreapp3.1;netcoreapp2.1;netstandard2.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -30,10 +32,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(OS)'=='Windows_NT'">
-    <PackageReference Include="Microsoft.AnalyzerPowerPack" Version="1.1.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.4.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.0.0.9566" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.17.0.26580" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

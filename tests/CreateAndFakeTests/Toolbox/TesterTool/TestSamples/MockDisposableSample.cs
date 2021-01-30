@@ -7,9 +7,6 @@ namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples
 {
     /// <summary>For testing.</summary>
     [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "For testing.")]
-    [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "For testing.")]
-    [SuppressMessage("Sonar", "S2696:StaticModification", Justification = "For testing.")]
-    [SuppressMessage("Sonar", "S2223:FieldVisibility", Justification = "For testing.")]
     public sealed class MockDisposableSample : IDisposable
     {
         /// <summary>For testing.</summary>
@@ -29,7 +26,6 @@ namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples
         public MockDisposableSample(object value) { }
 
         /// <summary>For testing.</summary>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Must ignore in finalizer.")]
         [SuppressMessage("Sonar", "S108:DoNotCatchGeneralExceptionTypes", Justification = "Must ignore in finalizer.")]
         ~MockDisposableSample()
         {

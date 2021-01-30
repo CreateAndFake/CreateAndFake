@@ -100,7 +100,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 if (e.InnerException is InsufficientExecutionStackException)
                 {
                     throw new InsufficientExecutionStackException(
-                        $"Ran into infinite generation trying to randomize type '{type.Name}'.");
+                        $"Ran into infinite generation trying to randomize type '{type?.Name}'.");
                 }
                 else if (e.InnerException is TimeoutException)
                 {

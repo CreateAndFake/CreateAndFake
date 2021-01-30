@@ -229,7 +229,7 @@ namespace CreateAndFakeTests.TestBases
                 (e, a, c) => Tools.Valuer.Compare(e, a));
         }
 
-        private void ExpandReflectionException(Exception ex)
+        private static void ExpandReflectionException(Exception ex)
         {
             if (ex is ReflectionTypeLoadException refEx)
             {

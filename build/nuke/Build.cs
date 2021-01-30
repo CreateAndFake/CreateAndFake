@@ -1,21 +1,15 @@
-using System;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
-using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.Coverlet;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Tools.OpenCover;
 using Nuke.Common.Tools.ReportGenerator;
-using Nuke.Common.Utilities.Collections;
-using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.PathConstruction;
-using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 /// <summary>Manages build behavior for the solution.</summary>
 [CheckBuildProjectConfigurations]
@@ -45,10 +39,7 @@ class Build : NukeBuild
     private readonly Solution _solution;
 
     // Console application entry point. Also defines the default target.
-    public static int Main()
-    {
-        return Execute<Build>(x => x.Compile);
-    }
+    public static int Main() => Execute<Build>(x => x.Compile);
 
     /// <summary>Deletes output folders.</summary>
     internal Target Clean => _ => _

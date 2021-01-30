@@ -54,7 +54,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
             int i = 0;
             for (IEnumerator data = Collection.GetEnumerator(); data.MoveNext(); i++)
             {
-                contents.Append("[").Append(i).Append("]:").Append(data.Current).AppendLine();
+                contents.Append('[').Append(i).Append("]:").Append(data.Current).AppendLine();
             }
 
             if (i != count)
