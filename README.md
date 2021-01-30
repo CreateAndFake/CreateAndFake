@@ -2,7 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/CreateAndFake)](https://www.nuget.org/packages/CreateAndFake) [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/rmbj86u333y66hfw/branch/master?svg=true)](https://ci.appveyor.com/project/Werebunny/createandfake/branch/master) [![Travis Build Status](https://travis-ci.org/CreateAndFake/CreateAndFake.svg?branch=master)](https://travis-ci.org/CreateAndFake/CreateAndFake) [![CodeCov Coverage](https://codecov.io/gh/CreateAndFake/CreateAndFake/branch/master/graph/badge.svg)](https://codecov.io/gh/CreateAndFake/CreateAndFake/branch/master) [![Codacy Grade](https://api.codacy.com/project/badge/Grade/cc753a1417c24f6dba43e2386e89005a)](https://www.codacy.com/app/Werebunny/CreateAndFake?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CreateAndFake/CreateAndFake&amp;utm_campaign=Badge_Grade)
 
-A C# class library for .NET Standard 2.0 and .NET Core 2.0 that handles mocking, test data generation, and validation. Designed to handle the bulk of test setup quickly and easily so that developers can focus on the behavior to test, making tests easier to develop and maintain. The handful of tools provided are both easy to use and customizable should the need arise:
+A C# class library that handles mocking, test data generation, and validation. Designed to handle the bulk of test setup quickly and easily so that developers can focus on the behavior to test, making tests easier to develop and maintain. The handful of tools provided are both easy to use and customizable should the need arise:
 
 * `Tester` - Automates common tests.
 * `Faker` - Creates mocks and stubs.
