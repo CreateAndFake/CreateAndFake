@@ -28,7 +28,7 @@ The raw files can be viewed from the doc folder or built into a local site using
 
 ## Contributing
 
-If you're looking to contribute, thanks for your interest. Feel free to submit reports for any issues you can find, or request potential features you'd like to see [here](../../issues). If you wish to contribute code to the project, refer to the contributing guidelines [here](docs/CONTRIBUTING.md). Please follow the [code of conduct](docs/CODE_OF_CONDUCT.md) when contributing.
+If you're looking to contribute, thanks for your interest. Feel free to submit reports for any issues you can find, or request potential features you'd like to see [here](../../issues). If you wish to contribute code to the project, refer to the contributing guidelines [here](.github/CONTRIBUTING.md). Please follow the [code of conduct](.github/CODE_OF_CONDUCT.md) when contributing.
 
 ## License
 
