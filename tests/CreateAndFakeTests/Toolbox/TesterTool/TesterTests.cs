@@ -17,12 +17,12 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
     public static class TesterTests
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly Tester _ShortTestInstance = new Tester(Tools.Gen, Tools.Randomizer,
-            Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
+        private static readonly Tester _ShortTestInstance = new(Tools.Gen,
+            Tools.Randomizer, Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Instance to test with.</summary>
-        private static readonly Tester _LongTestInstance = new Tester(Tools.Gen, Tools.Randomizer,
-            Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
+        private static readonly Tester _LongTestInstance = new(Tools.Gen,
+            Tools.Randomizer, Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
 
         [Fact]
         internal static void Tester_AllMethodsVirtual()

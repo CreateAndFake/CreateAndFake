@@ -13,7 +13,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class DictionaryCompareHintTests : CompareHintTestBase<DictionaryCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly DictionaryCompareHint _TestInstance = new DictionaryCompareHint();
+        private static readonly DictionaryCompareHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes

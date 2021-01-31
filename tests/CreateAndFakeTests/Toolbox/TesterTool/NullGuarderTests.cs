@@ -13,12 +13,12 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
     public static class NullGuarderTests
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly NullGuarder _ShortTestInstance = new NullGuarder(
+        private static readonly NullGuarder _ShortTestInstance = new(
             new GenericFixer(Tools.Gen, Tools.Randomizer),
             Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Instance to test with.</summary>
-        private static readonly NullGuarder _LongTestInstance = new NullGuarder(
+        private static readonly NullGuarder _LongTestInstance = new(
             new GenericFixer(Tools.Gen, Tools.Randomizer),
             Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 10));
 
@@ -111,7 +111,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 MockDisposableSample._FinalizerDisposes = 0;
                 MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
 
-                using (MockDisposableSample sample = new MockDisposableSample(null))
+                using (MockDisposableSample sample = new(null))
                 {
                     _LongTestInstance.PreventsNullRefExceptionOnMethods(sample);
                     Tools.Asserter.Is(0, MockDisposableSample._ClassDisposes);

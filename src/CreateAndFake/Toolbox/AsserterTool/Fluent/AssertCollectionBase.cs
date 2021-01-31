@@ -50,7 +50,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
                     $"Expected collection of '{count}' elements, but was 'null'.", details);
             }
 
-            StringBuilder contents = new StringBuilder();
+            StringBuilder contents = new();
             int i = 0;
             for (IEnumerator data = Collection.GetEnumerator(); data.MoveNext(); i++)
             {

@@ -29,7 +29,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 
                 (typeof(StringCollection), (data, gen) =>
                 {
-                    StringCollection result = new StringCollection();
+                    StringCollection result = new();
                     foreach(string item in data)
                     {
                         result.Add(item);

@@ -11,8 +11,8 @@ namespace CreateAndFakeTests.Randomization
         [Fact]
         internal static void Seed_Deterministic()
         {
-            SeededRandom random1 = new SeededRandom();
-            SeededRandom random2 = new SeededRandom(random1.Seed);
+            SeededRandom random1 = new();
+            SeededRandom random2 = new(random1.Seed);
 
             Tools.Asserter.Is(random1.Next<int>(), random2.Next<int>());
             Tools.Asserter.Is(random1.Next<int>(), random2.Next<int>());

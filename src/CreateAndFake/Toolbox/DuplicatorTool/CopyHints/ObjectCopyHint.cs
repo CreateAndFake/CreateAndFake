@@ -94,7 +94,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             List<FieldInfo> fieldList = fields.ToList();
 
             // Attempts to match members with parameters in the constructor.
-            List<MemberInfo> matchedMembers = new List<MemberInfo>();
+            List<MemberInfo> matchedMembers = new();
             foreach (ParameterInfo param in constructor.GetParameters())
             {
                 PropertyInfo[] potentialProps = propList

@@ -57,7 +57,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         };
 
         /// <summary>Instance to test with.</summary>
-        private static readonly DelegateCreateHint _TestInstance = new DelegateCreateHint();
+        private static readonly DelegateCreateHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = new[] { typeof(Delegate),
@@ -86,11 +86,11 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 
             Action<IOutRef> action = (Action<IOutRef>)result.Item2;
 
-            OutRef<int> sampleInt = new OutRef<int>();
+            OutRef<int> sampleInt = new();
             action.Invoke(sampleInt);
             Tools.Asserter.IsNot(default(int), sampleInt.Var);
 
-            OutRef<string> sampleString = new OutRef<string>();
+            OutRef<string> sampleString = new();
             action.Invoke(sampleString);
             Tools.Asserter.IsNot(default(string), sampleString.Var);
         }

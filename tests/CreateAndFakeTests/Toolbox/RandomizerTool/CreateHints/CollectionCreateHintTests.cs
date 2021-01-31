@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
             = new[] { typeof(string), typeof(object), typeof(int), typeof(double), typeof(KeyValuePair<string, int>) };
 
         /// <summary>Instance to test with.</summary>
-        private static readonly CollectionCreateHint _TestInstance = new CollectionCreateHint();
+        private static readonly CollectionCreateHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = CollectionCreateHint.PotentialCollections

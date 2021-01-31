@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
     {
         /// <summary>Compares equatables by value as well.</summary>
         private static readonly ObjectCompareHint _NestedHint
-            = new ObjectCompareHint(BindingFlags.Public | BindingFlags.Instance);
+            = new(BindingFlags.Public | BindingFlags.Instance);
 
         /// <summary>Finds the differences between two objects.</summary>
         /// <param name="expected">First object to compare.</param>

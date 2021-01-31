@@ -14,7 +14,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class EarlyFailCompareHintTests : CompareHintTestBase<EarlyFailCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly EarlyFailCompareHint _TestInstance = new EarlyFailCompareHint();
+        private static readonly EarlyFailCompareHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes

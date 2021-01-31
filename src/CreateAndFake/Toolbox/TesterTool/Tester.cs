@@ -13,7 +13,7 @@ namespace CreateAndFake.Toolbox.TesterTool
     public class Tester
     {
         /// <summary>Default for how long to wait for methods to complete.</summary>
-        private static readonly TimeSpan _DefaultTimeout = new TimeSpan(0, 0, 3);
+        private static readonly TimeSpan _DefaultTimeout = new(0, 0, 3);
 
         /// <summary>Retries tests if timeout is reached.</summary>
         private static readonly Limiter _Limiter = Limiter.Few;
@@ -75,8 +75,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            NullGuarder checker = new NullGuarder(
-                new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout);
+            NullGuarder checker = new(new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout);
 
             _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsNullRefExceptionOnConstructors(type, true, injectionValues)).Wait();
@@ -114,8 +113,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="injectionValues">Values to inject into the method.</param>
         public virtual void PreventsNullRefException<T>(T instance, params object[] injectionValues)
         {
-            NullGuarder checker = new NullGuarder(
-                new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout);
+            NullGuarder checker = new(new GenericFixer(Gen, Randomizer), Randomizer, Asserter, _timeout);
 
             _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsNullRefExceptionOnConstructors(typeof(T), false, injectionValues)).Wait();
@@ -148,8 +146,8 @@ namespace CreateAndFake.Toolbox.TesterTool
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            MutationGuarder checker = new MutationGuarder(
-                new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, _timeout);
+            MutationGuarder checker = new(new GenericFixer(Gen, Randomizer),
+                Randomizer, Duplicator, Asserter, _timeout);
 
             _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsMutationOnConstructors(type, true, injectionValues)).Wait();
@@ -186,8 +184,8 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <param name="injectionValues">Values to inject into the method.</param>
         public virtual void PreventsParameterMutation<T>(T instance, params object[] injectionValues)
         {
-            MutationGuarder checker = new MutationGuarder(
-                new GenericFixer(Gen, Randomizer), Randomizer, Duplicator, Asserter, _timeout);
+            MutationGuarder checker = new(new GenericFixer(Gen, Randomizer),
+                Randomizer, Duplicator, Asserter, _timeout);
 
             _Limiter.Retry<TimeoutException>(
                 () => checker.PreventsMutationOnConstructors(typeof(T), false, injectionValues)).Wait();

@@ -9,7 +9,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
     public sealed class FakeMetaProvider : IDuplicatable
     {
         /// <summary>Faked behavior.</summary>
-        private readonly Stack<(CallData, Behavior)> _behavior = new Stack<(CallData, Behavior)>();
+        private readonly Stack<(CallData, Behavior)> _behavior = new();
 
         /// <summary>Record of calls made.</summary>
         private readonly IList<CallData> _log = new List<CallData>();
@@ -134,7 +134,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>Faked result previously set up.</returns>
         internal T CallRet<T>(string name, Type[] generics, object[] args)
         {
-            CallData data = new CallData(name, generics, args, null);
+            CallData data = new(name, generics, args, null);
             _log.Add(data);
 
             (CallData, Behavior) match = _behavior.FirstOrDefault(t => t.Item1.MatchesCall(data));

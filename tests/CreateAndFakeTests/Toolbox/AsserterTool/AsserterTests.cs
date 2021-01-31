@@ -172,7 +172,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         [Fact]
         internal void Throws_AggregateUnwraps()
         {
-            AggregateException ex = new AggregateException(new InvalidOperationException());
+            AggregateException ex = new(new InvalidOperationException());
 
             _testInstance.Throws<InvalidOperationException>(() => throw ex);
         }
@@ -180,8 +180,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         [Fact]
         internal void Throws_AggregateExtraInternal()
         {
-            AggregateException ex = new AggregateException(
-                new InvalidOperationException(), new InvalidCastException());
+            AggregateException ex = new(new InvalidOperationException(), new InvalidCastException());
 
             Tools.Asserter.Throws<AssertException>(
                 () => _testInstance.Throws<InvalidOperationException>(() => throw ex));
@@ -190,7 +189,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         [Fact]
         internal void Throws_AggregateWrongInternals()
         {
-            AggregateException ex = new AggregateException(new InvalidOperationException());
+            AggregateException ex = new(new InvalidOperationException());
 
             Tools.Asserter.Throws<AssertException>(
                 () => _testInstance.Throws<InvalidCastException>(() => throw ex));

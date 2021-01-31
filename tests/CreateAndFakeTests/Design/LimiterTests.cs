@@ -19,7 +19,7 @@ namespace CreateAndFakeTests.Design
         private const int _WaitAccuracy = 15;
 
         /// <summary>Small delay to test with.</summary>
-        private static readonly TimeSpan _SmallDelay = new TimeSpan(0, 0, 0, 0, 60);
+        private static readonly TimeSpan _SmallDelay = new(0, 0, 0, 0, 60);
 
         [Fact]
         internal static void Limiter_GuardsNulls()
@@ -176,7 +176,7 @@ namespace CreateAndFakeTests.Design
         [Fact]
         internal static void Repeat_Cancelable()
         {
-            using (CancellationTokenSource tokenSource = new CancellationTokenSource())
+            using (CancellationTokenSource tokenSource = new())
             {
                 Tools.Asserter.Throws<TaskCanceledException>(
                     () => Limiter.Few.Repeat(() => tokenSource.Cancel(), tokenSource.Token).Wait());
@@ -192,7 +192,7 @@ namespace CreateAndFakeTests.Design
         [Fact]
         internal static void StallUntil_Cancelable()
         {
-            using (CancellationTokenSource tokenSource = new CancellationTokenSource())
+            using (CancellationTokenSource tokenSource = new())
             {
                 Tools.Asserter.Throws<TaskCanceledException>(
                     () => Limiter.Few.StallUntil(() => tokenSource.Cancel(), () => false, tokenSource.Token).Wait());
@@ -208,7 +208,7 @@ namespace CreateAndFakeTests.Design
         [Theory, RandomData]
         internal static void Retry_Cancelable(Exception exception)
         {
-            using (CancellationTokenSource tokenSource = new CancellationTokenSource())
+            using (CancellationTokenSource tokenSource = new())
             {
                 Tools.Asserter.Throws<TaskCanceledException>(() => Limiter.Few.Retry(
                     () => throw exception, () => tokenSource.Cancel(), tokenSource.Token).Wait());
@@ -325,7 +325,7 @@ namespace CreateAndFakeTests.Design
             Tools.Asserter.Is(exception, Tools.Asserter.Throws<NotSupportedException>(
                 () => new Limiter(3).Retry<InvalidOperationException>((Action)(() => throw exception)).Wait()));
 
-            IOException exception2 = new IOException();
+            IOException exception2 = new();
 
             Tools.Asserter.Is(exception2, Tools.Asserter.Throws<AggregateException>(
                 () => new Limiter(3).Retry<DirectoryNotFoundException, bool>(
@@ -346,10 +346,10 @@ namespace CreateAndFakeTests.Design
         [Theory, RandomData]
         internal static void Equality_MatchesValue(int tries, TimeSpan elapsed)
         {
-            Limiter original = new Limiter(tries, elapsed);
-            Limiter dupe = new Limiter(tries, elapsed);
-            Limiter variant1 = new Limiter(Tools.Mutator.Variant(tries), elapsed);
-            Limiter variant2 = new Limiter(tries, Tools.Mutator.Variant(elapsed));
+            Limiter original = new(tries, elapsed);
+            Limiter dupe = new(tries, elapsed);
+            Limiter variant1 = new(Tools.Mutator.Variant(tries), elapsed);
+            Limiter variant2 = new(tries, Tools.Mutator.Variant(elapsed));
 
             Tools.Asserter.Is(true, original.Equals(original));
             Tools.Asserter.Is(false, original.Equals(null));

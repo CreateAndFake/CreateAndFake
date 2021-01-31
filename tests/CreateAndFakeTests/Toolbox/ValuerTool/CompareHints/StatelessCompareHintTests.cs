@@ -10,7 +10,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class StatelessCompareHintTests : CompareHintTestBase<StatelessCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly StatelessCompareHint _TestInstance = new StatelessCompareHint();
+        private static readonly StatelessCompareHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = new[] { typeof(StatelessSample) };

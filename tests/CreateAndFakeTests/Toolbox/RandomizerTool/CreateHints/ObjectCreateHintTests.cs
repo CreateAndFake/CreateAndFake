@@ -13,7 +13,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class ObjectCreateHintTests : CreateHintTestBase<ObjectCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly ObjectCreateHint _TestInstance = new ObjectCreateHint();
+        private static readonly ObjectCreateHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = new[]

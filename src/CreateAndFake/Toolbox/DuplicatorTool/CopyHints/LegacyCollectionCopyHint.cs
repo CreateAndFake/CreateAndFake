@@ -23,7 +23,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 
                 { typeof(StringCollection), (data, cloner) =>
                     {
-                        StringCollection result = new StringCollection();
+                        StringCollection result = new();
                         foreach (string item in (StringCollection)data)
                         {
                             result.Add(item);
@@ -33,7 +33,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
                 },
                 { typeof(StringDictionary), (data, cloner) =>
                     {
-                        StringDictionary result = new StringDictionary();
+                        StringDictionary result = new();
                         foreach (DictionaryEntry entry in (StringDictionary)data)
                         {
                             result.Add((string)entry.Key, (string)entry.Value);
@@ -69,7 +69,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <returns>The cloned instance.</returns>
         private static T CreateAndCopy<T>(object source, DuplicatorChainer duplicator) where T : IDictionary, new()
         {
-            T result = new T();
+            T result = new();
             foreach (DictionaryEntry entry in (T)source)
             {
                 result.Add(duplicator.Copy(entry.Key), duplicator.Copy(entry.Value));

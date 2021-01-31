@@ -10,7 +10,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class GenericCreateHintTests : CreateHintTestBase<GenericCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly GenericCreateHint _TestInstance = new GenericCreateHint();
+        private static readonly GenericCreateHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes

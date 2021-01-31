@@ -6,7 +6,7 @@ namespace CreateAndFake.Design.Randomization
     public sealed class FastRandom : ValueRandom
     {
         /// <summary>Source generator used for random bytes.</summary>
-        private static readonly Random _Gen = new Random();
+        private static readonly Random _Gen = new();
 
         /// <summary>Sets up the randomizer.</summary>
         /// <param name="onlyValidValues">Option to prevent generating invalid values.</param>

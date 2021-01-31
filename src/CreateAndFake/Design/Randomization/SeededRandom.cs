@@ -6,7 +6,7 @@ namespace CreateAndFake.Design.Randomization
     public sealed class SeededRandom : ValueRandom
     {
         /// <summary>Lock to prevent thread collision with seeds.</summary>
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
 
         /// <summary>Current seed to be used for the next randomized value.</summary>
         private int _seed;

@@ -80,7 +80,7 @@ namespace CreateAndFake.Design
         {
             if (action == null) throw new ArgumentNullException(nameof(action));
 
-            List<T> results = new List<T>();
+            List<T> results = new();
 
             Stopwatch watch = Stopwatch.StartNew();
             int attempt = 0;
@@ -126,7 +126,7 @@ namespace CreateAndFake.Design
             if (action == null) throw new ArgumentNullException(nameof(checkState));
             if (checkState == null) throw new ArgumentNullException(nameof(checkState));
 
-            List<T> results = new List<T>();
+            List<T> results = new();
 
             Stopwatch watch = Stopwatch.StartNew();
             for (int i = 1; true; i++)
