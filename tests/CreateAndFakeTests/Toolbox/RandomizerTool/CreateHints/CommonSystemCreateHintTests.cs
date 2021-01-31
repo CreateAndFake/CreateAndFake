@@ -48,7 +48,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         {
             for (int i = 0; i < 50; i++)
             {
-                _TestInstance.TryCreate(typeof(FieldInfo), CreateChainer());
+                _ = _TestInstance.TryCreate(typeof(FieldInfo), CreateChainer());
             }
         }
     }

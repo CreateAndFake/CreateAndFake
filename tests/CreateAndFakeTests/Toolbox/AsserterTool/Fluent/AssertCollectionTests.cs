@@ -10,13 +10,13 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool.Fluent
         [Fact]
         internal static void AssertCollection_GuardsNulls()
         {
-            Tools.Tester.PreventsNullRefException<AssertCollection>();
+            Tools.Tester.PreventsNullRefException<AssertGroup>();
         }
 
         [Fact]
         internal static void AssertCollection_NoParameterMutation()
         {
-            Tools.Tester.PreventsParameterMutation<AssertCollection>();
+            Tools.Tester.PreventsParameterMutation<AssertGroup>();
         }
     }
 }

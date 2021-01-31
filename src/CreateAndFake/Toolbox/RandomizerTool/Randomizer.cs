@@ -58,14 +58,9 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             _limiter = limiter ?? throw new ArgumentNullException(nameof(limiter));
 
             IEnumerable<CreateHint> inputHints = hints ?? Enumerable.Empty<CreateHint>();
-            if (includeDefaultHints)
-            {
-                _hints = inputHints.Concat(_DefaultHints).ToArray();
-            }
-            else
-            {
-                _hints = inputHints.ToArray();
-            }
+            _hints = (includeDefaultHints)
+                ? inputHints.Concat(_DefaultHints).ToArray()
+                : inputHints.ToArray();
         }
 
         /// <summary>Creates a randomized instance.</summary>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -10,7 +9,6 @@ namespace CreateAndFake.Toolbox.FakerTool
 {
     /// <summary>Manages faking objects.</summary>
     /// <typeparam name="T">Type being faked.</typeparam>
-    [SuppressMessage("Sonar", "S3242:ConsiderGeneralType", Justification = "Provides type safety.")]
     public sealed class Fake<T> : Fake
     {
         /// <summary>Faked implementation.</summary>
@@ -121,23 +119,18 @@ namespace CreateAndFake.Toolbox.FakerTool
 
             if (!onlySetter && method.Body is MethodCallExpression methodCall)
             {
-                Type[] generics = (methodCall.Method.IsGenericMethod
+                Type[] generics = (methodCall.Method.IsGenericMethod)
                     ? methodCall.Method.GetGenericArguments()
-                    : Type.EmptyTypes);
+                    : Type.EmptyTypes;
 
                 return (methodCall.Method, generics, methodCall.Arguments.Select(a => ConvertArg(a)).ToArray());
             }
             else if (method.Body is MemberExpression memberExpression)
             {
                 PropertyInfo info = (PropertyInfo)memberExpression.Member;
-                if (onlySetter)
-                {
-                    return (info.GetSetMethod(), Type.EmptyTypes, Array.Empty<object>());
-                }
-                else
-                {
-                    return (info.GetGetMethod(), Type.EmptyTypes, Array.Empty<object>());
-                }
+                return (onlySetter)
+                    ? (info.GetSetMethod(), Type.EmptyTypes, Array.Empty<object>())
+                    : (info.GetGetMethod(), Type.EmptyTypes, Array.Empty<object>());
             }
             else
             {

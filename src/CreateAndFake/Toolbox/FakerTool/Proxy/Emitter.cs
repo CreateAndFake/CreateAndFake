@@ -73,7 +73,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
 
                 if (method.IsGenericMethod)
                 {
-                    fakedMethod.DefineGenericParameters(method.GetGenericArguments().Select(a => a.Name).ToArray());
+                    _ = fakedMethod.DefineGenericParameters(method.GetGenericArguments().Select(a => a.Name).ToArray());
                 }
                 ImplementFakeBehavior(fakedMethod.GetILGenerator(), method, metaGetter);
                 newType.DefineMethodOverride(fakedMethod, method);

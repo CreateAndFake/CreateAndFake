@@ -1,5 +1,7 @@
 ﻿using System;
 
+#pragma warning disable CA5394 // Do not use insecure randomness
+
 namespace CreateAndFake.Design.Randomization
 {
     /// <summary>For generating quick but insecure random values.</summary>
@@ -26,3 +28,5 @@ namespace CreateAndFake.Design.Randomization
         }
     }
 }
+
+#pragma warning restore CA5394 // Do not use insecure randomness

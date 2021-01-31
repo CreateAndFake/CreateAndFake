@@ -17,9 +17,9 @@ namespace CreateAndFake.Fluent
         /// <summary>Handles common test scenarios.</summary>
         /// <param name="collection">Collection to test.</param>
         /// <returns>Asserter to test with.</returns>
-        public static AssertCollection Assert(this IEnumerable collection)
+        public static AssertGroup Assert(this IEnumerable collection)
         {
-            return new AssertCollection(Tools.Valuer, collection);
+            return new AssertGroup(Tools.Valuer, collection);
         }
     }
 }

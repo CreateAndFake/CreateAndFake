@@ -22,11 +22,13 @@ namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples
         internal static int _FinalizerDisposes = 0;
 
         /// <summary>For testing.</summary>
-        [SuppressMessage("IDE", "IDE0060:RemoveUnusedParameters", Justification = "For testing.")]
+        [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "For testing.")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "For testing.")]
         public MockDisposableSample(object value) { }
 
         /// <summary>For testing.</summary>
         [SuppressMessage("Sonar", "S108:DoNotCatchGeneralExceptionTypes", Justification = "Must ignore in finalizer.")]
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Must ignore in finalizer.")]
         ~MockDisposableSample()
         {
             try
@@ -44,7 +46,8 @@ namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples
         }
 
         /// <summary>For testing.</summary>
-        [SuppressMessage("IDE", "IDE0060:RemoveUnusedParameters", Justification = "For testing.")]
+        [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "For testing.")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "For testing.")]
         public IDisposable DisposePass(object value)
         {
             return _Fake.Dummy;

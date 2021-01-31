@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -32,10 +33,10 @@ namespace CreateAndFakeTests.Design
         {
             int attempts = 0;
 
-            await new Limiter(0).Repeat(() => attempts++).ConfigureAwait(false);
+            _ = await new Limiter(0).Repeat(() => attempts++).ConfigureAwait(false);
             Tools.Asserter.Is(1, attempts);
 
-            await new Limiter(TimeSpan.MinValue).Repeat(() => attempts++).ConfigureAwait(false);
+            _ = await new Limiter(TimeSpan.MinValue).Repeat(() => attempts++).ConfigureAwait(false);
             Tools.Asserter.Is(2, attempts);
         }
 
@@ -44,11 +45,11 @@ namespace CreateAndFakeTests.Design
         {
             int attempts = 0;
 
-            Tools.Asserter.Throws<TimeoutException>(
+            _ = Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(0).StallUntil(() => attempts++, () => false).Wait());
             Tools.Asserter.Is(1, attempts);
 
-            Tools.Asserter.Throws<TimeoutException>(
+            _ = Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(TimeSpan.MinValue).StallUntil(() => attempts++, () => false).Wait());
             Tools.Asserter.Is(2, attempts);
         }
@@ -75,7 +76,7 @@ namespace CreateAndFakeTests.Design
         {
             int attempts = 0;
 
-            await new Limiter(tries).Repeat(() => attempts++).ConfigureAwait(false);
+            _ = await new Limiter(tries).Repeat(() => attempts++).ConfigureAwait(false);
             Tools.Asserter.Is(tries, attempts);
         }
 
@@ -86,7 +87,7 @@ namespace CreateAndFakeTests.Design
         {
             int attempts = 0;
 
-            Tools.Asserter.Throws<TimeoutException>(
+            _ = Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(tries).StallUntil(() => attempts++, () => false).Wait());
             Tools.Asserter.Is(tries, attempts);
         }
@@ -117,7 +118,7 @@ namespace CreateAndFakeTests.Design
         {
             Stopwatch watch = Stopwatch.StartNew();
 
-            Tools.Asserter.Throws<TimeoutException>(
+            _ = Tools.Asserter.Throws<TimeoutException>(
                 () => new Limiter(_SmallDelay).StallUntil(() => { }, () => false).Wait());
             Tools.Asserter.Is(true, watch.Elapsed.TotalMilliseconds >= _SmallDelay.TotalMilliseconds - _WaitAccuracy);
         }
@@ -178,14 +179,14 @@ namespace CreateAndFakeTests.Design
         {
             using (CancellationTokenSource tokenSource = new())
             {
-                Tools.Asserter.Throws<TaskCanceledException>(
+                _ = Tools.Asserter.Throws<TaskCanceledException>(
                     () => Limiter.Few.Repeat(() => tokenSource.Cancel(), tokenSource.Token).Wait());
             }
 
-            Tools.Asserter.Throws<TaskCanceledException>(
+            _ = Tools.Asserter.Throws<TaskCanceledException>(
                 () => Limiter.Few.Repeat(() => { }, new CancellationToken(true)).Wait());
 
-            Tools.Asserter.Throws<TaskCanceledException>(
+            _ = Tools.Asserter.Throws<TaskCanceledException>(
                 () => Limiter.Quick.Repeat(() => { }, new CancellationToken(true)).Wait());
         }
 
@@ -194,14 +195,14 @@ namespace CreateAndFakeTests.Design
         {
             using (CancellationTokenSource tokenSource = new())
             {
-                Tools.Asserter.Throws<TaskCanceledException>(
+                _ = Tools.Asserter.Throws<TaskCanceledException>(
                     () => Limiter.Few.StallUntil(() => tokenSource.Cancel(), () => false, tokenSource.Token).Wait());
             }
 
-            Tools.Asserter.Throws<TaskCanceledException>(
+            _ = Tools.Asserter.Throws<TaskCanceledException>(
                 () => Limiter.Few.StallUntil(() => false, new CancellationToken(true)).Wait());
 
-            Tools.Asserter.Throws<TaskCanceledException>(
+            _ = Tools.Asserter.Throws<TaskCanceledException>(
                 () => Limiter.Quick.StallUntil(() => false, new CancellationToken(true)).Wait());
         }
 
@@ -210,14 +211,14 @@ namespace CreateAndFakeTests.Design
         {
             using (CancellationTokenSource tokenSource = new())
             {
-                Tools.Asserter.Throws<TaskCanceledException>(() => Limiter.Few.Retry(
+                _ = Tools.Asserter.Throws<TaskCanceledException>(() => Limiter.Few.Retry(
                     () => throw exception, () => tokenSource.Cancel(), tokenSource.Token).Wait());
             }
 
-            Tools.Asserter.Throws<TaskCanceledException>(
+            _ = Tools.Asserter.Throws<TaskCanceledException>(
                 () => Limiter.Few.Retry(() => throw exception, new CancellationToken(true)).Wait());
 
-            Tools.Asserter.Throws<TaskCanceledException>(
+            _ = Tools.Asserter.Throws<TaskCanceledException>(
                 () => Limiter.Quick.Retry(() => throw exception, new CancellationToken(true)).Wait());
         }
 
@@ -280,7 +281,7 @@ namespace CreateAndFakeTests.Design
             int attempt = 0;
             int checkAttempt = 0;
 
-            await new Limiter(tries).StallUntil(() => attempt++, () => ++checkAttempt == tries).ConfigureAwait(false);
+            _ = await new Limiter(tries).StallUntil(() => attempt++, () => ++checkAttempt == tries).ConfigureAwait(false);
             Tools.Asserter.Is(tries, attempt);
             Tools.Asserter.Is(tries, checkAttempt);
         }
@@ -302,6 +303,7 @@ namespace CreateAndFakeTests.Design
         [Theory,
             InlineData(1),
             InlineData(3)]
+        [SuppressMessage("Major Code Smell", "S1854:Unused assignments should be removed", Justification = "False positive.")]
         internal static async Task Retry_ReturnResetStateBehavior(int tries)
         {
             Exception exception = Tools.Randomizer.Create<Exception>();
@@ -352,7 +354,6 @@ namespace CreateAndFakeTests.Design
             Limiter variant2 = new(tries, Tools.Mutator.Variant(elapsed));
 
             Tools.Asserter.Is(true, original.Equals(original));
-            Tools.Asserter.Is(false, original.Equals(null));
             Tools.Asserter.Is(true, original.Equals(dupe));
             Tools.Asserter.Is(false, original.Equals(variant1));
             Tools.Asserter.Is(false, original.Equals(variant2));
