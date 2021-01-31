@@ -124,26 +124,4 @@ class Build : NukeBuild
                 .SetTargetDirectory(CoverageDir / "report")
                 .SetReports(RawCoverageFile));
         });
-
-    /// <summary>Build process for AppVeyor.</summary>
-    internal Target OnAppVeyor => _ => _
-        .Requires(() => IsServerBuild)
-        .DependsOn(Test)
-        .DependsOn(Pack)
-        .DependsOn(Coverage);
-
-    /// <summary>Build process for Travis.</summary>
-    internal Target OnTravis => _ => _
-        .Requires(() => IsServerBuild)
-        .Executes(() =>
-        {
-            DotNetTasks.DotNetBuild(s => s
-                .SetProjectFile(_solution)
-                .SetFramework("netcoreapp3.0"));
-
-            DotNetTasks.DotNetTest(s => s
-                .SetProjectFile(_solution)
-                .SetFramework("netcoreapp3.0")
-                .SetNoBuild(true));
-        });
 }

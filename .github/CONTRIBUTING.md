@@ -33,9 +33,10 @@ Pull requests will be reviewed thoroughly to maintain project quality.
     B) EditorConfig for VS Code
     C) Powershell
 3) Add the following VS Code settings:
-    "git.enableCommitSigning": true,
     "omnisharp.enableEditorConfigSupport": true,
-    "omnisharp.enableRoslynAnalyzers": true
+    "omnisharp.enableRoslynAnalyzers": true,
+    "git.enableCommitSigning": true,
+    "editor.formatOnSave": true
 4) Clone repo and run from terminal "bash build/build.sh Test".
 
 ## Developer Certificate of Origin (DCO)
