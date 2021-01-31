@@ -31,7 +31,7 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
         [Fact]
         internal static void Copy_MissingMatchThrows()
         {
-            Tools.Asserter.Throws<NotSupportedException>(
+            _ = Tools.Asserter.Throws<NotSupportedException>(
                 () => new Duplicator(Tools.Asserter, false).Copy(new object()));
         }
 

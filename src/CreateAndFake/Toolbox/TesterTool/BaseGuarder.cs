@@ -29,7 +29,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             Fixer = fixer ?? throw new ArgumentNullException(nameof(fixer));
             Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
 
-            if (timeout.TotalMilliseconds >= -1 && timeout.TotalMilliseconds <= int.MaxValue)
+            if (timeout.TotalMilliseconds is >= -1 and <= int.MaxValue)
             {
                 Timeout = timeout;
             }
@@ -74,7 +74,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
             foreach (MethodInfo method in FindAllMethods(instance.GetType(), BindingFlags.Instance)
-                .Where(m => m.Name != "Finalize" && m.Name != "Dispose")
+                .Where(m => m.Name is not "Finalize" and not "Dispose")
                 .Where(m => !m.IsFamily)
                 .Select(m => Fixer.FixMethod(m)))
             {

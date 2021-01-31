@@ -2,6 +2,8 @@
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
+
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 {
     /// <summary>Handles copying serializables for the duplicator.</summary>
@@ -23,7 +25,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
                 using (Stream stream = new MemoryStream())
                 {
                     _Serializer.Serialize(stream, source);
-                    stream.Seek(0, SeekOrigin.Begin);
+                    _ = stream.Seek(0, SeekOrigin.Begin);
                     return (true, _Serializer.Deserialize(stream));
                 }
             }
@@ -34,3 +36,5 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         }
     }
 }
+
+#pragma warning restore SYSLIB0011 // Type or member is obsolete

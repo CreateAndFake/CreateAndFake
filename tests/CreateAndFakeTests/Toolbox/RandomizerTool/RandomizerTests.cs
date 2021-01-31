@@ -16,9 +16,9 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         [Fact]
         internal static void Randomizer_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(() => new Randomizer(null, Tools.Gen, Limiter.Few));
-            Tools.Asserter.Throws<ArgumentNullException>(() => new Randomizer(Tools.Faker, null, Limiter.Few));
-            Tools.Asserter.Throws<ArgumentNullException>(() => new Randomizer(Tools.Faker, Tools.Gen, null));
+            _ = Tools.Asserter.Throws<ArgumentNullException>(() => new Randomizer(null, Tools.Gen, Limiter.Few));
+            _ = Tools.Asserter.Throws<ArgumentNullException>(() => new Randomizer(Tools.Faker, null, Limiter.Few));
+            _ = Tools.Asserter.Throws<ArgumentNullException>(() => new Randomizer(Tools.Faker, Tools.Gen, null));
 
             Tools.Tester.PreventsNullRefException(Tools.Randomizer);
         }
@@ -39,7 +39,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         [Fact]
         internal static void Create_NoRulesThrows()
         {
-            Tools.Asserter.Throws<NotSupportedException>(
+            _ = Tools.Asserter.Throws<NotSupportedException>(
                 () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false).Create<object>());
         }
 
@@ -53,7 +53,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
                 m => m.TryCreate(data.GetType(), Arg.Any<RandomizerChainer>()),
                 Behavior.Returns((false, (object)null), Times.Once));
 
-            Tools.Asserter.Throws<NotSupportedException>(
+            _ = Tools.Asserter.Throws<NotSupportedException>(
                 () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false, hint.Dummy).Create<string>());
 
             hint.VerifyAll(Times.Once);
@@ -98,7 +98,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         [Fact]
         internal static void Create_ConditionTimesOut()
         {
-            Tools.Asserter.Throws<TimeoutException>(
+            _ = Tools.Asserter.Throws<TimeoutException>(
                 () => Tools.Randomizer.Create<DateTime>(d => d < DateTime.MinValue));
         }
 
