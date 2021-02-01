@@ -49,7 +49,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <returns>Created instance.</returns>
         private static object Create(Type type, RandomizerChainer randomizer)
         {
-            Delegator delegator = new Delegator(randomizer);
+            Delegator delegator = new(randomizer);
 
             MethodInfo info = type.GetMethod("Invoke");
             bool hasReturn = info.ReturnType != typeof(void);

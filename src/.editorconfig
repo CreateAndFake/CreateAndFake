@@ -1,0 +1,34 @@
+[*.cs]
+
+# Default severity for all analyzer diagnostics
+dotnet_analyzer_diagnostic.severity = warning
+
+# IDE0011: Add braces
+csharp_prefer_braces = when_multiline:warning
+
+# CA1508: Avoid dead conditional code
+dotnet_diagnostic.CA1508.severity = silent
+# CA1805: Do not initialize unnecessarily
+dotnet_diagnostic.CA1805.severity = none
+
+# IDE0045: 'if' statement can be simplified
+dotnet_diagnostic.IDE0045.severity = none
+# IDE0046: Convert to conditional expression
+dotnet_diagnostic.IDE0046.severity = none
+# IDE0047: Remove unnecessary parentheses
+dotnet_diagnostic.IDE0047.severity = none
+# IDE0048: Add parentheses for clarity
+dotnet_diagnostic.IDE0048.severity = none
+# IDE0063: 'using' statement can be simplified
+dotnet_diagnostic.IDE0063.severity = none
+# IDE0079: Remove unnecessary suppression
+dotnet_diagnostic.IDE0079.severity = none
+
+# S1125: Boolean literals should not be redundant
+dotnet_diagnostic.S1125.severity = silent
+# S1199: Nested code blocks should not be used
+dotnet_diagnostic.S1199.severity = none
+# S3443: Type should not be examined on "System.Type" instances
+dotnet_diagnostic.S3443.severity = none
+# S4457: Parameter validation in "async"/"await" methods should be wrapped
+dotnet_diagnostic.S4457.severity = none

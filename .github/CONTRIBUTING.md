@@ -15,7 +15,29 @@ Make sure to refer to and follow the [code of conduct](CODE_OF_CONDUCT.md).
 * Follow the project code style.
 * No #region.
 
-Pull requests will be reviewed thoroughly and harshly to maintain project quality. Expect to make additional changes before approval.
+Pull requests will be reviewed thoroughly to maintain project quality.
+
+## Windows Dev Environment Recommended Setup
+
+1) Install [VS Community](https://visualstudio.microsoft.com/vs/community/).
+2) Clone repo and run from cmd prompt "build/build.cmd Test".
+
+## Linux Dev Environment Recommended Setup
+
+1) Install packages for:
+    A) [.NET frameworks](https://dotnet.microsoft.com/download/)
+    B) [Mono](https://www.mono-project.com/download/stable/#download-lin/)
+    C) [VS Code](https://code.visualstudio.com/download/)
+2) Install VS Code extensions:
+    A) C#
+    B) EditorConfig for VS Code
+    C) Powershell
+3) Add the following VS Code settings:
+    "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.enableRoslynAnalyzers": true,
+    "git.enableCommitSigning": true,
+    "editor.formatOnSave": true
+4) Clone repo and run from terminal "bash build/build.sh Test".
 
 ## Developer Certificate of Origin (DCO)
 

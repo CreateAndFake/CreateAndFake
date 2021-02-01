@@ -91,7 +91,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Arg for the fake provider to match with.</returns>
         public static Arg LambdaAny<T>()
         {
-            return new Arg(o => o is T || o == null);
+            return new Arg(o => o is T or null);
         }
 
         /// <summary>Matches any reference of the given type.</summary>

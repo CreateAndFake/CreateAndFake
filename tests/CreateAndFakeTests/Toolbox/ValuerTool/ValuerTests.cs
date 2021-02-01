@@ -33,10 +33,10 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         [Fact]
         internal static void GetHashCode_MissingMatchThrows()
         {
-            Tools.Asserter.Throws<NotSupportedException>(
+            _ = Tools.Asserter.Throws<NotSupportedException>(
                 () => new Valuer(false).GetHashCode((object)null));
 
-            Tools.Asserter.Throws<NotSupportedException>(
+            _ = Tools.Asserter.Throws<NotSupportedException>(
                 () => new Valuer(false).GetHashCode(new object()));
         }
 
@@ -65,10 +65,10 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         [Fact]
         internal static void Compare_MissingMatchThrows()
         {
-            Tools.Asserter.Throws<NotSupportedException>(
+            _ = Tools.Asserter.Throws<NotSupportedException>(
                 () => new Valuer(false).Compare(null, new object()));
 
-            Tools.Asserter.Throws<NotSupportedException>(
+            _ = Tools.Asserter.Throws<NotSupportedException>(
                 () => new Valuer(false).Compare(new object(), new object()));
         }
 
@@ -137,13 +137,13 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         [Fact]
         internal static void GetHashCode_CanNotSupportNull()
         {
-            Tools.Asserter.Throws<NotSupportedException>(() => new Valuer(false).GetHashCode((object)null));
+            _ = Tools.Asserter.Throws<NotSupportedException>(() => new Valuer(false).GetHashCode((object)null));
         }
 
         [Fact]
         internal static void Compare_CanNotSupportNull()
         {
-            Tools.Asserter.Throws<NotSupportedException>(() => new Valuer(false).Compare(null, new object()));
+            _ = Tools.Asserter.Throws<NotSupportedException>(() => new Valuer(false).Compare(null, new object()));
         }
     }
 }

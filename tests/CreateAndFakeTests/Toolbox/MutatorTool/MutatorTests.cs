@@ -50,7 +50,7 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
                 m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Returns(true));
 
-            Mutator testInstance = new Mutator(Tools.Randomizer, fakeValuer.Dummy, new Limiter(3));
+            Mutator testInstance = new(Tools.Randomizer, fakeValuer.Dummy, new Limiter(3));
 
             Tools.Asserter.Throws<TimeoutException>(
                 () => testInstance.Variant(Tools.Randomizer.Create<DataSample>()));
@@ -65,7 +65,7 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
                 m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Series(true, true, true, false));
 
-            Mutator testInstance = new Mutator(Tools.Randomizer, fakeValuer.Dummy, new Limiter(5));
+            Mutator testInstance = new(Tools.Randomizer, fakeValuer.Dummy, new Limiter(5));
 
             Tools.Asserter.IsNot(null, testInstance.Variant(Tools.Randomizer.Create<DataSample>()));
             fakeValuer.VerifyTotalCalls(4);
@@ -78,7 +78,7 @@ namespace CreateAndFakeTests.Toolbox.RandifferTool
                 m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
                 Behavior.Series(false, true, true, false, true, true, false, false));
 
-            Mutator testInstance = new Mutator(Tools.Randomizer, fakeValuer.Dummy, new Limiter(5));
+            Mutator testInstance = new(Tools.Randomizer, fakeValuer.Dummy, new Limiter(5));
 
             Tools.Asserter.IsNot(null, testInstance.Variant(
                 Tools.Randomizer.Create<DataSample>(),

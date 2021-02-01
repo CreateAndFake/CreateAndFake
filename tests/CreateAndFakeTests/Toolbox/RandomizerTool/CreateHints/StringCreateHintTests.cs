@@ -11,7 +11,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class StringCreateHintTests : CreateHintTestBase<StringCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly StringCreateHint _TestInstance = new StringCreateHint();
+        private static readonly StringCreateHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = new[] { typeof(string) };
@@ -27,7 +27,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         {
             int minSize = 2;
             int range = 3;
-            StringCreateHint hint = new StringCreateHint(minSize, range, Enumerable.Empty<char>());
+            StringCreateHint hint = new(minSize, range, Enumerable.Empty<char>());
 
             for (int i = 0; i < 1000; i++)
             {
@@ -41,13 +41,14 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         [Fact]
         internal static void TryCreate_UsesCharSet()
         {
-            StringCreateHint hint = new StringCreateHint(3, 0, "a");
+            StringCreateHint hint = new(3, 0, "a");
             for (int i = 0; i < 100; i++)
             {
-                Tools.Asserter.Is((true, "aaa" as object), hint.TryCreate(typeof(string), CreateChainer()));
+                object value = "aaa";
+                Tools.Asserter.Is((true, value), hint.TryCreate(typeof(string), CreateChainer()));
             }
 
-            StringCreateHint hint2 = new StringCreateHint(3, 0, "ab");
+            StringCreateHint hint2 = new(3, 0, "ab");
             for (int i = 0; i < 100; i++)
             {
                 (bool, object) result = hint2.TryCreate(typeof(string), CreateChainer());

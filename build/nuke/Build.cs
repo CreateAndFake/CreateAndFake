@@ -1,5 +1,6 @@
 using System.Linq;
 using Nuke.Common;
+using Nuke.Common.CI;
 using Nuke.Common.Execution;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
@@ -12,8 +13,8 @@ using static Nuke.Common.IO.PathConstruction;
 
 /// <summary>Manages build behavior for the solution.</summary>
 [CheckBuildProjectConfigurations]
-[UnsetVisualStudioEnvironmentVariables]
-internal class Build : NukeBuild
+[ShutdownDotNetAfterServerBuild]
+class Build : NukeBuild
 {
     /// <summary>Output folder for the solution.</summary>
     private AbsolutePath ArtifactDir => _solution.Directory / "artifacts";
@@ -37,38 +38,24 @@ internal class Build : NukeBuild
     [Solution]
     private readonly Solution _solution;
 
-    /// <summary>Controls pack versioning.</summary>
-    [GitVersion]
-    private readonly GitVersion _gitVersion;
-
     // Console application entry point. Also defines the default target.
-    public static int Main()
-    {
-        return Execute<Build>(x => x.Compile);
-    }
+    public static int Main() => Execute<Build>(x => x.Compile);
 
     /// <summary>Deletes output folders.</summary>
     internal Target Clean => _ => _
         .Before(Compile)
         .Executes(() =>
         {
-            FileSystemTasks.EnsureCleanDirectory(ArtifactDir / "obj");
-            FileSystemTasks.EnsureCleanDirectory(ArtifactDir / "bin");
-            FileSystemTasks.EnsureCleanDirectory(TestingDir);
-            FileSystemTasks.EnsureCleanDirectory(PackageDir);
-            FileSystemTasks.EnsureCleanDirectory(CoverageDir);
+            FileSystemTasks.EnsureCleanDirectory(ArtifactDir);
         });
 
     /// <summary>Builds the solution.</summary>
-    internal Target Compile => _ => _
+    public Target Compile => _ => _
         .Executes(() =>
         {
             DotNetBuildSettings Set(DotNetBuildSettings s)
             {
-                return s.SetProjectFile(_solution)
-                    .SetFileVersion(_gitVersion.GetNormalizedFileVersion())
-                    .SetInformationalVersion(_gitVersion.InformationalVersion)
-                    .SetAssemblyVersion(_gitVersion.GetNormalizedAssemblyVersion());
+                return s.SetProjectFile(_solution);
             }
 
             DotNetTasks.DotNetBuild(s => Set(s).SetConfiguration("Debug"));
@@ -81,7 +68,7 @@ internal class Build : NukeBuild
         .Executes(() =>
         {
             DotNetTasks.DotNetPack(s => s
-                .SetVersion(_gitVersion.NuGetVersionV2)
+                .SetVersion("1.8.3")
                 .SetOutputDirectory(PackageDir)
                 .SetConfiguration("Release")
                 .SetProject(_solution)
@@ -136,27 +123,5 @@ internal class Build : NukeBuild
             ReportGeneratorTasks.ReportGenerator(s => s
                 .SetTargetDirectory(CoverageDir / "report")
                 .SetReports(RawCoverageFile));
-        });
-
-    /// <summary>Build process for AppVeyor.</summary>
-    internal Target OnAppVeyor => _ => _
-        .Requires(() => IsServerBuild)
-        .DependsOn(Test)
-        .DependsOn(Pack)
-        .DependsOn(Coverage);
-
-    /// <summary>Build process for Travis.</summary>
-    internal Target OnTravis => _ => _
-        .Requires(() => IsServerBuild)
-        .Executes(() =>
-        {
-            DotNetTasks.DotNetBuild(s => s
-                .SetProjectFile(_solution)
-                .SetFramework("netcoreapp3.0"));
-
-            DotNetTasks.DotNetTest(s => s
-                .SetProjectFile(_solution)
-                .SetFramework("netcoreapp3.0")
-                .SetNoBuild(true));
         });
 }

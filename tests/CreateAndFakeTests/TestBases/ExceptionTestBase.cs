@@ -21,6 +21,8 @@ namespace CreateAndFakeTests.TestBases
             Tools.Asserter.IsNot(null, Activator.CreateInstance(typeof(T), true));
         }
 
+#pragma warning disable SYSLIB0011 // Type or member is obsolete
+
         /// <summary>Verifies that the exception can make a binary roundtrip.</summary>
         [Theory, RandomData]
         public void Exception_BinarySerializes(T original)
@@ -30,11 +32,13 @@ namespace CreateAndFakeTests.TestBases
             using (Stream stream = new MemoryStream())
             {
                 formatter.Serialize(stream, original);
-                stream.Seek(0, SeekOrigin.Begin);
+                _ = stream.Seek(0, SeekOrigin.Begin);
 
                 Tools.Asserter.Is(original, formatter.Deserialize(stream));
             }
         }
+
+#pragma warning restore SYSLIB0011 // Type or member is obsolete
 
         /// <summary>Verifies that the exception can make an xml roundtrip.</summary>
         [Theory, RandomData]
@@ -48,7 +52,7 @@ namespace CreateAndFakeTests.TestBases
             using (Stream stream = new MemoryStream())
             {
                 formatter.WriteObject(stream, original);
-                stream.Seek(0, SeekOrigin.Begin);
+                _ = stream.Seek(0, SeekOrigin.Begin);
 
                 Tools.Asserter.Is(original, formatter.ReadObject(stream));
             }
@@ -69,7 +73,7 @@ namespace CreateAndFakeTests.TestBases
             using (Stream stream = new MemoryStream())
             {
                 formatter.WriteObject(stream, original);
-                stream.Seek(0, SeekOrigin.Begin);
+                _ = stream.Seek(0, SeekOrigin.Begin);
 
                 Tools.Asserter.Is(original, formatter.ReadObject(stream));
             }

@@ -33,7 +33,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                 .Where(m => !m.IsVirtual)
                 .Select(m => m.Name)
-                .Where(n => n != "Is" && n != "IsNot"));
+                .Where(n => n is not "Is" and not "IsNot"));
         }
 
         [Fact]
@@ -172,7 +172,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         [Fact]
         internal void Throws_AggregateUnwraps()
         {
-            AggregateException ex = new AggregateException(new InvalidOperationException());
+            AggregateException ex = new(new InvalidOperationException());
 
             _testInstance.Throws<InvalidOperationException>(() => throw ex);
         }
@@ -180,8 +180,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         [Fact]
         internal void Throws_AggregateExtraInternal()
         {
-            AggregateException ex = new AggregateException(
-                new InvalidOperationException(), new InvalidCastException());
+            AggregateException ex = new(new InvalidOperationException(), new InvalidCastException());
 
             Tools.Asserter.Throws<AssertException>(
                 () => _testInstance.Throws<InvalidOperationException>(() => throw ex));
@@ -190,7 +189,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         [Fact]
         internal void Throws_AggregateWrongInternals()
         {
-            AggregateException ex = new AggregateException(new InvalidOperationException());
+            AggregateException ex = new(new InvalidOperationException());
 
             Tools.Asserter.Throws<AssertException>(
                 () => _testInstance.Throws<InvalidCastException>(() => throw ex));
@@ -217,14 +216,9 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
                 m => m.Compare(true, Arg.Any<bool?>()),
                 Behavior.Set((object o1, object o2) =>
                 {
-                    if (!o1.Equals(o2))
-                    {
-                        return Tools.Randomizer.Create<IEnumerable<Difference>>();
-                    }
-                    else
-                    {
-                        return Enumerable.Empty<Difference>();
-                    }
+                    return (!o1.Equals(o2))
+                        ? Tools.Randomizer.Create<IEnumerable<Difference>>()
+                        : Enumerable.Empty<Difference>();
                 }));
 
             _testInstance.IsNotEmpty(Tools.Randomizer.Create<string[]>());

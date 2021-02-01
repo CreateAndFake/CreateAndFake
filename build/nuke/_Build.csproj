@@ -1,33 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RootNamespace></RootNamespace>
     <IsPackable>false</IsPackable>
     <NoWarn>CS0649;CS0169</NoWarn>
+    <NukeRootDirectory>../..</NukeRootDirectory>
+    <NukeScriptDirectory>..</NukeScriptDirectory>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nuke.Common" Version="0.22.2" />
-    <PackageReference Include="GitVersion.CommandLine.DotNetCore" Version="5.0.0" PrivateAssets="All" />
-    <PackageReference Include="ReportGenerator" Version="4.2.20" />
-    <PackageReference Include="coverlet.console" Version="1.6.0" ExcludeAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <NukeSpecificationFiles Include="**\*.json" Exclude="bin\**;obj\**" />
-    <NukeExternalFiles Include="**\*.*.ext" Exclude="bin\**;obj\**" />
-    <None Remove="*.csproj.DotSettings;*.ref.*.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\*" Link="build\%(Filename)%(Extension)" />
-    <None Include="..\..\src\*" Link="src\%(Filename)%(Extension)" />
-    <None Include="..\..\tests\*" Link="tests\%(Filename)%(Extension)" />
-    <None Include="..\..\docs\**" Link="docs\%(RecursiveDir)%(Filename)%(Extension)" />
-    <None Include="..\..\*" Exclude="**\*.sln" Link="root\%(Filename)%(Extension)" />
+    <PackageReference Include="Nuke.Common" Version="5.0.2" />
   </ItemGroup>
 
 </Project>

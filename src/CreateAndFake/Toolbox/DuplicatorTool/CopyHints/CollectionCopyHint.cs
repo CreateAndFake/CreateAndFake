@@ -100,7 +100,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <returns>Duplicate object.</returns>
         private static object[] CopyContentsHelper(IEnumerable source, DuplicatorChainer duplicator, bool reverse)
         {
-            List<object> copy = new List<object>();
+            List<object> copy = new();
 
             IEnumerator enumerator = source.GetEnumerator();
             while (enumerator.MoveNext())

@@ -19,15 +19,9 @@ namespace CreateAndFakeTests.TestSamples
         /// <returns>True if equal; false otherwise.</returns>
         public virtual bool ValuesEqual(object other)
         {
-            if (other is ValueEquatableSample sample)
-            {
-                return StringValue == sample.StringValue
-                    && NumberValue == sample.NumberValue;
-            }
-            else
-            {
-                return false;
-            }
+            return (other is ValueEquatableSample sample)
+                && StringValue == sample.StringValue
+                && NumberValue == sample.NumberValue;
         }
 
         /// <summary>Generates a hash based upon value.</summary>

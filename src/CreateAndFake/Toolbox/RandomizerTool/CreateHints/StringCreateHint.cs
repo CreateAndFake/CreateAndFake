@@ -25,15 +25,9 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         {
             _minSize = minSize;
             _range = range;
-
-            if (charSet != null && charSet.Any())
-            {
-                _charSet = charSet.ToArray();
-            }
-            else
-            {
-                _charSet = _DefaultCharSet;
-            }
+            _charSet = (charSet?.Any() ?? false)
+                ? charSet.ToArray()
+                : _DefaultCharSet;
         }
 
         /// <summary>Creates a random instance of the type.</summary>

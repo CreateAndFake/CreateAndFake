@@ -14,7 +14,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class EnumerableCompareHintTests : CompareHintTestBase<EnumerableCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly EnumerableCompareHint _TestInstance = new EnumerableCompareHint();
+        private static readonly EnumerableCompareHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes

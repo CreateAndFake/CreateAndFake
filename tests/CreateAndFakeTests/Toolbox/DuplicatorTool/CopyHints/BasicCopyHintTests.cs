@@ -24,7 +24,7 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
         [Fact]
         internal static void TryCopy_HandlesBaseObject()
         {
-            object data = new object();
+            object data = new();
             (bool, object) result = new BasicCopyHint().TryCopy(data, CreateChainer());
 
             Tools.Asserter.Is((true, data), result);

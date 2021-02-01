@@ -13,7 +13,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class TaskCompareHintTests : CompareHintTestBase<TaskCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly TaskCompareHint _TestInstance = new TaskCompareHint();
+        private static readonly TaskCompareHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = new[]
@@ -40,7 +40,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 
         private static Task BuildExceptionTask(Exception ex)
         {
-            Task task = new Task(() => { throw ex; });
+            Task task = new(() => { throw ex; });
             try
             {
                 task.Start();

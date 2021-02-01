@@ -13,12 +13,12 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
     public static class MutationGuarderTests
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly MutationGuarder _ShortTestInstance = new MutationGuarder(
+        private static readonly MutationGuarder _ShortTestInstance = new(
             new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
         /// <summary>Instance to test with.</summary>
-        private static readonly MutationGuarder _LongTestInstance = new MutationGuarder(
+        private static readonly MutationGuarder _LongTestInstance = new(
             new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
             Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
 
@@ -97,7 +97,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool
                 MockDisposableSample._FinalizerDisposes = 0;
                 MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
 
-                using (MockDisposableSample sample = new MockDisposableSample(null))
+                using (MockDisposableSample sample = new(null))
                 {
                     _LongTestInstance.PreventsMutationOnMethods(sample);
                     Tools.Asserter.Is(0, MockDisposableSample._ClassDisposes);

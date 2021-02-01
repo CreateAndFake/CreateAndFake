@@ -15,7 +15,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     {
         /// <summary>Instance to test with.</summary>
         private static readonly ObjectCompareHint _TestInstance
-            = new ObjectCompareHint(BindingFlags.Public | BindingFlags.Instance);
+            = new(BindingFlags.Public | BindingFlags.Instance);
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes

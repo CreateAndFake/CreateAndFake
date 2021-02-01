@@ -19,7 +19,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             {
                 return (true, new TimeSpan(duplicator.Copy(span.Ticks)));
             }
-            else if(source is Uri link)
+            else if (source is Uri link)
             {
                 return (true, new Uri(link.OriginalString));
             }

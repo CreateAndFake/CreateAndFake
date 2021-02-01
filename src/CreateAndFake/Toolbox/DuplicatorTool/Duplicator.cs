@@ -39,14 +39,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
             _asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
 
             IEnumerable<CopyHint> inputHints = hints ?? Enumerable.Empty<CopyHint>();
-            if (includeDefaultHints)
-            {
-                _hints = inputHints.Concat(_DefaultHints).ToArray();
-            }
-            else
-            {
-                _hints = inputHints.ToArray();
-            }
+            _hints = (includeDefaultHints)
+                ? inputHints.Concat(_DefaultHints).ToArray()
+                : inputHints.ToArray();
         }
 
         /// <summary>Deep clones an object.</summary>

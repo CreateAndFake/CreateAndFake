@@ -10,7 +10,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
     public sealed class EquatableCompareHintTests : CompareHintTestBase<EquatableCompareHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly EquatableCompareHint _TestInstance = new EquatableCompareHint();
+        private static readonly EquatableCompareHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = new[] { typeof(Limiter) };

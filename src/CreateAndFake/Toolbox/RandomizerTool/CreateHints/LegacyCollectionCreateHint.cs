@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
+#pragma warning disable IDE0058 // Expression value is never used
+
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Handles generation of legacy collections for the randomizer.</summary>
@@ -29,7 +31,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 
                 (typeof(StringCollection), (data, gen) =>
                 {
-                    StringCollection result = new StringCollection();
+                    StringCollection result = new();
                     foreach(string item in data)
                     {
                         result.Add(item);
@@ -110,3 +112,5 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         }
     }
 }
+
+#pragma warning restore IDE0058 // Expression value is never used

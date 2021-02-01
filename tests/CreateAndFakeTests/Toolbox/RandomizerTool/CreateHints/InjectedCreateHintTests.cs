@@ -13,7 +13,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class InjectedCreateHintTests : CreateHintTestBase<InjectedCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly InjectedCreateHint _TestInstance = new InjectedCreateHint();
+        private static readonly InjectedCreateHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = new[]

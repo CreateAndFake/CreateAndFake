@@ -24,12 +24,12 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         [Theory, RandomData]
         internal static void Verify_PresetOutOfRangeThrows(string name)
         {
-            FakeMetaProvider provider = new FakeMetaProvider
+            FakeMetaProvider provider = new()
             {
                 ThrowByDefault = false
             };
 
-            CallData data = new CallData(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
+            CallData data = new(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
 
             provider.SetCallBehavior(data, Behavior.None(Times.Once));
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify());
@@ -47,12 +47,12 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         [Theory, RandomData]
         internal static void Verify_CustomOutOfRangeThrows(string name)
         {
-            FakeMetaProvider provider = new FakeMetaProvider
+            FakeMetaProvider provider = new()
             {
                 ThrowByDefault = false
             };
 
-            CallData data = new CallData(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
+            CallData data = new(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
 
             provider.Verify(0, data);
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
@@ -73,7 +73,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         [Fact]
         internal static void VerifyTotalCalls_OutOfRangeThrows()
         {
-            FakeMetaProvider provider = new FakeMetaProvider
+            FakeMetaProvider provider = new()
             {
                 ThrowByDefault = false
             };
@@ -93,9 +93,9 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
         [Theory, RandomData]
         internal static void CallVoid_ReturnValueThrows(string name)
         {
-            FakeMetaProvider provider = new FakeMetaProvider();
+            FakeMetaProvider provider = new();
 
-            CallData data = new CallData(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
+            CallData data = new(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
             provider.SetCallBehavior(data, Behavior.Returns(""));
 
             Tools.Asserter.Throws<InvalidOperationException>(

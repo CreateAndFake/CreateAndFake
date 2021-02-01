@@ -68,7 +68,7 @@ namespace CreateAndFake.Design
         /// <returns>Awaitable task.</returns>
         public async Task Repeat(Action action, CancellationToken? canceler = null)
         {
-            await Repeat(() => { action?.Invoke(); return true; }, canceler).ConfigureAwait(false);
+            _ = await Repeat(() => { action?.Invoke(); return true; }, canceler).ConfigureAwait(false);
         }
 
         /// <summary>Repeats an action.</summary>
@@ -80,7 +80,7 @@ namespace CreateAndFake.Design
         {
             if (action == null) throw new ArgumentNullException(nameof(action));
 
-            List<T> results = new List<T>();
+            List<T> results = new();
 
             Stopwatch watch = Stopwatch.StartNew();
             int attempt = 0;
@@ -110,7 +110,7 @@ namespace CreateAndFake.Design
         /// <exception cref="TimeoutException">If an attempt limit is reached.</exception>
         public async Task StallUntil(Action action, Func<bool> checkState, CancellationToken? canceler = null)
         {
-            await StallUntil(() => { action?.Invoke(); return true; }, checkState, canceler).ConfigureAwait(false);
+            _ = await StallUntil(() => { action?.Invoke(); return true; }, checkState, canceler).ConfigureAwait(false);
         }
 
         /// <summary>Retries an action until a given state.</summary>
@@ -126,7 +126,7 @@ namespace CreateAndFake.Design
             if (action == null) throw new ArgumentNullException(nameof(checkState));
             if (checkState == null) throw new ArgumentNullException(nameof(checkState));
 
-            List<T> results = new List<T>();
+            List<T> results = new();
 
             Stopwatch watch = Stopwatch.StartNew();
             for (int i = 1; true; i++)
@@ -188,9 +188,7 @@ namespace CreateAndFake.Design
         public async Task Retry<TException>(Action action, Action resetState, CancellationToken? canceler = null)
             where TException : Exception
         {
-            await Retry<TException, bool>(
-                () => { action?.Invoke(); return true; }, resetState, canceler)
-                .ConfigureAwait(false);
+            _ = await Retry<TException, bool>(() => { action?.Invoke(); return true; }, resetState, canceler).ConfigureAwait(false);
         }
 
         /// <summary>Retries an action when encountering exceptions.</summary>

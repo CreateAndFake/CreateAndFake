@@ -37,14 +37,9 @@ namespace CreateAndFake.Toolbox.ValuerTool
         public Valuer(bool includeDefaultHints = true, params CompareHint[] hints)
         {
             IEnumerable<CompareHint> inputHints = hints ?? Enumerable.Empty<CompareHint>();
-            if (includeDefaultHints)
-            {
-                _hints = inputHints.Concat(_DefaultHints).ToArray();
-            }
-            else
-            {
-                _hints = inputHints.ToArray();
-            }
+            _hints = (includeDefaultHints)
+                ? inputHints.Concat(_DefaultHints).ToArray()
+                : inputHints.ToArray();
         }
 
         /// <summary>Determines whether the specified objects are equal.</summary>

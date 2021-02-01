@@ -11,26 +11,26 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class CommonSystemCreateHintTests : CreateHintTestBase<CommonSystemCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly CommonSystemCreateHint _TestInstance = new CommonSystemCreateHint();
+        private static readonly CommonSystemCreateHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = new[]
         {
-            typeof(CultureInfo), 
+            typeof(CultureInfo),
             typeof(TimeSpan),
-            typeof(DateTime), 
-            typeof(Assembly), 
-            typeof(AssemblyName), 
+            typeof(DateTime),
+            typeof(Assembly),
+            typeof(AssemblyName),
             typeof(Guid),
-            typeof(Type), 
-            typeof(Type).GetType(), 
-            typeof(ConstructorInfo), 
-            typeof(PropertyInfo), 
+            typeof(Type),
+            typeof(Type).GetType(),
+            typeof(ConstructorInfo),
+            typeof(PropertyInfo),
             typeof(MethodInfo),
-            typeof(MemberInfo), 
-            typeof(MemberInfo), 
-            typeof(FieldInfo), 
-            typeof(ParameterInfo), 
+            typeof(MemberInfo),
+            typeof(MemberInfo),
+            typeof(FieldInfo),
+            typeof(ParameterInfo),
             typeof(MethodBase),
             typeof(DateTimeOffset),
             typeof(Uri),
@@ -48,7 +48,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         {
             for (int i = 0; i < 50; i++)
             {
-                _TestInstance.TryCreate(typeof(FieldInfo), CreateChainer());
+                _ = _TestInstance.TryCreate(typeof(FieldInfo), CreateChainer());
             }
         }
     }

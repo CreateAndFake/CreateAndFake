@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>..\..\artifacts\obj\Nuke\</BaseIntermediateOutputPath>
+    <OutputPath>..\..\artifacts\bin\$(Configuration)\Nuke\</OutputPath>
+  </PropertyGroup>
+</Project>

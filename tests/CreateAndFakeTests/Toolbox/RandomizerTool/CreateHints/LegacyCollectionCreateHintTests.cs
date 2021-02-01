@@ -10,7 +10,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
     public sealed class LegacyCollectionCreateHintTests : CreateHintTestBase<LegacyCollectionCreateHint>
     {
         /// <summary>Instance to test with.</summary>
-        private static readonly LegacyCollectionCreateHint _TestInstance = new LegacyCollectionCreateHint();
+        private static readonly LegacyCollectionCreateHint _TestInstance = new();
 
         /// <summary>Types that can be created by the hint.</summary>
         private static readonly Type[] _ValidTypes = LegacyCollectionCreateHint.PotentialCollections

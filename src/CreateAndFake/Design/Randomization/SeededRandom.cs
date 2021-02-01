@@ -1,12 +1,14 @@
 ﻿using System;
 
+#pragma warning disable CA5394 // Do not use insecure randomness
+
 namespace CreateAndFake.Design.Randomization
 {
     /// <summary>For generating deterministic random values.</summary>
     public sealed class SeededRandom : ValueRandom
     {
         /// <summary>Lock to prevent thread collision with seeds.</summary>
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
 
         /// <summary>Current seed to be used for the next randomized value.</summary>
         private int _seed;
@@ -51,3 +53,5 @@ namespace CreateAndFake.Design.Randomization
         }
     }
 }
+
+#pragma warning restore CA5394 // Do not use insecure randomness

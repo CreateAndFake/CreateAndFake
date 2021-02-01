@@ -1,12 +1,14 @@
 ﻿using System;
 
+#pragma warning disable CA5394 // Do not use insecure randomness
+
 namespace CreateAndFake.Design.Randomization
 {
     /// <summary>For generating quick but insecure random values.</summary>
     public sealed class FastRandom : ValueRandom
     {
         /// <summary>Source generator used for random bytes.</summary>
-        private static readonly Random _Gen = new Random();
+        private static readonly Random _Gen = new();
 
         /// <summary>Sets up the randomizer.</summary>
         /// <param name="onlyValidValues">Option to prevent generating invalid values.</param>
@@ -26,3 +28,5 @@ namespace CreateAndFake.Design.Randomization
         }
     }
 }
+
+#pragma warning restore CA5394 // Do not use insecure randomness
