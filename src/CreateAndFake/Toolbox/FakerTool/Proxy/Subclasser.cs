@@ -113,7 +113,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             }
             else if (parent == typeof(Array))
             {
-                return (false, new ArgumentException($"Cannot subclass system reserved '{typeof(Array).Name}' type."));
+                return (false, new ArgumentException($"Cannot subclass system reserved '{nameof(Array)}' type."));
             }
             else
             {

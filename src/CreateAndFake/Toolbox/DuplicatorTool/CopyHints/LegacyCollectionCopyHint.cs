@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
+#pragma warning disable IDE0058 // Expression value is never used
+
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
 {
     /// <summary>Handles copying legacy collections for the duplicator.</summary>
@@ -78,3 +80,5 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         }
     }
 }
+
+#pragma warning restore IDE0058 // Expression value is never used

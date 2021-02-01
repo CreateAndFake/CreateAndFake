@@ -45,14 +45,9 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 object[] args = new object[info.Length];
                 for (int i = 0; i < args.Length; i++)
                 {
-                    if (randomizer.FakerSupports(info[i].ParameterType))
-                    {
-                        args[i] = randomizer.Create(typeof(Fake<>).MakeGenericType(info[i].ParameterType));
-                    }
-                    else
-                    {
-                        args[i] = randomizer.Create(info[i].ParameterType);
-                    }
+                    args[i] = (randomizer.FakerSupports(info[i].ParameterType))
+                        ? randomizer.Create(typeof(Fake<>).MakeGenericType(info[i].ParameterType))
+                        : randomizer.Create(info[i].ParameterType);
                 }
 
                 return type

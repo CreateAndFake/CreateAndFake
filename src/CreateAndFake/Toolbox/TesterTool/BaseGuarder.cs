@@ -29,14 +29,9 @@ namespace CreateAndFake.Toolbox.TesterTool
             Fixer = fixer ?? throw new ArgumentNullException(nameof(fixer));
             Randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
 
-            if (timeout.TotalMilliseconds is >= -1 and <= int.MaxValue)
-            {
-                Timeout = timeout;
-            }
-            else
-            {
-                Timeout = TimeSpan.FromMilliseconds(-1);
-            }
+            Timeout = (timeout.TotalMilliseconds is >= -1 and <= int.MaxValue)
+                ? timeout
+                : TimeSpan.FromMilliseconds(-1);
         }
 
         /// <summary>Gets all testable constructors on a type.</summary>

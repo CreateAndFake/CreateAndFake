@@ -44,7 +44,8 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
             StringCreateHint hint = new(3, 0, "a");
             for (int i = 0; i < 100; i++)
             {
-                Tools.Asserter.Is((true, "aaa" as object), hint.TryCreate(typeof(string), CreateChainer()));
+                object value = "aaa";
+                Tools.Asserter.Is((true, value), hint.TryCreate(typeof(string), CreateChainer()));
             }
 
             StringCreateHint hint2 = new(3, 0, "ab");

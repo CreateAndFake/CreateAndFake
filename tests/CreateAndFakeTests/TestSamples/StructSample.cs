@@ -30,14 +30,7 @@ namespace CreateAndFakeTests.TestSamples
         /// <summary>For testing.</summary>
         public override bool Equals(object obj)
         {
-            if (obj is StructSample sample)
-            {
-                return Equals(sample);
-            }
-            else
-            {
-                return false;
-            }
+            return (obj is StructSample sample) && Equals(sample);
         }
 
         /// <summary>For testing.</summary>

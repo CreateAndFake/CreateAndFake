@@ -54,7 +54,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             if (instance == null) throw new ArgumentNullException(nameof(instance));
 
             foreach (MethodInfo method in FindAllMethods(instance.GetType(), BindingFlags.Instance)
-                .Where(m => m.Name != "Finalize" && m.Name != "Dispose"))
+                .Where(m => m.Name is not "Finalize" and not "Dispose"))
             {
                 PreventsNullRefException(instance, Fixer.FixMethod(method), false, injectionValues);
             }
@@ -107,14 +107,9 @@ namespace CreateAndFake.Toolbox.TesterTool
                     data[i] = null;
                     try
                     {
-                        if (instance == null && method is ConstructorInfo builder)
-                        {
-                            result = RunCheck(method, param, () => builder.Invoke(data));
-                        }
-                        else
-                        {
-                            result = RunCheck(method, param, () => method.Invoke(instance, data));
-                        }
+                        result = (instance == null && method is ConstructorInfo builder)
+                            ? RunCheck(method, param, () => builder.Invoke(data))
+                            : RunCheck(method, param, () => method.Invoke(instance, data));
 
                         if (result != null && callAllMethods)
                         {

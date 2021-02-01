@@ -40,7 +40,7 @@ namespace CreateAndFakeTests.IssueReplication
             TestInfiniteSample(sample);
         }
 
-        private static void TestInfiniteSample<T>(T sample) where T: new()
+        private static void TestInfiniteSample<T>(T sample) where T : new()
         {
             Tools.Asserter.IsNot(null, sample);
             Tools.Asserter.IsNot(new T(), sample);

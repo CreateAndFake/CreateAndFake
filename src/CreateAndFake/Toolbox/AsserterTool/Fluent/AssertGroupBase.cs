@@ -5,7 +5,7 @@ using CreateAndFake.Toolbox.ValuerTool;
 namespace CreateAndFake.Toolbox.AsserterTool.Fluent
 {
     /// <summary>Handles assertion calls.</summary>
-    public abstract class AssertCollectionBase<T> : AssertObjectBase<T> where T : AssertCollectionBase<T>
+    public abstract class AssertGroupBase<T> : AssertObjectBase<T> where T : AssertGroupBase<T>
     {
         /// <summary>Collection to check.</summary>
         protected IEnumerable Collection { get; }
@@ -13,7 +13,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <summary>Initializer.</summary>
         /// <param name="valuer">Handles comparisons.</param>
         /// <param name="collection">Collection to check.</param>
-        protected AssertCollectionBase(IValuer valuer, IEnumerable collection) : base(valuer, collection)
+        protected AssertGroupBase(IValuer valuer, IEnumerable collection) : base(valuer, collection)
         {
             Collection = collection;
         }
@@ -33,7 +33,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <returns>Chainer to make additional assertions with.</returns>
         public AssertChainer<T> IsNotEmpty(string details = null)
         {
-            new AssertObject(Valuer, Collection?.GetEnumerator().MoveNext()).Is(true, details);
+            _ = new AssertObject(Valuer, Collection?.GetEnumerator().MoveNext()).Is(true, details);
             return ToChainer();
         }
 
@@ -54,7 +54,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
             int i = 0;
             for (IEnumerator data = Collection.GetEnumerator(); data.MoveNext(); i++)
             {
-                contents.Append('[').Append(i).Append("]:").Append(data.Current).AppendLine();
+                _ = contents.Append('[').Append(i).Append("]:").Append(data.Current).AppendLine();
             }
 
             if (i != count)

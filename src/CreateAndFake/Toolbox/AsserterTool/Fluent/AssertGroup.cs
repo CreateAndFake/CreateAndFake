@@ -4,7 +4,7 @@ using CreateAndFake.Toolbox.ValuerTool;
 namespace CreateAndFake.Toolbox.AsserterTool.Fluent
 {
     /// <summary>Handles assertion calls.</summary>
-    public sealed class AssertGroup : AssertCollectionBase<AssertGroup>
+    public sealed class AssertGroup : AssertGroupBase<AssertGroup>
     {
         /// <summary>Initializer.</summary>
         /// <param name="valuer">Handles comparisons.</param>
