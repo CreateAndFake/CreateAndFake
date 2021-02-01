@@ -24,14 +24,8 @@ namespace CreateAndFakeTests.TestSamples
         {
             if (valuer == null) throw new ArgumentNullException(nameof(valuer));
 
-            if (other is PrivateValuerEquatableSample sample)
-            {
-                return valuer.Equals(StringValue, sample.StringValue);
-            }
-            else
-            {
-                return false;
-            }
+            return (other is PrivateValuerEquatableSample sample)
+                && valuer.Equals(StringValue, sample.StringValue);
         }
 
         /// <summary>Generates a hash based upon value.</summary>
@@ -39,9 +33,7 @@ namespace CreateAndFakeTests.TestSamples
         /// <returns>The generated hash code.</returns>
         public virtual int GetValueHash(IValuer valuer)
         {
-            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
-
-            return valuer.GetHashCode(StringValue);
+            return valuer?.GetHashCode(StringValue) ?? throw new ArgumentNullException(nameof(valuer));
         }
     }
 }

@@ -16,7 +16,7 @@ namespace CreateAndFakeTests.IssueReplication
         [Fact]
         internal static void Issue_SupportsDateTimeOffset()
         {
-            TestSample< DateTimeOffset>();
+            TestSample<DateTimeOffset>();
         }
 
         private static void TestSample<T>()

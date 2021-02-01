@@ -106,12 +106,12 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
                         p => p.Name.Equals(param.Name, StringComparison.OrdinalIgnoreCase));
                     if (directPropMatch != null)
                     {
-                        propList.Remove(directPropMatch);
+                        _ = propList.Remove(directPropMatch);
                         matchedMembers.Add(directPropMatch);
                     }
                     else
                     {
-                        propList.Remove(potentialProps.First());
+                        _ = propList.Remove(potentialProps.First());
                         matchedMembers.Add(potentialProps.First());
                     }
                     continue;
@@ -126,12 +126,12 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
                         f => f.Name.Equals(param.Name, StringComparison.OrdinalIgnoreCase));
                     if (directFieldMatch != null)
                     {
-                        fieldList.Remove(directFieldMatch);
+                        _ = fieldList.Remove(directFieldMatch);
                         matchedMembers.Add(directFieldMatch);
                     }
                     else
                     {
-                        fieldList.Remove(potentialFields.First());
+                        _ = fieldList.Remove(potentialFields.First());
                         matchedMembers.Add(potentialFields.First());
                     }
                     continue;

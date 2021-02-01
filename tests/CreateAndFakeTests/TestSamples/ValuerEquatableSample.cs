@@ -23,15 +23,9 @@ namespace CreateAndFakeTests.TestSamples
         {
             if (valuer == null) throw new ArgumentNullException(nameof(valuer));
 
-            if (other is ValuerEquatableSample sample)
-            {
-                return valuer.Equals(StringValue, sample.StringValue)
-                    && valuer.Equals(NumberValue, sample.NumberValue);
-            }
-            else
-            {
-                return false;
-            }
+            return (other is ValuerEquatableSample sample)
+                && valuer.Equals(StringValue, sample.StringValue)
+                && valuer.Equals(NumberValue, sample.NumberValue);
         }
 
         /// <summary>Generates a hash based upon value.</summary>

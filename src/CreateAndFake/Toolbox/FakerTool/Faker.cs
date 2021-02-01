@@ -130,7 +130,7 @@ namespace CreateAndFake.Toolbox.FakerTool
                     if (match != default)
                     {
                         args[i] = match.Item2;
-                        data.Remove(match);
+                        _ = data.Remove(match);
                     }
                     else if (Supports(info[i].ParameterType))
                     {

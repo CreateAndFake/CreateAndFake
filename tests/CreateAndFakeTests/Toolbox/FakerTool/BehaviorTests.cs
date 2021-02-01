@@ -22,7 +22,10 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
                 Type[] generics = type.AsGenericType()?.GetGenericArguments()
                     .Select(a => typeof(string)).ToArray() ?? Type.EmptyTypes;
 
-                MethodInfo caller = (generics.Any()) ? info.MakeGenericMethod(generics) : info;
+                MethodInfo caller = (generics.Any())
+                    ? info.MakeGenericMethod(generics)
+                    : info;
+
                 Type setupType = caller.GetParameters().First().ParameterType;
 
                 Type[] args = (type.Name.StartsWith("Func", StringComparison.InvariantCulture))

@@ -175,7 +175,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 else if (match != default)
                 {
                     AddArg(param.Name, match.Item2);
-                    data.Remove(match);
+                    _ = data.Remove(match);
                 }
                 else
                 {
@@ -226,7 +226,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                     if (match != default)
                     {
                         args[i] = match.Item2;
-                        data.Remove(match);
+                        _ = data.Remove(match);
                     }
                     else
                     {

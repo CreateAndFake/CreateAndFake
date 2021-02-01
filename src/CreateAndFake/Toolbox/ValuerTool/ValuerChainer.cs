@@ -94,7 +94,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             _hashHistory[refHash] = item;
 
             int hash = _hasher.Invoke(item, this);
-            _hashHistory.Remove(refHash);
+            _ = _hashHistory.Remove(refHash);
             return hash;
         }
 
