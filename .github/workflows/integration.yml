@@ -58,7 +58,4 @@ jobs:
       with:
         dotnet-version: '5.0.x'
     - name: Build & Test
-      run: ./build/build.cmd Test+Coverage
-    - uses: codecov/codecov-action@v1
-      with:
-        files: ./artifacts/coverage/CoverageRaw.xml
+      run: ./build/build.cmd Test
