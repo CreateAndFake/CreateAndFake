@@ -99,6 +99,16 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         [Theory, RandomData]
+        internal static void Series_NullCountsAsNone(string value)
+        {
+            Behavior behavior = Behavior.Series(value, null);
+            Tools.Asserter.Is(value, behavior.Invoke(Array.Empty<object>()));
+
+            Tools.Asserter.Throws<NotImplementedException>(
+                () => behavior.Invoke(Array.Empty<object>()));
+        }
+
+        [Theory, RandomData]
         internal static void ToExpectedCalls_MatchesTimes(Times times)
         {
             Tools.Asserter.Is(null, Behavior.None().ToExpectedCalls());

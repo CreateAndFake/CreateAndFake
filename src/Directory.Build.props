@@ -1,5 +1,8 @@
 <Project>
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <BaseIntermediateOutputPath>..\..\artifacts\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
     <OutputPath>..\..\artifacts\bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
     <DocumentationFile>..\..\artifacts\bin\$(Configuration)\$(MSBuildProjectName)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>

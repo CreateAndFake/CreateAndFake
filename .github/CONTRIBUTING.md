@@ -20,7 +20,7 @@ Pull requests will be reviewed thoroughly to maintain project quality.
 ## Windows Dev Environment Recommended Setup
 
 1) Install [VS Community](https://visualstudio.microsoft.com/vs/community/).
-2) Clone repo and run from cmd prompt "build/build.cmd Test".
+2) Clone repo and run from cmd prompt "build/run.cmd test".
 
 ## Linux Dev Environment Recommended Setup
 
@@ -37,7 +37,7 @@ Pull requests will be reviewed thoroughly to maintain project quality.
     "omnisharp.enableRoslynAnalyzers": true,
     "git.enableCommitSigning": true,
     "editor.formatOnSave": true
-4) Clone repo and run from terminal "bash build/build.sh Test".
+4) Clone repo and run from terminal "./build/run.sh test".
 
 ## Developer Certificate of Origin (DCO)
 

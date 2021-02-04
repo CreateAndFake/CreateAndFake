@@ -1,8 +1,13 @@
 <Project>
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>false</IsPackable>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <BaseIntermediateOutputPath>..\..\artifacts\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
     <OutputPath>..\..\artifacts\testing\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
     <DocumentationFile>..\..\artifacts\testing\$(Configuration)\$(MSBuildProjectName)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+    <RunSettingsFilePath>..\TestSettings.runsettings</RunSettingsFilePath>
     <CodeAnalysisRuleSet>..\TestRules.ruleset</CodeAnalysisRuleSet>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>

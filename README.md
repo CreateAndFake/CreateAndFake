@@ -1,6 +1,6 @@
 # Create & Fake
 
-[![NuGet](https://img.shields.io/nuget/v/CreateAndFake)](https://www.nuget.org/packages/CreateAndFake) [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/rmbj86u333y66hfw/branch/master?svg=true)](https://ci.appveyor.com/project/Werebunny/createandfake/branch/master) [![Travis Build Status](https://travis-ci.org/CreateAndFake/CreateAndFake.svg?branch=master)](https://travis-ci.org/CreateAndFake/CreateAndFake) [![CodeCov Coverage](https://codecov.io/gh/CreateAndFake/CreateAndFake/branch/master/graph/badge.svg)](https://codecov.io/gh/CreateAndFake/CreateAndFake/branch/master) [![Codacy Grade](https://api.codacy.com/project/badge/Grade/cc753a1417c24f6dba43e2386e89005a)](https://www.codacy.com/app/Werebunny/CreateAndFake?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CreateAndFake/CreateAndFake&amp;utm_campaign=Badge_Grade)
+[![NuGet](https://img.shields.io/nuget/v/CreateAndFake)](https://www.nuget.org/packages/CreateAndFake) [![Build](https://github.com/CreateAndFake/CreateAndFake/workflows/Integration/badge.svg)](../../actions?query=workflow%3AIntegration) [![CodeCov Coverage](https://codecov.io/gh/CreateAndFake/CreateAndFake/branch/master/graph/badge.svg)](https://codecov.io/gh/CreateAndFake/CreateAndFake/branch/master) [![Codacy Grade](https://api.codacy.com/project/badge/Grade/cc753a1417c24f6dba43e2386e89005a)](https://www.codacy.com/app/Werebunny/CreateAndFake?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CreateAndFake/CreateAndFake&amp;utm_campaign=Badge_Grade)
 
 A C# class library that handles mocking, test data generation, and validation. Designed to handle the bulk of test setup quickly and easily so that developers can focus on the behavior to test, making tests easier to develop and maintain. The handful of tools provided are both easy to use and customizable should the need arise:
 
@@ -18,7 +18,9 @@ Visit the [documentation site](https://createandfake.github.io/CreateAndFake/) f
 
 ## Installation
 
-Use a NuGet package reference inside your project with the name "[CreateAndFake](https://www.nuget.org/packages/CreateAndFake)." Alternatively, binaries can be pulled from the build server linked above under artifacts or compiled manually from the build folder.
+```
+dotnet add package CreateAndFake
+```
 
 ## Documentation
 
@@ -39,13 +41,8 @@ View the [license](LICENSE.txt) file for more details.
 ## Acknowledgments
 
 * [xUnit](https://xunit.github.io/): For running tests.
-* [Nuke](https://nuke.build/): For project building.
-* [Coverlet](https://github.com/tonerdo/coverlet): For test coverage.
-* [ReportGenerator](https://danielpalme.github.io/ReportGenerator/): For readable coverage.
-* [Sonar](https://www.sonarsource.com/products/codeanalyzers/sonarcsharp.html): For code analyzers.
-* [AppVeyor](https://www.appveyor.com/): For Windows continous integration.
-* [Travis CI](https://travis-ci.org/): For Linux continous integration.
-* [CodeCov](https://codecov.io/): For hosting test coverage.
-* [Codacy](https://www.codacy.com/): For hosting code analysis.
+* [Coverlet](https://github.com/tonerdo/coverlet) + [ReportGenerator](https://danielpalme.github.io/ReportGenerator/) + [CodeCov](https://codecov.io/): For test coverage.
+* [Bullseye](https://github.com/adamralph/bullseye) + [SimpleExec](https://github.com/adamralph/simple-exec) + [MinVer](https://github.com/adamralph/minver): For project building.
+* [Sonar](https://www.sonarsource.com/products/codeanalyzers/sonarcsharp.html) + [Codacy](https://www.codacy.com/): For code analysis.
 * [GitHub](https://github.com/): For hosting code.
-* [Microsoft](https://visualstudio.microsoft.com/vs/features/net-development/): For C# and Visual Studio.
+* [Microsoft](https://visualstudio.microsoft.com/vs/features/net-development/): For C# and editors.

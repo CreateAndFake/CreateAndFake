@@ -2,9 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net5.0;netcoreapp3.1;netstandard2.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
@@ -15,8 +13,9 @@
     <Authors>CreateAndFake Contributors</Authors>
     <Description>A C# class library that handles mocking, test data generation, and validation.</Description>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/CreateAndFake/CreateAndFake</PackageProjectUrl>
+    <PackageProjectUrl>https://createandfake.github.io/CreateAndFake/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/CreateAndFake/CreateAndFake</RepositoryUrl>
+    <ReleaseNotes>https://github.com/CreateAndFake/CreateAndFake/releases/</ReleaseNotes>
     <RepositoryType>Github</RepositoryType>
     <PackageTags>create, fake, tdd, agile, testing, tests, stubs, mocking, mocks, mock, data, random, cloning, clones, clone</PackageTags>
   </PropertyGroup>
@@ -28,10 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MinVer" Version="2.4.0" PrivateAssets="All" />
     <PackageReference Include="xunit.core" Version="2.2.0" PrivateAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(OS)'=='Windows_NT'">
     <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" PrivateAssets="All" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="8.17.0.26580" PrivateAssets="All" />
   </ItemGroup>
