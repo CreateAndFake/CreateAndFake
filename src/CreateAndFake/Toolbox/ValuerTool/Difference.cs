@@ -50,7 +50,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             if (access == null) throw new ArgumentNullException(nameof(access));
             if (difference == null) throw new ArgumentNullException(nameof(difference));
 
-            _message = new Lazy<string>(() => access + difference);
+            _message = new Lazy<string>(() => access + difference.ToString());
         }
 
         /// <summary>Details a difference.</summary>

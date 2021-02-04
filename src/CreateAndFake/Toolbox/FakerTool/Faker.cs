@@ -107,13 +107,7 @@ namespace CreateAndFake.Toolbox.FakerTool
                 .Select(v => v.GetType())
                 .ToArray();
 
-            // Finds the contructor with the most matches then by most parameters.
-            ConstructorInfo maker = typeof(T).GetConstructors(BindingFlags.Instance | BindingFlags.Public)
-                .GroupBy(c => c.GetParameters().Count(p => startingTypes.Any(t => t.Inherits(p.ParameterType))))
-                .OrderByDescending(g => g.Key)
-                .FirstOrDefault()
-                ?.OrderByDescending(c => c.GetParameters())
-                .FirstOrDefault();
+            ConstructorInfo maker = FindBestConstructor<T>(startingTypes);
 
             List<Tuple<Type, object>> data = values
                 .Where(v => v != null)
@@ -149,6 +143,20 @@ namespace CreateAndFake.Toolbox.FakerTool
             {
                 throw new InvalidOperationException($"No constructors found on type '{typeof(T).Name}'.");
             }
+        }
+
+        /// <summary>Finds the constructor with the most matches then by most parameters.</summary>
+        /// <typeparam name="T">Type to search.</typeparam>
+        /// <param name="startingTypes">Argument types to search on.</param>
+        /// <returns>The constructor best fitted to the types.</returns>
+        private static ConstructorInfo FindBestConstructor<T>(Type[] startingTypes)
+        {
+            return typeof(T).GetConstructors(BindingFlags.Instance | BindingFlags.Public)
+                .GroupBy(c => c.GetParameters().Count(p => startingTypes.Any(t => t.Inherits(p.ParameterType))))
+                .OrderByDescending(g => g.Key)
+                .FirstOrDefault()
+                ?.OrderByDescending(c => c.GetParameters())
+                .FirstOrDefault();
         }
     }
 }

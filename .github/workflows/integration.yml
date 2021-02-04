@@ -24,7 +24,7 @@ jobs:
       with:
         dotnet-version: '5.0.x'
     - name: Build & Test
-      run: bash build/build.sh Test
+      run: ./build/build.sh test
 
   mac:
     runs-on: macOS-latest
@@ -43,7 +43,7 @@ jobs:
       with:
         dotnet-version: '5.0.x'
     - name: Build & Test
-      run: bash build/build.sh Test
+      run: bash build/build.sh test
 
   windows:
     runs-on: windows-latest
@@ -57,5 +57,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
-    - name: Build & Test
-      run: ./build/build.cmd Test
+    - name: Build & Test & Coverage
+      run: ./build/build.cmd test coverage
+    - name: Upload coverage
+    - uses: codecov/codecov-action@v1
+      with:
+        directory ./artifacts/coverage

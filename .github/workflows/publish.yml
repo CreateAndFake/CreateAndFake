@@ -3,14 +3,10 @@ name: Publish
 on: release
 
 jobs:
-  windows:
-    runs-on: windows-latest
+  nuget:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core 2.1
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '2.1.x'
     - name: Setup .NET Core 3.1
       uses: actions/setup-dotnet@v1
       with:
@@ -19,5 +15,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
-    - name: Pack
-      run: ./build/build.cmd Pack
+    - name: Build & Pack
+      run: ./build/run.sh pack
+    - name: Publish to NuGet
+      run: dotnet nuget push ./artifacts/releases/*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols

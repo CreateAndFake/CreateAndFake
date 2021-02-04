@@ -35,24 +35,28 @@ namespace CreateAndFake.Toolbox
             return AppDomain.CurrentDomain.GetAssemblies()
                 .Where(a => !a.ReflectionOnly)
                 .Where(a => !a.IsDynamic)
-                .SelectMany(a =>
-                    {
-                        // Ignore assemblies that can't load.
-                        try
-                        {
-                            return a.GetExportedTypes();
-                        }
-                        catch (FileNotFoundException)
-                        {
-                            return Type.EmptyTypes;
-                        }
-                        catch (ReflectionTypeLoadException)
-                        {
-                            return Type.EmptyTypes;
-                        }
-                    })
+                .SelectMany(a => FindLoadedTypes(a))
                 .Where(t => !t.IsAbstract)
                 .Where(t => t.Inherits(type));
+        }
+
+        /// <summary>Finds all types in an assembly.</summary>
+        /// <param name="assembly">Assembly to load types from.</param>
+        /// <returns>Found types if assembly can load; none otherwise.</returns>
+        internal static Type[] FindLoadedTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly?.GetExportedTypes() ?? Type.EmptyTypes;
+            }
+            catch (FileNotFoundException)
+            {
+                return Type.EmptyTypes;
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                return Type.EmptyTypes;
+            }
         }
 
         /// <summary>Determines if the class is visible to the given assembly.</summary>
