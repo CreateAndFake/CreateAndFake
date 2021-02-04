@@ -1,6 +1,7 @@
 name: Publish
 
 on: release
+  types: published
 
 jobs:
   nuget:
@@ -18,4 +19,4 @@ jobs:
     - name: Build & Pack
       run: ./build/run.sh pack
     - name: Publish to NuGet
-      run: dotnet nuget push ./artifacts/releases/*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
+      run: dotnet nuget push ./artifacts/releases/*.nupkg -k ${{ secrets.NUGET_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate
