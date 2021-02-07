@@ -5,7 +5,7 @@ using Xunit;
 namespace CreateAndFakeTests.IssueReplication
 {
     /// <summary>Verifies issue is resolved.</summary>
-    public static class Issue65Tests
+    public static class Issue065Tests
     {
         internal class InfiniteA
         {
