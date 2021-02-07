@@ -4,8 +4,8 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <BaseIntermediateOutputPath>..\..\artifacts\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
-    <OutputPath>..\..\artifacts\bin\$(Configuration)\$(MSBuildProjectName)\</OutputPath>
-    <DocumentationFile>..\..\artifacts\bin\$(Configuration)\$(MSBuildProjectName)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+    <OutputPath>..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\</OutputPath>
+    <DocumentationFile>..\..\artifacts\bin\$(MSBuildProjectName)\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\SourceRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 </Project>

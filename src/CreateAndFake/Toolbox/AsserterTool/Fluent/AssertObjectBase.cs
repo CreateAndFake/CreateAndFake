@@ -115,7 +115,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <returns>The created chainer.</returns>
         protected AssertChainer<T> ToChainer()
         {
-            return new AssertChainer<T>((T)this);
+            return new AssertChainer<T>((T)this, Valuer);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool.Fluent
         [Theory, RandomData]
         internal static void And_PassesBackInstance(object data)
         {
-            Tools.Asserter.Is(data, new AssertChainer<object>(data).And);
+            Tools.Asserter.Is(data, new AssertChainer<object>(data, Tools.Valuer).And);
         }
     }
 }

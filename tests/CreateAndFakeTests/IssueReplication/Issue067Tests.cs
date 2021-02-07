@@ -5,7 +5,7 @@ using Xunit;
 namespace CreateAndFakeTests.IssueReplication
 {
     /// <summary>Verifies issue is resolved.</summary>
-    public static class Issue67Tests
+    public static class Issue067Tests
     {
         [Fact]
         internal static void Issue_SupportsUri()
