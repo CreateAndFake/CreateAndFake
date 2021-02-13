@@ -34,13 +34,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             provider.SetCallBehavior(data, Behavior.None(Times.Once));
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify());
 
-            provider.CallVoid(Tools.Mutator.Variant(name), Type.EmptyTypes, Array.Empty<object>());
+            provider.CallVoid(null, Tools.Mutator.Variant(name), Type.EmptyTypes, Array.Empty<object>());
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify());
 
-            provider.CallVoid(name, Type.EmptyTypes, Array.Empty<object>());
+            provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>());
             provider.Verify();
 
-            provider.CallVoid(name, Type.EmptyTypes, Array.Empty<object>());
+            provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>());
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify());
         }
 
@@ -57,15 +57,15 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             provider.Verify(0, data);
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
 
-            provider.CallVoid(Tools.Mutator.Variant(name), Type.EmptyTypes, Array.Empty<object>());
+            provider.CallVoid(null, Tools.Mutator.Variant(name), Type.EmptyTypes, Array.Empty<object>());
             provider.Verify(0, data);
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
 
-            provider.CallVoid(name, Type.EmptyTypes, Array.Empty<object>());
+            provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>());
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(0, data));
             provider.Verify(1, data);
 
-            provider.CallVoid(name, Type.EmptyTypes, Array.Empty<object>());
+            provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>());
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
             provider.Verify(2, data);
         }
@@ -81,11 +81,11 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             provider.VerifyTotalCalls(0);
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.VerifyTotalCalls(1));
 
-            provider.CallVoid(Tools.Randomizer.Create<string>(), Type.EmptyTypes, Array.Empty<object>());
+            provider.CallVoid(null, Tools.Randomizer.Create<string>(), Type.EmptyTypes, Array.Empty<object>());
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.VerifyTotalCalls(0));
             provider.VerifyTotalCalls(1);
 
-            provider.CallVoid(Tools.Randomizer.Create<string>(), Type.EmptyTypes, Array.Empty<object>());
+            provider.CallVoid(null, Tools.Randomizer.Create<string>(), Type.EmptyTypes, Array.Empty<object>());
             Tools.Asserter.Throws<FakeVerifyException>(() => provider.VerifyTotalCalls(1));
             provider.VerifyTotalCalls(2);
         }
@@ -99,7 +99,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             provider.SetCallBehavior(data, Behavior.Returns(""));
 
             Tools.Asserter.Throws<InvalidOperationException>(
-                () => provider.CallVoid(name, Type.EmptyTypes, Array.Empty<object>()));
+                () => provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>()));
         }
     }
 }

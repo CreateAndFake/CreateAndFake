@@ -20,6 +20,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Times the fake behavior was called.</summary>
         protected internal int Calls { get; private set; }
 
+        /// <summary>Triggers calling the base method of the given type instead.</summary>
+        public Type BaseCallType { get; private set; }
+
         /// <summary>Sets up the behavior.</summary>
         /// <param name="implementation">Set behavior to run.</param>
         /// <param name="times">Behavior call limit.</param>
@@ -29,6 +32,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             Implementation = implementation;
             Limit = times;
             Calls = calls;
+            BaseCallType = null;
         }
 
         /// <summary>
@@ -43,16 +47,25 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Result of the call.</returns>
         internal object Invoke(object[] args)
         {
+            return Invoke(Implementation, args);
+        }
+
+        /// <summary>Runs the behavior.</summary>
+        /// <param name="implementation">Delegate to run.</param>
+        /// <param name="args">Expected args for the behavior.</param>
+        /// <returns>Result of the call.</returns>
+        internal object Invoke(Delegate implementation, object[] args)
+        {
             Calls++;
             try
             {
-                if (Implementation.Method.GetParameters().Length == 0)
+                if (implementation.Method.GetParameters().Length == 0)
                 {
-                    return Implementation.DynamicInvoke();
+                    return implementation.DynamicInvoke();
                 }
                 else
                 {
-                    return Implementation.DynamicInvoke(args);
+                    return implementation.DynamicInvoke(args);
                 }
             }
             catch (Exception e)
@@ -109,6 +122,27 @@ namespace CreateAndFake.Toolbox.FakerTool
         public static Behavior<T> Default<T>(Times times = null)
         {
             return Returns(default(T), times);
+        }
+
+        /// <summary>Specifies behavior calling the base implementation.</summary>
+        /// <typeparam name="TBase">Type with the base method to call.</typeparam>
+        /// <param name="times">Behavior call limit.</param>
+        /// <returns>Instance to set up the mock with.</returns>
+        public static Behavior<VoidType> Base<TBase>(Times times = null)
+        {
+            return Base<TBase, VoidType>(times);
+        }
+
+        /// <summary>Specifies behavior calling the base implementation.</summary>
+        /// <typeparam name="TBase">Type with the base method to call.</typeparam>
+        /// <typeparam name="T">Expected value type to return.</typeparam>
+        /// <param name="times">Behavior call limit.</param>
+        /// <returns>Instance to set up the mock with.</returns>
+        public static Behavior<T> Base<TBase, T>(Times times = null)
+        {
+            Behavior<T> result = Default<T>(times);
+            result.BaseCallType = typeof(TBase);
+            return result;
         }
 
         /// <summary>Specifies a specific exception behavior for a fake.</summary>
