@@ -202,9 +202,10 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 gen.Emit(OpCodes.Stelem_Ref);
             }
 
-            // this.FakeMeta.Call('method.Name', types, args);
+            // this.FakeMeta.Call(this, 'method.Name', types, args);
             gen.Emit(OpCodes.Ldarg_0);
             gen.Emit(OpCodes.Callvirt, metaGetter);
+            gen.Emit(OpCodes.Ldarg_0);
             gen.Emit(OpCodes.Ldstr, method.Name);
             gen.Emit(OpCodes.Ldloc, types);
             gen.Emit(OpCodes.Ldloc, args);

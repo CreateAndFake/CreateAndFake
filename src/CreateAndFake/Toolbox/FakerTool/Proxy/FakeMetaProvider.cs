@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using CreateAndFake.Toolbox.DuplicatorTool;
 
 namespace CreateAndFake.Toolbox.FakerTool.Proxy
@@ -113,12 +115,13 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Manager for all action calls.</summary>
+        /// <param name="instance">The faked object.</param>
         /// <param name="name">Name of the method being called.</param>
         /// <param name="generics">Generics tied to the call.</param>
         /// <param name="args">Provided args to the call.</param>
-        internal void CallVoid(string name, Type[] generics, object[] args)
+        internal void CallVoid(object instance, string name, Type[] generics, object[] args)
         {
-            object result = CallRet<object>(name, generics, args);
+            object result = CallRet<object>(instance, name, generics, args);
             if (result != null)
             {
                 throw new InvalidOperationException(
@@ -128,11 +131,12 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
 
         /// <summary>Manager for all func calls.</summary>
         /// <typeparam name="T">Return type.</typeparam>
+        /// <param name="instance">The faked object.</param>
         /// <param name="name">Name of the method being called.</param>
         /// <param name="generics">Generics tied to the call.</param>
         /// <param name="args">Provided args to the call.</param>
         /// <returns>Faked result previously set up.</returns>
-        internal T CallRet<T>(string name, Type[] generics, object[] args)
+        internal T CallRet<T>(object instance, string name, Type[] generics, object[] args)
         {
             CallData data = new(name, generics, args, null);
             _log.Add(data);
@@ -150,7 +154,54 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                     return default;
                 }
             }
-            return (T)match.Item2.Invoke(args);
+
+            if (match.Item2.BaseCallType != null)
+            {
+                return CallBase<T>(instance, name, match, args);
+            }
+            else
+            {
+                return (T)match.Item2.Invoke(args);
+            }
+        }
+
+        /// <summary>Calls the base method for a behavior.</summary>
+        /// <typeparam name="T">Return type.</typeparam>
+        /// <param name="instance">The faked object.</param>
+        /// <param name="name">Name of the method being called.</param>
+        /// <param name="match">Behavior details.</param>
+        /// <param name="args">Provided args to the call.</param>
+        /// <returns>Base method result.</returns>
+        private static T CallBase<T>(object instance, string name, (CallData, Behavior) match, object[] args)
+        {
+            MethodInfo method = match.Item2.BaseCallType.GetMethod(name);
+            if (method == null)
+            {
+                throw new MissingMethodException($"Method '{name}' does not exist on '{match.Item2.BaseCallType}'");
+            }
+            else if (method.IsAbstract)
+            {
+                throw new InvalidOperationException($"Cannot call base '{name}' as it's abstract.");
+            }
+            else
+            {
+                Delegate caller = (Delegate)Activator.CreateInstance(
+                    FindDelegateType(method), instance, method.MethodHandle.GetFunctionPointer());
+
+                return (T)match.Item2.Invoke(caller, args);
+            }
+        }
+
+        /// <summary>Matches a delegate to the method.</summary>
+        /// <param name="methodInfo">Method to call.</param>
+        /// <returns>Found delegate type.</returns>
+        private static Type FindDelegateType(MethodInfo methodInfo)
+        {
+            IEnumerable<Type> args = methodInfo.GetParameters().Select(p => p.ParameterType);
+
+            return (methodInfo.ReturnType == typeof(void))
+                ? Expression.GetActionType(args.ToArray())
+                : Expression.GetFuncType(args.Concat(new[] { methodInfo.ReturnType }).ToArray());
         }
     }
 }

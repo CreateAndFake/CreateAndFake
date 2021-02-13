@@ -1,0 +1,107 @@
+using System;
+using CreateAndFake;
+using CreateAndFake.Fluent;
+using CreateAndFake.Toolbox.FakerTool;
+using Xunit;
+
+namespace CreateAndFakeTests.IssueReplication
+{
+    /// <summary>Verifies issue is resolved.</summary>
+    public static class Issue004Tests
+    {
+        public interface IBaseHolder
+        {
+            void GetValueUnset();
+        }
+
+        public abstract class BaseHolder
+        {
+            internal static readonly int _TestValue = Tools.Randomizer.Create<int>();
+
+            public int ValueHolder { get; set; }
+
+            public virtual int GetValueA()
+            {
+                return _TestValue;
+            }
+
+            public virtual int GetValueB(int input)
+            {
+                return input;
+            }
+
+            public virtual void GetValueC()
+            {
+                ValueHolder = _TestValue;
+            }
+
+            public virtual void GetValueD(int input)
+            {
+                ValueHolder = input;
+            }
+
+            public virtual void ThrowError(Exception e)
+            {
+                throw e;
+            }
+
+            public abstract void GetValueUnset();
+        }
+
+        [Theory, RandomData]
+        internal static void Issue_MockCanCallBaseA(Fake<BaseHolder> sample)
+        {
+            sample.Setup(d => d.GetValueA(), Behavior.Base<BaseHolder, int>());
+            sample.Dummy.GetValueA().Assert().Is(BaseHolder._TestValue);
+            sample.VerifyAll();
+        }
+
+        [Theory, RandomData]
+        internal static void Issue_MockCanCallBaseB(Fake<BaseHolder> sample, int value)
+        {
+            sample.Setup(d => d.GetValueB(value), Behavior.Base<BaseHolder, int>());
+            sample.Dummy.GetValueB(value).Assert().Is(value);
+            sample.VerifyAll();
+        }
+
+        [Theory, RandomData]
+        internal static void Issue_MockCanCallBaseC(Fake<BaseHolder> sample)
+        {
+            sample.Setup(d => d.GetValueC(), Behavior.Base<BaseHolder>());
+            sample.Dummy.GetValueC();
+            sample.Dummy.ValueHolder.Assert().Is(BaseHolder._TestValue);
+            sample.VerifyAll();
+        }
+
+        [Theory, RandomData]
+        internal static void Issue_MockCanCallBaseD(Fake<BaseHolder> sample, int value)
+        {
+            sample.Setup(d => d.GetValueD(value), Behavior.Base<BaseHolder>());
+            sample.Dummy.GetValueD(value);
+            sample.Dummy.ValueHolder.Assert().Is(value);
+            sample.VerifyAll();
+        }
+
+        [Theory, RandomData]
+        internal static void Issue_MockCanCallBaseThrow(Fake<BaseHolder> sample, Exception e)
+        {
+            sample.Setup(d => d.ThrowError(e), Behavior.Base<BaseHolder>());
+            Tools.Asserter.Throws<Exception>(() => sample.Dummy.ThrowError(e)).Assert().Is(e);
+            sample.VerifyAll();
+        }
+
+        [Theory, RandomData]
+        internal static void Issue_MockCallBaseAbstractInvalid(Fake<BaseHolder> sample)
+        {
+            sample.Setup(d => d.GetValueUnset(), Behavior.Base<BaseHolder>());
+            Tools.Asserter.Throws<InvalidOperationException>(() => sample.Dummy.GetValueUnset());
+        }
+
+        [Theory, RandomData]
+        internal static void Issue_MockCallBaseWrongTypeInvalid(Fake<IBaseHolder> sample)
+        {
+            sample.Setup(d => d.GetValueUnset(), Behavior.Base<string>());
+            Tools.Asserter.Throws<MissingMethodException>(() => sample.Dummy.GetValueUnset());
+        }
+    }
+}
