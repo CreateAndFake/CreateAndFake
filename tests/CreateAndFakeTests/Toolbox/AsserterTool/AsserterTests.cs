@@ -23,7 +23,7 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool
         public AsserterTests()
         {
             _fakeValuer = Tools.Faker.Mock<IValuer>();
-            _testInstance = new Asserter(_fakeValuer.Dummy);
+            _testInstance = new Asserter(Tools.Gen, _fakeValuer.Dummy);
         }
 
         [Fact]

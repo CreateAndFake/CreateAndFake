@@ -16,24 +16,27 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <summary>Sets up the exception.</summary>
         /// <param name="message">Reason for the exception.</param>
         /// <param name="details">Optional fail details.</param>
+        /// <param name="seed">Seed used for data generation.</param>
         /// <param name="content">Optional related content.</param>
-        public AssertException(string message, string details, string content = null)
-            : base(BuildMessage(message, details, content)) { }
+        public AssertException(string message, string details, int? seed, string content = null)
+            : base(BuildMessage(message, details, seed, content)) { }
 
         /// <summary>Sets up the exception.</summary>
         /// <param name="message">Reason for the exception.</param>
         /// <param name="details">Optional fail details.</param>
+        /// <param name="seed">Seed used for data generation.</param>
         /// <param name="innerException">Inner exception that occurred.</param>
-        public AssertException(string message, string details, Exception innerException)
-            : base(BuildMessage(message, details), innerException) { }
+        public AssertException(string message, string details, int? seed, Exception innerException)
+            : base(BuildMessage(message, details, seed), innerException) { }
 
         /// <summary>Sets up the exception.</summary>
         /// <param name="message">Reason for the exception.</param>
         /// <param name="details">Optional fail details.</param>
+        /// <param name="seed">Seed used for data generation.</param>
         /// <param name="content">Optional related content.</param>
         /// <param name="innerException">Inner exception that occurred.</param>
-        public AssertException(string message, string details, string content, Exception innerException)
-            : base(BuildMessage(message, details, content), innerException) { }
+        public AssertException(string message, string details, int? seed, string content, Exception innerException)
+            : base(BuildMessage(message, details, seed, content), innerException) { }
 
         /// <summary>Serialization constructor.</summary>
         /// <param name="info">Object data.</param>
@@ -43,15 +46,17 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <summary>Integrates the details into the message.</summary>
         /// <param name="message">Starting message.</param>
         /// <param name="details">Details to integrate.</param>
+        /// <param name="seed">Seed used for data generation.</param>
         /// <param name="content">Content to integrate.</param>
         /// <returns>Message to use for the exception.</returns>
-        private static string BuildMessage(string message, string details, string content = null)
+        private static string BuildMessage(string message, string details, int? seed, string content = null)
         {
             string nl = Environment.NewLine;
 
             return (message ?? "Unknown assert failure.") +
-                ((details == null) ? "" : $"{nl}Details: {details}") +
-                ((content == null) ? "" : $"{nl}Content: {nl}{content}");
+                ((details != null) ? $"{nl}Details: {details}" : "") +
+                ((seed.HasValue) ? $"{nl}Seed: {seed.Value}" : "") +
+                ((content != null) ? $"{nl}Content: {nl}{content}" : "");
         }
     }
 }

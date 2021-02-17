@@ -5,6 +5,9 @@ namespace CreateAndFake.Design.Randomization
     /// <summary>For generating secure but slow random values.</summary>
     public sealed class SecureRandom : ValueRandom
     {
+        /// <summary>Initial seed used by the instance if there is one.</summary>
+        public override int? InitialSeed { get; } = null;
+
         /// <summary>Source generator used for random bytes.</summary>
         private static readonly RandomNumberGenerator _Gen = RandomNumberGenerator.Create();
 

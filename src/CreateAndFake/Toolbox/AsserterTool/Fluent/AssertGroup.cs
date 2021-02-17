@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.AsserterTool.Fluent
@@ -7,8 +8,9 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
     public sealed class AssertGroup : AssertGroupBase<AssertGroup>
     {
         /// <summary>Initializer.</summary>
+        /// <param name="gen">Core value random handler.</param>
         /// <param name="valuer">Handles comparisons.</param>
         /// <param name="collection">Collection to check.</param>
-        internal AssertGroup(IValuer valuer, IEnumerable collection) : base(valuer, collection) { }
+        internal AssertGroup(IRandom gen, IValuer valuer, IEnumerable collection) : base(gen, valuer, collection) { }
     }
 }

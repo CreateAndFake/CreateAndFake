@@ -9,6 +9,9 @@ namespace CreateAndFake.Design.Randomization
         MessageId = "Next", Justification = "Matches the Random convention.")]
     public interface IRandom
     {
+        /// <summary>Initial seed used by the instance if there is one.</summary>
+        int? InitialSeed { get; }
+
         /// <summary>Checks if the given type is supported for randomization.</summary>
         /// <typeparam name="T">Type to verify.</typeparam>
         /// <returns>True if supported; false otherwise.</returns>

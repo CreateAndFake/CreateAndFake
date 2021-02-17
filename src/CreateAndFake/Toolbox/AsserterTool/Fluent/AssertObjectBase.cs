@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.AsserterTool.Fluent
@@ -7,6 +8,9 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
     /// <summary>Handles assertion calls.</summary>
     public abstract class AssertObjectBase<T> where T : AssertObjectBase<T>
     {
+        /// <summary>Core value random handler.</summary>
+        protected IRandom Gen { get; }
+
         /// <summary>Handles comparisons.</summary>
         protected IValuer Valuer { get; }
 
@@ -14,13 +18,14 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         protected object Actual { get; }
 
         /// <summary>Sets up the asserter capabilities.</summary>
+        /// <param name="gen">Core value random handler.</param>
         /// <param name="valuer">Handles comparisons.</param>
         /// <param name="actual">Object to compare with.</param>
         /// <exception cref="ArgumentNullException">If given a null valuer.</exception>
-        protected AssertObjectBase(IValuer valuer, object actual)
+        protected AssertObjectBase(IRandom gen, IValuer valuer, object actual)
         {
+            Gen = gen ?? throw new ArgumentNullException(nameof(gen));
             Valuer = valuer ?? throw new ArgumentNullException(nameof(valuer));
-
             Actual = actual;
         }
 
@@ -53,7 +58,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         {
             if (!ReferenceEquals(expected, Actual))
             {
-                throw new AssertException("References failed to equal.", details);
+                throw new AssertException("References failed to equal.", details, Gen.InitialSeed);
             }
             return ToChainer();
         }
@@ -67,7 +72,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         {
             if (ReferenceEquals(expected, Actual))
             {
-                throw new AssertException("References failed to not equal.", details);
+                throw new AssertException("References failed to not equal.", details, Gen.InitialSeed);
             }
             return ToChainer();
         }
@@ -83,7 +88,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
             if (differences.Length > 0)
             {
                 throw new AssertException($"Value equality failed for type '{GetTypeName(expected)}'.",
-                    details, string.Join<Difference>(Environment.NewLine, differences));
+                    details, Gen.InitialSeed, string.Join<Difference>(Environment.NewLine, differences));
             }
             return ToChainer();
         }
@@ -98,7 +103,8 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
             if (!Valuer.Compare(expected, Actual).Any())
             {
                 throw new AssertException(
-                    $"Value inequality failed for type '{GetTypeName(expected)}'.", details, expected?.ToString());
+                    $"Value inequality failed for type '{GetTypeName(expected)}'.",
+                    details, Gen.InitialSeed, expected?.ToString());
             }
             return ToChainer();
         }
@@ -115,7 +121,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <returns>The created chainer.</returns>
         protected AssertChainer<T> ToChainer()
         {
-            return new AssertChainer<T>((T)this, Valuer);
+            return new AssertChainer<T>((T)this, Gen, Valuer);
         }
     }
 }

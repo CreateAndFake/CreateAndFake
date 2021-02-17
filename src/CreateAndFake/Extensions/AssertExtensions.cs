@@ -11,7 +11,7 @@ namespace CreateAndFake.Fluent
         /// <returns>Asserter to test with.</returns>
         public static AssertObject Assert(this object actual)
         {
-            return new AssertObject(Tools.Valuer, actual);
+            return new AssertObject(Tools.Gen, Tools.Valuer, actual);
         }
 
         /// <summary>Handles common test scenarios.</summary>
@@ -19,7 +19,7 @@ namespace CreateAndFake.Fluent
         /// <returns>Asserter to test with.</returns>
         public static AssertGroup Assert(this IEnumerable collection)
         {
-            return new AssertGroup(Tools.Valuer, collection);
+            return new AssertGroup(Tools.Gen, Tools.Valuer, collection);
         }
     }
 }
