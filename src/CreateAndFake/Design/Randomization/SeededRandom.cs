@@ -20,7 +20,7 @@ namespace CreateAndFake.Design.Randomization
         }
 
         /// <summary>Initial seed used by the instance.</summary>
-        public int InitialSeed { get; }
+        public override int? InitialSeed { get; }
 
         /// <summary>Sets up the randomizer with the given seed.</summary>
         /// <param name="seed">Current seed to be used for the next randomized value.</param>
@@ -32,7 +32,7 @@ namespace CreateAndFake.Design.Randomization
         public SeededRandom(bool onlyValidValues, int? seed = null) : base(onlyValidValues)
         {
             InitialSeed = seed ?? Environment.TickCount;
-            _seed = InitialSeed;
+            _seed = InitialSeed.Value;
         }
 
         /// <summary>Generates a byte array filled with random bytes.</summary>

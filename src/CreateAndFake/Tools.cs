@@ -14,7 +14,7 @@ namespace CreateAndFake
     public static class Tools
     {
         /// <summary>Core value random handler.</summary>
-        public static IRandom Gen { get; } = new FastRandom();
+        public static IRandom Gen { get; } = new SeededRandom();
 
         /// <summary>Compares objects by value.</summary>
         public static IValuer Valuer { get; } = new Valuer();
@@ -29,7 +29,7 @@ namespace CreateAndFake
         public static IMutator Mutator { get; } = new Mutator(Randomizer, Valuer, Limiter.Dozen);
 
         /// <summary>Handles common test scenarios.</summary>
-        public static Asserter Asserter { get; } = new Asserter(Valuer);
+        public static Asserter Asserter { get; } = new Asserter(Gen, Valuer);
 
         /// <summary>Deep clones objects.</summary>
         public static IDuplicator Duplicator { get; } = new Duplicator(Asserter);

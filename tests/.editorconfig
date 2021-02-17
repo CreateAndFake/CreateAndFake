@@ -32,8 +32,3 @@ dotnet_diagnostic.IDE0063.severity = none
 dotnet_diagnostic.IDE0058.severity = none
 # IDE0079: Remove unnecessary suppression
 dotnet_diagnostic.IDE0079.severity = none
-
-# S2699: Tests should include assertions
-dotnet_diagnostic.S2699.severity = none
-# S3443: Type should not be examined on "System.Type" instances
-dotnet_diagnostic.S3443.severity = none

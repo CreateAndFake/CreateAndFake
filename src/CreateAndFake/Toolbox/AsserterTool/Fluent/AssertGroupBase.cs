@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Text;
+using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.AsserterTool.Fluent
@@ -11,9 +12,10 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         protected IEnumerable Collection { get; }
 
         /// <summary>Initializer.</summary>
+        /// <param name="gen">Core value random handler.</param>
         /// <param name="valuer">Handles comparisons.</param>
         /// <param name="collection">Collection to check.</param>
-        protected AssertGroupBase(IValuer valuer, IEnumerable collection) : base(valuer, collection)
+        protected AssertGroupBase(IRandom gen, IValuer valuer, IEnumerable collection) : base(gen, valuer, collection)
         {
             Collection = collection;
         }
@@ -33,7 +35,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <returns>Chainer to make additional assertions with.</returns>
         public AssertChainer<T> IsNotEmpty(string details = null)
         {
-            _ = new AssertObject(Valuer, Collection?.GetEnumerator().MoveNext()).Is(true, details);
+            _ = new AssertObject(Gen, Valuer, Collection?.GetEnumerator().MoveNext()).Is(true, details);
             return ToChainer();
         }
 
@@ -47,7 +49,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
             if (Collection == null)
             {
                 throw new AssertException(
-                    $"Expected collection of '{count}' elements, but was 'null'.", details);
+                    $"Expected collection of '{count}' elements, but was 'null'.", details, Gen.InitialSeed);
             }
 
             StringBuilder contents = new();
@@ -60,7 +62,8 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
             if (i != count)
             {
                 throw new AssertException(
-                    $"Expected collection of '{count}' elements, but was '{i}'.", details, contents.ToString());
+                    $"Expected collection of '{count}' elements, but was '{i}'.",
+                    details, Gen.InitialSeed, contents.ToString());
             }
 
             return ToChainer();

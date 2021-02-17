@@ -23,12 +23,3 @@ dotnet_diagnostic.IDE0048.severity = none
 dotnet_diagnostic.IDE0063.severity = none
 # IDE0079: Remove unnecessary suppression
 dotnet_diagnostic.IDE0079.severity = none
-
-# S1125: Boolean literals should not be redundant
-dotnet_diagnostic.S1125.severity = silent
-# S1199: Nested code blocks should not be used
-dotnet_diagnostic.S1199.severity = none
-# S3443: Type should not be examined on "System.Type" instances
-dotnet_diagnostic.S3443.severity = none
-# S4457: Parameter validation in "async"/"await" methods should be wrapped
-dotnet_diagnostic.S4457.severity = none

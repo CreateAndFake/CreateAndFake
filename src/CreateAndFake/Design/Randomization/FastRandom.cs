@@ -7,6 +7,9 @@ namespace CreateAndFake.Design.Randomization
     /// <summary>For generating quick but insecure random values.</summary>
     public sealed class FastRandom : ValueRandom
     {
+        /// <summary>Initial seed used by the instance if there is one.</summary>
+        public override int? InitialSeed { get; } = null;
+
         /// <summary>Source generator used for random bytes.</summary>
         private static readonly Random _Gen = new();
 

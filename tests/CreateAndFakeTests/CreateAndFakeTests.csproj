@@ -14,7 +14,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" PrivateAssets="All" />
     <PackageReference Include="coverlet.collector" Version="3.0.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.17.0.26580" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>

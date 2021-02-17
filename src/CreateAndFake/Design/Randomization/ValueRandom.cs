@@ -52,7 +52,10 @@ namespace CreateAndFake.Design.Randomization
         public static ICollection<Type> ValueTypes { get; } = _Gens.Keys;
 
         /// <summary>Option to prevent generating invalid values.</summary>
-        protected bool OnlyValidValues { get; }
+        public bool OnlyValidValues { get; set; }
+
+        /// <summary>Initial seed used by the instance if there is one.</summary>
+        public abstract int? InitialSeed { get; }
 
         /// <summary>Sets up the randomizer.</summary>
         /// <param name="onlyValidValues">Option to prevent generating invalid values.</param>
