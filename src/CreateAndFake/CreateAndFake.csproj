@@ -5,8 +5,12 @@
     <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
+    <DefineConstants>NEEDINIT</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DefineConstants>NETSTANDARD</DefineConstants>
+    <DefineConstants>NETSTANDARD,NEEDINIT</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>

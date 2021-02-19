@@ -18,7 +18,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Fact]
-        internal static void Issue_GuardsParameterMutation()
+        internal static void Issue015_GuardsParameterMutation()
         {
             Tools.Asserter.Throws<AggregateException>(() =>
                 Tools.Tester.PreventsParameterMutation(typeof(Sample)));

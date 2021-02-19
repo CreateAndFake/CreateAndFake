@@ -8,13 +8,13 @@ namespace CreateAndFakeTests.IssueReplication
     public static class Issue067Tests
     {
         [Fact]
-        internal static void Issue_SupportsUri()
+        internal static void Issue067_SupportsUri()
         {
             TestSample<Uri>();
         }
 
         [Fact]
-        internal static void Issue_SupportsDateTimeOffset()
+        internal static void Issue067_SupportsDateTimeOffset()
         {
             TestSample<DateTimeOffset>();
         }

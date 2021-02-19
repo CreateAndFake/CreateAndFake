@@ -31,21 +31,13 @@ namespace CreateAndFake.Toolbox.MutatorTool
             _limiter = limiter ?? throw new ArgumentNullException(nameof(limiter));
         }
 
-        /// <summary>Creates an object with different values.</summary>
-        /// <typeparam name="T">Type to create.</typeparam>
-        /// <param name="instance">Object to diverge from.</param>
-        /// <param name="extraInstances">Extra objects to diverge from.</param>
-        /// <returns>The created instance.</returns>
+        /// <inheritdoc/>
         public T Variant<T>(T instance, params T[] extraInstances)
         {
             return (T)Variant(typeof(T), instance, extraInstances?.Cast<object>().ToArray());
         }
 
-        /// <summary>Creates an object with different values.</summary>
-        /// <param name="type">Type to create.</param>
-        /// <param name="instance">Object to diverge from.</param>
-        /// <param name="extraInstances">Extra objects to diverge from.</param>
-        /// <returns>The created instance.</returns>
+        /// <inheritdoc/>
         public object Variant(Type type, object instance, params object[] extraInstances)
         {
             IEnumerable<object> values = (extraInstances ?? Enumerable.Empty<object>()).Prepend(instance);
@@ -64,9 +56,7 @@ namespace CreateAndFake.Toolbox.MutatorTool
             return result;
         }
 
-        /// <summary>Attempts to mutate an object.</summary>
-        /// <param name="instance">Object to modify.</param>
-        /// <returns>True if modified; false otherwise.</returns>
+        /// <inheritdoc/>
         public bool Modify(object instance)
         {
             if (instance == null) return false;

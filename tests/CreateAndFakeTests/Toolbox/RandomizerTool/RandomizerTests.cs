@@ -24,12 +24,6 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
         }
 
         [Fact]
-        internal static void Randomizer_NoParameterMutation()
-        {
-            Tools.Tester.PreventsParameterMutation(Tools.Randomizer);
-        }
-
-        [Fact]
         internal static void New_NullHintsValid()
         {
             Tools.Asserter.IsNot(null, new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, true, null));

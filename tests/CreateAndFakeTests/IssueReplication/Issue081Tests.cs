@@ -9,13 +9,13 @@ namespace CreateAndFakeTests.IssueReplication
     public static class Issue081Tests
     {
         [Fact]
-        internal static void Issue_RandomizationIsSeeded()
+        internal static void Issue081_RandomizationIsSeeded()
         {
             Tools.Gen.InitialSeed.Assert().IsNot(null);
         }
 
         [Fact]
-        internal static void Issue_AssertionsContainSeed()
+        internal static void Issue081_AssertionsContainSeed()
         {
             Tools.Asserter.Throws<AssertException>(() => Tools.Asserter.Fail())
                 .Message.Contains($"{Tools.Gen.InitialSeed}").Assert().Is(true);

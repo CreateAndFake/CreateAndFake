@@ -44,5 +44,10 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <param name="values">Values to inject into the instance.</param>
         /// <returns>The created instance.</returns>
         object Inject(Type type, params object[] values);
+
+        /// <summary>Adds the hint to be used for randomization.</summary>
+        /// <param name="hint">Hint to add.</param>
+        /// <remarks>Should only be modified in module inintializers.</remarks>
+        void AddHint(CreateHint hint);
     }
 }

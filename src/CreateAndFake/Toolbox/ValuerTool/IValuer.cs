@@ -36,5 +36,10 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <exception cref="NotSupportedException">If no hint supports hashing an object.</exception>
         /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
         int GetHashCode(params object[] items);
+
+        /// <summary>Adds the hint to be used for comparison.</summary>
+        /// <param name="hint">Hint to add.</param>
+        /// <remarks>Should only be modified in module inintializers.</remarks>
+        void AddHint(CompareHint hint);
     }
 }

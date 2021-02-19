@@ -49,7 +49,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_MockCanCallBaseA(Fake<BaseHolder> sample)
+        internal static void Issue004_MockCanCallBaseA(Fake<BaseHolder> sample)
         {
             sample.Setup(d => d.GetValueA(), Behavior.Base<BaseHolder, int>());
             sample.Dummy.GetValueA().Assert().Is(BaseHolder._TestValue);
@@ -57,7 +57,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_MockCanCallBaseB(Fake<BaseHolder> sample, int value)
+        internal static void Issue004_MockCanCallBaseB(Fake<BaseHolder> sample, int value)
         {
             sample.Setup(d => d.GetValueB(value), Behavior.Base<BaseHolder, int>());
             sample.Dummy.GetValueB(value).Assert().Is(value);
@@ -65,7 +65,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_MockCanCallBaseC(Fake<BaseHolder> sample)
+        internal static void Issue004_MockCanCallBaseC(Fake<BaseHolder> sample)
         {
             sample.Setup(d => d.GetValueC(), Behavior.Base<BaseHolder>());
             sample.Dummy.GetValueC();
@@ -74,7 +74,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_MockCanCallBaseD(Fake<BaseHolder> sample, int value)
+        internal static void Issue004_MockCanCallBaseD(Fake<BaseHolder> sample, int value)
         {
             sample.Setup(d => d.GetValueD(value), Behavior.Base<BaseHolder>());
             sample.Dummy.GetValueD(value);
@@ -83,7 +83,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_MockCanCallBaseThrow(Fake<BaseHolder> sample, Exception e)
+        internal static void Issue004_MockCanCallBaseThrow(Fake<BaseHolder> sample, Exception e)
         {
             sample.Setup(d => d.ThrowError(e), Behavior.Base<BaseHolder>());
             Tools.Asserter.Throws<Exception>(() => sample.Dummy.ThrowError(e)).Assert().Is(e);
@@ -91,14 +91,14 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_MockCallBaseAbstractInvalid(Fake<BaseHolder> sample)
+        internal static void Issue004_MockCallBaseAbstractInvalid(Fake<BaseHolder> sample)
         {
             sample.Setup(d => d.GetValueUnset(), Behavior.Base<BaseHolder>());
             Tools.Asserter.Throws<InvalidOperationException>(() => sample.Dummy.GetValueUnset());
         }
 
         [Theory, RandomData]
-        internal static void Issue_MockCallBaseWrongTypeInvalid(Fake<IBaseHolder> sample)
+        internal static void Issue004_MockCallBaseWrongTypeInvalid(Fake<IBaseHolder> sample)
         {
             sample.Setup(d => d.GetValueUnset(), Behavior.Base<string>());
             Tools.Asserter.Throws<MissingMethodException>(() => sample.Dummy.GetValueUnset());

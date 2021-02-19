@@ -28,7 +28,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         private readonly Asserter _asserter;
 
         /// <summary>Hints used to copy specific types.</summary>
-        private readonly IEnumerable<CopyHint> _hints;
+        private readonly IList<CopyHint> _hints;
 
         /// <summary>Sets up the duplicator capabilities.</summary>
         /// <param name="asserter">Verifies duplicates are valid.</param>
@@ -40,16 +40,11 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
 
             IEnumerable<CopyHint> inputHints = hints ?? Enumerable.Empty<CopyHint>();
             _hints = (includeDefaultHints)
-                ? inputHints.Concat(_DefaultHints).ToArray()
-                : inputHints.ToArray();
+                ? inputHints.Concat(_DefaultHints).ToList()
+                : inputHints.ToList();
         }
 
-        /// <summary>Deep clones an object.</summary>
-        /// <typeparam name="T">Type being cloned.</typeparam>
-        /// <param name="source">Object to clone.</param>
-        /// <returns>The duplicate.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>
-        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        /// <inheritdoc/>
         public T Copy<T>(T source)
         {
             try
@@ -93,17 +88,18 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
             }
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <param name="duplicator">Duplicator to clone child values.</param>
-        /// <returns>Clone that is equal in value to the instance.</returns>
+        /// <inheritdoc/>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
             return new Duplicator(duplicator.Copy(_asserter), false, duplicator.Copy(_hints).ToArray());
+        }
+
+        /// <inheritdoc/>
+        public void AddHint(CopyHint hint)
+        {
+            _hints.Insert(0, hint ?? throw new ArgumentNullException(nameof(hint)));
         }
     }
 }

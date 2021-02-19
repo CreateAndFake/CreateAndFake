@@ -15,7 +15,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_StaticsNotRandomized(Sample sample)
+        internal static void Issue016_StaticsNotRandomized(Sample sample)
         {
             sample.ValueB.Assert().IsNot(0).Also(Sample.ValueA).Is(0);
         }

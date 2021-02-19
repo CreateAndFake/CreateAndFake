@@ -23,19 +23,19 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_HandlesInfiniteChainsA(InfiniteA sample)
+        internal static void Issue065_HandlesInfiniteChainsA(InfiniteA sample)
         {
             TestInfiniteSample(sample);
         }
 
         [Theory, RandomData]
-        internal static void Issue_HandlesInfiniteChainsB(InfiniteB sample)
+        internal static void Issue065_HandlesInfiniteChainsB(InfiniteB sample)
         {
             TestInfiniteSample(sample);
         }
 
         [Theory, RandomData]
-        internal static void Issue_HandlesInfiniteChainsC(InfiniteC sample)
+        internal static void Issue065_HandlesInfiniteChainsC(InfiniteC sample)
         {
             TestInfiniteSample(sample);
         }

@@ -18,12 +18,6 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         [Fact]
-        internal static void Valuer_NoParameterMutation()
-        {
-            Tools.Tester.PreventsParameterMutation(Tools.Valuer);
-        }
-
-        [Fact]
         internal static void New_NullHintsValid()
         {
             Tools.Asserter.IsNot(null, new Valuer(true, null));

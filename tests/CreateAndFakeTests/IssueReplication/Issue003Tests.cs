@@ -21,7 +21,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_FakeHandlesOut(Fake<RefHolder> sample, int testValue, int result)
+        internal static void Issue003_FakeHandlesOut(Fake<RefHolder> sample, int testValue, int result)
         {
             sample.Setup(
                 d => d.TestMethodA(out Arg.AnyRef<int>().Var),
@@ -37,7 +37,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_FakeHandlesRef(Fake<RefHolder> sample, int result)
+        internal static void Issue003_FakeHandlesRef(Fake<RefHolder> sample, int result)
         {
             int testValue = 0;
             sample.Setup(

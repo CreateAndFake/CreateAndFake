@@ -10,7 +10,7 @@ using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
 namespace CreateAndFake.Toolbox.RandomizerTool
 {
-    /// <summary>Creates objects and populates them with random values.</summary>
+    /// <inheritdoc cref='IRandomizer'/>
     public sealed class Randomizer : IRandomizer, IDuplicatable
     {
         /// <summary>Default set of hints to use for randomization.</summary>
@@ -36,7 +36,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         private readonly IFaker _faker;
 
         /// <summary>Generators used to randomize specific types.</summary>
-        private readonly IEnumerable<CreateHint> _hints;
+        private readonly IList<CreateHint> _hints;
 
         /// <summary>Value generator used for base randomization.</summary>
         private readonly IRandom _gen;
@@ -59,28 +59,17 @@ namespace CreateAndFake.Toolbox.RandomizerTool
 
             IEnumerable<CreateHint> inputHints = hints ?? Enumerable.Empty<CreateHint>();
             _hints = (includeDefaultHints)
-                ? inputHints.Concat(_DefaultHints).ToArray()
-                : inputHints.ToArray();
+                ? inputHints.Concat(_DefaultHints).ToList()
+                : inputHints.ToList();
         }
 
-        /// <summary>Creates a randomized instance.</summary>
-        /// <typeparam name="T">Type to create.</typeparam>
-        /// <param name="condition">Optional condition for the instance to match.</param>
-        /// <returns>The created instance.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
-        /// <exception cref="TimeoutException">If an instance couldn't be created to match the condition.</exception>
-        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        /// <inheritdoc/>
         public T Create<T>(Func<T, bool> condition = null)
         {
             return (T)Create(typeof(T), o => condition?.Invoke((T)o) ?? true);
         }
 
-        /// <summary>Creates a randomized instance.</summary>
-        /// <param name="type">Type to create.</param>
-        /// <param name="condition">Optional condition for the instance to match.</param>
-        /// <returns>The created instance.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
-        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        /// <inheritdoc/>
         public object Create(Type type, Func<object, bool> condition = null)
         {
             object result = default;
@@ -140,15 +129,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             }
         }
 
-        /// <summary>
-        ///     Constructs the parameters for a method.
-        ///     Randomizes types by default.
-        ///     Earlier fakes will be used to construct later types if possible.
-        ///     Those types will be additionally populated with random fakes.
-        /// </summary>
-        /// <param name="method">Method to create parameters for.</param>
-        /// <param name="values">Starting values to inject into the instance.</param>
-        /// <returns>Parameter arguments in order.</returns>
+        /// <inheritdoc/>
         public MethodCallWrapper CreateFor(MethodBase method, params object[] values)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
@@ -190,19 +171,13 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             return new MethodCallWrapper(method, args);
         }
 
-        /// <summary>Creates an instance using the values or random data as needed.</summary>
-        /// <typeparam name="T">Type to create.</typeparam>
-        /// <param name="values">Values to inject into the instance.</param>
-        /// <returns>The created instance.</returns>
+        /// <inheritdoc/>
         public T Inject<T>(params object[] values)
         {
             return (T)Inject(typeof(T), values);
         }
 
-        /// <summary>Creates an instance using the values or random data as needed.</summary>
-        /// <param name="type">Type to create.</param>
-        /// <param name="values">Values to inject into the instance.</param>
-        /// <returns>The created instance.</returns>
+        /// <inheritdoc/>
         public object Inject(Type type, params object[] values)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -257,18 +232,19 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 .FirstOrDefault();
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <param name="duplicator">Duplicator to clone child values.</param>
-        /// <returns>Clone that is equal in value to the instance.</returns>
+        /// <inheritdoc/>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
             return new Randomizer(duplicator.Copy(_faker), duplicator.Copy(_gen),
                 duplicator.Copy(_limiter), false, duplicator.Copy(_hints).ToArray());
+        }
+
+        /// <inheritdoc/>
+        public void AddHint(CreateHint hint)
+        {
+            _hints.Insert(0, hint ?? throw new ArgumentNullException(nameof(hint)));
         }
     }
 }
