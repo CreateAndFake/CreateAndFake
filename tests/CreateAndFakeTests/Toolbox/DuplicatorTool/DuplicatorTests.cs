@@ -16,12 +16,6 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool
         }
 
         [Fact]
-        internal static void Duplicator_NoParameterMutation()
-        {
-            Tools.Tester.PreventsParameterMutation<Duplicator>();
-        }
-
-        [Fact]
         internal static void New_NullHintsValid()
         {
             Tools.Asserter.IsNot(null, new Duplicator(Tools.Asserter, true, null));

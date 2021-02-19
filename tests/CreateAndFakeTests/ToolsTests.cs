@@ -69,7 +69,9 @@ namespace CreateAndFakeTests
                 typeof(Behavior),
                 typeof(Behavior<>),
                 typeof(AssertObjectBase<>),
-                typeof(AssertGroupBase<>)
+                typeof(AssertGroupBase<>),
+                typeof(ToolSet),
+                typeof(Tools)
             };
 
             foreach (Type type in typeof(Tools).Assembly.GetTypes()

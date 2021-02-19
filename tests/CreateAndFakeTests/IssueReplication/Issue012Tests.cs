@@ -18,7 +18,7 @@ namespace CreateAndFakeTests.IssueReplication
         }
 
         [Theory, RandomData]
-        internal static void Issue_RandomizedFake(Fake<Sample> sample)
+        internal static void Issue012_RandomizedFake(Fake<Sample> sample)
         {
             sample.Dummy.Value().Assert().IsNot(sample.Dummy.Value());
         }

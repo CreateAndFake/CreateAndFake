@@ -29,7 +29,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         };
 
         /// <summary>Hints used to compare specific types.</summary>
-        private readonly IEnumerable<CompareHint> _hints;
+        private readonly IList<CompareHint> _hints;
 
         /// <summary>Sets up the valuer capabilities.</summary>
         /// <param name="includeDefaultHints">If the default set of hints should be added.</param>
@@ -38,26 +38,17 @@ namespace CreateAndFake.Toolbox.ValuerTool
         {
             IEnumerable<CompareHint> inputHints = hints ?? Enumerable.Empty<CompareHint>();
             _hints = (includeDefaultHints)
-                ? inputHints.Concat(_DefaultHints).ToArray()
-                : inputHints.ToArray();
+                ? inputHints.Concat(_DefaultHints).ToList()
+                : inputHints.ToList();
         }
 
-        /// <summary>Determines whether the specified objects are equal.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>True if equal; false otherwise.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports comparing the objects.</exception>
-        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        /// <inheritdoc/>
         public new bool Equals(object x, object y)
         {
             return !Compare(x, y).Any();
         }
 
-        /// <summary>Returns a hash code for the specified object.</summary>
-        /// <param name="item">Object to generate a code for.</param>
-        /// <returns>The generated hash.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports hashing the object.</exception>
-        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        /// <inheritdoc/>
         [SuppressMessage("Microsoft.Design",
             "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Forwarded.")]
         public int GetHashCode(object item)
@@ -97,22 +88,13 @@ namespace CreateAndFake.Toolbox.ValuerTool
             }
         }
 
-        /// <summary>Returns a hash code for the specified objects.</summary>
-        /// <param name="items">Objects to generate a code for.</param>
-        /// <returns>The generated hash.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports hashing an object.</exception>
-        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        /// <inheritdoc/>
         public int GetHashCode(params object[] items)
         {
             return GetHashCode((object)items);
         }
 
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <returns>Found differences.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports comparing the objects.</exception>
-        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        /// <inheritdoc/>
         public IEnumerable<Difference> Compare(object expected, object actual)
         {
             string typeName = (expected ?? actual)?.GetType().Name;
@@ -156,17 +138,18 @@ namespace CreateAndFake.Toolbox.ValuerTool
             }
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <param name="duplicator">Duplicator to clone child values.</param>
-        /// <returns>Clone that is equal in value to the instance.</returns>
+        /// <inheritdoc/>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
 
             return new Valuer(false, duplicator.Copy(_hints).ToArray());
+        }
+
+        /// <inheritdoc/>
+        public void AddHint(CompareHint hint)
+        {
+            _hints.Insert(0, hint ?? throw new ArgumentNullException(nameof(hint)));
         }
     }
 }
