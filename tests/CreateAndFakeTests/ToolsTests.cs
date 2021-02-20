@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using CreateAndFake;
+using CreateAndFake.Design.Context;
+using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox;
 using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using CreateAndFake.Toolbox.DuplicatorTool;
@@ -70,6 +72,9 @@ namespace CreateAndFakeTests
                 typeof(Behavior<>),
                 typeof(AssertObjectBase<>),
                 typeof(AssertGroupBase<>),
+                typeof(DataRandom),
+                typeof(BaseDataContext),
+                typeof(PersonContext),
                 typeof(ToolSet),
                 typeof(Tools)
             };
