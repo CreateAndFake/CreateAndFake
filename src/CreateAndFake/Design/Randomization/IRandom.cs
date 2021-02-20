@@ -56,5 +56,9 @@ namespace CreateAndFake.Design.Randomization
         /// <param name="items">Collection of items to pick from.</param>
         /// <returns>The picked item.</returns>
         T NextItem<T>(IEnumerable<T> items);
+
+        /// <inheritdoc cref="DataRandom"/>
+        /// <returns>New generated data.</returns>
+        DataRandom NextData();
     }
 }

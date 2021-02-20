@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
@@ -40,7 +41,8 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 return randomizer.Create(newType);
             }
 
-            object data = CreateNew(type, randomizer);
+            DataRandom smartData = randomizer.Gen.NextData();
+            object data = CreateNew(type, randomizer, smartData);
             if (data == null)
             {
                 return data;
@@ -51,13 +53,19 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             foreach (FieldInfo field in dataType.GetFields(BindingFlags.Instance | BindingFlags.Public)
                 .Where(f => !f.IsInitOnly && !f.IsLiteral))
             {
-                field.SetValue(data, randomizer.Create(field.FieldType, data));
+                string smartValue = (field.FieldType == typeof(string))
+                    ? smartData.Find(field.Name)
+                    : null;
+                field.SetValue(data, smartValue ?? randomizer.Create(field.FieldType, data));
             }
             foreach (PropertyInfo property in dataType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(p => p.CanWrite)
                 .Where(p => p.GetSetMethod() != null))
             {
-                property.SetValue(data, randomizer.Create(property.PropertyType, data));
+                string smartValue = (property.PropertyType == typeof(string))
+                    ? smartData.Find(property.Name)
+                    : null;
+                property.SetValue(data, smartValue ?? randomizer.Create(property.PropertyType, data));
             }
 
             return data;
@@ -66,8 +74,9 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <summary>Creates a new instance of the given type.</summary>
         /// <param name="type">Type to generate.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
+        /// <param name="smartData">Predefined random data.</param>
         /// <returns>Created instance.</returns>
-        private static object CreateNew(Type type, RandomizerChainer randomizer)
+        private static object CreateNew(Type type, RandomizerChainer randomizer, DataRandom smartData)
         {
             /*
              * Order of preference:
@@ -92,22 +101,22 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             }
             else if (FindConstructors(type, BindingFlags.Public, randomizer).Any())
             {
-                return CreateFrom(randomizer, (c, d) => c.Invoke(d),
+                return CreateFrom(randomizer, smartData, (c, d) => c.Invoke(d),
                     FindConstructors(type, BindingFlags.Public, randomizer));
             }
             else if (FindFactories(type, BindingFlags.Public, randomizer).Any())
             {
-                return CreateFrom(randomizer, (c, d) => c.Invoke(null, d),
+                return CreateFrom(randomizer, smartData, (c, d) => c.Invoke(null, d),
                     FindFactories(type, BindingFlags.Public, randomizer));
             }
             else if (FindFactories(type, BindingFlags.NonPublic, randomizer).Any())
             {
-                return CreateFrom(randomizer, (c, d) => c.Invoke(null, d),
+                return CreateFrom(randomizer, smartData, (c, d) => c.Invoke(null, d),
                     FindFactories(type, BindingFlags.NonPublic, randomizer));
             }
             else if (FindConstructors(type, BindingFlags.NonPublic, randomizer).Any())
             {
-                return CreateFrom(randomizer, (c, d) => c.Invoke(d),
+                return CreateFrom(randomizer, smartData, (c, d) => c.Invoke(d),
                     FindConstructors(type, BindingFlags.NonPublic, randomizer));
             }
             else if (!type.IsSealed)
@@ -123,15 +132,22 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <summary>Creates the type.</summary>
         /// <typeparam name="T">Creation method type.</typeparam>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
+        /// <param name="smartData">Predefined random data.</param>
         /// <param name="invoker">How to create the type from the creation method.</param>
         /// <param name="creators">Possible creation methods.</param>
         /// <returns>Created instance.</returns>
-        private static object CreateFrom<T>(RandomizerChainer randomizer,
+        private static object CreateFrom<T>(RandomizerChainer randomizer, DataRandom smartData,
             Func<T, object[], object> invoker, IEnumerable<T> creators) where T : MethodBase
         {
             T creator = randomizer.Gen.NextItem(creators);
             return invoker.Invoke(creator, creator.GetParameters()
-                .Select(p => randomizer.Create(p.ParameterType, randomizer.Parent))
+                .Select(p =>
+                {
+                    string smartValue = (p.ParameterType == typeof(string))
+                        ? smartData.Find(p.Name)
+                        : null;
+                    return smartValue ?? randomizer.Create(p.ParameterType, randomizer.Parent);
+                })
                 .ToArray());
         }
 
