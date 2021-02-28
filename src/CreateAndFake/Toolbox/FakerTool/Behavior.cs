@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using CreateAndFake.Design.Content;
@@ -7,8 +6,6 @@ using CreateAndFake.Design.Content;
 namespace CreateAndFake.Toolbox.FakerTool
 {
     /// <summary>Mock behavior for fakes.</summary>
-    [SuppressMessage("Sonar", "S2436:ReduceGenericParameters", Justification = "Must match any number.")]
-    [SuppressMessage("Sonar", "S3242:ConsiderGeneralType", Justification = "Delegate doesn't match lambdas properly.")]
     public abstract class Behavior : IDeepCloneable
     {
         /// <summary>Set behavior to run.</summary>

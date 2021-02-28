@@ -3,8 +3,7 @@
 namespace CreateAndFakeTests.TestSamples
 {
     /// <summary>For testing.</summary>
-    [SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly", Justification = "For testing."),
-        SuppressMessage("Sonar", "S1144:RemoveUnusedProperty", Justification = "For testing.")]
+    [SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly", Justification = "For testing.")]
     public class ScopeSample
     {
         /// <summary>For testing.</summary>

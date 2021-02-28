@@ -10,9 +10,6 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Used as the out/ref argument.</summary>
         [SuppressMessage("Microsoft.Design",
             "CA1051:DoNotDeclareVisibleInstanceFields",
-            Justification = "Required to match out/ref."),
-        SuppressMessage("Sonar",
-            "S1104:AvoidPublicFields",
             Justification = "Required to match out/ref.")]
         public T Var = default;
     }

@@ -42,8 +42,11 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <param name="type">Generic arg to create.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
         /// <returns>Created arg type.</returns>
-        private static Type CreateArg(Type type, RandomizerChainer randomizer)
+        internal static Type CreateArg(Type type, RandomizerChainer randomizer)
         {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));
+
             bool newNeeded = type.GenericParameterAttributes.HasFlag(
                 GenericParameterAttributes.DefaultConstructorConstraint);
 

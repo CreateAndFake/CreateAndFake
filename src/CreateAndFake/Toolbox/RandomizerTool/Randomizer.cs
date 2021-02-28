@@ -153,6 +153,14 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 {
                     AddArg(param.Name, null);
                 }
+                else if (param.GetCustomAttributes<FakeAttribute>().Any())
+                {
+                    AddArg(param.Name, ((Fake)Create(typeof(Fake<>).MakeGenericType(param.ParameterType))).Dummy);
+                }
+                else if (param.GetCustomAttributes<StubAttribute>().Any())
+                {
+                    AddArg(param.Name, _faker.Stub(param.ParameterType).Dummy);
+                }
                 else if (match != default)
                 {
                     AddArg(param.Name, match.Item2);

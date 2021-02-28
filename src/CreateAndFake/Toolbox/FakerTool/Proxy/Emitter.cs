@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -9,7 +8,6 @@ using System.Runtime.CompilerServices;
 namespace CreateAndFake.Toolbox.FakerTool.Proxy
 {
     /// <summary>Creates dynamic subclasses by IL code.</summary>
-    [SuppressMessage("Sonar", "S125:RemoveCommentedCode", Justification = "Documents emit code.")]
     internal static class Emitter
     {
         /// <summary>Assembly used to contain the dynamic types.</summary>

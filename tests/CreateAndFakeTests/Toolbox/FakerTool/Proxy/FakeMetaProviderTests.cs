@@ -101,5 +101,15 @@ namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
             Tools.Asserter.Throws<InvalidOperationException>(
                 () => provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>()));
         }
+
+        [Theory, RandomData]
+        internal static void SetLastCallBehavior_RequiresPreviousCall(Behavior behavior)
+        {
+            Tools.Asserter.Throws<InvalidOperationException>(() =>
+            {
+                FakeMetaProvider.SetLastCallBehavior(behavior);
+                FakeMetaProvider.SetLastCallBehavior(behavior);
+            });
+        }
     }
 }

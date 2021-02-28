@@ -42,7 +42,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Handler for fake behavior.</returns>
         public Fake<T> Mock<T>(params Type[] interfaces)
         {
-            return new Fake<T>(Subclasser.Create(typeof(T), interfaces), _valuer);
+            IFaked provider = Subclasser.Create(typeof(T), interfaces);
+            provider.FakeMeta.Valuer = _valuer;
+            return new Fake<T>(provider);
         }
 
         /// <summary>Creates a strict fake where calls fail unless set up.</summary>
@@ -51,7 +53,9 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>Handler for fake behavior.</returns>
         public Fake Mock(Type parent, params Type[] interfaces)
         {
-            return new Fake(Subclasser.Create(parent, interfaces), _valuer);
+            IFaked provider = Subclasser.Create(parent, interfaces);
+            provider.FakeMeta.Valuer = _valuer;
+            return new Fake(provider);
         }
 
         /// <summary>Creates a loose fake with a base default implementation.</summary>

@@ -19,6 +19,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         private static readonly Type[] _ValidTypes = new[]
         {
             typeof(object),
+            typeof(Arg),
             typeof(DataHolderSample),
             typeof(IUnimplementedSample),
             typeof(FieldSample),
@@ -26,7 +27,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         };
 
         /// <summary>Types that can't be created by the hint.</summary>
-        private static readonly Type[] _InvalidTypes = new[] { typeof(Arg) };
+        private static readonly Type[] _InvalidTypes = new[] { typeof(VoidType) };
 
         /// <summary>Sets up the tests.</summary>
         public ObjectCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }

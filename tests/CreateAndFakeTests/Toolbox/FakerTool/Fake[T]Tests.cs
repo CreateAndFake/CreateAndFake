@@ -14,7 +14,8 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         [Fact]
         internal static void Fake_GuardsNulls()
         {
-            Tools.Asserter.Throws<ArgumentNullException>(() => new Fake<object>(null));
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Fake<object>((IFaked)null));
+            Tools.Asserter.Throws<ArgumentNullException>(() => new Fake<object>((Fake)null));
         }
 
         [Fact]

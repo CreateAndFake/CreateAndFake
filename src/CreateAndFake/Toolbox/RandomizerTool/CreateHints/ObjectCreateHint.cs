@@ -140,6 +140,15 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             Func<T, object[], object> invoker, IEnumerable<T> creators) where T : MethodBase
         {
             T creator = randomizer.Gen.NextItem(creators);
+
+            if (creator is MethodInfo method && method.IsGenericMethodDefinition)
+            {
+                creator = (T)(object)method.MakeGenericMethod(method
+                    .GetGenericArguments()
+                    .Select(a => GenericCreateHint.CreateArg(a, randomizer))
+                    .ToArray());
+            }
+
             return invoker.Invoke(creator, creator.GetParameters()
                 .Select(p =>
                 {
@@ -221,13 +230,23 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         private static IEnumerable<MethodInfo> FindFactories(Type type,
             BindingFlags scope, RandomizerChainer randomizer = null)
         {
-            return type
+            MethodInfo[] factories = type
                 .GetMethods(BindingFlags.Static | scope)
                 .Where(m => m.IsPublic || m.IsAssembly)
                 .Where(m => m.ReturnType.Inherits(type))
-                .Where(m => !m.ContainsGenericParameters)
                 .Where(c => randomizer == null
-                    || c.GetParameters().All(p => !randomizer.AlreadyCreated(p.ParameterType)));
+                    || c.GetParameters().All(p => !randomizer.AlreadyCreated(p.ParameterType)))
+                .ToArray();
+
+            IEnumerable<MethodInfo> nonGenericFactores = factories.Where(m => !m.ContainsGenericParameters).ToArray();
+            if (nonGenericFactores.Any())
+            {
+                return nonGenericFactores;
+            }
+            else
+            {
+                return factories;
+            }
         }
     }
 }
