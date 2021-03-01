@@ -27,7 +27,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         protected Behavior(Delegate implementation, Times times, int calls)
         {
             Implementation = implementation;
-            Limit = times;
+            Limit = times ?? Times.Min(1);
             Calls = calls;
             BaseCallType = null;
         }
@@ -80,13 +80,13 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>True if in range; false otherwise.</returns>
         internal bool HasExpectedCalls()
         {
-            return Limit?.IsInRange(Calls) ?? true;
+            return Limit.IsInRange(Calls);
         }
 
         /// <returns>String representation of expected calls.</returns>
         internal string ToExpectedCalls()
         {
-            return Limit?.ToString();
+            return Limit.ToString();
         }
 
         /// <summary>Specifies no behavior for a fake.</summary>
@@ -192,7 +192,7 @@ namespace CreateAndFake.Toolbox.FakerTool
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    return default;
                 }
             });
         }

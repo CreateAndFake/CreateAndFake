@@ -35,16 +35,16 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
                 Behavior noTimes = (Behavior)caller.Invoke(null,
                     new[] { Tools.Randomizer.Create(setupType), null });
 
-                Tools.Asserter.Is(true, noTimes.HasExpectedCalls());
+                Tools.Asserter.Is(false, noTimes.HasExpectedCalls());
                 noTimes.Invoke(args.Select(g => Tools.Randomizer.Create(g)).ToArray());
                 Tools.Asserter.Is(true, noTimes.HasExpectedCalls());
 
                 Behavior withTimes = (Behavior)caller.Invoke(null,
-                    new[] { Tools.Randomizer.Create(setupType), Times.Once });
+                    new[] { Tools.Randomizer.Create(setupType), Times.Never });
 
-                Tools.Asserter.Is(false, withTimes.HasExpectedCalls());
-                withTimes.Invoke(args.Select(g => Tools.Randomizer.Create(g)).ToArray());
                 Tools.Asserter.Is(true, withTimes.HasExpectedCalls());
+                withTimes.Invoke(args.Select(g => Tools.Randomizer.Create(g)).ToArray());
+                Tools.Asserter.Is(false, withTimes.HasExpectedCalls());
             }
         }
 
@@ -93,9 +93,7 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Tools.Asserter.Is(false, behavior.Invoke(Array.Empty<object>()));
             Tools.Asserter.Is(true, behavior.Invoke(Array.Empty<object>()));
             Tools.Asserter.Is(false, behavior.Invoke(Array.Empty<object>()));
-
-            Tools.Asserter.Throws<NotImplementedException>(
-                () => behavior.Invoke(Array.Empty<object>()));
+            Tools.Asserter.Is(false, behavior.Invoke(Array.Empty<object>()));
         }
 
         [Theory, RandomData]
@@ -104,14 +102,13 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
             Behavior behavior = Behavior.Series(value, null);
             Tools.Asserter.Is(value, behavior.Invoke(Array.Empty<object>()));
 
-            Tools.Asserter.Throws<NotImplementedException>(
-                () => behavior.Invoke(Array.Empty<object>()));
+            Tools.Asserter.Is(null, behavior.Invoke(Array.Empty<object>()));
         }
 
         [Theory, RandomData]
         internal static void ToExpectedCalls_MatchesTimes(Times times)
         {
-            Tools.Asserter.Is(null, Behavior.None().ToExpectedCalls());
+            Tools.Asserter.Is(Times.Min(1).ToString(), Behavior.None().ToExpectedCalls());
             Tools.Asserter.Is(times.ToString(), Behavior.None(times).ToExpectedCalls());
         }
 
