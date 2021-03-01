@@ -76,7 +76,9 @@ namespace CreateAndFakeTests
                 typeof(BaseDataContext),
                 typeof(PersonContext),
                 typeof(ToolSet),
-                typeof(Tools)
+                typeof(Tools),
+                typeof(FakeAttribute),
+                typeof(StubAttribute)
             };
 
             foreach (Type type in typeof(Tools).Assembly.GetTypes()

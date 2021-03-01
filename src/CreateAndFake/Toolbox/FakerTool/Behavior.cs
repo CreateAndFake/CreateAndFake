@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using CreateAndFake.Design.Content;
@@ -7,8 +6,6 @@ using CreateAndFake.Design.Content;
 namespace CreateAndFake.Toolbox.FakerTool
 {
     /// <summary>Mock behavior for fakes.</summary>
-    [SuppressMessage("Sonar", "S2436:ReduceGenericParameters", Justification = "Must match any number.")]
-    [SuppressMessage("Sonar", "S3242:ConsiderGeneralType", Justification = "Delegate doesn't match lambdas properly.")]
     public abstract class Behavior : IDeepCloneable
     {
         /// <summary>Set behavior to run.</summary>
@@ -30,7 +27,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         protected Behavior(Delegate implementation, Times times, int calls)
         {
             Implementation = implementation;
-            Limit = times;
+            Limit = times ?? Times.Min(1);
             Calls = calls;
             BaseCallType = null;
         }
@@ -83,13 +80,13 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <returns>True if in range; false otherwise.</returns>
         internal bool HasExpectedCalls()
         {
-            return Limit?.IsInRange(Calls) ?? true;
+            return Limit.IsInRange(Calls);
         }
 
         /// <returns>String representation of expected calls.</returns>
         internal string ToExpectedCalls()
         {
-            return Limit?.ToString();
+            return Limit.ToString();
         }
 
         /// <summary>Specifies no behavior for a fake.</summary>
@@ -195,7 +192,7 @@ namespace CreateAndFake.Toolbox.FakerTool
                 }
                 else
                 {
-                    throw new NotImplementedException();
+                    return default;
                 }
             });
         }

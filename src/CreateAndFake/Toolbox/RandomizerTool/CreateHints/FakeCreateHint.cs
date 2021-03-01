@@ -120,16 +120,16 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 return (Behavior)typeof(Behavior<>)
                     .MakeGenericType(method.ReturnType)
                     .GetConstructor(new[] { typeof(Delegate), typeof(Times) })
-                    .Invoke(new[] { randomizer.Create(_FuncTypes[withOut.Length].MakeGenericType(withOut)), null });
+                    .Invoke(new[] { randomizer.Create(_FuncTypes[withOut.Length].MakeGenericType(withOut)), Times.Any() });
             }
             else if (args.Length != 0)
             {
                 return new Behavior<VoidType>((Delegate)randomizer
-                    .Create(_ActionTypes[args.Length].MakeGenericType(args)));
+                    .Create(_ActionTypes[args.Length].MakeGenericType(args)), Times.Any());
             }
             else
             {
-                return Behavior.None();
+                return Behavior.None(Times.Any());
             }
         }
 

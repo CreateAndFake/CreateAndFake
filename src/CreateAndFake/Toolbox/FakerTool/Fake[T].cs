@@ -3,7 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
-using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.FakerTool
 {
@@ -16,12 +15,11 @@ namespace CreateAndFake.Toolbox.FakerTool
 
         /// <summary>Sets up the fake harness.</summary>
         /// <param name="fake">Faked implementation.</param>
-        /// <param name="valuer">How to compare call data.</param>
-        public Fake(IFaked fake, IValuer valuer = null) : base(fake, valuer) { }
+        public Fake(IFaked fake) : base(fake) { }
 
         /// <summary>Switches the fake to a different type.</summary>
         /// <param name="baseFake">Created fake with the extra type.</param>
-        public Fake(Fake baseFake) : base(baseFake)
+        public Fake(Fake baseFake) : base(baseFake?.Dummy)
         {
             _ = (T)base.Dummy;
         }

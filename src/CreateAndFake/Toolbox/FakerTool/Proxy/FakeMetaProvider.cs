@@ -4,12 +4,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using CreateAndFake.Toolbox.DuplicatorTool;
+using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.FakerTool.Proxy
 {
     /// <summary>Internal mechanism for faked object behavior.</summary>
     public sealed class FakeMetaProvider : IDuplicatable
     {
+        /// <summary>Last called method.</summary>
+        [ThreadStatic]
+        private static Tuple<FakeMetaProvider, CallData> _LastCall;
+
         /// <summary>Faked behavior.</summary>
         private readonly Stack<(CallData, Behavior)> _behavior = new();
 
@@ -24,6 +29,9 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
 
         /// <summary>Determines behavior when missing set behavior for a call.</summary>
         public bool ThrowByDefault { get; set; } = true;
+
+        /// <inheritdoc cref="IValuer"/>
+        internal IValuer Valuer { get; set; }
 
         /// <summary>Starts up with a blank slate.</summary>
         public FakeMetaProvider() { }
@@ -60,13 +68,29 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
                 _behavior.Reverse().Select(t => duplicator.Copy(t)),
                 _log.Select(t => duplicator.Copy(t)))
             {
+                Valuer = duplicator.Copy(Valuer),
                 Identifier = Identifier,
                 ThrowByDefault = ThrowByDefault,
                 _defaultCalls = _defaultCalls
             };
         }
 
-        /// <summary>Sets up behavior for th fake.</summary>
+        /// <summary>Sets up behavior for the fake method last called.</summary>
+        /// <param name="behavior">Behavior to tie to the call.</param>
+        internal static void SetLastCallBehavior(Behavior behavior)
+        {
+            if (_LastCall == null)
+            {
+                throw new InvalidOperationException("Method never called to set up behavior for.");
+            }
+
+            _ = _LastCall.Item1._log.Remove(_LastCall.Item2);
+            _LastCall.Item1.SetCallBehavior(_LastCall.Item2, behavior);
+            _LastCall.Item2.ConvertArgs(Arg.CaptureSetArgs());
+            _LastCall = null;
+        }
+
+        /// <summary>Sets up behavior for the fake.</summary>
         /// <param name="callData">Call to set behavior for.</param>
         /// <param name="behavior">Behavior to tie to the call.</param>
         internal void SetCallBehavior(CallData callData, Behavior behavior)
@@ -138,8 +162,9 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>Faked result previously set up.</returns>
         internal T CallRet<T>(object instance, string name, Type[] generics, object[] args)
         {
-            CallData data = new(name, generics, args, null);
+            CallData data = new(name, generics, args, Valuer);
             _log.Add(data);
+            _LastCall = Tuple.Create(this, data);
 
             (CallData, Behavior) match = _behavior.FirstOrDefault(t => t.Item1.MatchesCall(data));
             if (match.Equals(default))

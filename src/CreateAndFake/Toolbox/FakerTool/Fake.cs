@@ -11,7 +11,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         public IFaked Dummy { get; }
 
         /// <summary>How to compare call data.</summary>
-        protected IValuer Valuer { get; }
+        protected IValuer Valuer => Dummy.FakeMeta.Valuer;
 
         /// <summary>Determines behavior when missing set behavior for a call.</summary>
         public bool ThrowByDefault
@@ -22,16 +22,10 @@ namespace CreateAndFake.Toolbox.FakerTool
 
         /// <summary>Sets up the fake harness.</summary>
         /// <param name="fake">Faked implementation.</param>
-        /// <param name="valuer">How to compare call data.</param>
-        public Fake(IFaked fake, IValuer valuer = null)
+        public Fake(IFaked fake)
         {
             Dummy = fake ?? throw new ArgumentNullException(nameof(fake));
-            Valuer = valuer;
         }
-
-        /// <summary>For converting fakes to different types.</summary>
-        /// <param name="baseFake">Created fake with the extra type.</param>
-        protected Fake(Fake baseFake) : this(baseFake?.Dummy, baseFake?.Valuer) { }
 
         /// <summary>Ties a method call to fake behavior.</summary>
         /// <param name="methodName">Method name of the call.</param>

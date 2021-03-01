@@ -25,14 +25,14 @@ namespace CreateAndFakeTests.Toolbox.FakerTool
         }
 
         [Fact]
-        internal static void Arg_Defaults()
+        internal static void Arg_Random()
         {
-            Tools.Asserter.Is(default(int), Arg.Any<int>());
-            Tools.Asserter.Is(default(int), Arg.Where<int>(null));
+            Tools.Asserter.IsNot(default(int), Arg.Any<int>());
+            Tools.Asserter.IsNot(default(int), Arg.Where<int>(null));
 
-            Tools.Asserter.Is(default(string), Arg.Any<string>());
-            Tools.Asserter.Is(default(string), Arg.NotNull<string>());
-            Tools.Asserter.Is(default(string), Arg.Where<string>(null));
+            Tools.Asserter.IsNot(default(string), Arg.Any<string>());
+            Tools.Asserter.IsNot(default(string), Arg.NotNull<string>());
+            Tools.Asserter.IsNot(default(string), Arg.Where<string>(null));
         }
 
         [Fact]

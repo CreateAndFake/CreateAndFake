@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.ValuerTool;
@@ -31,6 +32,22 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             _generics = generics ?? throw new ArgumentNullException(nameof(generics));
             _args = args ?? throw new ArgumentNullException(nameof(args));
             _valuer = valuer;
+        }
+
+        /// <summary>Converts arg values to designated Arg matchers.</summary>
+        /// <param name="argChanges">Created Args to substitue on the given values.</param>
+        internal void ConvertArgs(Tuple<Arg, object>[] argChanges)
+        {
+            List<Tuple<Arg, object>> changes = argChanges.ToList();
+            for (int i = 0; i < _args.Length; i++)
+            {
+                Tuple<Arg, object> change = changes.FirstOrDefault(c => c.Item2 == _args[i]);
+                if (change != default)
+                {
+                    _args[i] = change.Item1;
+                    _ = changes.Remove(change);
+                }
+            }
         }
 
         /// <summary>

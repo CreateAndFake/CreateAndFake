@@ -127,5 +127,12 @@ namespace CreateAndFake.Toolbox.FakerTool
         {
             return Between(0, count);
         }
+
+        /// <summary>Sets the expected bounds to any.</summary>
+        /// <returns>Representation of the bounds.</returns>
+        public static Times Any()
+        {
+            return Min(0);
+        }
     }
 }
