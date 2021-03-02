@@ -7,7 +7,8 @@ A C# class library that handles mocking, test data generation, and validation. D
 ```c#
 // xUnit attributes used to automatically create the parameters.
 [Theory, RandomData]
-internal static void TestGetMovieDirectors([Fake] IStorage db, Endpoint api, [Size(2)] Details[] movies)
+internal static void TestGetMovieDirectors(
+    [Fake] IStorage db, Endpoint api, [Size(2)] Details[] movies)
 {
     // Setup fake behavior using randomized movie data (times optional).
     db.Find(movies[0].Name).SetupReturn(movies, Times.Once);
