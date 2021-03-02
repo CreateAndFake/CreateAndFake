@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Reflection;
 
 namespace CreateAndFake.Toolbox.RandomizerTool
@@ -22,6 +23,22 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
         /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
         object Create(Type type, Func<object, bool> condition = null);
+
+        /// <summary>Creates a randomized collection of the given size.</summary>
+        /// <typeparam name="T">Collection type to create.</typeparam>
+        /// <param name="count">Number of items to generate.</param>
+        /// <returns>The created collection.</returns>
+        /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        T CreateSized<T>(int count) where T : IEnumerable;
+
+        /// <summary>Creates a randomized collection of the given size.</summary>
+        /// <param name="type">Collection type to create.</param>
+        /// <param name="count">Number of items to generate.</param>
+        /// <returns>The created collection.</returns>
+        /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
+        /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
+        object CreateSized(Type type, int count);
 
         /// <summary>
         ///     Constructs the parameters for a method.
