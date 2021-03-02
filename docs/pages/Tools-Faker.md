@@ -5,6 +5,11 @@ The `Faker` tool provides fakes to imitate object behavior for testing:
 * `Mock` - Strict fake where calls throw exceptions if not set up.
 * `Stub` - Loose fake where calls return defaults if not set up.
 
+For attributes:
+
+* `[Fake]` - Loose fake with all methods randomized by the `Randomizer`.
+* `[Stub]` - Same as regular `Stub` behavior.
+
 ## Example
 
 Fakes use a typical lambda based style with a very methodical structure:

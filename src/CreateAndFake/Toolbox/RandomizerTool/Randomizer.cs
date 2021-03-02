@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +7,7 @@ using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
+using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
 namespace CreateAndFake.Toolbox.RandomizerTool
@@ -130,6 +132,61 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         }
 
         /// <inheritdoc/>
+        public T CreateSized<T>(int count) where T : IEnumerable
+        {
+            return (T)CreateSized(typeof(T), count);
+        }
+
+        /// <inheritdoc/>
+        public object CreateSized(Type type, int count)
+        {
+            object result = default;
+            try
+            {
+                result = CreateSized(type, count, new RandomizerChainer(_faker, _gen, Create));
+
+            }
+            catch (InsufficientExecutionStackException)
+            {
+                throw new InsufficientExecutionStackException(
+                    $"Ran into infinite generation trying to randomize type '{type}'.");
+            }
+            catch (Exception e) when (e is not NotSupportedException)
+            {
+                throw new InvalidOperationException(
+                    $"Encountered issue creating instance of type '{type}'.", e);
+            }
+            return result;
+        }
+
+        /// <summary>Creates a randomized instance.</summary>
+        /// <param name="type">Type to create.</param>
+        /// <param name="count">Number of items to generate.</param>
+        /// <param name="chainer">Handles callback behavior for child values.</param>
+        /// <returns>The created instance.</returns>
+        /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
+        private object CreateSized(Type type, int count, RandomizerChainer chainer)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+
+            (bool, object) result = _hints
+                .OfType<CreateCollectionHint>()
+                .Select(h => h.TryCreate(type, count, chainer))
+                .FirstOrDefault(r => r.Item1);
+
+            if (!result.Equals(default))
+            {
+                return result.Item2;
+            }
+            else
+            {
+                throw new NotSupportedException(
+                    $"Collection type '{type.FullName}' not supported by the randomizer. " +
+                    "Create a collection hint to generate the type and pass it to the randomizer.");
+            }
+        }
+
+        /// <inheritdoc/>
         public MethodCallWrapper CreateFor(MethodBase method, params object[] values)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
@@ -161,6 +218,10 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 {
                     AddArg(param.Name, _faker.Stub(param.ParameterType).Dummy);
                 }
+                else if (param.GetCustomAttributes<SizeAttribute>().Any())
+                {
+                    AddArg(param.Name, CreateSized(param.ParameterType, param.GetCustomAttribute<SizeAttribute>().Count));
+                }
                 else if (match != default)
                 {
                     AddArg(param.Name, match.Item2);
@@ -170,7 +231,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
                 {
                     AddArg(param.Name, Inject(param.ParameterType, args
                         .Select(a => a.Item2)
-                        .Where(a => a is Fake)
+                        .Where(a => a is Fake or IFaked)
                         .Reverse()
                         .ToArray()));
                 }

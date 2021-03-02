@@ -1,3 +1,4 @@
+using System;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.AsserterTool;
@@ -14,12 +15,13 @@ namespace CreateAndFake
     public sealed record ToolSet
     {
         /// <summary>Default tools to use.</summary>
-        public static ToolSet DefaultSet { get; }
+        public static ToolSet DefaultSet { get; } = CreateViaSeed(Environment.TickCount);
 
-        /// <summary>Creates the default tools.</summary>
-        static ToolSet()
+        /// <summary>Sets up the tools with the given seed.</summary>
+        /// <param name="seed">Initial seed for randomization.</param>
+        public static ToolSet CreateViaSeed(int seed)
         {
-            IRandom gen = new SeededRandom();
+            IRandom gen = new SeededRandom(seed);
             IValuer valuer = new Valuer();
             IFaker faker = new Faker(valuer);
             IRandomizer randomizer = new Randomizer(faker, gen, Limiter.Dozen);
@@ -28,7 +30,7 @@ namespace CreateAndFake
             IDuplicator duplicator = new Duplicator(asserter);
             Tester tester = new(gen, randomizer, duplicator, asserter);
 
-            DefaultSet = new ToolSet()
+            return new ToolSet()
             {
                 Gen = gen,
                 Valuer = valuer,

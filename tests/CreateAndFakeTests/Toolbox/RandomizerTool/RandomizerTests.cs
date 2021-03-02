@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using CreateAndFake;
 using CreateAndFake.Design;
@@ -37,6 +38,13 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
                 () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false).Create<object>());
         }
 
+        [Theory, RandomData]
+        internal static void CreateSized_NoRulesThrows(int size)
+        {
+            _ = Tools.Asserter.Throws<NotSupportedException>(
+                () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false).CreateSized<IEnumerable>(size));
+        }
+
         [Fact]
         internal static void Create_MissingMatchThrows()
         {
@@ -49,6 +57,21 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
 
             _ = Tools.Asserter.Throws<NotSupportedException>(
                 () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false, hint.Dummy).Create<string>());
+
+            hint.VerifyAll(Times.Once);
+        }
+
+        [Theory, RandomData]
+        internal static void CreateSized_MissingMatchThrows(Fake<CreateCollectionHint> hint, int size)
+        {
+            string data = "Result";
+
+            hint.Setup(
+                m => m.TryCreate(data.GetType(), size, Arg.Any<RandomizerChainer>()),
+                Behavior.Returns((false, (object)null), Times.Once));
+
+            _ = Tools.Asserter.Throws<NotSupportedException>(
+                () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false, hint.Dummy).CreateSized<string>(size));
 
             hint.VerifyAll(Times.Once);
         }
@@ -69,6 +92,22 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
             hint.VerifyAll(Times.Once);
         }
 
+        [Fact]
+        internal static void CreateSized_ValidHintWorks()
+        {
+            string[] data = new[] { "Result" };
+
+            Fake<CreateCollectionHint> hint = Tools.Faker.Mock<CreateCollectionHint>();
+            hint.Setup(
+                m => m.TryCreate(data.GetType(), 1, Arg.Any<RandomizerChainer>()),
+                Behavior.Returns((true, (object)data), Times.Once));
+
+            Tools.Asserter.Is(data, new Randomizer(Tools.Faker, new FastRandom(),
+                Limiter.Dozen, false, hint.Dummy).CreateSized<string[]>(1));
+
+            hint.VerifyAll(Times.Once);
+        }
+
         [Theory, RandomData]
         internal static void Create_InfiniteLoopDetails(Type type, Fake<CreateHint> hint)
         {
@@ -78,6 +117,19 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool
 
             InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
                 () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false, hint.Dummy).Create(type));
+
+            Tools.Asserter.Is(true, e.Message.Contains(type.Name));
+        }
+
+        [Theory, RandomData]
+        internal static void CreateSized_InfiniteLoopDetails(Type type, Fake<CreateCollectionHint> hint, int size)
+        {
+            hint.Setup(
+                m => m.TryCreate(type, size, Arg.Any<RandomizerChainer>()),
+                Behavior.Throw<InsufficientExecutionStackException>(Times.Once));
+
+            InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
+                () => new Randomizer(Tools.Faker, new FastRandom(), Limiter.Dozen, false, hint.Dummy).CreateSized(type, size));
 
             Tools.Asserter.Is(true, e.Message.Contains(type.Name));
         }

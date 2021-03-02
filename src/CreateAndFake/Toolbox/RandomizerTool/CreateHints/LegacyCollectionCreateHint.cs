@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
+// Return isn't present on all .NET versions.
 #pragma warning disable IDE0058 // Expression value is never used
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Handles generation of legacy collections for the randomizer.</summary>
-    public sealed class LegacyCollectionCreateHint : CreateHint
+    public sealed class LegacyCollectionCreateHint : CreateCollectionHint
     {
         /// <summary>Supported types and the methods used to generate them.</summary>
         private static readonly (Type, Func<string[], RandomizerChainer, object>)[] _Creators
@@ -55,11 +56,14 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             _range = range;
         }
 
-        /// <summary>Tries to create a random instance of the given type.</summary>
-        /// <param name="type">Type to generate.</param>
-        /// <param name="randomizer">Handles callback behavior for child values.</param>
-        /// <returns>If the type could be created and the created instance.</returns>
+        /// <inheritdoc/>
         protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+        {
+            return TryCreate(type, _minSize + randomizer?.Gen.Next(_range) ?? 0, randomizer);
+        }
+
+        /// <inheritdoc/>
+        protected internal override (bool, object) TryCreate(Type type, int size, RandomizerChainer randomizer)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));
@@ -67,7 +71,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             if (type.Inherits<IEnumerable>() && FindMatches(type).Any())
             {
                 return (true, randomizer.Gen.NextItem(FindMatches(type)).Item2
-                    .Invoke(CreateInternalData(randomizer), randomizer));
+                    .Invoke(CreateInternalData(size, randomizer), randomizer));
             }
             else
             {
@@ -99,11 +103,12 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         }
 
         /// <summary>Creates populated string array of data to use.</summary>
+        /// <param name="size">Number of items to generate.</param>
         /// <param name="randomizer">Callback to the randomizer to create child values.</param>
         /// <returns>Data populated with random values.</returns>
-        private string[] CreateInternalData(RandomizerChainer randomizer)
+        private static string[] CreateInternalData(int size, RandomizerChainer randomizer)
         {
-            string[] data = new string[_minSize + randomizer.Gen.Next(_range)];
+            string[] data = new string[size];
             for (int i = 0; i < data.Length; i++)
             {
                 data.SetValue(randomizer.Create<string>(), i);

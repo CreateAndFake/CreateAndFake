@@ -3,12 +3,11 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using CreateAndFake.Design.Randomization;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 {
     /// <summary>Handles generation of collections for the randomizer.</summary>
-    public sealed class CollectionCreateHint : CreateHint
+    public sealed class CollectionCreateHint : CreateCollectionHint
     {
         /// <summary>Collections able to be randomized.</summary>
         private static readonly Type[] _Collections = new[]
@@ -41,11 +40,14 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             _range = range;
         }
 
-        /// <summary>Tries to create a random instance of the given type.</summary>
-        /// <param name="type">Type to generate.</param>
-        /// <param name="randomizer">Handles callback behavior for child values.</param>
-        /// <returns>If the type could be created and the created instance.</returns>
+        /// <inheritdoc/>
         protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+        {
+            return TryCreate(type, _minSize + randomizer?.Gen.Next(_range) ?? 0, randomizer);
+        }
+
+        /// <inheritdoc/>
+        protected internal override (bool, object) TryCreate(Type type, int size, RandomizerChainer randomizer)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));
@@ -53,7 +55,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             Type itemType = GetItemType(type);
             if (itemType != null && FindMatches(type, itemType).Any())
             {
-                return (true, Create(type, itemType, randomizer));
+                return (true, Create(type, size, itemType, randomizer));
             }
             else
             {
@@ -63,16 +65,17 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 
         /// <summary>Creates a random instance of the given type.</summary>
         /// <param name="type">Type to generate.</param>
+        /// <param name="size">Number of items to generate.</param>
         /// <param name="itemType">Item type to be contained in the collection.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
         /// <returns>Created instance.</returns>
-        private object Create(Type type, Type itemType, RandomizerChainer randomizer)
+        private static object Create(Type type, int size, Type itemType, RandomizerChainer randomizer)
         {
             Type collection = randomizer.Gen.NextItem(FindMatches(type, itemType));
             Type newType = MakeNewType(collection, itemType);
 
-            Array internalData = CreateInternalData(itemType,
-                randomizer.Gen, t => randomizer.Create(t, randomizer.Parent));
+            Array internalData = CreateInternalData(itemType, size,
+                t => randomizer.Create(t, randomizer.Parent));
 
             if (newType == typeof(Array) || newType == internalData.GetType())
             {
@@ -154,12 +157,12 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
 
         /// <summary>Creates basic structures for the given type.</summary>
         /// <param name="itemType">Item type to be contained in the collection.</param>
-        /// <param name="gen">Value generator to use for base randomization.</param>
+        /// <param name="size">Number of items to generate.</param>
         /// <param name="randomizer">Callback to the randomizer to create child values.</param>
         /// <returns>Data populated with random values.</returns>
-        private Array CreateInternalData(Type itemType, IRandom gen, Func<Type, object> randomizer)
+        private static Array CreateInternalData(Type itemType, int size, Func<Type, object> randomizer)
         {
-            Array data = Array.CreateInstance(itemType, _minSize + gen.Next(_range));
+            Array data = Array.CreateInstance(itemType, size);
             for (int i = 0; i < data.Length; i++)
             {
                 data.SetValue(randomizer.Invoke(itemType), i);
