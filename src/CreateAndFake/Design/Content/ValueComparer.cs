@@ -28,10 +28,12 @@ namespace CreateAndFake.Design.Content
         /// <summary>Default instance for use.</summary>
         public static ValueComparer Use { get; } = new ValueComparer();
 
-        /// <summary>Determines whether the specified objects are equal.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>True if equal; false otherwise.</returns>
+        /// <summary>Determines if <paramref name="x"/> equals <paramref name="y"/> by value.</summary>
+        /// <param name="x">Object to compare with <paramref name="y"/>.</param>
+        /// <param name="y">Object to compare with <paramref name="x"/>.</param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="x"/> equals <paramref name="y"/> by value; <c>false</c> otherwise.
+        /// </returns>
         public new bool Equals(object x, object y)
         {
             if (ReferenceEquals(x, y))
@@ -56,19 +58,13 @@ namespace CreateAndFake.Design.Content
             }
         }
 
-        /// <summary>Determines whether the specified objects are equal.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>True if equal; false otherwise.</returns>
+        /// <inheritdoc cref="Equals(object,object)"/>
         public bool Equals(IValueEquatable x, IValueEquatable y)
         {
             return x?.ValuesEqual(y) ?? y?.ValuesEqual(x) ?? true;
         }
 
-        /// <summary>Determines whether the specified objects are equal.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>True if equal; false otherwise.</returns>
+        /// <inheritdoc cref="Equals(object,object)"/>
         public bool Equals(IEnumerable x, IEnumerable y)
         {
             if (ReferenceEquals(x, y))
@@ -103,10 +99,7 @@ namespace CreateAndFake.Design.Content
             }
         }
 
-        /// <summary>Determines whether the specified objects are equal.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>True if equal; false otherwise.</returns>
+        /// <inheritdoc cref="Equals(object,object)"/>
         public bool Equals(IDictionary x, IDictionary y)
         {
             if (ReferenceEquals(x, y))
@@ -134,9 +127,17 @@ namespace CreateAndFake.Design.Content
             }
         }
 
-        /// <summary>Returns a hash code for the specified object.</summary>
-        /// <param name="obj">Object to generate a code for.</param>
-        /// <returns>The generated hash.</returns>
+        /// <summary>Computes a hash code for <paramref name="items"/>.</summary>
+        /// <param name="items">Objects to generate a hash code for.</param>
+        /// <returns>The computed hash code.</returns>
+        public int GetHashCode(params object[] items)
+        {
+            return GetHashCode((IEnumerable)items);
+        }
+
+        /// <summary>Computes a hash code for <paramref name="obj"/>.</summary>
+        /// <param name="obj">Object to generate a hash code for.</param>
+        /// <returns>The computed hash code.</returns>
         public int GetHashCode(object obj)
         {
             if (obj is null)
@@ -157,25 +158,13 @@ namespace CreateAndFake.Design.Content
             }
         }
 
-        /// <summary>Returns a hash code for the specified objects.</summary>
-        /// <param name="items">Objects to generate a code for.</param>
-        /// <returns>The generated hash.</returns>
-        public int GetHashCode(params object[] items)
-        {
-            return GetHashCode((IEnumerable)items);
-        }
-
-        /// <summary>Returns a hash code for the specified object.</summary>
-        /// <param name="obj">Object to generate a code for.</param>
-        /// <returns>The generated hash.</returns>
+        /// <inheritdoc cref="GetHashCode(object)"/>
         public int GetHashCode(IValueEquatable obj)
         {
             return obj?.GetValueHash() ?? NullHash;
         }
 
-        /// <summary>Returns a hash code for the specified object.</summary>
-        /// <param name="obj">Object to generate a code for.</param>
-        /// <returns>The generated hash.</returns>
+        /// <inheritdoc cref="GetHashCode(object)"/>
         public int GetHashCode(IEnumerable obj)
         {
             if (obj is null)
@@ -201,9 +190,7 @@ namespace CreateAndFake.Design.Content
             }
         }
 
-        /// <summary>Returns a hash code for the specified object.</summary>
-        /// <param name="obj">Object to generate a code for.</param>
-        /// <returns>The generated hash.</returns>
+        /// <inheritdoc cref="GetHashCode(object)"/>
         public int GetHashCode(IDictionary obj)
         {
             if (obj is null) return NullHash;
@@ -217,40 +204,37 @@ namespace CreateAndFake.Design.Content
             return hash;
         }
 
-        /// <summary>Compares to sort values by their value hash.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>Difference between value hashes.</returns>
+        /// <summary>
+        ///     Compares <paramref name="x"/>  and <paramref name="y"/> by their value hash for sorting.
+        /// </summary>
+        /// <param name="x">Object to compare with <paramref name="y"/>.</param>
+        /// <param name="y">Object to compare with <paramref name="x"/>.</param>
+        /// <returns>
+        ///     <para>Positive value if <paramref name="x"/> &gt; <paramref name="y"/>.</para>
+        ///     <para>Zero if <paramref name="x"/> = <paramref name="y"/>.</para>
+        ///     <para>Negative value if <paramref name="x"/> &lt; <paramref name="y"/>.</para>
+        /// </returns>
         public int Compare(object x, object y)
         {
-            return ReferenceEquals(x, y) ? 0 : GetHashCode(x) - GetHashCode(y);
+            return ReferenceEquals(x, y) ? 0 : GetHashCode(x).CompareTo(GetHashCode(y));
         }
 
-        /// <summary>Compares to sort values by their value hash.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>Difference between value hashes.</returns>
+        /// <inheritdoc cref="Compare(object,object)"/>
         public int Compare(IValueEquatable x, IValueEquatable y)
         {
-            return ReferenceEquals(x, y) ? 0 : GetHashCode(x) - GetHashCode(y);
+            return ReferenceEquals(x, y) ? 0 : GetHashCode(x).CompareTo(GetHashCode(y));
         }
 
-        /// <summary>Compares to sort values by their value hash.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>Difference between value hashes.</returns>
+        /// <inheritdoc cref="Compare(object,object)"/>
         public int Compare(IEnumerable x, IEnumerable y)
         {
-            return ReferenceEquals(x, y) ? 0 : GetHashCode(x) - GetHashCode(y);
+            return ReferenceEquals(x, y) ? 0 : GetHashCode(x).CompareTo(GetHashCode(y));
         }
 
-        /// <summary>Compares to sort values by their value hash.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>Difference between value hashes.</returns>
+        /// <inheritdoc cref="Compare(object,object)"/>
         public int Compare(IDictionary x, IDictionary y)
         {
-            return ReferenceEquals(x, y) ? 0 : GetHashCode(x) - GetHashCode(y);
+            return ReferenceEquals(x, y) ? 0 : GetHashCode(x).CompareTo(GetHashCode(y));
         }
     }
 }

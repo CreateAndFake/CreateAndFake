@@ -25,7 +25,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <summary>Created object using this instance.</summary>
         public object Parent { get; }
 
-        /// <summary>Sets up the callback functionality.</summary>
+        /// <summary>Initializes a new instance of the <see cref="RandomizerChainer"/> class.</summary>
         /// <param name="faker">Provides stubs.</param>
         /// <param name="gen">Value generator to use for base randomization.</param>
         /// <param name="randomizer">Callback to the randomizer to create child values.</param>
@@ -39,7 +39,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             Parent = null;
         }
 
-        /// <summary>Sets up the callback functionality.</summary>
+        /// <summary>Initializes a new instance of the <see cref="RandomizerChainer"/> class.</summary>
         /// <param name="prevChainer">Previous chainer to build upon.</param>
         /// <param name="parent">Container of the instance to create.</param>
         private RandomizerChainer(RandomizerChainer prevChainer, object parent)

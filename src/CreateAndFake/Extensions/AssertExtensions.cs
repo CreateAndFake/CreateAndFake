@@ -8,7 +8,7 @@ namespace CreateAndFake.Fluent
     {
         /// <summary>Handles common test scenarios.</summary>
         /// <param name="actual">Object to test.</param>
-        /// <returns>Asserter to test with.</returns>
+        /// <returns>Asserter to test <paramref name="actual"/> with.</returns>
         public static AssertObject Assert(this object actual)
         {
             return new AssertObject(Tools.Gen, Tools.Valuer, actual);
@@ -16,7 +16,7 @@ namespace CreateAndFake.Fluent
 
         /// <summary>Handles common test scenarios.</summary>
         /// <param name="collection">Collection to test.</param>
-        /// <returns>Asserter to test with.</returns>
+        /// <returns>Asserter to test <paramref name="collection"/> with.</returns>
         public static AssertGroup Assert(this IEnumerable collection)
         {
             return new AssertGroup(Tools.Gen, Tools.Valuer, collection);

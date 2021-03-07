@@ -14,7 +14,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Fakes injected into the dummy.</summary>
         public IEnumerable<Fake> Fakes { get; }
 
-        /// <summary>Initializer.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Injected{T}"/> class.</summary>
         /// <param name="dummy">Faked implementation.</param>
         /// <param name="fakes">Fakes injected into the dummy.</param>
         public Injected(T dummy, IEnumerable<Fake> fakes)

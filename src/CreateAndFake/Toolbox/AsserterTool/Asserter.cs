@@ -17,7 +17,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <summary>Handles comparisons.</summary>
         protected IValuer Valuer { get; }
 
-        /// <summary>Sets up the asserter capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Asserter"/> class.</summary>
         /// <param name="gen">Core value random handler.</param>
         /// <param name="valuer">Handles comparisons.</param>
         /// <exception cref="ArgumentNullException">If given a null valuer.</exception>

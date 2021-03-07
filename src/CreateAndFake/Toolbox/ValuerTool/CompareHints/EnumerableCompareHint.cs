@@ -8,11 +8,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
     /// <summary>Handles comparing collections for the valuer.</summary>
     public sealed class EnumerableCompareHint : CompareHint<IEnumerable>
     {
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
+        /// <inheritdoc/>
         protected override IEnumerable<Difference> Compare(
             IEnumerable expected, IEnumerable actual, ValuerChainer valuer)
         {
@@ -23,11 +19,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             return LazyCompare(expected, actual, valuer);
         }
 
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
+        /// <inheritdoc cref="Compare"/>
         private static IEnumerable<Difference> LazyCompare(
             IEnumerable expected, IEnumerable actual, ValuerChainer valuer)
         {
@@ -56,10 +48,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             }
         }
 
-        /// <summary>Calculates a hash code based upon value.</summary>
-        /// <param name="item">Object to generate a code for.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>The generated hash.</returns>
+        /// <inheritdoc/>
         protected override int GetHashCode(IEnumerable item, ValuerChainer valuer)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));

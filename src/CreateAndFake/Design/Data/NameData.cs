@@ -5,7 +5,7 @@ namespace CreateAndFake.Design.Data
     /// <summary>Provides a pool of names.</summary>
     public static class NameData
     {
-        /// <summary>Names for use.</summary>
+        /// <summary>Possible names for randomization.</summary>
         public static ICollection<string> Values { get; } = new string[]
         {
             // Aa

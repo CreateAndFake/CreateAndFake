@@ -21,7 +21,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <summary>How to compare call data.</summary>
         private readonly IValuer _valuer;
 
-        /// <summary>Populates the details.</summary>
+        /// <summary>Initializes a new instance of the <see cref="CallData"/> class.</summary>
         /// <param name="methodName">Name tied to the call.</param>
         /// <param name="generics">Generics tied to the call.</param>
         /// <param name="args">Args tied to the call.</param>

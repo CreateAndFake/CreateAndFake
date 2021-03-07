@@ -17,11 +17,10 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <summary>Object to compare with.</summary>
         protected object Actual { get; }
 
-        /// <summary>Sets up the asserter capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="AssertObjectBase{T}"/> class.</summary>
         /// <param name="gen">Core value random handler.</param>
         /// <param name="valuer">Handles comparisons.</param>
         /// <param name="actual">Object to compare with.</param>
-        /// <exception cref="ArgumentNullException">If given a null valuer.</exception>
         protected AssertObjectBase(IRandom gen, IValuer valuer, object actual)
         {
             Gen = gen ?? throw new ArgumentNullException(nameof(gen));
@@ -32,8 +31,8 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <summary>Verifies two objects are equal by value.</summary>
         /// <param name="expected">Object to compare against.</param>
         /// <param name="details">Optional failure details.</param>
-        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         /// <returns>Chainer to make additional assertions with.</returns>
+        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public AssertChainer<T> Is(object expected, string details = null)
         {
             return ValuesEqual(expected, details);
@@ -42,8 +41,8 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <summary>Verifies two objects are unequal by value.</summary>
         /// <param name="expected">Object to compare against.</param>
         /// <param name="details">Optional failure details.</param>
-        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         /// <returns>Chainer to make additional assertions with.</returns>
+        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public AssertChainer<T> IsNot(object expected, string details = null)
         {
             return ValuesNotEqual(expected, details);
@@ -52,8 +51,8 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <summary>Verifies two objects are equal by reference.</summary>
         /// <param name="expected">Object to compare against.</param>
         /// <param name="details">Optional failure details.</param>
-        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         /// <returns>Chainer to make additional assertions with.</returns>
+        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual AssertChainer<T> ReferenceEqual(object expected, string details = null)
         {
             if (!ReferenceEquals(expected, Actual))
@@ -66,8 +65,8 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <summary>Verifies two objects are not equal by reference.</summary>
         /// <param name="expected">Object to compare against.</param>
         /// <param name="details">Optional failure details.</param>
-        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         /// <returns>Chainer to make additional assertions with.</returns>
+        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual AssertChainer<T> ReferenceNotEqual(object expected, string details = null)
         {
             if (ReferenceEquals(expected, Actual))
@@ -80,8 +79,8 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <summary>Verifies two objects are equal by value.</summary>
         /// <param name="expected">Object to compare against.</param>
         /// <param name="details">Optional failure details.</param>
-        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         /// <returns>Chainer to make additional assertions with.</returns>
+        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual AssertChainer<T> ValuesEqual(object expected, string details = null)
         {
             Difference[] differences = Valuer.Compare(expected, Actual).ToArray();
@@ -96,8 +95,8 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <summary>Verifies two objects are unequal by value.</summary>
         /// <param name="expected">Object to compare against.</param>
         /// <param name="details">Optional failure details.</param>
-        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         /// <returns>Chainer to make additional assertions with.</returns>
+        /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual AssertChainer<T> ValuesNotEqual(object expected, string details = null)
         {
             if (!Valuer.Compare(expected, Actual).Any())

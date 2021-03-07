@@ -11,17 +11,19 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         Justification = "Enforces pattern behind the exception existing instead.")]
     public sealed class FakeCallException : Exception
     {
-        /// <summary>Serialization cosntructor.</summary>
+        /// <summary>Initializes a new instance of the <see cref="FakeCallException"/> class.</summary>
+        /// <remarks>Serialization constructor.</remarks>
         private FakeCallException() : base() { }
 
-        /// <summary>Sets up the exception.</summary>
+        /// <summary>Initializes a new instance of the <see cref="FakeCallException"/> class.</summary>
         /// <param name="data">Associated call data.</param>
         /// <param name="setup">Call data with behavior.</param>
         internal FakeCallException(CallData data, IEnumerable<CallData> setup) : base(BuildMessage(data, setup)) { }
 
-        /// <summary>Serialization constructor.</summary>
+        /// <summary>Initializes a new instance of the <see cref="FakeCallException"/> class.</summary>
         /// <param name="info">Object data.</param>
         /// <param name="context">Additional info.</param>
+        /// <remarks>Serialization constructor.</remarks>
         private FakeCallException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>Integrates the details into the message.</summary>

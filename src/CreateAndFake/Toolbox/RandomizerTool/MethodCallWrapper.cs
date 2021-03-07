@@ -21,7 +21,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <summary>Parameter data for the method.</summary>
         public IEnumerable<object> Args => _names.Select(n => _args[n]).ToArray();
 
-        /// <summary>Initializer.</summary>
+        /// <summary>Initializes a new instance of the <see cref="MethodCallWrapper"/> class.</summary>
         /// <param name="method">Associated method.</param>
         /// <param name="args">Parameter data for the method.</param>
         public MethodCallWrapper(MethodBase method, IEnumerable<Tuple<string, object>> args)

@@ -33,12 +33,13 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <inheritdoc cref="IValuer"/>
         internal IValuer Valuer { get; set; }
 
-        /// <summary>Starts up with a blank slate.</summary>
+        /// <summary>Initializes a new instance of the <see cref="FakeMetaProvider"/> class.</summary>
         public FakeMetaProvider() { }
 
-        /// <summary>Copy constructor.</summary>
+        /// <summary>Initializes a new instance of the <see cref="FakeMetaProvider"/> class.</summary>
         /// <param name="behavior">Behavior to pass in.</param>
         /// <param name="log">Record of calls to pass in.</param>
+        /// <remarks>Copy constructor.</remarks>
         internal FakeMetaProvider(IEnumerable<(CallData, Behavior)> behavior, IEnumerable<CallData> log)
         {
             if (behavior == null) throw new ArgumentNullException(nameof(behavior));

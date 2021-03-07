@@ -13,8 +13,8 @@ namespace CreateAndFake.Design.Randomization
         /// <summary>Source generator used for random bytes.</summary>
         private static readonly Random _Gen = new();
 
-        /// <summary>Sets up the randomizer.</summary>
-        /// <param name="onlyValidValues">Option to prevent generating invalid values.</param>
+        /// <summary>Initializes a new instance of the <see cref="FastRandom"/> class.</summary>
+        /// <inheritdoc/>
         public FastRandom(bool onlyValidValues = true) : base(onlyValidValues) { }
 
         /// <inheritdoc/>

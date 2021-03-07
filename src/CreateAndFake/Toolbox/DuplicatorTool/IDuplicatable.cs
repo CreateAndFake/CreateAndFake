@@ -8,7 +8,7 @@
         ///     or copy only affects that object and not the other.
         /// </summary>
         /// <param name="duplicator">Duplicator to clone child values.</param>
-        /// <returns>Clone that is equal in value to the instance.</returns>
+        /// <returns>Created clone that is equal in value to the instance.</returns>
         IDuplicatable DeepClone(IDuplicator duplicator);
     }
 }

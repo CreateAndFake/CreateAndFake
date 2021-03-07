@@ -7,11 +7,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
     /// <summary>Handles basic type compare issues for the valuer.</summary>
     public sealed class EarlyFailCompareHint : CompareHint
     {
-        /// <summary>Determines if the objects are supported by the hint.</summary>
-        /// <param name="expected">First object under question.</param>
-        /// <param name="actual">Second object under question.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>True if the objects can be compared; false otherwise.</returns>
+        /// <inheritdoc/>
         protected override bool Supports(object expected, object actual, ValuerChainer valuer)
         {
             Type objectType = expected?.GetType();
@@ -26,11 +22,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
                 || expected is Type;
         }
 
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
+        /// <inheritdoc/>
         protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
         {
             if (expected == null && actual == null) yield break;
@@ -49,10 +41,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             }
         }
 
-        /// <summary>Calculates a hash code based upon value.</summary>
-        /// <param name="item">Object to generate a code for.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>The generated hash.</returns>
+        /// <inheritdoc/>
         protected override int GetHashCode(object item, ValuerChainer valuer)
         {
             return ValueComparer.Use.GetHashCode(item);

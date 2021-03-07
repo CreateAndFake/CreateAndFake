@@ -17,10 +17,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             typeof(Stack)
         };
 
-        /// <summary>Deep clones an object.</summary>
-        /// <param name="source">Object to clone.</param>
-        /// <param name="duplicator">Handles callback behavior for child values.</param>
-        /// <returns>Duplicate object.</returns>
+        /// <inheritdoc/>
         protected override IEnumerable Copy(IEnumerable source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
@@ -48,10 +45,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             }
         }
 
-        /// <summary>Copies the contents of a collection.</summary>
+        /// <summary>Copies the contents of <paramref name="source"/>.</summary>
         /// <param name="source">Collection with contents to copy.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
-        /// <returns>Duplicate object.</returns>
+        /// <returns>Clone of <paramref name="source"/>'s elements.</returns>
         private static IEnumerable CopyContents(IEnumerable source, DuplicatorChainer duplicator)
         {
             Type type = source.GetType();
@@ -79,10 +76,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             }
         }
 
-        /// <summary>Converts an array to a specific type.</summary>
+        /// <summary>Convert <paramref name="data"/> to <paramref name="elementType"/> array.</summary>
         /// <param name="elementType">Array type to create.</param>
         /// <param name="data">Array to convert.</param>
-        /// <returns>Converted array.</returns>
+        /// <returns>The converted array.</returns>
         private static Array ArrayCast(Type elementType, object[] data)
         {
             Array result = Array.CreateInstance(elementType, data.Length);
@@ -93,11 +90,11 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             return result;
         }
 
-        /// <summary>Copies the contents of a collection.</summary>
+        /// <summary>Copies the contents of <paramref name="source"/>.</summary>
         /// <param name="source">Collection with contents to copy.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
         /// <param name="reverse">If the copy process should reverse the order of items from the enumerator.</param>
-        /// <returns>Duplicate object.</returns>
+        /// <returns>The duplicate object.</returns>
         private static object[] CopyContentsHelper(IEnumerable source, DuplicatorChainer duplicator, bool reverse)
         {
             List<object> copy = new();

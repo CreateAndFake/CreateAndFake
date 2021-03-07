@@ -17,7 +17,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Condition to compare with.</summary>
         private readonly Func<object, bool> _matcher;
 
-        /// <summary>Creates a matcher arg.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Arg"/> class.</summary>
         /// <param name="matcher">Condition to compare with.</param>
         private Arg(Func<object, bool> matcher)
         {

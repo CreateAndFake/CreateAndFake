@@ -30,7 +30,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         /// <summary>Hints used to copy specific types.</summary>
         private readonly IList<CopyHint> _hints;
 
-        /// <summary>Sets up the duplicator capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Duplicator"/> class.</summary>
         /// <param name="asserter">Verifies duplicates are valid.</param>
         /// <param name="includeDefaultHints">If the default set of hints should be added.</param>
         /// <param name="hints">Hints used to copy specific types.</param>
@@ -62,11 +62,11 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
             }
         }
 
-        /// <summary>Deep clones an object.</summary>
+        /// <summary>Deep clones <paramref name="source"/>.</summary>
         /// <typeparam name="T">Type being cloned.</typeparam>
         /// <param name="source">Object to clone.</param>
         /// <param name="chainer">Handles callback behavior for child values.</param>
-        /// <returns>The duplicate.</returns>
+        /// <returns>Clone of <paramref name="source"/>.</returns>
         /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>
         private T Copy<T>(T source, DuplicatorChainer chainer)
         {

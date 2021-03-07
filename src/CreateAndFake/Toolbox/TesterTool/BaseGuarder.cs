@@ -20,7 +20,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <summary>How long to wait for methods to complete.</summary>
         protected TimeSpan Timeout { get; }
 
-        /// <summary>Sets up the guarder capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="BaseGuarder"/> class.</summary>
         /// <param name="fixer">Handles generic resolution.</param>
         /// <param name="randomizer">Creates objects and populates them with random values.</param>
         /// <param name="timeout">How long to wait for methods to complete.</param>

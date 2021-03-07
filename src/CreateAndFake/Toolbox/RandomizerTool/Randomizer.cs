@@ -46,7 +46,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <summary>Limits attempts at matching conditions.</summary>
         private readonly Limiter _limiter;
 
-        /// <summary>Sets up the randomizer capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Randomizer"/> class.</summary>
         /// <param name="faker">Provides stubs.</param>
         /// <param name="gen">Value generator to use for base randomization.</param>
         /// <param name="includeDefaultHints">If the default set of hints should be added.</param>

@@ -13,7 +13,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Handles comparisons.</summary>
         private readonly IValuer _valuer;
 
-        /// <summary>Sets up the asserter capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Faker"/> class.</summary>
         /// <param name="valuer">Handles comparisons.</param>
         public Faker(IValuer valuer)
         {

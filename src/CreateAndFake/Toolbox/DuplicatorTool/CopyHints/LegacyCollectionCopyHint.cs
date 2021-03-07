@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
+// Return not available on all .NET versions.
 #pragma warning disable IDE0058 // Expression value is never used
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
@@ -45,10 +46,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
                 }
             };
 
-        /// <summary>Tries to deep clone an object.</summary>
-        /// <param name="source">Object to clone.</param>
-        /// <param name="duplicator">Handles callback behavior for child values.</param>
-        /// <returns>If the type could be cloned and the cloned instance.</returns>
+        /// <inheritdoc/>
         protected internal sealed override (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
@@ -64,11 +62,11 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             }
         }
 
-        /// <summary>Clones a collection.</summary>
+        /// <summary>Clones <paramref name="source"/>.</summary>
         /// <typeparam name="T">Collection type being cloned.</typeparam>
         /// <param name="source">Collection to clone.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
-        /// <returns>The cloned instance.</returns>
+        /// <returns>Clone of <paramref name="source"/>.</returns>
         private static T CreateAndCopy<T>(object source, DuplicatorChainer duplicator) where T : IDictionary, new()
         {
             T result = new();

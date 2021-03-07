@@ -24,7 +24,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <summary>Reference to the actual valuer.</summary>
         internal IValuer Valuer { get; }
 
-        /// <summary>Sets up the callback functionality.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ValuerChainer"/> class.</summary>
         /// <param name="valuer">Reference to the actual valuer.</param>
         /// <param name="hasher">Callback to the valuer to handle child values.</param>
         /// <param name="comparer">Callback to the valuer to handle child values.</param>

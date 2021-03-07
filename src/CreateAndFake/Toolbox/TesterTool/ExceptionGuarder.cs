@@ -11,7 +11,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <summary>Handles common test scenarios.</summary>
         private readonly Asserter _asserter;
 
-        /// <summary>Sets up the guarder capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ExceptionGuarder"/> class.</summary>
         /// <param name="fixer">Handles generic resolution.</param>
         /// <param name="randomizer">Creates objects and populates them with random values.</param>
         /// <param name="asserter">Handles common test scenarios.</param>

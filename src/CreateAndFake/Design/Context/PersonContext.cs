@@ -4,12 +4,13 @@ using CreateAndFake.Design.Randomization;
 
 namespace CreateAndFake.Design.Context
 {
-    /// <summary>Generates values for people.</summary>
+    /// <summary>Random values for people.</summary>
     public sealed class PersonContext : BaseDataContext
     {
         /// <summary>Name fragment.</summary>
         private readonly Lazy<string> _firstName, _middleName, _lastName;
 
+        /// <summary>Initializes a new instance of the <see cref="PersonContext"/> class.</summary>
         /// <inheritdoc/>
         internal PersonContext(IRandom gen) : base(gen)
         {

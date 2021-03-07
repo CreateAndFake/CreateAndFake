@@ -13,12 +13,13 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Faked implementation.</summary>
         public new T Dummy => (T)base.Dummy;
 
-        /// <summary>Sets up the fake harness.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Fake{T}"/> class.</summary>
         /// <param name="fake">Faked implementation.</param>
         public Fake(IFaked fake) : base(fake) { }
 
-        /// <summary>Switches the fake to a different type.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Fake{T}"/> class.</summary>
         /// <param name="baseFake">Created fake with the extra type.</param>
+        /// <remarks>Switches the fake to a different type.</remarks>
         public Fake(Fake baseFake) : base(baseFake?.Dummy)
         {
             _ = (T)base.Dummy;

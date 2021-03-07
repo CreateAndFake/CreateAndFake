@@ -17,7 +17,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <summary>Size details for created strings.</summary>
         private readonly int _minSize, _range;
 
-        /// <summary>Specifies the given character set for string randomization.</summary>
+        /// <summary>Initializes a new instance of the <see cref="StringCreateHint"/> class.</summary>
         /// <param name="minSize">Min size for created collections.</param>
         /// <param name="range">Size variance for created collections.</param>
         /// <param name="charSet">Character set to use for randomization.</param>
@@ -30,9 +30,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
                 : _DefaultCharSet;
         }
 
-        /// <summary>Creates a random instance of the type.</summary>
-        /// <param name="randomizer">Handles callback behavior for child values.</param>
-        /// <returns>Created instance.</returns>
+        /// <inheritdoc/>
         protected override string Create(RandomizerChainer randomizer)
         {
             if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));

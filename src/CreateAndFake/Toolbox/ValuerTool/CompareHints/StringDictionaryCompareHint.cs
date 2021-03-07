@@ -9,11 +9,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
     /// <summary>Handles comparing string dictionaries for the valuer.</summary>
     public sealed class StringDictionaryCompareHint : CompareHint<StringDictionary>
     {
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
+        /// <inheritdoc/>
         protected override IEnumerable<Difference> Compare(
             StringDictionary expected, StringDictionary actual, ValuerChainer valuer)
         {
@@ -22,10 +18,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             return valuer.Compare(Convert(expected), Convert(actual));
         }
 
-        /// <summary>Calculates a hash code based upon value.</summary>
-        /// <param name="item">Object to generate a code for.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>The generated hash.</returns>
+        /// <inheritdoc/>
         protected override int GetHashCode(StringDictionary item, ValuerChainer valuer)
         {
             if (valuer == null) throw new ArgumentNullException(nameof(valuer));

@@ -12,10 +12,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         private const BindingFlags _MemberFlags = BindingFlags.Public
             | BindingFlags.NonPublic | BindingFlags.Instance;
 
-        /// <summary>Tries to deep clone an object.</summary>
-        /// <param name="source">Object to clone.</param>
-        /// <param name="duplicator">Handles callback behavior for child values.</param>
-        /// <returns>If the type could be cloned and the cloned instance.</returns>
+        /// <inheritdoc/>
         protected internal sealed override (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
@@ -25,10 +22,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             return (result != null, result);
         }
 
-        /// <summary>Deep clones an object.</summary>
+        /// <summary>Deep clones <paramref name="source"/>.</summary>
         /// <param name="source">Object to clone.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
-        /// <returns>Duplicate object.</returns>
+        /// <returns>Clone of <paramref name="source"/>.</returns>
         private static object Copy(object source, DuplicatorChainer duplicator)
         {
             object dupe = CreateNew(source, duplicator);
@@ -55,10 +52,10 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             return dupe;
         }
 
-        /// <summary>Creates an instance of an object.</summary>
-        /// <param name="source">Object to create.</param>
+        /// <summary>Creates an instance of <paramref name="source"/>'s <see cref="Type"/>.</summary>
+        /// <param name="source">Object whose <see cref="Type"/> is to be created.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
-        /// <returns>Created instance.</returns>
+        /// <returns>The created instance.</returns>
         private static object CreateNew(object source, DuplicatorChainer duplicator)
         {
             Type type = source.GetType();
@@ -80,12 +77,12 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             }
         }
 
-        /// <summary>Attempts to create and instance using a constructor.</summary>
+        /// <summary>Attempts to create an instance using a <paramref name="constructor"/>.</summary>
         /// <param name="source">Object being cloned.</param>
         /// <param name="duplicator">Handles callback behavior for child values.</param>
-        /// <param name="constructor">Constructor to use.</param>
-        /// <param name="props">Properties on the object.</param>
-        /// <param name="fields">Fields on the object.</param>
+        /// <param name="constructor">Constructor on <paramref name="source"/> to use.</param>
+        /// <param name="props">Properties on <paramref name="source"/>.</param>
+        /// <param name="fields">Fields on <paramref name="source"/>.</param>
         /// <returns>Null if failed; created instance otherwise.</returns>
         private static object TryCreate(object source, DuplicatorChainer duplicator,
             ConstructorInfo constructor, IEnumerable<PropertyInfo> props, IEnumerable<FieldInfo> fields)
@@ -143,11 +140,11 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
             return constructor.Invoke(matchedMembers.Select(m => CopyMember(m, source, duplicator)).ToArray());
         }
 
-        /// <summary>Copies the value of the member on the source.</summary>
+        /// <summary>Copies the value of <paramref name="member"/> on <paramref name="source"/>.</summary>
         /// <param name="member">Property or field to copy.</param>
         /// <param name="source">Instance containing the member.</param>
         /// <param name="duplicator">Duplicator handling the cloning.</param>
-        /// <returns>Duplicate object.</returns>
+        /// <returns>The duplicate object.</returns>
         private static object CopyMember(MemberInfo member, object source, DuplicatorChainer duplicator)
         {
             if (member is PropertyInfo prop)

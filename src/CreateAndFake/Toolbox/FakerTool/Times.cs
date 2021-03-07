@@ -9,11 +9,12 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Expected bounds.</summary>
         private readonly int _min, _max;
 
-        /// <summary>Sets the expected bounds to a single value.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Times"/> class.</summary>
         /// <param name="count">Upper and lower bound.</param>
+        /// <remarks>Sets the expected bounds to a single value.</remarks>
         private Times(int count) : this(count, count) { }
 
-        /// <summary>Sets the bounds to the given values.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Times"/> class.</summary>
         /// <param name="min">Lower bound.</param>
         /// <param name="max">Upper bound.</param>
         private Times(int min, int max)

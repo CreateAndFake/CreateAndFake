@@ -12,18 +12,14 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <summary>Flags used to find properties and fields.</summary>
         private readonly BindingFlags _scope;
 
-        /// <summary>Sets up what to compare.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ObjectCompareHint"/> class.</summary>
         /// <param name="scope">Flags used to find properties and fields.</param>
         public ObjectCompareHint(BindingFlags scope)
         {
             _scope = scope;
         }
 
-        /// <summary>Determines if the objects are supported by the hint.</summary>
-        /// <param name="expected">First object under question.</param>
-        /// <param name="actual">Second object under question.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>True if the objects can be compared; false otherwise.</returns>
+        /// <inheritdoc/>
         protected override bool Supports(object expected, object actual, ValuerChainer valuer)
         {
             if (expected == null) throw new ArgumentNullException(nameof(expected));
@@ -34,11 +30,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
                 || type.GetFields(_scope).Any();
         }
 
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
+        /// <inheritdoc/>
         protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
         {
             if (expected == null) throw new ArgumentNullException(nameof(expected));
@@ -48,11 +40,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             return LazyCompare(expected, actual, valuer);
         }
 
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
+        /// <inheritdoc cref="Compare"/>
         private IEnumerable<Difference> LazyCompare(object expected, object actual, ValuerChainer valuer)
         {
             Type type = expected.GetType();
@@ -74,10 +62,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             }
         }
 
-        /// <summary>Calculates a hash code based upon value.</summary>
-        /// <param name="item">Object to generate a code for.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>The generated hash.</returns>
+        /// <inheritdoc/>
         protected override int GetHashCode(object item, ValuerChainer valuer)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));

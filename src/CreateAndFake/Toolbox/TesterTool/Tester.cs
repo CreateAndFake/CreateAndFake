@@ -33,7 +33,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <summary>How long to wait for tests to complete.</summary>
         private readonly TimeSpan _timeout;
 
-        /// <summary>Sets up the tester capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Tester"/> class.</summary>
         /// <param name="gen">Core value random handler.</param>
         /// <param name="randomizer">Creates objects and populates them with random values.</param>
         /// <param name="duplicator">Deep clones objects.</param>

@@ -11,8 +11,8 @@ namespace CreateAndFake.Design.Randomization
         /// <summary>Source generator used for random bytes.</summary>
         private static readonly RandomNumberGenerator _Gen = RandomNumberGenerator.Create();
 
-        /// <summary>Sets up the randomizer.</summary>
-        /// <param name="onlyValidValues">Option to prevent generating invalid values.</param>
+        /// <summary>Initializes a new instance of the <see cref="SecureRandom"/> class.</summary>
+        /// <inheritdoc/>
         public SecureRandom(bool onlyValidValues = true) : base(onlyValidValues) { }
 
         /// <inheritdoc/>

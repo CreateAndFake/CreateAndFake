@@ -13,27 +13,19 @@ namespace CreateAndFake.Design.Content
             Justification = "Per generic intended.")]
         public static ValueComparer<T> Use { get; } = new ValueComparer<T>();
 
-        /// <summary>Determines whether the specified objects are equal.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>True if equal; false otherwise.</returns>
+        /// <inheritdoc cref="ValueComparer.Equals(object,object)"/>
         public bool Equals(T x, T y)
         {
             return ValueComparer.Use.Equals(x, y);
         }
 
-        /// <summary>Returns a hash code for the specified object.</summary>
-        /// <param name="obj">Object to generate a code for.</param>
-        /// <returns>The generated hash.</returns>
+        /// <inheritdoc cref="ValueComparer.GetHashCode(object)"/>
         public int GetHashCode(T obj)
         {
             return ValueComparer.Use.GetHashCode(obj);
         }
 
-        /// <summary>Compares to sort values by their value hash.</summary>
-        /// <param name="x">First object to compare.</param>
-        /// <param name="y">Second object to compare.</param>
-        /// <returns>Difference between value hashes.</returns>
+        /// <inheritdoc cref="ValueComparer.Compare(object,object)"/>
         public int Compare(T x, T y)
         {
             return ValueComparer.Use.Compare(x, y);

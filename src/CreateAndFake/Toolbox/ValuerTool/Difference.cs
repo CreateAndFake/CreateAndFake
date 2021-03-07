@@ -10,7 +10,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <summary>Message stating the difference.</summary>
         private readonly Lazy<string> _message;
 
-        /// <summary>Details a difference of types.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
         /// <param name="expected">Type of the first object being compared.</param>
         /// <param name="actual">Type of the second object being compared.</param>
         public Difference(Type expected, Type actual)
@@ -19,7 +19,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
                 () => $" -> Expected type:<{expected}>, Actual type:<{actual}>");
         }
 
-        /// <summary>Details a difference of values.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
         /// <param name="expected">First value being compared.</param>
         /// <param name="actual">Second value being compared.</param>
         public Difference(object expected, object actual)
@@ -27,7 +27,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             _message = new Lazy<string>(() => $" -> Expected:<{expected}>, Actual:<{actual}>");
         }
 
-        /// <summary>Details a difference on a member.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
         /// <param name="member">Member where the objects differed.</param>
         /// <param name="difference">Found difference.</param>
         public Difference(MemberInfo member, Difference difference)
@@ -36,13 +36,13 @@ namespace CreateAndFake.Toolbox.ValuerTool
             if (member == null) throw new ArgumentNullException(nameof(member));
         }
 
-        /// <summary>Details a difference on an index.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
         /// <param name="index">Index where the objects differed.</param>
         /// <param name="difference">Found difference.</param>
         public Difference(int index, Difference difference)
             : this($"[{index}]", difference) { }
 
-        /// <summary>Details a difference.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
         /// <param name="access">Acess method where the objects differed.</param>
         /// <param name="difference">Found difference.</param>
         public Difference(string access, Difference difference)
@@ -53,7 +53,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             _message = new Lazy<string>(() => access + difference.ToString());
         }
 
-        /// <summary>Details a difference.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
         /// <param name="message">Message stating the difference.</param>
         public Difference(string message)
         {

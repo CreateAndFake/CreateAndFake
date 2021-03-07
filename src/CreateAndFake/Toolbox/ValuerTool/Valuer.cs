@@ -31,7 +31,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <summary>Hints used to compare specific types.</summary>
         private readonly IList<CompareHint> _hints;
 
-        /// <summary>Sets up the valuer capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Valuer"/> class.</summary>
         /// <param name="includeDefaultHints">If the default set of hints should be added.</param>
         /// <param name="hints">Hints used to compare specific types.</param>
         public Valuer(bool includeDefaultHints = true, params CompareHint[] hints)
