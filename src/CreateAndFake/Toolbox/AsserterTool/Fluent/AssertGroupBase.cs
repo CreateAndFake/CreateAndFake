@@ -24,7 +24,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <param name="details">Optional failure details.</param>
         /// <returns>Chainer to make additional assertions with.</returns>
         /// <exception cref="AssertException">If collection has elements.</exception>
-        public AssertChainer<T> IsEmpty(string details = null)
+        public virtual AssertChainer<T> IsEmpty(string details = null)
         {
             return HasCount(0, details);
         }
@@ -33,10 +33,22 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <param name="details">Optional failure details.</param>
         /// <returns>Chainer to make additional assertions with.</returns>
         /// <exception cref="AssertException">If collection is null or has no elements.</exception>
-        public AssertChainer<T> IsNotEmpty(string details = null)
+        public virtual AssertChainer<T> IsNotEmpty(string details = null)
         {
-            _ = new AssertObject(Gen, Valuer, Collection?.GetEnumerator().MoveNext()).Is(true, details);
-            return ToChainer();
+            if (Collection == null)
+            {
+                throw new AssertException(
+                    $"Expected collection with elements, but was 'null'.", details, Gen.InitialSeed);
+            }
+            else if (!Collection.GetEnumerator().MoveNext())
+            {
+                throw new AssertException(
+                    "Expected collection with elements, but was empty.", details, Gen.InitialSeed);
+            }
+            else
+            {
+                return ToChainer();
+            }
         }
 
         /// <summary>Verifies the collection has <paramref name="count"/> elements.</summary>
@@ -44,7 +56,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         /// <param name="details">Optional failure details.</param>
         /// <returns>Chainer to make additional assertions with.</returns>
         /// <exception cref="AssertException">If collection size does not match <paramref name="count"/>.</exception>
-        public AssertChainer<T> HasCount(int count, string details = null)
+        public virtual AssertChainer<T> HasCount(int count, string details = null)
         {
             if (Collection == null)
             {

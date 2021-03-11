@@ -73,6 +73,17 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool
         }
 
         [Theory, RandomData]
+        internal static void Compare_NullableWorks(int? item)
+        {
+            Tools.Asserter.IsNot(item, Tools.Mutator.Variant(item));
+            Tools.Asserter.Is(item, Tools.Duplicator.Copy(item));
+            Tools.Asserter.IsNot(item, null);
+            int? none = null;
+            Tools.Asserter.IsNot(item, none);
+            Tools.Asserter.Is(none, none);
+        }
+
+        [Theory, RandomData]
         internal static void Equals_NoDifferencesTrue(object data1, object data2, Fake<CompareHint> hint)
         {
             hint.Setup("Supports",

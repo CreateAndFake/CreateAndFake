@@ -108,6 +108,13 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
             return ToChainer();
         }
 
+        /// <summary>Throws an assert exception.</summary>
+        /// <param name="details">Optional failure details.</param>
+        public virtual void Fail(string details = null)
+        {
+            throw new AssertException("Test failed.", details, Gen.InitialSeed, Actual?.ToString());
+        }
+
         /// <summary>Find a type name to use for messages.</summary>
         /// <param name="expected">Object to compare against.</param>
         /// <returns>Found name to use.</returns>

@@ -65,11 +65,9 @@ namespace CreateAndFake.Toolbox.ValuerTool
             }
         }
 
-        /// <summary>Returns a hash code for the specified object.</summary>
         /// <param name="item">Object to generate a code for.</param>
         /// <param name="chainer">Handles callback behavior for child values.</param>
-        /// <returns>The generated hash.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports hashing the object.</exception>
+        /// <inheritdoc cref="GetHashCode(object)"/>
         private int GetHashCode(object item, ValuerChainer chainer)
         {
             (bool, int) result = _hints
@@ -109,12 +107,10 @@ namespace CreateAndFake.Toolbox.ValuerTool
             }
         }
 
-        /// <summary>Finds the differences between two objects.</summary>
         /// <param name="expected">First object to compare.</param>
         /// <param name="actual">Second object to compare.</param>
         /// <param name="chainer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports comparing the objects.</exception>
+        /// <inheritdoc cref="Compare(object,object)"/>
         private IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer chainer)
         {
             if (ReferenceEquals(expected, actual))
