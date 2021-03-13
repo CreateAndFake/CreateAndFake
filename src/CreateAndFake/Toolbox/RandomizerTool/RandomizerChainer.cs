@@ -7,7 +7,7 @@ using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFake.Toolbox.RandomizerTool
 {
-    /// <summary>Provides a callback into the randomizer to create child values.</summary>
+    /// <summary>Provides a callback into <see cref="IRandomizer"/> to create child values.</summary>
     public sealed class RandomizerChainer
     {
         /// <summary>Callback to the randomizer to create child values.</summary>
@@ -61,25 +61,25 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             }
         }
 
-        /// <summary>Checks if a type has already been created by the randomizer.</summary>
+        /// <summary>Checks if <typeparamref name="T"/> has already been created by the randomizer.</summary>
         /// <typeparam name="T">Type to check.</typeparam>
-        /// <returns>True if already created; false otherwise.</returns>
+        /// <returns>True if <typeparamref name="T"/> already created; false otherwise.</returns>
         public bool AlreadyCreated<T>()
         {
             return AlreadyCreated(typeof(T));
         }
 
-        /// <summary>Checks if a type has already been created by the randomizer.</summary>
+        /// <summary>Checks if <paramref name="type"/> has already been created by the randomizer.</summary>
         /// <param name="type">Type to check.</param>
-        /// <returns>True if already created; false otherwise.</returns>
+        /// <returns>True if <paramref name="type"/> already created; false otherwise.</returns>
         public bool AlreadyCreated(Type type)
         {
             return _history.ContainsKey(type);
         }
 
-        /// <summary>Calls the randomizer to create a random instance.</summary>
+        /// <summary>Calls the randomizer to create a random <typeparamref name="T"/> instance.</summary>
         /// <typeparam name="T">Type to create.</typeparam>
-        /// <returns>The created instance.</returns>
+        /// <returns>The created <typeparamref name="T"/> instance.</returns>
         public T Create<T>()
         {
             return (T)Create(typeof(T), null);
@@ -111,23 +111,23 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             return _randomizer.Invoke(type, new RandomizerChainer(this, (parent != Parent) ? parent : null));
         }
 
-        /// <summary>Calls the faker to create a stub instance.</summary>
+        /// <summary>Calls the faker to create a stub <typeparamref name="T"/> instance.</summary>
         /// <typeparam name="T">Type to stub.</typeparam>
-        /// <returns>The stubbed instance.</returns>
+        /// <returns>The stubbed <typeparamref name="T"/> instance.</returns>
         public Fake<T> Stub<T>()
         {
             return _faker.Stub<T>();
         }
 
         /// <summary>Calls the faker to create a stub instance.</summary>
-        /// <param name="parent">Type to stub.</param>
+        /// <param name="type">Type to stub.</param>
         /// <returns>The stubbed instance.</returns>
-        public Fake Stub(Type parent)
+        public Fake Stub(Type type)
         {
-            return _faker.Stub(parent);
+            return _faker.Stub(type);
         }
 
-        /// <summary>Determines if the type can be faked.</summary>
+        /// <summary>Determines if <typeparamref name="T"/> can be faked.</summary>
         /// <typeparam name="T">Type to check.</typeparam>
         /// <returns>True if possible; false otherwise.</returns>
         public bool FakerSupports<T>()
@@ -135,7 +135,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             return _faker.Supports<T>();
         }
 
-        /// <summary>Determines if the type can be faked.</summary>
+        /// <summary>Determines if <paramref name="type"/> can be faked.</summary>
         /// <param name="type">Type to check.</param>
         /// <returns>True if possible; false otherwise.</returns>
         public bool FakerSupports(Type type)

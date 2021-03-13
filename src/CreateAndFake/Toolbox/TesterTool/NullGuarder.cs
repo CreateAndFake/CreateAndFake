@@ -128,10 +128,7 @@ namespace CreateAndFake.Toolbox.TesterTool
             }
         }
 
-        /// <summary>Handles exceptions encountered by the check.</summary>
-        /// <param name="testOrigin">Method under test.</param>
-        /// <param name="testParam">Parameter being set to null.</param>
-        /// <param name="taskException">Exception encountered.</param>
+        /// <inheritdoc/>
         protected override void HandleCheckException(MethodBase testOrigin,
             ParameterInfo testParam, Exception taskException)
         {

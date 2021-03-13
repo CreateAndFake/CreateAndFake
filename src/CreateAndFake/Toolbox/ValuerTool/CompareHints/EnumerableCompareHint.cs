@@ -5,7 +5,7 @@ using CreateAndFake.Design.Content;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
-    /// <summary>Handles comparing collections for the valuer.</summary>
+    /// <summary>Handles comparing collections for <see cref="IValuer"/>.</summary>
     public sealed class EnumerableCompareHint : CompareHint<IEnumerable>
     {
         /// <inheritdoc/>

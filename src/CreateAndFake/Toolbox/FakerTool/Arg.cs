@@ -24,11 +24,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             _matcher = matcher;
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <returns>Clone that is equal in value to the current instance.</returns>
+        /// <inheritdoc/>
         public IDeepCloneable DeepClone()
         {
             return new Arg(_matcher);

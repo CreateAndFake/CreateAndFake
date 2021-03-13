@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -8,8 +7,6 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
 {
     /// <summary>Exception for call counts not matching expectations.</summary>
     [Serializable, KnownType(typeof(Exception))]
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "Enforces pattern behind the exception existing instead.")]
     public sealed class FakeVerifyException : Exception
     {
         /// <summary>Initializes a new instance of the <see cref="FakeVerifyException"/> class.</summary>

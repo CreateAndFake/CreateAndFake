@@ -2,7 +2,7 @@
 
 namespace CreateAndFake.Toolbox.RandomizerTool
 {
-    /// <summary>Handles generation of a specific type for the randomizer.</summary>
+    /// <summary>Handles generation of <typeparamref name="T"/> instances for the randomizer.</summary>
     /// <typeparam name="T">Type capable of being randomized.</typeparam>
     public abstract class CreateHint<T> : CreateHint
     {
@@ -24,9 +24,9 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             }
         }
 
-        /// <summary>Creates a random instance of the type.</summary>
+        /// <summary>Creates a random <typeparamref name="T"/> instance.</summary>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
-        /// <returns>The created instance.</returns>
+        /// <returns>The created <typeparamref name="T"/> instance.</returns>
         protected abstract T Create(RandomizerChainer randomizer);
     }
 }

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace CreateAndFake.Toolbox.FakerTool.Proxy
 {
     /// <summary>Exception for a call lacking behavior.</summary>
     [Serializable, KnownType(typeof(Exception))]
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "Enforces pattern behind the exception existing instead.")]
     public sealed class FakeCallException : Exception
     {
         /// <summary>Initializes a new instance of the <see cref="FakeCallException"/> class.</summary>

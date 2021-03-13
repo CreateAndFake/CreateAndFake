@@ -11,25 +11,25 @@ namespace CreateAndFake.Toolbox.ValuerTool
         private readonly Lazy<string> _message;
 
         /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
-        /// <param name="expected">Type of the first object being compared.</param>
-        /// <param name="actual">Type of the second object being compared.</param>
-        public Difference(Type expected, Type actual)
+        /// <param name="expectedType">Type of the compared expected object.</param>
+        /// <param name="actualType">Type of the compared actual object.</param>
+        public Difference(Type expectedType, Type actualType)
         {
             _message = new Lazy<string>(
-                () => $" -> Expected type:<{expected}>, Actual type:<{actual}>");
+                () => $" -> Expected type:<{expectedType}>, Actual type:<{actualType}>");
         }
 
         /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
-        /// <param name="expected">First value being compared.</param>
-        /// <param name="actual">Second value being compared.</param>
+        /// <param name="expected">Object compared with <paramref name="actual"/>.</param>
+        /// <param name="actual">Object compared against <paramref name="expected"/>.</param>
         public Difference(object expected, object actual)
         {
             _message = new Lazy<string>(() => $" -> Expected:<{expected}>, Actual:<{actual}>");
         }
 
         /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
-        /// <param name="member">Member where the objects differed.</param>
-        /// <param name="difference">Found difference.</param>
+        /// <param name="member">Member where the compared objects differed.</param>
+        /// <param name="difference">Found difference for the compared objects.</param>
         public Difference(MemberInfo member, Difference difference)
             : this("." + member?.Name, difference)
         {
@@ -37,14 +37,14 @@ namespace CreateAndFake.Toolbox.ValuerTool
         }
 
         /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
-        /// <param name="index">Index where the objects differed.</param>
-        /// <param name="difference">Found difference.</param>
+        /// <param name="index">Index where the compared objects differed.</param>
+        /// <param name="difference">Found difference for the compared objects.</param>
         public Difference(int index, Difference difference)
             : this($"[{index}]", difference) { }
 
         /// <summary>Initializes a new instance of the <see cref="Difference"/> class.</summary>
-        /// <param name="access">Acess method where the objects differed.</param>
-        /// <param name="difference">Found difference.</param>
+        /// <param name="access">Access method where the compared objects differed.</param>
+        /// <param name="difference">Found difference for the compared objects.</param>
         public Difference(string access, Difference difference)
         {
             if (access == null) throw new ArgumentNullException(nameof(access));
@@ -60,19 +60,13 @@ namespace CreateAndFake.Toolbox.ValuerTool
             _message = new Lazy<string>(() => message);
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <returns>Clone that is equal in value to the current instance.</returns>
+        /// <inheritdoc/>
         public IDeepCloneable DeepClone()
         {
             return new Difference(_message.Value);
         }
 
-        /// <summary>Compares by value.</summary>
-        /// <param name="other">Instance to compare with.</param>
-        /// <returns>True if equal; false otherwise.</returns>
+        /// <inheritdoc/>
         public bool ValuesEqual(object other)
         {
             return other != null
@@ -80,13 +74,13 @@ namespace CreateAndFake.Toolbox.ValuerTool
                 && _message.Value == ((Difference)other)._message.Value;
         }
 
-        /// <summary>Generates a hash based upon value.</summary>
-        /// <returns>The generated hash code.</returns>
+        /// <inheritdoc/>
         public int GetValueHash()
         {
             return ValueComparer.Use.GetHashCode(_message.Value);
         }
 
+        /// <summary>Converts this object to a string.</summary>
         /// <returns>String representation of the difference.</returns>
         public override string ToString()
         {

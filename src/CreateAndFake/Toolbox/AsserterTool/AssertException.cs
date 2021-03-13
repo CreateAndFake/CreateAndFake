@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace CreateAndFake.Toolbox.AsserterTool
 {
     /// <summary>Exception for a failed asserter case.</summary>
     [Serializable, KnownType(typeof(Exception)), KnownType(typeof(Exception[]))]
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "Enforces pattern behind the exception existing instead.")]
     public sealed class AssertException : Exception
     {
         /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>

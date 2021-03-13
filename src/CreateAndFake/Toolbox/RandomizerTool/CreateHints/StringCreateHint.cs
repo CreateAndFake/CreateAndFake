@@ -18,7 +18,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         private readonly int _minSize, _range;
 
         /// <summary>Initializes a new instance of the <see cref="StringCreateHint"/> class.</summary>
-        /// <param name="minSize">Min size for created collections.</param>
+        /// <param name="minSize">Minimum size for created collections.</param>
         /// <param name="range">Size variance for created collections.</param>
         /// <param name="charSet">Character set to use for randomization.</param>
         public StringCreateHint(int minSize = 7, int range = 5, IEnumerable<char> charSet = null)

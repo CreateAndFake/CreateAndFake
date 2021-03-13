@@ -26,10 +26,10 @@ namespace CreateAndFake.Toolbox.FakerTool
             Fakes = fakes.ToArray();
         }
 
-        /// <summary>Finds the fake of the given type.</summary>
+        /// <summary>Finds the <typeparamref name="TInject"/> fake.</summary>
         /// <typeparam name="TInject">Type of fake to look for.</typeparam>
         /// <param name="skip">How many fakes of the given type to ignore first.</param>
-        /// <returns>The found fake.</returns>
+        /// <returns>The found <typeparamref name="TInject"/> fake.</returns>
         public Fake<TInject> Fake<TInject>(int skip = 0)
         {
             Fake<TInject> direct = Fakes

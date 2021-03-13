@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -8,8 +7,6 @@ namespace CreateAndFake.Toolbox.RandomizerTool
 {
     /// <summary>Exception when encountering infinite loops.</summary>
     [Serializable, KnownType(typeof(Exception)), KnownType(typeof(Exception[]))]
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "Enforces pattern behind the exception existing instead.")]
     public sealed class InfiniteLoopException : Exception
     {
         /// <summary>Initializes a new instance of the <see cref="InfiniteLoopException"/> class.</summary>

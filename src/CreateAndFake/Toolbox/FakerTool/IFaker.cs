@@ -5,12 +5,12 @@ namespace CreateAndFake.Toolbox.FakerTool
     /// <summary>Creates fake objects.</summary>
     public interface IFaker
     {
-        /// <summary>Determines if the type can be faked.</summary>
+        /// <summary>Determines if type <typeparamref name="T"/> can be faked.</summary>
         /// <typeparam name="T">Type to check.</typeparam>
         /// <returns>True if possible; false otherwise.</returns>
         bool Supports<T>();
 
-        /// <summary>Determines if the type can be faked.</summary>
+        /// <summary>Determines if <paramref name="type"/> can be faked.</summary>
         /// <param name="type">Type to check.</param>
         /// <returns>True if possible; false otherwise.</returns>
         bool Supports(Type type);
@@ -40,13 +40,13 @@ namespace CreateAndFake.Toolbox.FakerTool
         Fake Stub(Type parent, params Type[] interfaces);
 
         /// <summary>Creates an instance injected with mocks.</summary>
-        /// <typeparam name="T">Instance to be created.</typeparam>
+        /// <typeparam name="T">Instance type to be created.</typeparam>
         /// <param name="values">Values to inject instead where possible.</param>
         /// <returns>The created instance with its fakes.</returns>
         Injected<T> InjectMocks<T>(params object[] values);
 
         /// <summary>Creates an instance injected with stubs.</summary>
-        /// <typeparam name="T">Instance to be created.</typeparam>
+        /// <typeparam name="T">Instance type to be created.</typeparam>
         /// <param name="values">Values to inject instead where possible.</param>
         /// <returns>The created instance with its fakes.</returns>
         Injected<T> InjectStubs<T>(params object[] values);

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace CreateAndFake.Toolbox.ValuerTool
 {
-    /// <summary>Handles comparing specific types for the valuer.</summary>
     /// <typeparam name="T">Type to handle.</typeparam>
+    /// <inheritdoc/>
     public abstract class CompareHint<T> : CompareHint
     {
         /// <inheritdoc/>

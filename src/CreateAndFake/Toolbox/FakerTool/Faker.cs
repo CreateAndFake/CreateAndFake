@@ -7,7 +7,7 @@ using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.FakerTool
 {
-    /// <summary>Creates fake objects.</summary>
+    /// <inheritdoc cref="IFaker"/>
     public sealed class Faker : IFaker
     {
         /// <summary>Handles comparisons.</summary>
@@ -20,26 +20,19 @@ namespace CreateAndFake.Toolbox.FakerTool
             _valuer = valuer;
         }
 
-        /// <summary>Determines if the type can be faked.</summary>
-        /// <typeparam name="T">Type to check.</typeparam>
-        /// <returns>True if possible; false otherwise.</returns>
+        /// <inheritdoc/>
         public bool Supports<T>()
         {
             return Subclasser.Supports<T>();
         }
 
-        /// <summary>Determines if the type can be faked.</summary>
-        /// <param name="type">Type to check.</param>
-        /// <returns>True if possible; false otherwise.</returns>
+        /// <inheritdoc/>
         public bool Supports(Type type)
         {
             return Subclasser.Supports(type);
         }
 
-        /// <summary>Creates a strict fake where calls fail unless set up.</summary>
-        /// <typeparam name="T">Type being faked.</typeparam>
-        /// <param name="interfaces">Extra interfaces to implement.</param>
-        /// <returns>Handler for fake behavior.</returns>
+        /// <inheritdoc/>
         public Fake<T> Mock<T>(params Type[] interfaces)
         {
             IFaked provider = Subclasser.Create(typeof(T), interfaces);
@@ -47,10 +40,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             return new Fake<T>(provider);
         }
 
-        /// <summary>Creates a strict fake where calls fail unless set up.</summary>
-        /// <param name="parent">Type being faked.</param>
-        /// <param name="interfaces">Extra interfaces to implement.</param>
-        /// <returns>Handler for fake behavior.</returns>
+        /// <inheritdoc/>
         public Fake Mock(Type parent, params Type[] interfaces)
         {
             IFaked provider = Subclasser.Create(parent, interfaces);
@@ -58,10 +48,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             return new Fake(provider);
         }
 
-        /// <summary>Creates a loose fake with a base default implementation.</summary>
-        /// <typeparam name="T">Type being faked.</typeparam>
-        /// <param name="interfaces">Extra interfaces to implement.</param>
-        /// <returns>Handler for the fake behavior.</returns>
+        /// <inheritdoc/>
         public Fake<T> Stub<T>(params Type[] interfaces)
         {
             Fake<T> fake = Mock<T>(interfaces);
@@ -69,10 +56,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             return fake;
         }
 
-        /// <summary>Creates a loose fake with a base default implementation.</summary>
-        /// <param name="parent">Type being faked.</param>
-        /// <param name="interfaces">Extra interfaces to implement.</param>
-        /// <returns>Handler for the fake behavior.</returns>
+        /// <inheritdoc/>
         public Fake Stub(Type parent, params Type[] interfaces)
         {
             Fake fake = Mock(parent, interfaces);
@@ -80,19 +64,13 @@ namespace CreateAndFake.Toolbox.FakerTool
             return fake;
         }
 
-        /// <summary>Creates an instance injected with mocks.</summary>
-        /// <typeparam name="T">Instance to be created.</typeparam>
-        /// <param name="values">Values to inject instead where possible.</param>
-        /// <returns>The created instance with its fakes.</returns>
+        /// <inheritdoc/>
         public Injected<T> InjectMocks<T>(params object[] values)
         {
             return Inject<T>(values ?? Array.Empty<object>(), (Type t) => Mock(t));
         }
 
-        /// <summary>Creates an instance injected with stubs.</summary>
-        /// <typeparam name="T">Instance to be created.</typeparam>
-        /// <param name="values">Values to inject instead where possible.</param>
-        /// <returns>The created instance with its fakes.</returns>
+        /// <inheritdoc/>
         public Injected<T> InjectStubs<T>(params object[] values)
         {
             return Inject<T>(values ?? Array.Empty<object>(), (Type t) => Stub(t));

@@ -8,7 +8,7 @@ using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 
 namespace CreateAndFake.Toolbox.ValuerTool
 {
-    /// <summary>Compares objects by value.</summary>
+    /// <inheritdoc cref="IValuer"/>
     public sealed class Valuer : IValuer, IDuplicatable
     {
         /// <summary>Default set of hints to use for comparisons.</summary>

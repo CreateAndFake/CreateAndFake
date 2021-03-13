@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
-    /// <summary>Handles comparing objects for the valuer.</summary>
+    /// <summary>Handles comparing objects for <see cref="IValuer"/>.</summary>
     public sealed class StatelessCompareHint : CompareHint
     {
         /// <summary>Flags used to find properties and fields.</summary>

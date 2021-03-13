@@ -4,7 +4,7 @@ using CreateAndFake.Design.Content;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
-    /// <summary>Handles basic type compare issues for the valuer.</summary>
+    /// <summary>Handles basic type compare issues for <see cref="IValuer"/>.</summary>
     public sealed class EarlyFailCompareHint : CompareHint
     {
         /// <inheritdoc/>

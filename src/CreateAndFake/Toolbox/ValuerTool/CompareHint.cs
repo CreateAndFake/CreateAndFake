@@ -2,14 +2,14 @@
 
 namespace CreateAndFake.Toolbox.ValuerTool
 {
-    /// <summary>Handles comparing specific types for the valuer.</summary>
+    /// <summary>Handles comparing specific types for <see cref="IValuer"/>.</summary>
     public abstract class CompareHint
     {
         /// <summary>
-        ///     Tries to finds the differences between <paramref name="expected"/> and <paramref name="actual"/>.
+        ///     Tries to find the differences between <paramref name="expected"/> and <paramref name="actual"/>.
         /// </summary>
-        /// <param name="expected">Base object to compare with.</param>
-        /// <param name="actual">Potentially different object to compare with.</param>
+        /// <param name="expected">Object to compare with <paramref name="actual"/>.</param>
+        /// <param name="actual">Potentially different object to compare against <paramref name="expected"/>.</param>
         /// <param name="valuer">Handles callback behavior for child values.</param>
         /// <returns>
         ///     (<c>true</c>, found differences) if successful;
@@ -54,12 +54,12 @@ namespace CreateAndFake.Toolbox.ValuerTool
         protected abstract bool Supports(object expected, object actual, ValuerChainer valuer);
 
         /// <summary>Finds the differences between <paramref name="expected"/> and <paramref name="actual"/>.</summary>
-        /// <returns>The found differences.</returns>
+        /// <returns>The found differences between <paramref name="expected"/> and <paramref name="actual"/>.</returns>
         /// <inheritdoc cref="TryCompare"/>
         protected abstract IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer);
 
         /// <summary>Calculates a hash code for <paramref name="item"/> based upon value.</summary>
-        /// <returns>The generated hash.</returns>
+        /// <returns>The generated hash for <paramref name="item"/>.</returns>
         /// <inheritdoc cref="TryGetHashCode"/>
         protected abstract int GetHashCode(object item, ValuerChainer valuer);
     }

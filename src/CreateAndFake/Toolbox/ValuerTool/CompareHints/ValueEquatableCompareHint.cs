@@ -5,7 +5,7 @@ using CreateAndFake.Design.Content;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
-    /// <summary>Handles comparing equatables for the valuer.</summary>
+    /// <summary>Handles comparing equatables for <see cref="IValuer"/>.</summary>
     public sealed class ValueEquatableCompareHint : CompareHint<IValueEquatable>
     {
         /// <summary>Compares equatables by value as well.</summary>

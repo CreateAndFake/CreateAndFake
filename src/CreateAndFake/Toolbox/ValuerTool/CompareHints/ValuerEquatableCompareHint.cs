@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
-    /// <summary>Handles comparing equatables for the valuer.</summary>
+    /// <summary>Handles comparing equatables for <see cref="IValuer"/>.</summary>
     public sealed class ValuerEquatableCompareHint : CompareHint<IValuerEquatable>
     {
         /// <summary>Compares equatables by value as well.</summary>

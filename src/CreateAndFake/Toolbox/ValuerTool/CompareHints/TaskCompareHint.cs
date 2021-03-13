@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
-    /// <summary>Handles comparing tasks for the valuer.</summary>
+    /// <summary>Handles comparing tasks for <see cref="IValuer"/>.</summary>
     public sealed class TaskCompareHint : CompareHint<Task>
     {
         /// <inheritdoc/>

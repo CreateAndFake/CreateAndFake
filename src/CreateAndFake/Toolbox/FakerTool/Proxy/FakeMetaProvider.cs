@@ -55,12 +55,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             }
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <param name="duplicator">Duplicator to clone child values.</param>
-        /// <returns>Clone that is equal in value to the instance.</returns>
+        /// <inheritdoc/>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));

@@ -40,7 +40,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             _names = names;
         }
 
-        /// <summary>Modifies a parameter value.</summary>
+        /// <summary>Sets parameter named <paramref name="name"/> to <paramref name="value"/>.</summary>
         /// <param name="name">Name for the parameter to modify.</param>
         /// <param name="value">New value to use.</param>
         public void ModifyArg(string name, object value)
@@ -55,7 +55,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             }
         }
 
-        /// <summary>Invokes the method on the instance.</summary>
+        /// <summary>Invokes the method on <paramref name="instance"/>.</summary>
         /// <param name="instance">Instance to call the method with the data on.</param>
         /// <returns>Results from the call.</returns>
         public object InvokeOn(object instance)
@@ -63,12 +63,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             return _method.Invoke(instance, Args.ToArray());
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <param name="duplicator">Duplicator to clone child values.</param>
-        /// <returns>Clone that is equal in value to the instance.</returns>
+        /// <inheritdoc/>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));

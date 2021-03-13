@@ -294,6 +294,7 @@ namespace CreateAndFake.Design
             return ValueComparer.Use.GetHashCode(_tries, _timeout, _delay);
         }
 
+        /// <summary>Converts this object to a string.</summary>
         /// <returns>String representation of the object.</returns>
         public override string ToString()
         {

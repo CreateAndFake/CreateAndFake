@@ -32,11 +32,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             BaseCallType = null;
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <returns>Clone that is equal in value to the current instance.</returns>
+        /// <inheritdoc/>
         public abstract IDeepCloneable DeepClone();
 
         /// <summary>Runs the behavior.</summary>

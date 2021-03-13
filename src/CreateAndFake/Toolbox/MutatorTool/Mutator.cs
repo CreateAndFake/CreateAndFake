@@ -8,7 +8,7 @@ using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.MutatorTool
 {
-    /// <summary>Changes the value of objects or creates alternatives.</summary>
+    /// <inheritdoc cref="IMutator"/>
     public sealed class Mutator : IMutator
     {
         /// <summary>Handles randomization.</summary>

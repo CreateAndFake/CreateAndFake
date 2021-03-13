@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
-    /// <summary>Handles comparing string dictionaries for the valuer.</summary>
+    /// <summary>Handles comparing string dictionaries for <see cref="IValuer"/>.</summary>
     public sealed class StringDictionaryCompareHint : CompareHint<StringDictionary>
     {
         /// <inheritdoc/>
@@ -28,7 +28,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 
         /// <summary>Handles changing string dictionaries to dictionaries.</summary>
         /// <param name="dict">Dictionary to convert.</param>
-        /// <returns>Converted dictionary.</returns>
+        /// <returns>The converted dictionary.</returns>
         private static IDictionary Convert(StringDictionary dict)
         {
             if (dict == null) throw new ArgumentNullException(nameof(dict));

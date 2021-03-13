@@ -127,7 +127,7 @@ namespace CreateAndFake.Design.Content
             }
         }
 
-        /// <summary>Computes a hash code for <paramref name="items"/>.</summary>
+        /// <summary>Computes an identifying hash code for <paramref name="items"/>.</summary>
         /// <param name="items">Objects to generate a hash code for.</param>
         /// <returns>The computed hash code.</returns>
         public int GetHashCode(params object[] items)
@@ -135,7 +135,7 @@ namespace CreateAndFake.Design.Content
             return GetHashCode((IEnumerable)items);
         }
 
-        /// <summary>Computes a hash code for <paramref name="obj"/>.</summary>
+        /// <summary>Computes an identifying hash code for <paramref name="obj"/>.</summary>
         /// <param name="obj">Object to generate a hash code for.</param>
         /// <returns>The computed hash code.</returns>
         public int GetHashCode(object obj)
@@ -205,7 +205,7 @@ namespace CreateAndFake.Design.Content
         }
 
         /// <summary>
-        ///     Compares <paramref name="x"/>  and <paramref name="y"/> by their value hash for sorting.
+        ///     Compares <paramref name="x"/> and <paramref name="y"/> by their value hash for sorting.
         /// </summary>
         /// <param name="x">Object to compare with <paramref name="y"/>.</param>
         /// <param name="y">Object to compare with <paramref name="x"/>.</param>

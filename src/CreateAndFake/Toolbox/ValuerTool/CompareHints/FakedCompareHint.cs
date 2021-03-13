@@ -4,7 +4,7 @@ using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
-    /// <summary>Handles comparing fakes for the valuer.</summary>
+    /// <summary>Handles comparing fakes for <see cref="IValuer"/>.</summary>
     public sealed class FakedCompareHint : CompareHint<IFaked>
     {
         /// <inheritdoc/>

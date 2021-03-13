@@ -19,11 +19,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <param name="calls">Starting number of calls.</param>
         private Behavior(Delegate implementation, Times times, int calls) : base(implementation, times, calls) { }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <returns>Clone that is equal in value to the current instance.</returns>
+        /// <inheritdoc/>
         public override IDeepCloneable DeepClone()
         {
             return new Behavior<T>(Implementation, Limit, Calls);

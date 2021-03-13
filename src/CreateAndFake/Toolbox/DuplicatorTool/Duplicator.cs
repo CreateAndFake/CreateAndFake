@@ -6,7 +6,7 @@ using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool
 {
-    /// <summary>Deep clones objects.</summary>
+    /// <inheritdoc cref="IDuplicator"/>
     public sealed class Duplicator : IDuplicator, IDuplicatable
     {
         /// <summary>Default set of hints to use for copying.</summary>
