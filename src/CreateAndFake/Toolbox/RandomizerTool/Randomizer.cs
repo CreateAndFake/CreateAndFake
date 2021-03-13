@@ -46,7 +46,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <summary>Limits attempts at matching conditions.</summary>
         private readonly Limiter _limiter;
 
-        /// <summary>Sets up the randomizer capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Randomizer"/> class.</summary>
         /// <param name="faker">Provides stubs.</param>
         /// <param name="gen">Value generator to use for base randomization.</param>
         /// <param name="includeDefaultHints">If the default set of hints should be added.</param>
@@ -106,11 +106,9 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             return result;
         }
 
-        /// <summary>Creates a randomized instance.</summary>
         /// <param name="type">Type to create.</param>
         /// <param name="chainer">Handles callback behavior for child values.</param>
-        /// <returns>The created instance.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
+        /// <inheritdoc cref="Create(Type,Func{object,bool})"/>
         private object Create(Type type, RandomizerChainer chainer)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -159,12 +157,10 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             return result;
         }
 
-        /// <summary>Creates a randomized instance.</summary>
         /// <param name="type">Type to create.</param>
         /// <param name="count">Number of items to generate.</param>
         /// <param name="chainer">Handles callback behavior for child values.</param>
-        /// <returns>The created instance.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
+        /// <inheritdoc cref="CreateSized(Type,int)"/>
         private object CreateSized(Type type, int count, RandomizerChainer chainer)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));

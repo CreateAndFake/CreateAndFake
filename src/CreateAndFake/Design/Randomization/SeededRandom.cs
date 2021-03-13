@@ -13,7 +13,7 @@ namespace CreateAndFake.Design.Randomization
         /// <summary>Current seed to be used for the next randomized value.</summary>
         private int _seed;
 
-        /// <summary>Current seed to be used for the next randomized value.</summary>
+        /// <inheritdoc cref="_seed"/>
         public int Seed
         {
             get { lock (_lock) { return _seed; } }
@@ -22,12 +22,11 @@ namespace CreateAndFake.Design.Randomization
         /// <inheritdoc/>
         public override int? InitialSeed { get; }
 
-        /// <summary>Sets up the randomizer with the given seed.</summary>
-        /// <param name="seed">Current seed to be used for the next randomized value.</param>
+        /// <inheritdoc cref="SeededRandom(bool,int?)"/>
         public SeededRandom(int? seed = null) : this(true, seed) { }
 
-        /// <summary>Sets up the randomizer with the given seed.</summary>
-        /// <param name="onlyValidValues">Option to prevent generating invalid values.</param>
+        /// <summary>Initializes a new instance of the <see cref="SeededRandom"/> class.</summary>
+        /// <param name="onlyValidValues">Flag to prevent generating invalid values.</param>
         /// <param name="seed">Current seed to be used for the next randomized value.</param>
         public SeededRandom(bool onlyValidValues, int? seed = null) : base(onlyValidValues)
         {

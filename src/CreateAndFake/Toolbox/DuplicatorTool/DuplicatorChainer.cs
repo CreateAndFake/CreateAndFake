@@ -16,7 +16,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
         /// <summary>History of clones to match up references.</summary>
         private readonly ConditionalWeakTable<object, object> _history;
 
-        /// <summary>Sets up the callback functionality.</summary>
+        /// <summary>Initializes a new instance of the <see cref="DuplicatorChainer"/> class.</summary>
         /// <param name="duplicator">Reference to the actual duplicator.</param>
         /// <param name="callback">Callback to the duplicator to handle child values.</param>
         public DuplicatorChainer(IDuplicator duplicator, Func<object, DuplicatorChainer, object> callback)
@@ -26,7 +26,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
             _history = new ConditionalWeakTable<object, object>();
         }
 
-        /// <summary>Adds created type to history.</summary>
+        /// <summary>Adds successful clone details to history.</summary>
         /// <param name="source">Object cloned.</param>
         /// <param name="clone">The clone.</param>
         public void AddToHistory(object source, object clone)
@@ -37,19 +37,16 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
             }
         }
 
-        /// <summary>Deep clones an object.</summary>
         /// <typeparam name="T">Type being cloned.</typeparam>
-        /// <param name="source">Object to clone.</param>
-        /// <returns>The duplicate.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>
+        /// <inheritdoc cref="Copy"/>
         public T Copy<T>(T source)
         {
             return (T)Copy((object)source);
         }
 
-        /// <summary>Deep clones an object.</summary>
+        /// <summary>Deep clones <paramref name="source"/>.</summary>
         /// <param name="source">Object to clone.</param>
-        /// <returns>The duplicate.</returns>
+        /// <returns>Clone of <paramref name="source"/>.</returns>
         /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>
         public object Copy(object source)
         {
@@ -72,9 +69,9 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
             return result;
         }
 
-        /// <summary>If the object can be tracked in history.</summary>
+        /// <summary>If <paramref name="source"/> can be tracked in history.</summary>
         /// <param name="source">Item to check.</param>
-        /// <returns>True if possible; false otherwise.</returns>
+        /// <returns><c>true</c> if possible; <c>false</c> otherwise.</returns>
         private static bool CanTrack(object source)
         {
             return !(source == null || source is IFaked || source.GetType().IsValueType);

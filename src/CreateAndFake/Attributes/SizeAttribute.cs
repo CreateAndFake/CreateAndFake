@@ -9,7 +9,7 @@ namespace CreateAndFake
         /// <summary>Number of items to generate.</summary>
         public int Count { get; }
 
-        /// <summary>Sets up the randomizer capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="SizeAttribute"/> class.</summary>
         /// <param name="count">Number of items to generate.</param>
         public SizeAttribute(int count)
         {

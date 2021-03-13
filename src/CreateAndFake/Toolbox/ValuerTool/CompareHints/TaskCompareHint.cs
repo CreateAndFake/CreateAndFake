@@ -4,14 +4,10 @@ using System.Threading.Tasks;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
 {
-    /// <summary>Handles comparing tasks for the valuer.</summary>
+    /// <summary>Handles comparing tasks for <see cref="IValuer"/>.</summary>
     public sealed class TaskCompareHint : CompareHint<Task>
     {
-        /// <summary>Finds the differences between two objects.</summary>
-        /// <param name="expected">First object to compare.</param>
-        /// <param name="actual">Second object to compare.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
+        /// <inheritdoc/>
         protected override IEnumerable<Difference> Compare(Task expected, Task actual, ValuerChainer valuer)
         {
             if (valuer == null) throw new ArgumentNullException(nameof(valuer));
@@ -19,10 +15,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             return valuer.Compare(ExtractResult(expected), ExtractResult(actual));
         }
 
-        /// <summary>Calculates a hash code based upon value.</summary>
-        /// <param name="item">Object to generate a code for.</param>
-        /// <param name="valuer">Handles callback behavior for child values.</param>
-        /// <returns>The generated hash.</returns>
+        /// <inheritdoc/>
         protected override int GetHashCode(Task item, ValuerChainer valuer)
         {
             if (valuer == null) throw new ArgumentNullException(nameof(valuer));

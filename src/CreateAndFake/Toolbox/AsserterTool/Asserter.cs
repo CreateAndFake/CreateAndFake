@@ -17,7 +17,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <summary>Handles comparisons.</summary>
         protected IValuer Valuer { get; }
 
-        /// <summary>Sets up the asserter capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Asserter"/> class.</summary>
         /// <param name="gen">Core value random handler.</param>
         /// <param name="valuer">Handles comparisons.</param>
         /// <exception cref="ArgumentNullException">If given a null valuer.</exception>
@@ -166,7 +166,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual T Throws<T>(Action behavior, string details = null) where T : Exception
         {
-            return Throws<T>(() => { behavior?.Invoke(); return true; }, details);
+            return new AssertBehavior(Gen, Valuer, behavior).Throws<T>(details);
         }
 
         /// <summary>Verifies the given behavior throws an exception.</summary>
@@ -176,32 +176,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
         public virtual T Throws<T>(Func<object> behavior, string details = null) where T : Exception
         {
-            string errorMessage = $"Expected exception of type '{typeof(T).FullName}'.";
-            try
-            {
-                (behavior?.Invoke() as IDisposable)?.Dispose();
-            }
-            catch (T e)
-            {
-                return e;
-            }
-            catch (AggregateException e)
-            {
-                if (e.InnerExceptions.Count == 1 && e.InnerExceptions[0] is T actual)
-                {
-                    return actual;
-                }
-                else
-                {
-                    throw new AssertException(errorMessage, details, Gen.InitialSeed, e);
-                }
-            }
-            catch (Exception e)
-            {
-                throw new AssertException(errorMessage, details, Gen.InitialSeed, e);
-            }
-
-            throw new AssertException(errorMessage, details, Gen.InitialSeed);
+            return new AssertBehavior(Gen, Valuer, behavior).Throws<T>(details);
         }
     }
 }

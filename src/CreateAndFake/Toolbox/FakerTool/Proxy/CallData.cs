@@ -21,7 +21,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <summary>How to compare call data.</summary>
         private readonly IValuer _valuer;
 
-        /// <summary>Populates the details.</summary>
+        /// <summary>Initializes a new instance of the <see cref="CallData"/> class.</summary>
         /// <param name="methodName">Name tied to the call.</param>
         /// <param name="generics">Generics tied to the call.</param>
         /// <param name="args">Args tied to the call.</param>
@@ -50,12 +50,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             }
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <param name="duplicator">Duplicator to clone child values.</param>
-        /// <returns>Clone that is equal in value to the instance.</returns>
+        /// <inheritdoc/>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
@@ -117,6 +112,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             return matches;
         }
 
+        /// <summary>Converts this object to a string.</summary>
         /// <returns>String representation of the call.</returns>
         public override string ToString()
         {

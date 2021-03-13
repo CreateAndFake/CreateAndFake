@@ -47,9 +47,10 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <summary>Size details for created collections.</summary>
         private readonly int _minSize, _range;
 
-        /// <summary>Specifies the size of generated collections.</summary>
+        /// <summary>Initializes a new instance of the <see cref="LegacyCollectionCreateHint"/> class.</summary>
         /// <param name="minSize">Min size for created collections.</param>
         /// <param name="range">Size variance for created collections.</param>
+        /// <remarks>Specifies the size of generated collections.</remarks>
         public LegacyCollectionCreateHint(int minSize = 1, int range = 3)
         {
             _minSize = minSize;

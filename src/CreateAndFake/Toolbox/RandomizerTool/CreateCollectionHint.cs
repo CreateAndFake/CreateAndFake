@@ -5,11 +5,10 @@ namespace CreateAndFake.Toolbox.RandomizerTool
     /// <summary>Handles generation of collection types for the randomizer.</summary>
     public abstract class CreateCollectionHint : CreateHint
     {
-        /// <summary>Tries to create a random instance of the given type.</summary>
         /// <param name="type">Type to generate.</param>
         /// <param name="size">Number of items to generate.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
-        /// <returns>If the type could be created and the created instance.</returns>
+        /// <inheritdoc cref="CreateHint.TryCreate(Type,RandomizerChainer)"/>
         protected internal abstract (bool, object) TryCreate(Type type, int size, RandomizerChainer randomizer);
     }
 }

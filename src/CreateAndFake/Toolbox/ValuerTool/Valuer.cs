@@ -8,7 +8,7 @@ using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 
 namespace CreateAndFake.Toolbox.ValuerTool
 {
-    /// <summary>Compares objects by value.</summary>
+    /// <inheritdoc cref="IValuer"/>
     public sealed class Valuer : IValuer, IDuplicatable
     {
         /// <summary>Default set of hints to use for comparisons.</summary>
@@ -31,7 +31,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
         /// <summary>Hints used to compare specific types.</summary>
         private readonly IList<CompareHint> _hints;
 
-        /// <summary>Sets up the valuer capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Valuer"/> class.</summary>
         /// <param name="includeDefaultHints">If the default set of hints should be added.</param>
         /// <param name="hints">Hints used to compare specific types.</param>
         public Valuer(bool includeDefaultHints = true, params CompareHint[] hints)
@@ -65,11 +65,9 @@ namespace CreateAndFake.Toolbox.ValuerTool
             }
         }
 
-        /// <summary>Returns a hash code for the specified object.</summary>
         /// <param name="item">Object to generate a code for.</param>
         /// <param name="chainer">Handles callback behavior for child values.</param>
-        /// <returns>The generated hash.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports hashing the object.</exception>
+        /// <inheritdoc cref="GetHashCode(object)"/>
         private int GetHashCode(object item, ValuerChainer chainer)
         {
             (bool, int) result = _hints
@@ -109,12 +107,10 @@ namespace CreateAndFake.Toolbox.ValuerTool
             }
         }
 
-        /// <summary>Finds the differences between two objects.</summary>
         /// <param name="expected">First object to compare.</param>
         /// <param name="actual">Second object to compare.</param>
         /// <param name="chainer">Handles callback behavior for child values.</param>
-        /// <returns>Found differences.</returns>
-        /// <exception cref="NotSupportedException">If no hint supports comparing the objects.</exception>
+        /// <inheritdoc cref="Compare(object,object)"/>
         private IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer chainer)
         {
             if (ReferenceEquals(expected, actual))

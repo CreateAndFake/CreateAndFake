@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace CreateAndFake.Toolbox.AsserterTool
 {
     /// <summary>Exception for a failed asserter case.</summary>
     [Serializable, KnownType(typeof(Exception)), KnownType(typeof(Exception[]))]
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
-        Justification = "Enforces pattern behind the exception existing instead.")]
     public sealed class AssertException : Exception
     {
-        /// <summary>Serialization cosntructor.</summary>
+        /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
+        /// <remarks>Serialization constructor.</remarks>
         private AssertException() : base() { }
 
-        /// <summary>Sets up the exception.</summary>
+        /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
         /// <param name="message">Reason for the exception.</param>
         /// <param name="details">Optional fail details.</param>
         /// <param name="seed">Seed used for data generation.</param>
@@ -21,7 +19,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         public AssertException(string message, string details, int? seed, string content = null)
             : base(BuildMessage(message, details, seed, content)) { }
 
-        /// <summary>Sets up the exception.</summary>
+        /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
         /// <param name="message">Reason for the exception.</param>
         /// <param name="details">Optional fail details.</param>
         /// <param name="seed">Seed used for data generation.</param>
@@ -29,7 +27,7 @@ namespace CreateAndFake.Toolbox.AsserterTool
         public AssertException(string message, string details, int? seed, Exception innerException)
             : base(BuildMessage(message, details, seed), innerException) { }
 
-        /// <summary>Sets up the exception.</summary>
+        /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
         /// <param name="message">Reason for the exception.</param>
         /// <param name="details">Optional fail details.</param>
         /// <param name="seed">Seed used for data generation.</param>
@@ -38,9 +36,10 @@ namespace CreateAndFake.Toolbox.AsserterTool
         public AssertException(string message, string details, int? seed, string content, Exception innerException)
             : base(BuildMessage(message, details, seed, content), innerException) { }
 
-        /// <summary>Serialization constructor.</summary>
+        /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
         /// <param name="info">Object data.</param>
         /// <param name="context">Additional info.</param>
+        /// <remarks>Serialization constructor.</remarks>
         private AssertException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>Integrates the details into the message.</summary>

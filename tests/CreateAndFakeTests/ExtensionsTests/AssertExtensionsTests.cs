@@ -3,7 +3,7 @@ using CreateAndFake;
 using CreateAndFake.Fluent;
 using Xunit;
 
-namespace CreateAndFakeTests.ExtensionsTests
+namespace CreateAndFakeTests.Extensions
 {
     /// <summary>Verifies behavior.</summary>
     public static class AssertExtensionsTests

@@ -31,13 +31,13 @@ namespace CreateAndFake.Design.Randomization
                     gen.Next<int>(), gen.Next<bool>(), gen.Next<byte>(29)) }
             };
 
-        /// <summary>Creates values.</summary>
+        /// <summary>Creates values from bytes.</summary>
         /// <typeparam name="T">Type to create.</typeparam>
         /// <param name="gen">Random instance.</param>
         /// <param name="converter">Converter for the type.</param>
         /// <param name="size">Number of bytes in the type.</param>
         /// <param name="invalids">Special invalid values for the type.</param>
-        /// <returns>Created value.</returns>
+        /// <returns>The created value.</returns>
         private static T Create<T>(ValueRandom gen, Func<byte[], int, T> converter, short size, params T[] invalids)
         {
             T value;
@@ -48,17 +48,17 @@ namespace CreateAndFake.Design.Randomization
             return value;
         }
 
-        /// <summary>All default value types.</summary>
+        /// <summary>All supported value types.</summary>
         public static ICollection<Type> ValueTypes { get; } = _Gens.Keys;
 
-        /// <summary>Option to prevent generating invalid values.</summary>
+        /// <summary>Flag to prevent generating invalid values.</summary>
         public bool OnlyValidValues { get; set; }
 
         /// <inheritdoc/>
         public abstract int? InitialSeed { get; }
 
-        /// <summary>Sets up the randomizer.</summary>
-        /// <param name="onlyValidValues">Option to prevent generating invalid values.</param>
+        /// <summary>Initializes a new instance of the <see cref="ValueRandom"/> class.</summary>
+        /// <param name="onlyValidValues">Flag to prevent generating invalid values.</param>
         protected ValueRandom(bool onlyValidValues)
         {
             OnlyValidValues = onlyValidValues;
@@ -88,17 +88,17 @@ namespace CreateAndFake.Design.Randomization
         }
 
         /// <inheritdoc/>
-        public object Next(Type type)
+        public object Next(Type valueType)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
+            if (valueType == null) throw new ArgumentNullException(nameof(valueType));
 
-            if (!Supports(type))
+            if (!Supports(valueType))
             {
-                throw new NotSupportedException($"Type '{type.Name}' not supported.");
+                throw new NotSupportedException($"Type '{valueType.Name}' not supported.");
             }
             else
             {
-                return _Gens[type].Invoke(this);
+                return _Gens[valueType].Invoke(this);
             }
         }
 
@@ -141,11 +141,8 @@ namespace CreateAndFake.Design.Randomization
             }
         }
 
-        /// <summary>Uses an algorithm to generate the next value.</summary>
-        /// <typeparam name="T">Value type to generate.</typeparam>
-        /// <param name="min">Inclusive lower boundary for the value.</param>
-        /// <param name="max">Exclusive upper boundary for the value.</param>
-        /// <returns>The generated value.</returns>
+        /// <summary>Uses an algorithm to generate the next <typeparamref name="T"/> value.</summary>
+        /// <inheritdoc cref="Next{T}(T,T)"/>
         private T CalcNext<T>(T min, T max) where T : struct, IComparable, IComparable<T>, IEquatable<T>
         {
             dynamic percent;
@@ -169,11 +166,8 @@ namespace CreateAndFake.Design.Randomization
             }
         }
 
-        /// <summary>Randoms until acceptable for the next value.</summary>
-        /// <typeparam name="T">Value type to generate.</typeparam>
-        /// <param name="min">Inclusive lower boundary for the value.</param>
-        /// <param name="max">Exclusive upper boundary for the value.</param>
-        /// <returns>The generated value.</returns>
+        /// <summary>Randoms until acceptable for the next <typeparamref name="T"/> value.</summary>
+        /// <inheritdoc cref="Next{T}(T,T)"/>
         private T StumbleNext<T>(T min, T max) where T : struct, IComparable, IComparable<T>, IEquatable<T>
         {
             dynamic value;

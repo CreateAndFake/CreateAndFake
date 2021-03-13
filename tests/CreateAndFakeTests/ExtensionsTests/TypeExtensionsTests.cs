@@ -10,7 +10,7 @@ using CreateAndFake.Toolbox.FakerTool;
 using Xunit;
 using TypeExtensions = CreateAndFake.Toolbox.TypeExtensions;
 
-namespace CreateAndFakeTests
+namespace CreateAndFakeTests.Extensions
 {
     /// <summary>Verifies behavior.</summary>
     public static class TypeExtensionsTests

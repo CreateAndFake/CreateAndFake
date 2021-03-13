@@ -20,7 +20,7 @@ namespace CreateAndFake.Toolbox.FakerTool
         /// <summary>Triggers calling the base method of the given type instead.</summary>
         public Type BaseCallType { get; private set; }
 
-        /// <summary>Sets up the behavior.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Behavior"/> class.</summary>
         /// <param name="implementation">Set behavior to run.</param>
         /// <param name="times">Behavior call limit.</param>
         /// <param name="calls">Starting number of calls.</param>
@@ -32,11 +32,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             BaseCallType = null;
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <returns>Clone that is equal in value to the current instance.</returns>
+        /// <inheritdoc/>
         public abstract IDeepCloneable DeepClone();
 
         /// <summary>Runs the behavior.</summary>

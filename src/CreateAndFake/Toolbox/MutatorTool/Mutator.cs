@@ -8,7 +8,7 @@ using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.MutatorTool
 {
-    /// <summary>Changes the value of objects or creates alternatives.</summary>
+    /// <inheritdoc cref="IMutator"/>
     public sealed class Mutator : IMutator
     {
         /// <summary>Handles randomization.</summary>
@@ -20,7 +20,7 @@ namespace CreateAndFake.Toolbox.MutatorTool
         /// <summary>Limits attempts at creating variants.</summary>
         private readonly Limiter _limiter;
 
-        /// <summary>Sets up the randiffer capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Mutator"/> class.</summary>
         /// <param name="randomizer">Handles randomization.</param>
         /// <param name="valuer">Ensures object variance.</param>
         /// <param name="limiter">Limits attempts at creating variants.</param>

@@ -16,10 +16,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             { typeof(object), new[] { typeof(object) } }
         };
 
-        /// <summary>Tries to create a random instance of the given type.</summary>
-        /// <param name="type">Type to generate.</param>
-        /// <param name="randomizer">Handles callback behavior for child values.</param>
-        /// <returns>If the type could be created and the created instance.</returns>
+        /// <inheritdoc/>
         protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -71,11 +68,11 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             return data;
         }
 
-        /// <summary>Creates a new instance of the given type.</summary>
+        /// <summary>Creates a new instance of <paramref name="type"/>.</summary>
         /// <param name="type">Type to generate.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
         /// <param name="smartData">Predefined random data.</param>
-        /// <returns>Created instance.</returns>
+        /// <returns>The created instance.</returns>
         private static object CreateNew(Type type, RandomizerChainer randomizer, DataRandom smartData)
         {
             /*
@@ -129,13 +126,13 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             }
         }
 
-        /// <summary>Creates the type.</summary>
+        /// <summary>Creates a <typeparamref name="T"/> instance.</summary>
         /// <typeparam name="T">Creation method type.</typeparam>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
         /// <param name="smartData">Predefined random data.</param>
         /// <param name="invoker">How to create the type from the creation method.</param>
         /// <param name="creators">Possible creation methods.</param>
-        /// <returns>Created instance.</returns>
+        /// <returns>The created instance.</returns>
         private static object CreateFrom<T>(RandomizerChainer randomizer, DataRandom smartData,
             Func<T, object[], object> invoker, IEnumerable<T> creators) where T : MethodBase
         {

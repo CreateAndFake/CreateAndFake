@@ -8,22 +8,18 @@ namespace CreateAndFake.Toolbox.FakerTool
     /// <typeparam name="T">Return type.</typeparam>
     public sealed class Behavior<T> : Behavior
     {
-        /// <summary>Sets up the behavior.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Behavior{T}"/> class.</summary>
         /// <param name="implementation">Set behavior to run.</param>
         /// <param name="times">Behavior call limit.</param>
         public Behavior(Delegate implementation, Times times = null) : base(implementation, times, 0) { }
 
-        /// <summary>Sets up the behavior.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Behavior{T}"/> class.</summary>
         /// <param name="implementation">Set behavior to run.</param>
         /// <param name="times">Behavior call limit.</param>
         /// <param name="calls">Starting number of calls.</param>
         private Behavior(Delegate implementation, Times times, int calls) : base(implementation, times, calls) { }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <returns>Clone that is equal in value to the current instance.</returns>
+        /// <inheritdoc/>
         public override IDeepCloneable DeepClone()
         {
             return new Behavior<T>(Implementation, Limit, Calls);

@@ -8,18 +8,18 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
     /// <typeparam name="T">Assertion type to chain.</typeparam>
     public sealed class AssertChainer<T>
     {
-        /// <summary>Core value random handler.</summary>
+        /// <inheritdoc cref="IRandom"/>
         private readonly IRandom _gen;
 
-        /// <summary>Handles comparisons.</summary>
+        /// <inheritdoc cref="IValuer"/>
         private readonly IValuer _valuer;
 
-        /// <summary>Includes another assertion.</summary>
+        /// <summary>Includes another assertion on the value.</summary>
         public T And { get; }
 
-        /// <summary>Initializer.</summary>
-        /// <param name="gen">Core value random handler.</param>
+        /// <summary>Initializes a new instance of the <see cref="AssertChainer{T}"/> class.</summary>
         /// <param name="chain">Assertion class to chain.</param>
+        /// <param name="gen">Core value random handler.</param>
         /// <param name="valuer">Handles comparisons.</param>
         public AssertChainer(T chain, IRandom gen, IValuer valuer)
         {

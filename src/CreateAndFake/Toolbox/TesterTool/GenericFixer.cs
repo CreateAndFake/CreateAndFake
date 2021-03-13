@@ -16,7 +16,7 @@ namespace CreateAndFake.Toolbox.TesterTool
         /// <summary>Creates objects and populates them with random values.</summary>
         private readonly IRandomizer _randomizer;
 
-        /// <summary>Sets up the fixer capabilities.</summary>
+        /// <summary>Initializes a new instance of the <see cref="GenericFixer"/> class.</summary>
         /// <param name="gen">Core value random handler.</param>
         /// <param name="randomizer">Creates objects and populates them with random values.</param>
         internal GenericFixer(IRandom gen, IRandomizer randomizer)

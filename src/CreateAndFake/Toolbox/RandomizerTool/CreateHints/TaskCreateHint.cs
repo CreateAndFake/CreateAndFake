@@ -7,10 +7,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
     /// <summary>Handles generation of injected dummies for the randomizer.</summary>
     public sealed class TaskCreateHint : CreateHint
     {
-        /// <summary>Tries to create a random instance of the given type.</summary>
-        /// <param name="type">Type to generate.</param>
-        /// <param name="randomizer">Handles callback behavior for child values.</param>
-        /// <returns>If the type could be created and the created instance.</returns>
+        /// <inheritdoc/>
         protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -29,7 +26,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         /// <summary>Creates a random instance of the given type.</summary>
         /// <param name="type">Type to generate.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
-        /// <returns>Created instance.</returns>
+        /// <returns>The created instance.</returns>
         private static object Create(Type type, RandomizerChainer randomizer)
         {
             if (type.IsGenericType)

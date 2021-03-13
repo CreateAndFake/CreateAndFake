@@ -30,17 +30,17 @@ namespace CreateAndFake.Design.Randomization
         /// <inheritdoc cref="PersonContext"/>
         public PersonContext Person => _person.Value;
 
-        /// <summary>Sets up the data contexts.</summary>
-        /// <param name="gen">Handles basic randomization.</param>
+        /// <summary>Initializes a new instance of the <see cref="DataRandom"/> class.</summary>
+        /// <param name="gen">Manages the randomization process.</param>
         internal DataRandom(IRandom gen)
         {
             _gen = gen ?? throw new ArgumentNullException(nameof(gen));
             _person = new(() => new PersonContext(_gen));
         }
 
-        /// <summary>Finds a value for a property name.</summary>
+        /// <summary>Finds a value for the identifying <paramref name="name"/>.</summary>
         /// <param name="name">Name to find a value for.</param>
-        /// <returns>Value if found; null otherwise.</returns>
+        /// <returns>The value if found; <c>null</c> otherwise.</returns>
         public string Find(string name)
         {
             if (_Matcher.TryGetValue(ToUpperOnly(name), out Func<DataRandom, string> finder))
@@ -53,7 +53,8 @@ namespace CreateAndFake.Design.Randomization
             }
         }
 
-        /// <summary>Converts the string to upper case letters only.</summary>
+        /// <summary>Converts <paramref name="value"/> to upper case letters only.</summary>
+        /// <param name="value">String to convert.</param>
         /// <returns>The converted string.</returns>
         private static string ToUpperOnly(string value)
         {

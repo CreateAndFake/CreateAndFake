@@ -33,12 +33,13 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <inheritdoc cref="IValuer"/>
         internal IValuer Valuer { get; set; }
 
-        /// <summary>Starts up with a blank slate.</summary>
+        /// <summary>Initializes a new instance of the <see cref="FakeMetaProvider"/> class.</summary>
         public FakeMetaProvider() { }
 
-        /// <summary>Copy constructor.</summary>
+        /// <summary>Initializes a new instance of the <see cref="FakeMetaProvider"/> class.</summary>
         /// <param name="behavior">Behavior to pass in.</param>
         /// <param name="log">Record of calls to pass in.</param>
+        /// <remarks>Copy constructor.</remarks>
         internal FakeMetaProvider(IEnumerable<(CallData, Behavior)> behavior, IEnumerable<CallData> log)
         {
             if (behavior == null) throw new ArgumentNullException(nameof(behavior));
@@ -54,12 +55,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             }
         }
 
-        /// <summary>
-        ///     Makes a clone such that any mutation to the source
-        ///     or copy only affects that object and not the other.
-        /// </summary>
-        /// <param name="duplicator">Duplicator to clone child values.</param>
-        /// <returns>Clone that is equal in value to the instance.</returns>
+        /// <inheritdoc/>
         public IDuplicatable DeepClone(IDuplicator duplicator)
         {
             if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));

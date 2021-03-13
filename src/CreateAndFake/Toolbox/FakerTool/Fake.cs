@@ -20,7 +20,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             set => Dummy.FakeMeta.ThrowByDefault = value;
         }
 
-        /// <summary>Sets up the fake harness.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Fake"/> class.</summary>
         /// <param name="fake">Faked implementation.</param>
         public Fake(IFaked fake)
         {
