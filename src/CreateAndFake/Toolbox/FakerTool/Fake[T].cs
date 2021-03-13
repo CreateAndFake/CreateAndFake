@@ -90,7 +90,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             Verify(times, call.Item1.Name, call.Item2, new object[] { value });
         }
 
-        /// <summary>Verifies the number of calls made to the method.</summary>
+        /// <summary>Verifies the number of calls made to <paramref name="method"/>.</summary>
         /// <param name="times">Expected number of calls.</param>
         /// <param name="method">Method to verify.</param>
         public void Verify(Times times, Expression<Action<T>> method)
@@ -99,7 +99,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             Verify(times, call.Item1.Name, call.Item2, call.Item3);
         }
 
-        /// <summary>Verifies the number of calls made to the method.</summary>
+        /// <summary>Verifies the number of calls made to <paramref name="method"/>.</summary>
         /// <param name="times">Expected number of calls.</param>
         /// <param name="method">Method to verify.</param>
         public void Verify<TResult>(Times times, Expression<Func<T, TResult>> method)

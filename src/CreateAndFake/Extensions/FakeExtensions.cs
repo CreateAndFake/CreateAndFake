@@ -56,7 +56,10 @@ namespace CreateAndFake.Fluent
         /// <summary>Verifies all behaviors with associated times were called as expected.</summary>
         /// <param name="fake">Fake instance with behavior set.</param>
         /// <param name="total">Expected total number of calls to test as well.</param>
-        /// <remarks>For use on <see cref="IFaked"/> stubs from the <see cref="Faker"/> tool only.</remarks>
+        /// <remarks>
+        ///     For use on <see cref="IFaked"/> stubs from the <see cref="Faker"/> tool only.
+        ///     When specifying <paramref name="total"/>, be aware of test framework calls for info/display.
+        /// </remarks>
         public static void VerifyAllCalls(this object fake, Times total = null)
         {
             new Fake((IFaked)fake).VerifyAll(total);

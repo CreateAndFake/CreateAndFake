@@ -47,9 +47,10 @@ namespace CreateAndFake.Toolbox.FakerTool
             return result;
         }
 
-        /// <summary>Matches any instance of the given type.</summary>
+        /// <summary>Matches any <typeparamref name="T"/> instance.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
-        /// <returns>Default instance of T for the fake setup.</returns>
+        /// <returns>Random instance of <typeparamref name="T"/> for the fake setup.</returns>
+        /// <remarks>Use <see cref="LambdaAny{T}"/> when matching via method names.</remarks>
         public static T Any<T>()
         {
             T value = Tools.Randomizer.Create<T>();
@@ -57,17 +58,19 @@ namespace CreateAndFake.Toolbox.FakerTool
             return value;
         }
 
-        /// <summary>Matches any reference of the given type.</summary>
+        /// <summary>Matches any <typeparamref name="T"/> reference.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <returns>Container for the reference.</returns>
+        /// <remarks>Use <see cref="LambdaAnyRef{T}"/> when matching via method names.</remarks>
         public static OutRef<T> AnyRef<T>()
         {
             return new OutRef<T>();
         }
 
-        /// <summary>Matches any instance but null of the given type.</summary>
+        /// <summary>Matches any <typeparamref name="T"/> instance except <c>null</c>.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
-        /// <returns>Default instance of T for the fake setup.</returns>
+        /// <returns>Random instance of <typeparamref name="T"/> for the fake setup.</returns>
+        /// <remarks>Use <see cref="LambdaNotNull{T}"/> when matching via method names.</remarks>
         public static T NotNull<T>() where T : class
         {
             T value = Tools.Randomizer.Create<T>();
@@ -75,10 +78,11 @@ namespace CreateAndFake.Toolbox.FakerTool
             return value;
         }
 
-        /// <summary>Matches any instance that fulfills the given condition.</summary>
+        /// <summary>Matches any <typeparamref name="T"/> instance that fulfills <paramref name="condition"/>.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <param name="condition">Condition to verify.</param>
-        /// <returns>Default instance of T for the fake setup.</returns>
+        /// <returns>Random instance of <typeparamref name="T"/> for the fake setup.</returns>
+        /// <remarks>Use <see cref="LambdaWhere{T}"/> when matching via method names.</remarks>
         public static T Where<T>(Func<T, bool> condition)
         {
             T value = Tools.Randomizer.Create<T>();
@@ -86,10 +90,13 @@ namespace CreateAndFake.Toolbox.FakerTool
             return value;
         }
 
-        /// <summary>Matches any reference that fulfills the given condition.</summary>
+        /// <summary>
+        ///     Matches any <typeparamref name="T"/> reference that fulfills <paramref name="condition"/>.
+        /// </summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <param name="condition">Condition to verify.</param>
         /// <returns>Container for the reference.</returns>
+        /// <remarks>Use <see cref="LambdaWhereRef{T}"/> when matching via method names.</remarks>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters",
             Justification = "Taken and used through lambdas for setup replacement behavior.")]
         [SuppressMessage("IDE", "IDE0060:RemoveUnusedParameters",
@@ -99,7 +106,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             return new OutRef<T>();
         }
 
-        /// <summary>Matches any instance of the given type.</summary>
+        /// <summary>Matches any <typeparamref name="T"/> instance.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <returns>Arg for the fake provider to match with.</returns>
         public static Arg LambdaAny<T>()
@@ -107,7 +114,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             return new Arg(o => o is T or null);
         }
 
-        /// <summary>Matches any reference of the given type.</summary>
+        /// <summary>Matches any <typeparamref name="T"/> reference.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <returns>Arg for the fake provider to match with.</returns>
         public static Arg LambdaAnyRef<T>()
@@ -115,7 +122,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             return LambdaWhere<OutRef<T>>(null);
         }
 
-        /// <summary>Matches any instance but null of the given type.</summary>
+        /// <summary>Matches any <typeparamref name="T"/> instance except <c>null</c>.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <returns>Arg for the fake provider to match with.</returns>
         public static Arg LambdaNotNull<T>() where T : class
@@ -123,7 +130,7 @@ namespace CreateAndFake.Toolbox.FakerTool
             return LambdaWhere<T>(o => o != null);
         }
 
-        /// <summary>Matches any instance that fulfills the given condition.</summary>
+        /// <summary>Matches any <typeparamref name="T"/> instance that fulfills <paramref name="condition"/>.</summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <param name="condition">Condition to verify.</param>
         /// <returns>Arg for the fake provider to match with.</returns>
@@ -132,7 +139,9 @@ namespace CreateAndFake.Toolbox.FakerTool
             return new Arg(o => o is T value && (condition?.Invoke(value) ?? true));
         }
 
-        /// <summary>Matches any reference that fulfills the given condition.</summary>
+        /// <summary>
+        ///     Matches any <typeparamref name="T"/> reference that fulfills <paramref name="condition"/>.
+        /// </summary>
         /// <typeparam name="T">Type to match.</typeparam>
         /// <param name="condition">Condition to verify.</param>
         /// <returns>Container for the reference.</returns>
