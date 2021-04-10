@@ -32,12 +32,8 @@ Pull requests will be reviewed thoroughly to maintain project quality.
     A) C#
     B) EditorConfig for VS Code
     C) Powershell
-3) Add the following VS Code settings:
-    "omnisharp.enableEditorConfigSupport": true,
-    "omnisharp.enableRoslynAnalyzers": true,
-    "git.enableCommitSigning": true,
-    "editor.formatOnSave": true
-4) Clone repo and run from terminal "./build/run.sh test".
+    D) Code Spell Checker
+3) Clone repo and run from terminal "./build/run.sh test".
 
 ## Developer Certificate of Origin (DCO)
 
