@@ -35,13 +35,13 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         }
 
         /// <summary>Converts arg values to designated Arg matchers.</summary>
-        /// <param name="argChanges">Created Args to substitue on the given values.</param>
+        /// <param name="argChanges">Created Args to substitute on the given values.</param>
         internal void ConvertArgs(Tuple<Arg, object>[] argChanges)
         {
             List<Tuple<Arg, object>> changes = argChanges.ToList();
             for (int i = 0; i < _args.Length; i++)
             {
-                Tuple<Arg, object> change = changes.FirstOrDefault(c => c.Item2 == _args[i]);
+                Tuple<Arg, object> change = changes.FirstOrDefault(c => Equals(c.Item2, _args[i]));
                 if (change != default)
                 {
                     _args[i] = change.Item1;

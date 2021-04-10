@@ -1,0 +1,19 @@
+// Extension: EditorConfig for VS Code
+{
+    "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.enableRoslynAnalyzers": true,
+    "git.enableCommitSigning": true,
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        120,
+        140
+    ],
+    // Extension: Code Spell Checker
+    "cSpell.words": [
+        "Chainer",
+        "Duplicatable",
+        "Mutatable",
+        "Randomizer",
+        "Xunit"
+    ]
+}
