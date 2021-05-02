@@ -55,8 +55,17 @@ Visit the [documentation site](https://createandfake.github.io/CreateAndFake/) f
 
 ## Installation
 
+* Install using:
+
 ```
 dotnet add package CreateAndFake
+```
+
+* Use in a class by adding:
+
+```
+using CreateAndFake;
+using CreateAndFake.Fluent;
 ```
 
 ## Documentation

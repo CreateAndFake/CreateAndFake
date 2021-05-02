@@ -22,7 +22,7 @@ namespace CreateAndFake.Design.Content
         /// <summary>Starting hash value.</summary>
         public static int BaseHash { get; } = 1009;
 
-        /// <summary>Multplier for computing hashes.</summary>
+        /// <summary>Multiplier for computing hashes.</summary>
         public static int HashMultiplier { get; } = 92821;
 
         /// <summary>Default instance for use.</summary>

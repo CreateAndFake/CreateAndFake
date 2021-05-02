@@ -13,7 +13,7 @@ namespace CreateAndFake
     public static class Tools
     {
         /// <summary>Manages currently used tools.</summary>
-        /// <remarks>Should only be modified in module inintializer once.</remarks>
+        /// <remarks>Should only be modified in module initializer once.</remarks>
         public static ToolSet Source { get; set; } = ToolSet.DefaultSet;
 
         /// <summary>Core value random handler.</summary>

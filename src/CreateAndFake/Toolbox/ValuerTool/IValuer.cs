@@ -41,7 +41,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
 
         /// <summary>Adds <paramref name="hint"/> to be used for comparison.</summary>
         /// <param name="hint">Hint to add.</param>
-        /// <remarks>Should only be modified in module inintializers.</remarks>
+        /// <remarks>Should only be modified in module initializers.</remarks>
         void AddHint(CompareHint hint);
     }
 }

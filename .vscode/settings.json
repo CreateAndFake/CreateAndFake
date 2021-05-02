@@ -10,10 +10,27 @@
     ],
     // Extension: Code Spell Checker
     "cSpell.words": [
+        "Callvirt",
         "Chainer",
         "Duplicatable",
+        "Ldarg",
+        "Ldelem",
+        "Ldfld",
+        "Ldind",
+        "Ldloc",
+        "Ldstr",
+        "Ldtoken",
         "Mutatable",
         "Randomizer",
-        "Xunit"
+        "SYSLIB",
+        "Stfld",
+        "Stind",
+        "Stloc",
+        "Xunit",
+        "cloner",
+        "codacy",
+        "duplicatables",
+        "equatables",
+        "serializables"
     ]
 }

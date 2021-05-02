@@ -1,3 +1,4 @@
+using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 
@@ -63,6 +64,44 @@ namespace CreateAndFake.Fluent
         public static void VerifyAllCalls(this object fake, Times total = null)
         {
             new Fake((IFaked)fake).VerifyAll(total);
+        }
+
+        /// <param name="asserter">Asserter testing a method call using fakes.</param>
+        /// <param name="fake">Fake instance with behavior set.</param>
+        /// <param name="total">Expected total number of calls to test as well.</param>
+        /// <inheritdoc cref="VerifyAllCalls"/>
+        public static AssertChainer<AssertObject> Called(this AssertObject asserter, object fake, Times total = null)
+        {
+            VerifyAllCalls(fake, total);
+            return asserter?.ToChainer();
+        }
+
+        /// <inheritdoc cref="Called(AssertObject,object,Times)"/>
+        public static AssertChainer<AssertGroup> Called(this AssertGroup asserter, object fake, Times total = null)
+        {
+            VerifyAllCalls(fake, total);
+            return asserter?.ToChainer();
+        }
+
+        /// <inheritdoc cref="Called(AssertObject,object,Times)"/>
+        public static AssertChainer<AssertBehavior> Called(this AssertBehavior asserter, object fake, Times total = null)
+        {
+            VerifyAllCalls(fake, total);
+            return asserter?.ToChainer();
+        }
+
+        /// <inheritdoc cref="Called(AssertObject,object,Times)"/>
+        public static AssertChainer<AssertText> Called(this AssertText asserter, object fake, Times total = null)
+        {
+            VerifyAllCalls(fake, total);
+            return asserter?.ToChainer();
+        }
+
+        /// <inheritdoc cref="Called(AssertObject,object,Times)"/>
+        public static AssertChainer<AssertComparable> Called(this AssertComparable asserter, object fake, Times total = null)
+        {
+            VerifyAllCalls(fake, total);
+            return asserter?.ToChainer();
         }
     }
 }

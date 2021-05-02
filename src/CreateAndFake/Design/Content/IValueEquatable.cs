@@ -8,7 +8,7 @@
         /// <returns>True if equal to <paramref name="other"/> by value; false otherwise.</returns>
         bool ValuesEqual(object other);
 
-        /// <summary>Computes an indentifying hash code based upon value.</summary>
+        /// <summary>Computes an identifying hash code based upon value.</summary>
         /// <returns>The computed hash code.</returns>
         int GetValueHash();
     }

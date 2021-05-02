@@ -40,7 +40,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             .DefineDynamicAssembly(AssemblyName, AssemblyBuilderAccess.RunAndCollect)
             .DefineDynamicModule("FakerTypesModule");
 
-        /// <summary>Creates a type with the given inheritence.</summary>
+        /// <summary>Creates a type with the given inheritance.</summary>
         /// <param name="parent">Base class inheriting from.</param>
         /// <param name="interfaces">Additional interfaces to inherit.</param>
         /// <returns>Dynamic type with behavior faked.</returns>
@@ -242,7 +242,7 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         /// <returns>Info for the meta provider field.</returns>
         private static FieldInfo SetupConstructor(TypeBuilder newType, Type parent)
         {
-            ConstructorInfo baseConstuctor = parent
+            ConstructorInfo baseConstructor = parent
                 .GetConstructors(_MemberFinder)
                 .SingleOrDefault(c => !c.GetParameters().Any());
 
@@ -257,10 +257,10 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
             {
                 // base();
                 ILGenerator gen = constructor.GetILGenerator();
-                if (baseConstuctor != null)
+                if (baseConstructor != null)
                 {
                     gen.Emit(OpCodes.Ldarg_0);
-                    gen.Emit(OpCodes.Call, baseConstuctor);
+                    gen.Emit(OpCodes.Call, baseConstructor);
                 }
 
                 // this.m_FakeMeta = params[0];
