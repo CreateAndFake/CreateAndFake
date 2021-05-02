@@ -281,7 +281,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             }
         }
 
-        /// <summary>Finds the contructor with the most matches then by fewest parameters.</summary>
+        /// <summary>Finds the constructor with the most matches then by fewest parameters.</summary>
         /// <param name="type">Type to find a constructor for.</param>
         /// <param name="data">Injection data to use.</param>
         /// <param name="scope">Scope of constructors to find.</param>

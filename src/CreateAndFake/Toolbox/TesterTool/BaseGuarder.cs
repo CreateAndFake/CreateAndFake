@@ -36,7 +36,7 @@ namespace CreateAndFake.Toolbox.TesterTool
 
         /// <summary>Gets all testable constructors on a type.</summary>
         /// <param name="type">Type with the constructors to test.</param>
-        /// <returns>Found contructors.</returns>
+        /// <returns>Found constructors.</returns>
         protected static IEnumerable<ConstructorInfo> FindAllConstructors(Type type)
         {
             return type

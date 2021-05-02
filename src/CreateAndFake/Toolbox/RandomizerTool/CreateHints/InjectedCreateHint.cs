@@ -61,7 +61,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
             }
         }
 
-        /// <summary>Finds the contructor with the most class references then by fewest parameters.</summary>
+        /// <summary>Finds the constructor with the most class references then by fewest parameters.</summary>
         /// <param name="target">Type to find a constructor for.</param>
         /// <param name="randomizer">Handles callback behavior for child values.</param>
         /// <param name="scope">Scope of constructors to find.</param>

@@ -125,7 +125,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
 
         /// <summary>Converts the instance to a chainer.</summary>
         /// <returns>The created chainer.</returns>
-        protected AssertChainer<T> ToChainer()
+        protected internal AssertChainer<T> ToChainer()
         {
             return new AssertChainer<T>((T)this, Gen, Valuer);
         }

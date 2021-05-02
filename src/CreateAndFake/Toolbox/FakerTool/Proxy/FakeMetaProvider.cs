@@ -77,7 +77,8 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy
         {
             if (_LastCall == null)
             {
-                throw new InvalidOperationException("Method never called to set up behavior for.");
+                throw new InvalidOperationException(
+                    "Faked method never called to set behavior for. Verify instance is a [Fake] stub, and method is abstract.");
             }
 
             _ = _LastCall.Item1._log.Remove(_LastCall.Item2);

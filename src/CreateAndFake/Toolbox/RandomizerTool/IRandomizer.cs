@@ -69,7 +69,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
 
         /// <summary>Adds <paramref name="hint"/> to be used for randomization.</summary>
         /// <param name="hint">Hint to add.</param>
-        /// <remarks>Should only be modified in module inintializers.</remarks>
+        /// <remarks>Should only be modified in module initializers.</remarks>
         void AddHint(CreateHint hint);
     }
 }
