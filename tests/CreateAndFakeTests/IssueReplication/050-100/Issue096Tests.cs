@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CreateAndFake;
+using CreateAndFake.Fluent;
 using Xunit;
 
 namespace CreateAndFakeTests.IssueReplication
@@ -12,7 +14,18 @@ namespace CreateAndFakeTests.IssueReplication
         {
             TestSample<IAsyncEnumerable<int>>();
             TestSample<IAsyncEnumerable<string>>();
-            TestSample<IAsyncEnumerator<object>>();
+            TestSample<IAsyncEnumerable<object>>();
+        }
+
+        [Theory, RandomData]
+        internal static async Task Issue096_SupportsSizedAsyncEnumerable([Size(5)] IAsyncEnumerable<int> items)
+        {
+            int count = 0;
+            await foreach (int item in items)
+            {
+                count++;
+            }
+            count.Assert().Is(5);
         }
 
         private static void TestSample<T>()

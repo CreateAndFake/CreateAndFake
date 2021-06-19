@@ -13,7 +13,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             Type objectType = expected?.GetType();
             return objectType == null
                 || actual == null
-                || objectType != actual.GetType()
+                || (objectType != actual.GetType()
+                    && !objectType.Inherits(typeof(IAsyncEnumerable<>)))
                 || objectType.IsPrimitive
                 || objectType.IsEnum
                 || objectType == typeof(string)

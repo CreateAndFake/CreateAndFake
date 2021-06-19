@@ -16,8 +16,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             if (expected == null) throw new ArgumentNullException(nameof(expected));
             if (actual == null) throw new ArgumentNullException(nameof(actual));
 
-            return expected.GetType().AsGenericType() == typeof(IAsyncEnumerable<>)
-                && expected.GetType() == actual.GetType();
+            return expected.GetType().Inherits(typeof(IAsyncEnumerable<>))
+                && actual.GetType().Inherits(typeof(IAsyncEnumerable<>));
         }
 
         /// <inheritdoc/>

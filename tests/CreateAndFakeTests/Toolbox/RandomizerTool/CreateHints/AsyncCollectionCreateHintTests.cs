@@ -18,7 +18,7 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 
         /// <summary>Types that can't be created by the hint.</summary>
         private static readonly Type[] _InvalidTypes
-            = new[] { typeof(object), typeof(IEnumerable), typeof(IAsyncEnumerable<>) };
+            = new[] { typeof(object), typeof(IEnumerable) };
 
         /// <summary>Sets up the tests.</summary>
         public AsyncCollectionCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }

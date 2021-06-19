@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CreateAndFake;
@@ -22,7 +23,7 @@ namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints
 
         /// <summary>Types that can't be created by the hint.</summary>
         private static readonly Type[] _InvalidTypes
-            = new[] { typeof(IDictionary), typeof(IEnumerable) };
+            = new[] { typeof(IDictionary), typeof(IEnumerable), typeof(IAsyncEnumerable<int>) };
 
         /// <summary>Sets up the tests.</summary>
         public EarlyFailCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
