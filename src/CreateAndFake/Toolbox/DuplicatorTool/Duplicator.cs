@@ -17,6 +17,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool
             new DeepCloneableCopyHint(),
             new DuplicatableCopyHint(),
             new BasicCopyHint(),
+            new AsyncCollectionCopyHint(),
             new LegacyCollectionCopyHint(),
             new CollectionCopyHint(),
             new CloneableCopyHint(),

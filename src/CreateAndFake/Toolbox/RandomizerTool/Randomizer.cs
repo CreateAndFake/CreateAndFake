@@ -21,6 +21,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
             new ValueCreateHint(),
             new EnumCreateHint(),
             new GenericCreateHint(),
+            new AsyncCollectionCreateHint(),
             new CollectionCreateHint(),
             new LegacyCollectionCreateHint(),
             new StringCreateHint(),
