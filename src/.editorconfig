@@ -25,3 +25,6 @@ dotnet_diagnostic.IDE0048.severity = none
 dotnet_diagnostic.IDE0063.severity = none
 # IDE0079: Remove unnecessary suppression
 dotnet_diagnostic.IDE0079.severity = none
+
+# RS1024: Compare symbols correctly
+dotnet_diagnostic.RS1024.severity = none

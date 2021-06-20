@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using CreateAndFake;
+using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 {
@@ -22,5 +26,46 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
 
         /// <summary>Sets up the tests.</summary>
         public AsyncCollectionCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
+
+        [Theory, RandomData]
+        internal static async Task GetItems_Repeatable(IAsyncEnumerable<int> items)
+        {
+            List<int> first = new();
+            await foreach (int item in items)
+            {
+                first.Add(item);
+            }
+
+            List<int> second = new();
+            await foreach (int item in items)
+            {
+                second.Add(item);
+            }
+
+            first.Assert().Is(second);
+        }
+
+        [Theory, RandomData]
+        internal static async Task GetItems_Interrupt([Size(5)] IAsyncEnumerable<int> items)
+        {
+            await items.GetAsyncEnumerator().DisposeAsync().ConfigureAwait(false);
+
+            int count = 0;
+            await foreach (int item in items)
+            {
+                count++;
+                if (count == 3)
+                {
+                    break;
+                }
+            }
+
+            count = 0;
+            await foreach (int item in items)
+            {
+                count++;
+            }
+            count.Assert().Is(5);
+        }
     }
 }

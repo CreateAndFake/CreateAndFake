@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using CreateAndFake;
+using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFakeTests.TestBases;
+using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
 {
@@ -18,5 +22,38 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
 
         /// <summary>Sets up the tests.</summary>
         public AsyncCollectionCopyHintTests() : base(_ValidTypes, _InvalidTypes) { }
+
+        [Theory, RandomData]
+        internal static void TryCopy_Empty([Size(0)] IAsyncEnumerable<int> items)
+        {
+            Tools.Duplicator.Copy(items).Assert().Is(items);
+        }
+
+        [Theory, RandomData]
+        internal static async Task CopyAsync_Interrupt([Size(5)] IAsyncEnumerable<int> original)
+        {
+            IAsyncEnumerable<int> items = Tools.Duplicator.Copy(original);
+
+            await items.GetAsyncEnumerator().DisposeAsync().ConfigureAwait(false);
+
+            int count = 0;
+            await foreach (int item in items)
+            {
+                count++;
+                if (count == 3)
+                {
+                    break;
+                }
+            }
+
+            count = 0;
+            await foreach (int item in items)
+            {
+                count++;
+            }
+            count.Assert().Is(5);
+
+            items.Assert().Is(original);
+        }
     }
 }
