@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -131,7 +130,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         }
 
         /// <inheritdoc/>
-        public T CreateSized<T>(int count) where T : IEnumerable
+        public T CreateSized<T>(int count)
         {
             return (T)CreateSized(typeof(T), count);
         }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.RandomizerTool;
 
 namespace CreateAndFake.Toolbox.TesterTool
@@ -76,9 +77,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 object[] data = Randomizer.CreateFor(method, injectionValues).Args.ToArray();
                 try
                 {
-                    object result = RunCheck(testOrigin ?? method, testParam, () => method.Invoke(instance, data));
-                    (result as IDisposable)?.Dispose();
-                    (result as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    Disposer.Cleanup(RunCheck(testOrigin ?? method, testParam, () => method.Invoke(instance, data)));
                 }
                 finally
                 {
@@ -143,8 +142,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 }
                 else if (!(injectedValues?.Any(v => ReferenceEquals(item, v)) ?? false))
                 {
-                    (item as IDisposable)?.Dispose();
-                    (item as IAsyncDisposable)?.DisposeAsync().AsTask().RunSynchronously();
+                    Disposer.Cleanup(item);
                 }
             }
         }

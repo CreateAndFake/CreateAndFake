@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CreateAndFake;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.RandomizerTool;
 using Xunit;
@@ -58,8 +59,7 @@ namespace CreateAndFakeTests.TestBases
                         "Hint '" + typeof(T).Name + "' failed to create populated '" + type + "'.");
                 }
 
-                (result.Item2 as IDisposable)?.Dispose();
-                (result.Item2 as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                Disposer.Cleanup(result.Item2);
             }
         }
 

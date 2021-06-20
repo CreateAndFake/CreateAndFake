@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CreateAndFake;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using Xunit;
 
@@ -63,10 +64,7 @@ namespace CreateAndFakeTests.TestBases
                         "Hint '" + typeof(T).Name + "' copied by ref instead of a deep clone of type '" + type.Name + "'.");
                 }
 
-                (data as IDisposable)?.Dispose();
-                (result.Item2 as IDisposable)?.Dispose();
-                (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
-                (result.Item2 as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                Disposer.Cleanup(data, result.Item2);
             }
         }
 
@@ -82,10 +80,7 @@ namespace CreateAndFakeTests.TestBases
                 Tools.Asserter.Is((false, (object)null), result,
                     "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
 
-                (data as IDisposable)?.Dispose();
-                (result.Item2 as IDisposable)?.Dispose();
-                (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
-                (result.Item2 as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                Disposer.Cleanup(data, result.Item2);
             }
         }
 

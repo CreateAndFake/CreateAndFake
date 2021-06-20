@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CreateAndFake;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.ValuerTool;
 using Xunit;
 
@@ -64,8 +65,7 @@ namespace CreateAndFakeTests.TestBases
                 }
                 finally
                 {
-                    (data as IDisposable)?.Dispose();
-                    (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    Disposer.Cleanup(data);
                 }
             }
         }
@@ -96,10 +96,7 @@ namespace CreateAndFakeTests.TestBases
                 }
                 finally
                 {
-                    (one as IDisposable)?.Dispose();
-                    (two as IDisposable)?.Dispose();
-                    (one as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
-                    (two as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    Disposer.Cleanup(one, two);
                 }
             }
         }
@@ -127,10 +124,7 @@ namespace CreateAndFakeTests.TestBases
                 }
                 finally
                 {
-                    (one as IDisposable)?.Dispose();
-                    (two as IDisposable)?.Dispose();
-                    (one as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
-                    (two as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    Disposer.Cleanup(one, two);
                 }
             }
         }
@@ -162,10 +156,7 @@ namespace CreateAndFakeTests.TestBases
                 }
                 finally
                 {
-                    (data as IDisposable)?.Dispose();
-                    (dataCopy as IDisposable)?.Dispose();
-                    (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
-                    (dataCopy as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    Disposer.Cleanup(data, dataCopy);
                 }
             }
         }
@@ -195,10 +186,7 @@ namespace CreateAndFakeTests.TestBases
                 }
                 finally
                 {
-                    (data as IDisposable)?.Dispose();
-                    (dataDiffer as IDisposable)?.Dispose();
-                    (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
-                    (dataDiffer as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    Disposer.Cleanup(data, dataDiffer);
                 }
             }
         }
@@ -225,8 +213,7 @@ namespace CreateAndFakeTests.TestBases
                 }
                 finally
                 {
-                    (data as IDisposable)?.Dispose();
-                    (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    Disposer.Cleanup(data);
                 }
             }
         }

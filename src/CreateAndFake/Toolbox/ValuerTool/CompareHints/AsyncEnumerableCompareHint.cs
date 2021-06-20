@@ -64,8 +64,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
                 differences.Add(new Difference(index++, new Difference("'outofbounds'", actualEnumerator.Current)));
             }
 
-            expectedEnumerator.DisposeAsync().AsTask().Wait();
-            actualEnumerator.DisposeAsync().AsTask().Wait();
+            Disposer.Cleanup(expectedEnumerator, actualEnumerator);
 
             return differences;
         }

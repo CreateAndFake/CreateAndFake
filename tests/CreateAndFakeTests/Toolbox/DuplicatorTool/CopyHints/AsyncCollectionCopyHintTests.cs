@@ -29,9 +29,10 @@ namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints
             Tools.Duplicator.Copy(items).Assert().Is(items);
         }
 
-        [Theory, RandomData]
-        internal static async Task CopyAsync_Interrupt([Size(5)] IAsyncEnumerable<int> original)
+        [Fact]
+        internal static async Task CopyAsync_Interrupt()
         {
+            IAsyncEnumerable<int> original = Tools.Randomizer.CreateSized<IAsyncEnumerable<int>>(5);
             IAsyncEnumerable<int> items = Tools.Duplicator.Copy(original);
 
             await items.GetAsyncEnumerator().DisposeAsync().ConfigureAwait(false);

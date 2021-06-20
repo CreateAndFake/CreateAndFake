@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Reflection;
 
 namespace CreateAndFake.Toolbox.RandomizerTool
@@ -33,7 +32,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool
         /// <returns>The created <typeparamref name="T"/> collection with <paramref name="count"/> items.</returns>
         /// <exception cref="NotSupportedException">If no hint supports generating the type.</exception>
         /// <exception cref="InsufficientExecutionStackException">If infinite recursion occurs.</exception>
-        T CreateSized<T>(int count) where T : IEnumerable;
+        T CreateSized<T>(int count);
 
         /// <summary>Creates a randomized collection of <paramref name="count"/> size.</summary>
         /// <param name="type">Collection type to create.</param>

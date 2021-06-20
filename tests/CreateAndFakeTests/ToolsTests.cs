@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using CreateAndFake;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Context;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox;
@@ -152,12 +153,7 @@ namespace CreateAndFakeTests
             }
             finally
             {
-                (original as IDisposable)?.Dispose();
-                (variant as IDisposable)?.Dispose();
-                (dupe as IDisposable)?.Dispose();
-                (original as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
-                (variant as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
-                (dupe as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                Disposer.Cleanup(original, variant, dupe);
             }
         }
     }

@@ -17,9 +17,11 @@ namespace CreateAndFakeTests.IssueReplication
             TestSample<IAsyncEnumerable<object>>();
         }
 
-        [Theory, RandomData]
-        internal static async Task Issue096_SupportsSizedAsyncEnumerable([Size(5)] IAsyncEnumerable<int> items)
+        [Fact]
+        internal static async Task Issue096_SupportsSizedAsyncEnumerable()
         {
+            IAsyncEnumerable<int> items = Tools.Randomizer.CreateSized<IAsyncEnumerable<int>>(5);
+
             int count = 0;
             await foreach (int item in items)
             {
