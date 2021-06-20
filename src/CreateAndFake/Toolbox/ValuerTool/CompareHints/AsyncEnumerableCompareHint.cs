@@ -64,6 +64,9 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
                 differences.Add(new Difference(index++, new Difference("'outofbounds'", actualEnumerator.Current)));
             }
 
+            expectedEnumerator.DisposeAsync().AsTask().Wait();
+            actualEnumerator.DisposeAsync().AsTask().Wait();
+
             return differences;
         }
 
@@ -83,7 +86,7 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         /// <typeparam name="T">Item type being compared.</typeparam>
         private static async Task<int> GetHashCodeAsync<T>(IAsyncEnumerable<T> item, ValuerChainer valuer)
         {
-            IAsyncEnumerator<T> enumerator = item.GetAsyncEnumerator();
+            await using IAsyncEnumerator<T> enumerator = item.GetAsyncEnumerator();
 
             int hash = ValueComparer.BaseHash;
             while (await enumerator.MoveNextAsync().ConfigureAwait(false))

@@ -65,6 +65,7 @@ namespace CreateAndFakeTests.TestBases
                 finally
                 {
                     (data as IDisposable)?.Dispose();
+                    (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                 }
             }
         }
@@ -97,6 +98,8 @@ namespace CreateAndFakeTests.TestBases
                 {
                     (one as IDisposable)?.Dispose();
                     (two as IDisposable)?.Dispose();
+                    (one as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    (two as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                 }
             }
         }
@@ -126,6 +129,8 @@ namespace CreateAndFakeTests.TestBases
                 {
                     (one as IDisposable)?.Dispose();
                     (two as IDisposable)?.Dispose();
+                    (one as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    (two as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                 }
             }
         }
@@ -159,6 +164,8 @@ namespace CreateAndFakeTests.TestBases
                 {
                     (data as IDisposable)?.Dispose();
                     (dataCopy as IDisposable)?.Dispose();
+                    (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    (dataCopy as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                 }
             }
         }
@@ -190,6 +197,8 @@ namespace CreateAndFakeTests.TestBases
                 {
                     (data as IDisposable)?.Dispose();
                     (dataDiffer as IDisposable)?.Dispose();
+                    (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                    (dataDiffer as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                 }
             }
         }
@@ -217,6 +226,7 @@ namespace CreateAndFakeTests.TestBases
                 finally
                 {
                     (data as IDisposable)?.Dispose();
+                    (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                 }
             }
         }

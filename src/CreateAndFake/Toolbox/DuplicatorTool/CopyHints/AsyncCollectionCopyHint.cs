@@ -36,7 +36,7 @@ namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
         /// <returns>Clone of <paramref name="source"/>.</returns>
         private static async IAsyncEnumerable<T> CopyAsync<T>(IAsyncEnumerable<T> source, DuplicatorChainer duplicator)
         {
-            IAsyncEnumerator<T> gen = source.GetAsyncEnumerator();
+            await using IAsyncEnumerator<T> gen = source.GetAsyncEnumerator();
 
             while (await gen.MoveNextAsync().ConfigureAwait(false))
             {

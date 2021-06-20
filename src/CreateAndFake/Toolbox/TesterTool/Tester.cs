@@ -94,6 +94,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                     finally
                     {
                         (instance as IDisposable)?.Dispose();
+                        (instance as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                     }
                 }).Wait();
             }
@@ -166,6 +167,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                     finally
                     {
                         (instance as IDisposable)?.Dispose();
+                        (instance as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                     }
                 }).Wait();
             }

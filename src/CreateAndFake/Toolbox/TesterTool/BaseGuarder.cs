@@ -76,7 +76,9 @@ namespace CreateAndFake.Toolbox.TesterTool
                 object[] data = Randomizer.CreateFor(method, injectionValues).Args.ToArray();
                 try
                 {
-                    (RunCheck(testOrigin ?? method, testParam, () => method.Invoke(instance, data)) as IDisposable)?.Dispose();
+                    object result = RunCheck(testOrigin ?? method, testParam, () => method.Invoke(instance, data));
+                    (result as IDisposable)?.Dispose();
+                    (result as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                 }
                 finally
                 {
@@ -142,6 +144,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                 else if (!(injectedValues?.Any(v => ReferenceEquals(item, v)) ?? false))
                 {
                     (item as IDisposable)?.Dispose();
+                    (item as IAsyncDisposable)?.DisposeAsync().AsTask().RunSynchronously();
                 }
             }
         }

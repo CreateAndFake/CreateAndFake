@@ -34,7 +34,9 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
                 }
                 else
                 {
-                    (((dynamic)Behavior)?.Invoke() as IDisposable)?.Dispose();
+                    object result = ((dynamic)Behavior)?.Invoke();
+                    (result as IDisposable)?.Dispose();
+                    (result as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
                 }
             }
             catch (TException e)

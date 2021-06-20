@@ -59,6 +59,7 @@ namespace CreateAndFakeTests.TestBases
                 }
 
                 (result.Item2 as IDisposable)?.Dispose();
+                (result.Item2 as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
             }
         }
 

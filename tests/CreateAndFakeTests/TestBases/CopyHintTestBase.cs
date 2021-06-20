@@ -65,6 +65,8 @@ namespace CreateAndFakeTests.TestBases
 
                 (data as IDisposable)?.Dispose();
                 (result.Item2 as IDisposable)?.Dispose();
+                (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                (result.Item2 as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
             }
         }
 
@@ -82,6 +84,8 @@ namespace CreateAndFakeTests.TestBases
 
                 (data as IDisposable)?.Dispose();
                 (result.Item2 as IDisposable)?.Dispose();
+                (data as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                (result.Item2 as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
             }
         }
 

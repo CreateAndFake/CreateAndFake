@@ -155,6 +155,9 @@ namespace CreateAndFakeTests
                 (original as IDisposable)?.Dispose();
                 (variant as IDisposable)?.Dispose();
                 (dupe as IDisposable)?.Dispose();
+                (original as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                (variant as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
+                (dupe as IAsyncDisposable)?.DisposeAsync().AsTask().Wait();
             }
         }
     }
