@@ -68,6 +68,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
         {
             for (int i = 0; i < backing.Count; i++)
             {
+                await Task.Delay(0).ConfigureAwait(false);
                 yield return backing[i];
             }
         }
