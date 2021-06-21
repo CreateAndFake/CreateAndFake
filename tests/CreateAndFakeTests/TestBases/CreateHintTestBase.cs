@@ -47,19 +47,23 @@ namespace CreateAndFakeTests.TestBases
             foreach (Type type in _validTypes)
             {
                 (bool, object) result = TestInstance.TryCreate(type, CreateChainer());
-
-                Tools.Asserter.Is(true, result.Item1,
-                    "Hint '" + typeof(T).Name + "' did not support type '" + type.Name + "'.");
-                Tools.Asserter.IsNot(null, result.Item2,
-                    "Hint '" + typeof(T).Name + "' did not create valid '" + type.Name + "'.");
-
-                if (result.Item2 is IEnumerable collection)
+                try
                 {
-                    Tools.Asserter.Is(true, collection.GetEnumerator().MoveNext(),
-                        "Hint '" + typeof(T).Name + "' failed to create populated '" + type + "'.");
-                }
+                    Tools.Asserter.Is(true, result.Item1,
+                        "Hint '" + typeof(T).Name + "' did not support type '" + type.Name + "'.");
+                    Tools.Asserter.IsNot(null, result.Item2,
+                        "Hint '" + typeof(T).Name + "' did not create valid '" + type.Name + "'.");
 
-                Disposer.Cleanup(result.Item2);
+                    if (result.Item2 is IEnumerable collection)
+                    {
+                        Tools.Asserter.Is(true, collection.GetEnumerator().MoveNext(),
+                            "Hint '" + typeof(T).Name + "' failed to create populated '" + type + "'.");
+                    }
+                }
+                finally
+                {
+                    Disposer.Cleanup(result.Item2);
+                }
             }
         }
 

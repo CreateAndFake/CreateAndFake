@@ -39,8 +39,8 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
         private static async Task<IEnumerable<Difference>> CompareAsync<T>(
             IAsyncEnumerable<T> expected, IAsyncEnumerable<T> actual, ValuerChainer valuer)
         {
-            IAsyncEnumerator<T> expectedEnumerator = expected.GetAsyncEnumerator();
-            IAsyncEnumerator<T> actualEnumerator = actual.GetAsyncEnumerator();
+            await using IAsyncEnumerator<T> expectedEnumerator = expected.GetAsyncEnumerator();
+            await using IAsyncEnumerator<T> actualEnumerator = actual.GetAsyncEnumerator();
             int index = 0;
 
             List<Difference> differences = new();
@@ -63,8 +63,6 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             {
                 differences.Add(new Difference(index++, new Difference("'outofbounds'", actualEnumerator.Current)));
             }
-
-            Disposer.Cleanup(expectedEnumerator, actualEnumerator);
 
             return differences;
         }

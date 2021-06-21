@@ -45,10 +45,9 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
             first.Assert().Is(second);
         }
 
-        [Fact]
-        internal static async Task GetItems_Interrupt()
+        [Theory, RandomData]
+        internal static async Task GetItems_Interrupt([Size(5)] IAsyncEnumerable<int> items)
         {
-            IAsyncEnumerable<int> items = Tools.Randomizer.CreateSized<IAsyncEnumerable<int>>(5);
             await items.GetAsyncEnumerator().DisposeAsync().ConfigureAwait(false);
 
             int count = 0;
