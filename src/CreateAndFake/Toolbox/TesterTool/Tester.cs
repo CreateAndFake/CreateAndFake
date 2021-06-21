@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CreateAndFake.Design;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.DuplicatorTool;
@@ -93,7 +94,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                     }
                     finally
                     {
-                        (instance as IDisposable)?.Dispose();
+                        Disposer.Cleanup(instance);
                     }
                 }).Wait();
             }
@@ -165,7 +166,7 @@ namespace CreateAndFake.Toolbox.TesterTool
                     }
                     finally
                     {
-                        (instance as IDisposable)?.Dispose();
+                        Disposer.Cleanup(instance);
                     }
                 }).Wait();
             }

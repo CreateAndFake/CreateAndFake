@@ -1,4 +1,5 @@
 using System;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.ValuerTool;
 
@@ -34,7 +35,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
                 }
                 else
                 {
-                    (((dynamic)Behavior)?.Invoke() as IDisposable)?.Dispose();
+                    Disposer.Cleanup(((dynamic)Behavior)?.Invoke());
                 }
             }
             catch (TException e)

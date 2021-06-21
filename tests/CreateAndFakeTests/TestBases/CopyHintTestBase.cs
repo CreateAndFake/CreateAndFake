@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CreateAndFake;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using Xunit;
 
@@ -46,25 +47,31 @@ namespace CreateAndFakeTests.TestBases
         {
             foreach (Type type in _validTypes)
             {
-                object data = Tools.Randomizer.Create(type);
-                (bool, object) result = TestInstance.TryCopy(data, CreateChainer());
-
-                Tools.Asserter.Is((true, data), result,
-                    "Hint '" + typeof(T).Name + "' failed to clone type '" + type.Name + "'.");
-
-                if (_copiesByRef || data is string)
+                object data = null;
+                (bool, object) result = (false, null);
+                try
                 {
-                    Tools.Asserter.ReferenceEqual(data, result.Item2,
-                        "Hint '" + typeof(T).Name + "' expected to copy value types by ref of type '" + type.Name + "'.");
-                }
-                else
-                {
-                    Tools.Asserter.ReferenceNotEqual(data, result.Item2,
-                        "Hint '" + typeof(T).Name + "' copied by ref instead of a deep clone of type '" + type.Name + "'.");
-                }
+                    data = Tools.Randomizer.Create(type);
+                    result = TestInstance.TryCopy(data, CreateChainer());
 
-                (data as IDisposable)?.Dispose();
-                (result.Item2 as IDisposable)?.Dispose();
+                    Tools.Asserter.Is((true, data), result,
+                        "Hint '" + typeof(T).Name + "' failed to clone type '" + type.Name + "'.");
+
+                    if (_copiesByRef || data is string)
+                    {
+                        Tools.Asserter.ReferenceEqual(data, result.Item2,
+                            "Hint '" + typeof(T).Name + "' expected to copy value types by ref of type '" + type.Name + "'.");
+                    }
+                    else
+                    {
+                        Tools.Asserter.ReferenceNotEqual(data, result.Item2,
+                            "Hint '" + typeof(T).Name + "' copied by ref instead of a deep clone of type '" + type.Name + "'.");
+                    }
+                }
+                finally
+                {
+                    Disposer.Cleanup(data, result.Item2);
+                }
             }
         }
 
@@ -75,13 +82,15 @@ namespace CreateAndFakeTests.TestBases
             foreach (Type type in _invalidTypes)
             {
                 object data = Tools.Randomizer.Create(type);
-                (bool, object) result = TestInstance.TryCopy(data, CreateChainer());
-
-                Tools.Asserter.Is((false, (object)null), result,
-                    "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
-
-                (data as IDisposable)?.Dispose();
-                (result.Item2 as IDisposable)?.Dispose();
+                try
+                {
+                    Tools.Asserter.Is((false, (object)null), TestInstance.TryCopy(data, CreateChainer()),
+                        "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
+                }
+                finally
+                {
+                    Disposer.Cleanup(data);
+                }
             }
         }
 

@@ -20,6 +20,7 @@ namespace CreateAndFake.Toolbox.ValuerTool
             new ValueEquatableCompareHint(),
             new ValuerEquatableCompareHint(),
             new EquatableCompareHint(),
+            new AsyncEnumerableCompareHint(),
             new StringDictionaryCompareHint(),
             new DictionaryCompareHint(),
             new EnumerableCompareHint(),
