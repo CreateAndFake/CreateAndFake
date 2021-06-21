@@ -28,6 +28,13 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
         public AsyncCollectionCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
         [Theory, RandomData]
+        internal static async Task GetItems_Empty([Size(0)] IAsyncEnumerable<int> items)
+        {
+            await using IAsyncEnumerator<int> gen = items.GetAsyncEnumerator();
+            (await gen.MoveNextAsync().ConfigureAwait(false)).Assert().Is(false);
+        }
+
+        [Theory, RandomData]
         internal static async Task GetItems_Repeatable(IAsyncEnumerable<int> items)
         {
             List<int> first = new();
@@ -43,6 +50,12 @@ namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints
             }
 
             first.Assert().Is(second);
+        }
+
+        [Theory, RandomData]
+        internal static async Task GetItems_Cancel(IAsyncEnumerable<int> items)
+        {
+            await items.GetAsyncEnumerator().DisposeAsync().ConfigureAwait(false);
         }
 
         [Theory, RandomData]

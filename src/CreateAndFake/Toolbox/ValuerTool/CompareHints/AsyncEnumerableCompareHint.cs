@@ -28,10 +28,10 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             if (actual == null) throw new ArgumentNullException(nameof(actual));
             if (valuer == null) throw new ArgumentNullException(nameof(valuer));
 
-            return ((Task<IEnumerable<Difference>>)GetType()
+            return Task.Run(() => ((Task<IEnumerable<Difference>>)GetType()
                 .GetMethod(nameof(CompareAsync), BindingFlags.Static | BindingFlags.NonPublic)
                 .MakeGenericMethod(expected.GetType().GetGenericArguments().Single())
-                .Invoke(null, new object[] { expected, actual, valuer })).Result;
+                .Invoke(null, new object[] { expected, actual, valuer }))).Result;
         }
 
         /// <inheritdoc cref="Compare"/>
@@ -73,22 +73,20 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             if (item == null) throw new ArgumentNullException(nameof(item));
             if (valuer == null) throw new ArgumentNullException(nameof(valuer));
 
-            return ((Task<int>)GetType()
+            return Task.Run(() => ((Task<int>)GetType()
                 .GetMethod(nameof(GetHashCodeAsync), BindingFlags.Static | BindingFlags.NonPublic)
                 .MakeGenericMethod(item.GetType().GetGenericArguments().Single())
-                .Invoke(null, new object[] { item, valuer })).Result;
+                .Invoke(null, new object[] { item, valuer }))).Result;
         }
 
         /// <inheritdoc cref="GetHashCode"/>
         /// <typeparam name="T">Item type being compared.</typeparam>
         private static async Task<int> GetHashCodeAsync<T>(IAsyncEnumerable<T> item, ValuerChainer valuer)
         {
-            await using IAsyncEnumerator<T> enumerator = item.GetAsyncEnumerator();
-
             int hash = ValueComparer.BaseHash;
-            while (await enumerator.MoveNextAsync().ConfigureAwait(false))
+            await foreach (T current in item)
             {
-                hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(enumerator.Current);
+                hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(current);
             }
             return hash;
         }
