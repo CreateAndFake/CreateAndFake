@@ -118,6 +118,12 @@ namespace CreateAndFake.Toolbox.FakerTool
 
             if (!onlySetter && method.Body is MethodCallExpression methodCall)
             {
+                if (methodCall.Method.IsStatic)
+                {
+                    throw new NotSupportedException(
+                        $"Method '{methodCall.Method.Name}' is static and not an actual member of '{typeof(T).Name}'.");
+                }
+
                 Type[] generics = (methodCall.Method.IsGenericMethod)
                     ? methodCall.Method.GetGenericArguments()
                     : Type.EmptyTypes;

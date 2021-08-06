@@ -102,6 +102,7 @@ namespace CreateAndFake.Design.Data
             // Bu
             "Bud",
             "Buddy",
+            "Bugs",
             "Butters",
             // Bv
             // Bw
@@ -109,6 +110,7 @@ namespace CreateAndFake.Design.Data
             // By
             // Bz
             // Ca
+            "Cander",
             "Carson",
             "Cat",
             "Cathrine",
@@ -125,6 +127,7 @@ namespace CreateAndFake.Design.Data
             "Christine",
             "Christopher",
             // Ci
+            "Cinder",
             "Cindy",
             // Cj
             // Ck
@@ -137,6 +140,7 @@ namespace CreateAndFake.Design.Data
             // Co
             "Cody",
             "Colby",
+            "Conor",
             "Cook",
             // Cp
             // Cq
@@ -197,6 +201,7 @@ namespace CreateAndFake.Design.Data
             // Ds
             // Dt
             // Du
+            "Dustin",
             // Dv
             // Dw
             "Dwayne",
@@ -789,6 +794,7 @@ namespace CreateAndFake.Design.Data
             "Sweeny",
             // Sx
             // Sy
+            "Sylvester",
             // Sz
             // Ta
             "Tae",
@@ -796,6 +802,7 @@ namespace CreateAndFake.Design.Data
             "Tanya",
             "Tasha",
             "Tay",
+            "Taz",
             // Tb
             // Tc
             // Td
