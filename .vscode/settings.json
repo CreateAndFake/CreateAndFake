@@ -36,6 +36,10 @@
         "finalizer",
         "nuget",
         "nupkg",
+        "omnisharp",
         "serializables"
+    ],
+    "cSpell.ignorePaths": [
+        "src/CreateAndFake/Design/Data/"
     ]
 }
