@@ -12,9 +12,7 @@
     "cSpell.words": [
         "Callvirt",
         "Chainer",
-        "cobertura",
         "Duplicatable",
-        "finalizer",
         "Ldarg",
         "Ldelem",
         "Ldfld",
@@ -30,9 +28,14 @@
         "Stloc",
         "Xunit",
         "cloner",
+        "cobertura",
         "codacy",
+        "codecov",
         "duplicatables",
         "equatables",
+        "finalizer",
+        "nuget",
+        "nupkg",
         "serializables"
     ]
 }
