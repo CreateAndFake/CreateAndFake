@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Bullseye" Version="3.7.0" />
     <PackageReference Include="SimpleExec" Version="7.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.10.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.11.0" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
