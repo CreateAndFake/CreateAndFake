@@ -9,13 +9,13 @@ namespace CreateAndFakeTests.Extensions
     public static class AssertExtensionsTests
     {
         [Fact]
-        internal static void AssertChainer_GuardsNulls()
+        internal static void AssertExtensions_GuardsNulls()
         {
             Tools.Tester.PreventsNullRefException(typeof(AssertExtensions));
         }
 
         [Fact]
-        internal static void AssertChainer_NoParameterMutation()
+        internal static void AssertExtensions_NoParameterMutation()
         {
             Tools.Tester.PreventsParameterMutation(typeof(AssertExtensions));
         }
