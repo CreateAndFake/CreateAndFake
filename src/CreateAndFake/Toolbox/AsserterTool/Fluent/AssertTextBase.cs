@@ -30,7 +30,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         {
             if (!Text.Contains(content))
             {
-                throw new AssertException($"Text was missing '{details}'.", details, Gen.InitialSeed, Text);
+                throw new AssertException($"Text was missing '{content}'.", details, Gen.InitialSeed, Text);
             }
             return ToChainer();
         }
@@ -44,7 +44,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         {
             if (Text.Contains(content))
             {
-                throw new AssertException($"Text contained '{details}'.", details, Gen.InitialSeed, Text);
+                throw new AssertException($"Text contained '{content}'.", details, Gen.InitialSeed, Text);
             }
             return ToChainer();
         }
@@ -58,7 +58,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         {
             if (!Text.StartsWith(content))
             {
-                throw new AssertException($"Text did not start with '{details}'.", details, Gen.InitialSeed, Text);
+                throw new AssertException($"Text did not start with '{content}'.", details, Gen.InitialSeed, Text);
             }
             return ToChainer();
         }
@@ -72,7 +72,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         {
             if (Text.StartsWith(content))
             {
-                throw new AssertException($"Text started with '{details}'.", details, Gen.InitialSeed, Text);
+                throw new AssertException($"Text started with '{content}'.", details, Gen.InitialSeed, Text);
             }
             return ToChainer();
         }
@@ -86,7 +86,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         {
             if (!Text.EndsWith(content))
             {
-                throw new AssertException($"Text did not end with '{details}'.", details, Gen.InitialSeed, Text);
+                throw new AssertException($"Text did not end with '{content}'.", details, Gen.InitialSeed, Text);
             }
             return ToChainer();
         }
@@ -100,7 +100,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent
         {
             if (Text.EndsWith(content))
             {
-                throw new AssertException($"Text ended with '{details}'.", details, Gen.InitialSeed, Text);
+                throw new AssertException($"Text ended with '{content}'.", details, Gen.InitialSeed, Text);
             }
             return ToChainer();
         }
