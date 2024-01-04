@@ -3,9 +3,6 @@
 # Default severity for all analyzer diagnostics
 dotnet_analyzer_diagnostic.severity = warning
 
-# IDE0011: Add braces
-csharp_prefer_braces = when_multiline:warning
-
 # CA1034: Nested types should not be visible
 dotnet_diagnostic.CA1034.severity = none
 # CA1307: Specify StringComparison for clarity
@@ -20,9 +17,10 @@ dotnet_diagnostic.CA1805.severity = none
 # CS1591: Missing XML comment for publicaly visible
 dotnet_diagnostic.CS1591.severity = none
 
+# IDE0045: 'if' statement can be simplified
+dotnet_diagnostic.IDE0045.severity = none
 # IDE0046: 'if' statement can be simplified
 dotnet_diagnostic.IDE0046.severity = none
-# IDE0047: Remove unnecessary parentheses
 dotnet_diagnostic.IDE0047.severity = none
 # IDE0048: Add parentheses for clarity
 dotnet_diagnostic.IDE0048.severity = none
@@ -30,5 +28,5 @@ dotnet_diagnostic.IDE0048.severity = none
 dotnet_diagnostic.IDE0063.severity = none
 # IDE0058: Expression value is never used
 dotnet_diagnostic.IDE0058.severity = none
-# IDE0079: Remove unnecessary suppression
-dotnet_diagnostic.IDE0079.severity = none
+# CA1062: Validate parameter is non-null
+dotnet_diagnostic.CA1062.severity = none

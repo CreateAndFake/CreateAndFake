@@ -1,16 +1,15 @@
-﻿using System;
+﻿using CreateAndFake.Design;
 
-namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints
+namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
+
+/// <summary>Handles copying duplicatables for the duplicator.</summary>
+public sealed class DuplicatableCopyHint : CopyHint<IDuplicatable>
 {
-    /// <summary>Handles copying duplicatables for the duplicator.</summary>
-    public sealed class DuplicatableCopyHint : CopyHint<IDuplicatable>
+    /// <inheritdoc/>
+    protected override IDuplicatable Copy(IDuplicatable source, DuplicatorChainer duplicator)
     {
-        /// <inheritdoc/>
-        protected override IDuplicatable Copy(IDuplicatable source, DuplicatorChainer duplicator)
-        {
-            if (duplicator == null) throw new ArgumentNullException(nameof(duplicator));
+        ArgumentGuard.ThrowIfNull(duplicator, nameof(duplicator));
 
-            return source?.DeepClone(duplicator.Duplicator);
-        }
+        return source?.DeepClone(duplicator.Duplicator);
     }
 }

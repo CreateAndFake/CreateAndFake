@@ -2,15 +2,14 @@ using CreateAndFake.Design.Data;
 using CreateAndFake.Fluent;
 using Xunit;
 
-namespace CreateAndFakeTests.Design.Data
+namespace CreateAndFakeTests.Design.Data;
+
+/// <summary>Verifies behavior.</summary>
+public static class NameDataTests
 {
-    /// <summary>Verifies behavior.</summary>
-    public static class NameDataTests
+    [Fact]
+    internal static void Values_Populated()
     {
-        [Fact]
-        internal static void Values_Populated()
-        {
-            NameData.Values.Assert().IsNotEmpty();
-        }
+        NameData.Values.Assert().IsNotEmpty();
     }
 }

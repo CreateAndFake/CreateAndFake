@@ -5,73 +5,72 @@ using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.RandomizerTool;
 
-namespace CreateAndFake.Toolbox.TesterTool
+namespace CreateAndFake.Toolbox.TesterTool;
+
+/// <summary>Handles generic resolution.</summary>
+internal sealed class GenericFixer
 {
-    /// <summary>Handles generic resolution.</summary>
-    internal sealed class GenericFixer
+    /// <summary>Core value random handler.</summary>
+    private readonly IRandom _gen;
+
+    /// <summary>Creates objects and populates them with random values.</summary>
+    private readonly IRandomizer _randomizer;
+
+    /// <summary>Initializes a new instance of the <see cref="GenericFixer"/> class.</summary>
+    /// <param name="gen">Core value random handler.</param>
+    /// <param name="randomizer">Creates objects and populates them with random values.</param>
+    internal GenericFixer(IRandom gen, IRandomizer randomizer)
     {
-        /// <summary>Core value random handler.</summary>
-        private readonly IRandom _gen;
+        _gen = gen ?? throw new ArgumentNullException(nameof(gen));
+        _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
+    }
 
-        /// <summary>Creates objects and populates them with random values.</summary>
-        private readonly IRandomizer _randomizer;
+    /// <summary>Defines any generics in a method.</summary>
+    /// <param name="method">Method to fix.</param>
+    /// <returns>Method with all generics defined.</returns>
+    internal MethodInfo FixMethod(MethodInfo method)
+    {
+        ArgumentGuard.ThrowIfNull(method, nameof(method));
 
-        /// <summary>Initializes a new instance of the <see cref="GenericFixer"/> class.</summary>
-        /// <param name="gen">Core value random handler.</param>
-        /// <param name="randomizer">Creates objects and populates them with random values.</param>
-        internal GenericFixer(IRandom gen, IRandomizer randomizer)
+        return method.ContainsGenericParameters
+            ? method.MakeGenericMethod(method.GetGenericArguments().Select(CreateArg).ToArray())
+            : method;
+    }
+
+    /// <summary>Creates a concrete arg type from the given generic arg.</summary>
+    /// <param name="type">Generic arg to create.</param>
+    /// <returns>Created arg type.</returns>
+    private Type CreateArg(Type type)
+    {
+        bool newNeeded = type.GenericParameterAttributes.HasFlag(
+            GenericParameterAttributes.DefaultConstructorConstraint);
+
+        Type arg;
+        if (type.GenericParameterAttributes.HasFlag(
+            GenericParameterAttributes.NotNullableValueTypeConstraint))
         {
-            _gen = gen ?? throw new ArgumentNullException(nameof(gen));
-            _randomizer = randomizer ?? throw new ArgumentNullException(nameof(randomizer));
+            arg = _gen.NextItem(ValueRandom.ValueTypes);
+        }
+        else if (newNeeded)
+        {
+            arg = typeof(object);
+        }
+        else
+        {
+            arg = typeof(string);
         }
 
-        /// <summary>Defines any generics in a method.</summary>
-        /// <param name="method">Method to fix.</param>
-        /// <returns>Method with all generics defined.</returns>
-        internal MethodInfo FixMethod(MethodInfo method)
+        Type[] constraints = type.GetGenericParameterConstraints();
+
+        Limiter.Dozen.Repeat(() =>
         {
-            if (method == null) throw new ArgumentNullException(nameof(method));
-
-            return (method.ContainsGenericParameters)
-                ? method.MakeGenericMethod(method.GetGenericArguments().Select(a => CreateArg(a)).ToArray())
-                : method;
-        }
-
-        /// <summary>Creates a concrete arg type from the given generic arg.</summary>
-        /// <param name="type">Generic arg to create.</param>
-        /// <returns>Created arg type.</returns>
-        private Type CreateArg(Type type)
-        {
-            bool newNeeded = type.GenericParameterAttributes.HasFlag(
-                GenericParameterAttributes.DefaultConstructorConstraint);
-
-            Type arg;
-            if (type.GenericParameterAttributes.HasFlag(
-                GenericParameterAttributes.NotNullableValueTypeConstraint))
+            while (!constraints.All(c => arg.Inherits(c))
+                && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null))
             {
-                arg = _gen.NextItem(ValueRandom.ValueTypes);
+                arg = _randomizer.Create(_gen.NextItem(constraints)).GetType();
             }
-            else if (newNeeded)
-            {
-                arg = typeof(object);
-            }
-            else
-            {
-                arg = typeof(string);
-            }
+        }).Wait();
 
-            Type[] constraints = type.GetGenericParameterConstraints();
-
-            Limiter.Dozen.Repeat(() =>
-            {
-                while (!constraints.All(c => arg.Inherits(c))
-                    && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null))
-                {
-                    arg = _randomizer.Create(_gen.NextItem(constraints)).GetType();
-                }
-            }).Wait();
-
-            return arg;
-        }
+        return arg;
     }
 }

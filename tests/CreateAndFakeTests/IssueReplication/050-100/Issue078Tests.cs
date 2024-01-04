@@ -2,21 +2,20 @@ using CreateAndFake;
 using CreateAndFake.Fluent;
 using Xunit;
 
-namespace CreateAndFakeTests.IssueReplication
-{
-    /// <summary>Verifies issue is resolved.</summary>
-    public static class Issue078Tests
-    {
-        [Theory, RandomData]
-        internal static void Issue078_CanChainObjects(int[] valueA, bool valueB)
-        {
-            valueA.Assert().IsNotEmpty().Also(valueB).IsNot(null);
-        }
+namespace CreateAndFakeTests.IssueReplication;
 
-        [Theory, RandomData]
-        internal static void Issue078_CanChainCollections(bool valueA, int[] valueB)
-        {
-            valueA.Assert().IsNot(null).Also(valueB).IsNotEmpty();
-        }
+/// <summary>Verifies issue is resolved.</summary>
+public static class Issue078Tests
+{
+    [Theory, RandomData]
+    internal static void Issue078_CanChainObjects(int[] valueA, bool valueB)
+    {
+        valueA.Assert().IsNotEmpty().Also(valueB).IsNot(null);
+    }
+
+    [Theory, RandomData]
+    internal static void Issue078_CanChainCollections(bool valueA, int[] valueB)
+    {
+        valueA.Assert().IsNot(null).Also(valueB).IsNotEmpty();
     }
 }

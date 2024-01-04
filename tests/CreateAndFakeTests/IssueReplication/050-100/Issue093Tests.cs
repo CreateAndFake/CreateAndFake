@@ -4,38 +4,37 @@ using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using Xunit;
 
-namespace CreateAndFakeTests.IssueReplication
+namespace CreateAndFakeTests.IssueReplication;
+
+/// <summary>Verifies issue is resolved.</summary>
+public static class Issue093Tests
 {
-    /// <summary>Verifies issue is resolved.</summary>
-    public static class Issue093Tests
+    public abstract class Provider
     {
-        public abstract class Provider
+        public abstract string Value { get; set; }
+    }
+
+    internal sealed class Api
+    {
+        private readonly Provider _provider;
+
+        internal Api(Provider provider)
         {
-            public abstract string Value { get; set; }
+            _provider = provider;
         }
 
-        internal sealed class Api
-        {
-            private readonly Provider _provider;
+        public string Value => _provider.Value;
+    }
 
-            internal Api(Provider provider)
-            {
-                _provider = provider;
-            }
+    [Theory, RandomData]
+    internal static void Issue093_AssertFakeCallIntegration([Fake] Provider faked, Api sample, string value)
+    {
+        faked.Value.SetupReturn(value);
 
-            public string Value => _provider.Value;
-        }
+        Tools.Asserter.Throws<FakeVerifyException>(() => "".Assert().Called(faked).And.Is(""));
 
-        [Theory, RandomData]
-        internal static void Issue093_AssertFakeCallIntegration([Fake] Provider faked, Api sample, string value)
-        {
-            faked.Value.SetupReturn(value);
+        sample.Value.Assert().Called(faked).And.Is(value);
 
-            Tools.Asserter.Throws<FakeVerifyException>(() => "".Assert().Called(faked).And.Is(""));
-
-            sample.Value.Assert().Called(faked).And.Is(value);
-
-            Tools.Asserter.Throws<AssertException>(() => sample.Value.Assert().Called(faked).And.Is(""));
-        }
+        Tools.Asserter.Throws<AssertException>(() => sample.Value.Assert().Called(faked).And.Is(""));
     }
 }

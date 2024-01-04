@@ -4,88 +4,80 @@ using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.FakerTool;
 using Xunit;
 
-namespace CreateAndFakeTests.IssueReplication
+namespace CreateAndFakeTests.IssueReplication;
+
+/// <summary>Verifies issue is resolved.</summary>
+public static class Issue091Tests
 {
-    /// <summary>Verifies issue is resolved.</summary>
-    public static class Issue091Tests
+    internal sealed class Api(ILayer layer)
     {
-        internal class Api
+        public Item FindItem(int key)
         {
-            private readonly ILayer _layer;
-
-            public Api(ILayer layer)
-            {
-                _layer = layer;
-            }
-
-            public Item FindItem(int key)
-            {
-                return _layer.GetItem(key);
-            }
-
-            public Item FindItem(Guid id)
-            {
-                return _layer.GetItem(id);
-            }
-
-            public Item FindItem(object key)
-            {
-                return _layer.GetItem(key);
-            }
+            return layer.GetItem(key);
         }
 
-        public interface ILayer
+        public Item FindItem(Guid id)
         {
-            Item GetItem(int key);
-
-            Item GetItem(Guid id);
-
-            Item GetItem(object key);
+            return layer.GetItem(id);
         }
 
-        public class Item
+        public Item FindItem(object key)
         {
-            public Guid Id { get; set; }
+            return layer.GetItem(key);
         }
+    }
 
-        [Theory, RandomData]
-        internal static void Issue091_FluentArgMatchesInt([Fake] ILayer layer, Api api, Item sample, int key)
-        {
-            layer.GetItem(Arg.Any<int>()).SetupReturn(sample, Times.Once);
+    public interface ILayer
+    {
+        Item GetItem(int key);
 
-            api.FindItem(key).Assert().Is(sample);
+        Item GetItem(Guid id);
 
-            layer.VerifyAllCalls();
-        }
+        Item GetItem(object key);
+    }
 
-        [Theory, RandomData]
-        internal static void Issue091_FluentArgMatchesGuid([Fake] ILayer layer, Api api, Item sample)
-        {
-            layer.GetItem(Arg.Any<Guid>()).SetupReturn(sample, Times.Once);
+    public class Item
+    {
+        public Guid Id { get; set; }
+    }
 
-            api.FindItem(sample.Id).Assert().Is(sample);
+    [Theory, RandomData]
+    internal static void Issue091_FluentArgMatchesInt([Fake] ILayer layer, Api api, Item sample, int key)
+    {
+        layer.GetItem(Arg.Any<int>()).SetupReturn(sample, Times.Once);
 
-            layer.VerifyAllCalls();
-        }
+        api.FindItem(key).Assert().Is(sample);
 
-        [Theory, RandomData]
-        internal static void Issue091_FluentArgMatchesObject([Fake] ILayer layer, Api api, Item sample, object key)
-        {
-            layer.GetItem(Arg.Any<object>()).SetupReturn(sample, Times.Once);
+        layer.VerifyAllCalls();
+    }
 
-            api.FindItem(key).Assert().Is(sample);
+    [Theory, RandomData]
+    internal static void Issue091_FluentArgMatchesGuid([Fake] ILayer layer, Api api, Item sample)
+    {
+        layer.GetItem(Arg.Any<Guid>()).SetupReturn(sample, Times.Once);
 
-            layer.VerifyAllCalls();
-        }
+        api.FindItem(sample.Id).Assert().Is(sample);
 
-        [Theory, RandomData]
-        internal static void Issue091_FluentArgMatchesNull([Fake] ILayer layer, Api api, Item sample)
-        {
-            layer.GetItem(null).SetupReturn(sample, Times.Once);
+        layer.VerifyAllCalls();
+    }
 
-            api.FindItem(null).Assert().Is(sample);
+    [Theory, RandomData]
+    internal static void Issue091_FluentArgMatchesObject([Fake] ILayer layer, Api api, Item sample, object key)
+    {
+        layer.GetItem(Arg.Any<object>()).SetupReturn(sample, Times.Once);
 
-            layer.VerifyAllCalls();
-        }
+        api.FindItem(key).Assert().Is(sample);
+
+        layer.VerifyAllCalls();
+    }
+
+    [Theory, RandomData]
+    internal static void Issue091_FluentArgMatchesNull([Fake] ILayer layer, Api api, Item sample)
+    {
+        layer.GetItem(null).SetupReturn(sample, Times.Once);
+
+        api.FindItem(null).Assert().Is(sample);
+
+        layer.VerifyAllCalls();
     }
 }

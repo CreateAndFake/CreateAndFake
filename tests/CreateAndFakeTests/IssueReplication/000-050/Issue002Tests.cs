@@ -2,15 +2,14 @@ using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using Xunit;
 
-namespace CreateAndFakeTests.IssueReplication
+namespace CreateAndFakeTests.IssueReplication;
+
+/// <summary>Verifies issue is resolved.</summary>
+public static class Issue002Tests
 {
-    /// <summary>Verifies issue is resolved.</summary>
-    public static class Issue002Tests
+    [Fact]
+    internal static void Issue002_CallDataEncapsulated()
     {
-        [Fact]
-        internal static void Issue002_CallDataEncapsulated()
-        {
-            typeof(CallData).IsPublic.Assert().Is(false);
-        }
+        typeof(CallData).IsPublic.Assert().Is(false);
     }
 }

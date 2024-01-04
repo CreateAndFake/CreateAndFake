@@ -4,43 +4,42 @@ using CreateAndFake;
 using CreateAndFake.Fluent;
 using Xunit;
 
-namespace CreateAndFakeTests.IssueReplication
+namespace CreateAndFakeTests.IssueReplication;
+
+/// <summary>Verifies issue is resolved.</summary>
+public static class Issue096Tests
 {
-    /// <summary>Verifies issue is resolved.</summary>
-    public static class Issue096Tests
+    [Fact]
+    internal static void Issue096_SupportsIAsyncEnumerable()
     {
-        [Fact]
-        internal static void Issue096_SupportsIAsyncEnumerable()
+        TestSample<IAsyncEnumerable<int>>();
+        TestSample<IAsyncEnumerable<string>>();
+        TestSample<IAsyncEnumerable<object>>();
+    }
+
+    [Theory, RandomData]
+    internal static async Task Issue096_SupportsSizedAsyncEnumerable([Size(5)] IAsyncEnumerable<int> items)
+    {
+        int count = 0;
+        await foreach (int item in items)
         {
-            TestSample<IAsyncEnumerable<int>>();
-            TestSample<IAsyncEnumerable<string>>();
-            TestSample<IAsyncEnumerable<object>>();
+            count++;
         }
+        count.Assert().Is(5);
+    }
 
-        [Theory, RandomData]
-        internal static async Task Issue096_SupportsSizedAsyncEnumerable([Size(5)] IAsyncEnumerable<int> items)
+    private static void TestSample<T>()
+    {
+        for (int i = 0; i < 50; i++)
         {
-            int count = 0;
-            await foreach (int item in items)
-            {
-                count++;
-            }
-            count.Assert().Is(5);
-        }
+            T sample = Tools.Randomizer.Create<T>();
+            Tools.Asserter.IsNot(null, sample);
+            Tools.Asserter.IsNot(sample, Tools.Mutator.Variant(sample));
 
-        private static void TestSample<T>()
-        {
-            for (int i = 0; i < 50; i++)
-            {
-                T sample = Tools.Randomizer.Create<T>();
-                Tools.Asserter.IsNot(null, sample);
-                Tools.Asserter.IsNot(sample, Tools.Mutator.Variant(sample));
+            T dupe = Tools.Duplicator.Copy(sample);
 
-                T dupe = Tools.Duplicator.Copy(sample);
-
-                Tools.Asserter.Is(sample, dupe);
-                Tools.Asserter.Is(Tools.Valuer.GetHashCode(sample), Tools.Valuer.GetHashCode(dupe));
-            }
+            Tools.Asserter.Is(sample, dupe);
+            Tools.Asserter.Is(Tools.Valuer.GetHashCode(sample), Tools.Valuer.GetHashCode(dupe));
         }
     }
 }

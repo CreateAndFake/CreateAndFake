@@ -4,34 +4,33 @@ using CreateAndFake.Design.Context;
 using CreateAndFake.Fluent;
 using Xunit;
 
-namespace CreateAndFakeTests.TestBases
+namespace CreateAndFakeTests.TestBases;
+
+/// <summary>Handles testing data context classes.</summary>
+/// <typeparam name="T">Type to test.</typeparam>
+public abstract class DataContextTestBase<T> where T : BaseDataContext
 {
-    /// <summary>Handles testing data context classes.</summary>
-    /// <typeparam name="T">Type to test.</typeparam>
-    public abstract class DataContextTestBase<T> where T : BaseDataContext
+    /// <summary>Verifies null reference exceptions are prevented.</summary>
+    [Fact]
+    public void DataContext_GuardsNulls()
     {
-        /// <summary>Verifies null reference exceptions are prevented.</summary>
-        [Fact]
-        public void DataContext_GuardsNulls()
-        {
-            Tools.Tester.PreventsNullRefException<PersonContext>();
-        }
+        Tools.Tester.PreventsNullRefException<PersonContext>();
+    }
 
-        /// <summary>Verifies data remains consistent on instance.</summary>
-        [Theory, RandomData]
-        public void DataContext_MaintainsValues(T testInstance)
+    /// <summary>Verifies data remains consistent on instance.</summary>
+    [Theory, RandomData]
+    public void DataContext_MaintainsValues(T testInstance)
+    {
+        foreach (PropertyInfo prop in typeof(T).GetProperties())
         {
-            foreach (PropertyInfo prop in typeof(T).GetProperties())
-            {
-                prop.GetValue(testInstance).Assert().Is(prop.GetValue(testInstance));
-            }
+            prop.GetValue(testInstance).Assert().Is(prop.GetValue(testInstance));
         }
+    }
 
-        /// <summary>Verifies instances are not equal.</summary>
-        [Theory, RandomData]
-        public void DataContext_DataVaries(T testInstance)
-        {
-            Tools.Mutator.Variant(testInstance).Assert().IsNot(testInstance);
-        }
+    /// <summary>Verifies instances are not equal.</summary>
+    [Theory, RandomData]
+    public void DataContext_DataVaries(T testInstance)
+    {
+        Tools.Mutator.Variant(testInstance).Assert().IsNot(testInstance);
     }
 }

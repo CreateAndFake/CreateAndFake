@@ -3,30 +3,29 @@ using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFakeTests.TestSamples;
 using Xunit;
 
-namespace CreateAndFakeTests.Toolbox.RandomizerTool
+namespace CreateAndFakeTests.Toolbox.RandomizerTool;
+
+/// <summary>Verifies behavior.</summary>
+public static class RandomizerChainerTests
 {
-    /// <summary>Verifies behavior.</summary>
-    public static class RandomizerChainerTests
+    [Fact]
+    internal static void RandomizerChainer_GuardsNulls()
     {
-        [Fact]
-        internal static void RandomizerChainer_GuardsNulls()
-        {
-            Tools.Tester.PreventsNullRefException<RandomizerChainer>();
-        }
+        Tools.Tester.PreventsNullRefException<RandomizerChainer>();
+    }
 
-        [Fact]
-        internal static void RandomizerChainer_NoParameterMutation()
-        {
-            Tools.Tester.PreventsParameterMutation<RandomizerChainer>();
-        }
+    [Fact]
+    internal static void RandomizerChainer_NoParameterMutation()
+    {
+        Tools.Tester.PreventsParameterMutation<RandomizerChainer>();
+    }
 
-        [Fact]
-        internal static void Create_HandlesInfinites()
-        {
-            RandomizerChainer chainer = null;
-            chainer = new RandomizerChainer(Tools.Faker, Tools.Gen, (t, c) => c.Create<ParentLoopSample>());
+    [Fact]
+    internal static void Create_HandlesInfinites()
+    {
+        RandomizerChainer chainer = null;
+        chainer = new RandomizerChainer(Tools.Faker, Tools.Gen, (t, c) => c.Create<ParentLoopSample>());
 
-            Tools.Asserter.Throws<InfiniteLoopException>(() => chainer.Create(typeof(ChildWithParentSample), new ParentLoopSample()));
-        }
+        Tools.Asserter.Throws<InfiniteLoopException>(() => chainer.Create(typeof(ChildWithParentSample), new ParentLoopSample()));
     }
 }

@@ -3,30 +3,24 @@ using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.FakerTool;
 using Xunit;
 
-namespace CreateAndFakeTests.IssueReplication
+namespace CreateAndFakeTests.IssueReplication;
+
+/// <summary>Verifies issue is resolved.</summary>
+public static class Issue018Tests
 {
-    /// <summary>Verifies issue is resolved.</summary>
-    public static class Issue018Tests
+    internal sealed class Sample(IInternalSample internalSample)
     {
-        internal class Sample
-        {
-            public IInternalSample InternalSample { get; }
+        public IInternalSample InternalSample { get; } = internalSample;
+    }
 
-            public Sample(IInternalSample internalSample)
-            {
-                InternalSample = internalSample;
-            }
-        }
+    public interface IInternalSample
+    {
+        string Value { get; }
+    }
 
-        public interface IInternalSample
-        {
-            string Value { get; }
-        }
-
-        [Theory, RandomData]
-        internal static void Issue018_RandomizerInjects(Injected<Sample> sample)
-        {
-            sample.Dummy.InternalSample.Assert().Is(sample.Fake<IInternalSample>().Dummy);
-        }
+    [Theory, RandomData]
+    internal static void Issue018_RandomizerInjects(Injected<Sample> sample)
+    {
+        sample.Dummy.InternalSample.Assert().Is(sample.Fake<IInternalSample>().Dummy);
     }
 }

@@ -6,12 +6,11 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("CreateAndFakeTests")]
 
 #if NEEDINIT // Init type only shipped with .NET 5.0+
-namespace System.Runtime.CompilerServices
-{
-    using System.ComponentModel;
+namespace System.Runtime.CompilerServices;
 
-    /// <summary>Tracks metadata.</summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    internal sealed class IsExternalInit {}
-}
+using System.ComponentModel;
+
+/// <summary>Tracks metadata.</summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+internal sealed class IsExternalInit { }
 #endif

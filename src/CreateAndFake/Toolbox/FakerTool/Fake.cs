@@ -2,95 +2,88 @@
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.ValuerTool;
 
-namespace CreateAndFake.Toolbox.FakerTool
+namespace CreateAndFake.Toolbox.FakerTool;
+
+/// <summary>Manages faking objects.</summary>
+/// <param name="fake">Faked implementation.</param>
+public class Fake(IFaked fake)
 {
-    /// <summary>Manages faking objects.</summary>
-    public class Fake
+    /// <summary>Faked implementation.</summary>
+    public IFaked Dummy { get; } = fake ?? throw new ArgumentNullException(nameof(fake));
+
+    /// <summary>How to compare call data.</summary>
+    protected IValuer Valuer => Dummy.FakeMeta.Valuer;
+
+    /// <summary>Determines behavior when missing set behavior for a call.</summary>
+    public bool ThrowByDefault
     {
-        /// <summary>Faked implementation.</summary>
-        public IFaked Dummy { get; }
+        get => Dummy.FakeMeta.ThrowByDefault;
+        set => Dummy.FakeMeta.ThrowByDefault = value;
+    }
 
-        /// <summary>How to compare call data.</summary>
-        protected IValuer Valuer => Dummy.FakeMeta.Valuer;
+    /// <summary>Ties a method call to fake behavior.</summary>
+    /// <param name="methodName">Method name of the call.</param>
+    /// <param name="args">Args to match on the call.</param>
+    /// <param name="callback">Fake behavior to invoke.</param>
+    /// <returns>Representation of the call.</returns>
+    public void Setup(string methodName, object[] args, Behavior callback)
+    {
+        Setup(methodName, [], args, callback);
+    }
 
-        /// <summary>Determines behavior when missing set behavior for a call.</summary>
-        public bool ThrowByDefault
+    /// <summary>Ties a method call to fake behavior.</summary>
+    /// <param name="methodName">Method name of the call.</param>
+    /// <param name="generics">Generics tied to the call.</param>
+    /// <param name="args">Args to match on the call.</param>
+    /// <param name="callback">Fake behavior to invoke.</param>
+    /// <returns>Representation of the call.</returns>
+    public void Setup(string methodName, Type[] generics, object[] args, Behavior callback)
+    {
+        Dummy.FakeMeta.SetCallBehavior(new CallData(methodName, generics, args, Valuer), callback);
+    }
+
+    /// <summary>Verifies all behaviors with associated times were called as expected.</summary>
+    /// <param name="total">Expected total number of calls to test as well.</param>
+    public void VerifyAll(Times total = null)
+    {
+        Dummy.FakeMeta.Verify();
+        if (total != null)
         {
-            get => Dummy.FakeMeta.ThrowByDefault;
-            set => Dummy.FakeMeta.ThrowByDefault = value;
+            VerifyTotalCalls(total);
         }
+    }
 
-        /// <summary>Initializes a new instance of the <see cref="Fake"/> class.</summary>
-        /// <param name="fake">Faked implementation.</param>
-        public Fake(IFaked fake)
-        {
-            Dummy = fake ?? throw new ArgumentNullException(nameof(fake));
-        }
+    /// <summary>Verifies the number of calls made.</summary>
+    /// <param name="times">Expected number of calls.</param>
+    /// <param name="methodName">Method name of the call.</param>
+    /// <param name="args">Args to match on the call.</param>
+    public void Verify(Times times, string methodName, object[] args)
+    {
+        Verify(times, methodName, [], args);
+    }
 
-        /// <summary>Ties a method call to fake behavior.</summary>
-        /// <param name="methodName">Method name of the call.</param>
-        /// <param name="args">Args to match on the call.</param>
-        /// <param name="callback">Fake behavior to invoke.</param>
-        /// <returns>Representation of the call.</returns>
-        public void Setup(string methodName, object[] args, Behavior callback)
-        {
-            Setup(methodName, Array.Empty<Type>(), args, callback);
-        }
+    /// <summary>Verifies the number of calls made.</summary>
+    /// <param name="times">Expected number of calls.</param>
+    /// <param name="methodName">Method name of the call.</param>
+    /// <param name="generics">Generics tied to the call.</param>
+    /// <param name="args">Args to match on the call.</param>
+    public void Verify(Times times, string methodName, Type[] generics, object[] args)
+    {
+        Verify(times, new CallData(methodName, generics, args, Valuer));
+    }
 
-        /// <summary>Ties a method call to fake behavior.</summary>
-        /// <param name="methodName">Method name of the call.</param>
-        /// <param name="generics">Generics tied to the call.</param>
-        /// <param name="args">Args to match on the call.</param>
-        /// <param name="callback">Fake behavior to invoke.</param>
-        /// <returns>Representation of the call.</returns>
-        public void Setup(string methodName, Type[] generics, object[] args, Behavior callback)
-        {
-            Dummy.FakeMeta.SetCallBehavior(new CallData(methodName, generics, args, Valuer), callback);
-        }
+    /// <summary>Verifies the number of calls made.</summary>
+    /// <param name="times">Expected number of calls.</param>
+    /// <param name="call">Call to verify.</param>
+    private void Verify(Times times, CallData call)
+    {
+        Dummy.FakeMeta.Verify(times, call);
+    }
 
-        /// <summary>Verifies all behaviors with associated times were called as expected.</summary>
-        /// <param name="total">Expected total number of calls to test as well.</param>
-        public void VerifyAll(Times total = null)
-        {
-            Dummy.FakeMeta.Verify();
-            if (total != null)
-            {
-                VerifyTotalCalls(total);
-            }
-        }
-
-        /// <summary>Verifies the number of calls made.</summary>
-        /// <param name="times">Expected number of calls.</param>
-        /// <param name="methodName">Method name of the call.</param>
-        /// <param name="args">Args to match on the call.</param>
-        public void Verify(Times times, string methodName, object[] args)
-        {
-            Verify(times, methodName, Array.Empty<Type>(), args);
-        }
-
-        /// <summary>Verifies the number of calls made.</summary>
-        /// <param name="times">Expected number of calls.</param>
-        /// <param name="methodName">Method name of the call.</param>
-        /// <param name="generics">Generics tied to the call.</param>
-        /// <param name="args">Args to match on the call.</param>
-        public void Verify(Times times, string methodName, Type[] generics, object[] args)
-        {
-            Verify(times, new CallData(methodName, generics, args, Valuer));
-        }
-
-        /// <summary>Verifies the number of calls made.</summary>
-        /// <param name="times">Expected number of calls.</param>
-        /// <param name="call">Call to verify.</param>
-        private void Verify(Times times, CallData call)
-        {
-            Dummy.FakeMeta.Verify(times, call);
-        }
-
-        /// <summary>Verifies the total number of calls made.</summary>
-        /// <param name="times">Expected total.</param>
-        public void VerifyTotalCalls(Times times)
-        {
-            Dummy.FakeMeta.VerifyTotalCalls(times);
-        }
+    /// <summary>Verifies the total number of calls made.</summary>
+    /// <param name="times">Expected total.</param>
+    public void VerifyTotalCalls(Times times)
+    {
+        Dummy.FakeMeta.VerifyTotalCalls(times);
     }
 }

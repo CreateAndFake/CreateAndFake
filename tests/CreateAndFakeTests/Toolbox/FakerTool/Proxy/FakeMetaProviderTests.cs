@@ -4,112 +4,111 @@ using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using Xunit;
 
-namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy
+namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy;
+
+/// <summary>Verifies behavior.</summary>
+public static class FakeMetaProviderTests
 {
-    /// <summary>Verifies behavior.</summary>
-    public static class FakeMetaProviderTests
+    [Fact]
+    internal static void FakeMetaProvider_GuardsNulls()
     {
-        [Fact]
-        internal static void FakeMetaProvider_GuardsNulls()
+        Tools.Tester.PreventsNullRefException<FakeMetaProvider>();
+    }
+
+    [Fact]
+    internal static void FakeMetaProvider_NoParameterMutation()
+    {
+        Tools.Tester.PreventsParameterMutation<FakeMetaProvider>();
+    }
+
+    [Theory, RandomData]
+    internal static void Verify_PresetOutOfRangeThrows(string name)
+    {
+        FakeMetaProvider provider = new()
         {
-            Tools.Tester.PreventsNullRefException<FakeMetaProvider>();
-        }
+            ThrowByDefault = false
+        };
 
-        [Fact]
-        internal static void FakeMetaProvider_NoParameterMutation()
+        CallData data = new(name, Type.EmptyTypes, [], Tools.Valuer);
+
+        provider.SetCallBehavior(data, Behavior.None(Times.Once));
+        Tools.Asserter.Throws<FakeVerifyException>(provider.Verify);
+
+        provider.CallVoid(null, Tools.Mutator.Variant(name), Type.EmptyTypes, []);
+        Tools.Asserter.Throws<FakeVerifyException>(provider.Verify);
+
+        provider.CallVoid(null, name, Type.EmptyTypes, []);
+        provider.Verify();
+
+        provider.CallVoid(null, name, Type.EmptyTypes, []);
+        Tools.Asserter.Throws<FakeVerifyException>(provider.Verify);
+    }
+
+    [Theory, RandomData]
+    internal static void Verify_CustomOutOfRangeThrows(string name)
+    {
+        FakeMetaProvider provider = new()
         {
-            Tools.Tester.PreventsParameterMutation<FakeMetaProvider>();
-        }
+            ThrowByDefault = false
+        };
 
-        [Theory, RandomData]
-        internal static void Verify_PresetOutOfRangeThrows(string name)
+        CallData data = new(name, Type.EmptyTypes, [], Tools.Valuer);
+
+        provider.Verify(0, data);
+        Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
+
+        provider.CallVoid(null, Tools.Mutator.Variant(name), Type.EmptyTypes, []);
+        provider.Verify(0, data);
+        Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
+
+        provider.CallVoid(null, name, Type.EmptyTypes, []);
+        Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(0, data));
+        provider.Verify(1, data);
+
+        provider.CallVoid(null, name, Type.EmptyTypes, []);
+        Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
+        provider.Verify(2, data);
+    }
+
+    [Fact]
+    internal static void VerifyTotalCalls_OutOfRangeThrows()
+    {
+        FakeMetaProvider provider = new()
         {
-            FakeMetaProvider provider = new()
-            {
-                ThrowByDefault = false
-            };
+            ThrowByDefault = false
+        };
 
-            CallData data = new(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
+        provider.VerifyTotalCalls(0);
+        Tools.Asserter.Throws<FakeVerifyException>(() => provider.VerifyTotalCalls(1));
 
-            provider.SetCallBehavior(data, Behavior.None(Times.Once));
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify());
+        provider.CallVoid(null, Tools.Randomizer.Create<string>(), Type.EmptyTypes, []);
+        Tools.Asserter.Throws<FakeVerifyException>(() => provider.VerifyTotalCalls(0));
+        provider.VerifyTotalCalls(1);
 
-            provider.CallVoid(null, Tools.Mutator.Variant(name), Type.EmptyTypes, Array.Empty<object>());
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify());
+        provider.CallVoid(null, Tools.Randomizer.Create<string>(), Type.EmptyTypes, []);
+        Tools.Asserter.Throws<FakeVerifyException>(() => provider.VerifyTotalCalls(1));
+        provider.VerifyTotalCalls(2);
+    }
 
-            provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>());
-            provider.Verify();
+    [Theory, RandomData]
+    internal static void CallVoid_ReturnValueThrows(string name)
+    {
+        FakeMetaProvider provider = new();
 
-            provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>());
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify());
-        }
+        CallData data = new(name, Type.EmptyTypes, [], Tools.Valuer);
+        provider.SetCallBehavior(data, Behavior.Returns(""));
 
-        [Theory, RandomData]
-        internal static void Verify_CustomOutOfRangeThrows(string name)
+        Tools.Asserter.Throws<InvalidOperationException>(
+            () => provider.CallVoid(null, name, Type.EmptyTypes, []));
+    }
+
+    [Theory, RandomData]
+    internal static void SetLastCallBehavior_RequiresPreviousCall(Behavior behavior)
+    {
+        Tools.Asserter.Throws<InvalidOperationException>(() =>
         {
-            FakeMetaProvider provider = new()
-            {
-                ThrowByDefault = false
-            };
-
-            CallData data = new(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
-
-            provider.Verify(0, data);
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
-
-            provider.CallVoid(null, Tools.Mutator.Variant(name), Type.EmptyTypes, Array.Empty<object>());
-            provider.Verify(0, data);
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
-
-            provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>());
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(0, data));
-            provider.Verify(1, data);
-
-            provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>());
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.Verify(1, data));
-            provider.Verify(2, data);
-        }
-
-        [Fact]
-        internal static void VerifyTotalCalls_OutOfRangeThrows()
-        {
-            FakeMetaProvider provider = new()
-            {
-                ThrowByDefault = false
-            };
-
-            provider.VerifyTotalCalls(0);
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.VerifyTotalCalls(1));
-
-            provider.CallVoid(null, Tools.Randomizer.Create<string>(), Type.EmptyTypes, Array.Empty<object>());
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.VerifyTotalCalls(0));
-            provider.VerifyTotalCalls(1);
-
-            provider.CallVoid(null, Tools.Randomizer.Create<string>(), Type.EmptyTypes, Array.Empty<object>());
-            Tools.Asserter.Throws<FakeVerifyException>(() => provider.VerifyTotalCalls(1));
-            provider.VerifyTotalCalls(2);
-        }
-
-        [Theory, RandomData]
-        internal static void CallVoid_ReturnValueThrows(string name)
-        {
-            FakeMetaProvider provider = new();
-
-            CallData data = new(name, Type.EmptyTypes, Array.Empty<object>(), Tools.Valuer);
-            provider.SetCallBehavior(data, Behavior.Returns(""));
-
-            Tools.Asserter.Throws<InvalidOperationException>(
-                () => provider.CallVoid(null, name, Type.EmptyTypes, Array.Empty<object>()));
-        }
-
-        [Theory, RandomData]
-        internal static void SetLastCallBehavior_RequiresPreviousCall(Behavior behavior)
-        {
-            Tools.Asserter.Throws<InvalidOperationException>(() =>
-            {
-                FakeMetaProvider.SetLastCallBehavior(behavior);
-                FakeMetaProvider.SetLastCallBehavior(behavior);
-            });
-        }
+            FakeMetaProvider.SetLastCallBehavior(behavior);
+            FakeMetaProvider.SetLastCallBehavior(behavior);
+        });
     }
 }
