@@ -407,4 +407,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Mac
-.DS_Store
+*.DS_Store
