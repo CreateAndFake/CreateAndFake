@@ -17,4 +17,4 @@ assignees: ''
 <!--- Optional implementation suggestion. --->
 
 ## Additional Information
-<!--- For example, why you want the feature. --->
+<!--- For example, why do you want the feature? --->

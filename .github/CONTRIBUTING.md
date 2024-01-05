@@ -34,9 +34,10 @@ May optionally use VS Code installs from other setups instead.
     C) [VS Code](https://code.visualstudio.com/download/)
 2) Install VS Code extensions:
     A) C# Dev Kit
-    B) GitHub Pull Request and Issues
-    C) EditorConfig for VS Code
-    D) Code Spell Checker
+    B) EditorConfig for VS Code
+    C) Code Spell Checker
+    D) GitHub Pull Request and Issues
+    E) GitHub Actions
 3) Clone the repository in the editor, then:
     A) Run from terminal: "chmod +x ./build/run.sh"
     B) To see build options, run from terminal: "./build/run.sh --help"
@@ -51,9 +52,10 @@ May optionally use VS Code installs from other setups instead.
 2) Install VS Code: https://code.visualstudio.com/download
 3) Install VS Code extensions:
     A) C# Dev Kit
-    B) GitHub Pull Request and Issues
-    C) EditorConfig for VS Code
-    D) Code Spell Checker
+    B) EditorConfig for VS Code
+    C) Code Spell Checker
+    D) GitHub Pull Request and Issues
+    E) GitHub Actions
 4) Clone the repository in the editor, then:
     A) Follow all prompts for signing in/downloads.
     B) To see build options, run from terminal: "./build/run.sh --help"
@@ -63,14 +65,14 @@ May optionally use VS Code installs from other setups instead.
 
 Set the following git configuration settings, replacing [xxx] with valid personal values:
 
-1) git config --global user.email "[xxx]@users.noreply.github.com"
-2) git config --global user.name "[xxx]"
-3) git config --global commit.gpgSign true
+1) git config --global user.name "[xxx]"
+2) git config --global user.email "[xxx]@users.noreply.github.com"
+3) git config --global user.signingKey [XXX]
 4) git config --global tag.gpgSign true
-5) git config --global push.gpgSign "if-asked"
-6) git config --global user.signingKey [XXX]
+5) git config --global commit.gpgSign true
+6) git config --global push.gpgSign "if-asked"
 
-Read more about GPG keys below.
+Read more about GPG keys in the following section.
 
 ## Developer Certificate of Origin (DCO)
 

@@ -1,12 +1,12 @@
 <!--- Follow the contributing guide and code of conduct. --->
 
+<!-- Title Format: Fix #xx, #xx: Small description. --->
+
 ## Summary
 <!--- Describe the code. --->
 
 ## Fulfills
 <!--- Specify which issues the contribution solves. --->
 
-* Closes #xx: Bug 1
-* Closes #xx: Bug 2
-* Closes #xx: Feature 1
-* Closes #xx: Feature 2
+* Closes #xx
+* Closes #xx
