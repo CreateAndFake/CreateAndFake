@@ -16,6 +16,8 @@ dotnet_diagnostic.IDE0045.severity = none
 dotnet_diagnostic.IDE0046.severity = none
 # IDE0048: Add parentheses for clarity
 dotnet_diagnostic.IDE0048.severity = none
+# IDE0057 Substring can be simplified
+dotnet_diagnostic.IDE0057.severity = none
 # IDE0063: 'using' statement can be simplified
 dotnet_diagnostic.IDE0063.severity = none
 # IDE0065: Using directives placed outside namespaces

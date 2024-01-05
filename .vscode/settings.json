@@ -48,6 +48,7 @@
         "NETSTANDARD",
         "Newarr",
         "Newobj",
+        "noreply",
         "nuget",
         "nupkg",
         "omnisharp",

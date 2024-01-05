@@ -15,7 +15,7 @@ public static class Issue089Tests
         text.Assert().Is(Tools.Duplicator.Copy(text));
         text.Assert().HasCount(text.Length);
 
-        string startSample = text[..2];
+        string startSample = text.Substring(0, 2);
         string endSample = text.Substring(text.Length - 2, 2);
 
         text.Assert().Contains(text.Substring(2, 2));
@@ -32,7 +32,7 @@ public static class Issue089Tests
         text.Assert(t => t.Assert().IsNot(Tools.Duplicator.Copy(text))).Throws<AssertException>();
         text.Assert(t => t.Assert().HasCount(text.Length + 1)).Throws<AssertException>();
 
-        string startSample = text[..2];
+        string startSample = text.Substring(0, 2);
         string endSample = text.Substring(text.Length - 2, 2);
 
         text.Assert(t => t.Assert().Contains(Tools.Mutator.Variant(text))).Throws<AssertException>();
