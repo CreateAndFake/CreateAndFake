@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+#if NETSTANDARD
+using System.Runtime.Serialization.Formatters.Binary;
+#endif
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
@@ -28,6 +31,17 @@ public sealed class SerializableCopyHint : CopyHint
         }
         else if (source is ISerializable)
         {
+#if NETSTANDARD // Backwards compatibility.
+            if (source.GetType().IsSerializable)
+            {
+                IFormatter binary = new BinaryFormatter();
+                using MemoryStream memory = new();
+
+                binary.Serialize(memory, source);
+                _ = memory.Seek(0, SeekOrigin.Begin);
+                return (true, binary.Deserialize(memory));
+            }
+#endif
             HashSet<object> knownData = [];
             FlattenData(source, knownData);
 
