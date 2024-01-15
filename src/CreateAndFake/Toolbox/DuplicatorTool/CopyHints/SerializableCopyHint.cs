@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,12 +26,12 @@ public sealed class SerializableCopyHint : CopyHint
         {
             return (true, null);
         }
-
-        if (source is ISerializable && source.GetType().IsSerializable)
+        else if (source is ISerializable)
         {
-            DataContractSerializer serializer = new(source.GetType(), FindInnerTypes(source)
-                .Where(t => t != null)
-                .Distinct());
+            HashSet<object> knownData = [];
+            FlattenData(source, knownData);
+
+            DataContractSerializer serializer = new(source.GetType(), knownData.Select(d => d.GetType()).Distinct());
 
             using MemoryStream stream = new();
 
@@ -44,18 +45,56 @@ public sealed class SerializableCopyHint : CopyHint
         }
     }
 
-    private static IEnumerable<Type> FindInnerTypes(object source)
+    /// <summary>Finds used objects inside <paramref name="source"/></summary>
+    /// <param name="source">Instance being serialized.</param>
+    /// <param name="foundData">Set to populate with found data.</param>
+    private static void FindInnerData(object source, HashSet<object> foundData)
     {
         Type type = source.GetType();
 
         foreach (PropertyInfo property in type.GetProperties(_Scope).Where(p => p.CanRead))
         {
-            yield return property.GetValue(source)?.GetType();
+            FlattenData(property.GetValue(source), foundData);
         }
 
         foreach (FieldInfo field in type.GetFields(_Scope))
         {
-            yield return field.GetValue(source)?.GetType();
+            FlattenData(field.GetValue(source), foundData);
+        }
+    }
+
+    /// <summary>Finds data associated with <paramref name="source"/></summary>
+    /// <param name="source">Instance being serialized.</param>
+    /// <param name="foundData">Set to populate with found data.</param>
+    private static void FlattenData(object source, HashSet<object> foundData)
+    {
+        if (source == null)
+        {
+            return;
+        }
+        else if (!foundData.Add(source) || source.GetType().Inherits<string>())
+        {
+            return;
+        }
+        else if (source is IDictionary map)
+        {
+            foreach (DictionaryEntry item in map)
+            {
+                FlattenData(item.Key, foundData);
+                FlattenData(item.Value, foundData);
+            }
+        }
+        else if (source is IEnumerable values)
+        {
+            IEnumerator gen = values.GetEnumerator();
+            while (gen.MoveNext())
+            {
+                FlattenData(gen.Current, foundData);
+            }
+        }
+        else if (!source.GetType().IsValueType)
+        {
+            FindInnerData(source, foundData);
         }
     }
 }

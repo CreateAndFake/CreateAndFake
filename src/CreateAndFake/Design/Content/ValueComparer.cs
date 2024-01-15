@@ -197,14 +197,16 @@ public sealed class ValueComparer :
         {
             return NullHash;
         }
-
-        int hash = BaseHash;
-        foreach (DictionaryEntry item in obj)
+        else
         {
-            hash += GetHashCode(item.Key);
-            hash += GetHashCode(item.Value);
+            int hash = BaseHash;
+            foreach (DictionaryEntry item in obj)
+            {
+                hash += GetHashCode(item.Key);
+                hash += GetHashCode(item.Value);
+            }
+            return hash;
         }
-        return hash;
     }
 
     /// <summary>
