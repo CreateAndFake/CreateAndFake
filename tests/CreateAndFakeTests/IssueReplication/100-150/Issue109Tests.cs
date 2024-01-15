@@ -8,6 +8,8 @@ using Xunit;
 
 namespace CreateAndFakeTests.IssueReplication;
 
+#pragma warning disable CA2227 // Change collection to read-only property setter.
+
 /// <summary>Verifies issue is resolved.</summary>
 public static class Issue109Tests
 {
@@ -60,3 +62,5 @@ public static class Issue109Tests
         new Duplicator(Tools.Asserter, true, new SerializableCopyHint()).Copy(sample).Assert().Is(sample);
     }
 }
+
+#pragma warning restore CA2227

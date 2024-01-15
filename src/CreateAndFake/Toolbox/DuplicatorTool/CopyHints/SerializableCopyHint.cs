@@ -34,7 +34,7 @@ public sealed class SerializableCopyHint : CopyHint
 #if NETSTANDARD // Backwards compatibility.
             if (source.GetType().IsSerializable)
             {
-                IFormatter binary = new BinaryFormatter();
+                BinaryFormatter binary = new();
                 using MemoryStream memory = new();
 
                 binary.Serialize(memory, source);

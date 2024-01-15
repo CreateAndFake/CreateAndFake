@@ -23,7 +23,8 @@ public static class TypeExtensions
 
         return type.Assembly.GetTypes()
             .Where(t => !t.IsAbstract)
-            .Where(t => t.Inherits(type));
+            .Where(t => t.Inherits(type))
+            .Where(t => IsVisibleTo(t, Assembly.GetCallingAssembly().GetName()));
     }
 
     /// <summary>Finds subclasses of <paramref name="type"/> in all loaded assemblies.</summary>

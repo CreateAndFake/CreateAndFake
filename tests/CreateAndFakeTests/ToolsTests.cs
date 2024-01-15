@@ -11,6 +11,7 @@ using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
+using CreateAndFake.Toolbox.TesterTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
 using Xunit;
@@ -82,7 +83,8 @@ public static class ToolsTests
             typeof(ToolSet),
             typeof(Tools),
             typeof(FakeAttribute),
-            typeof(StubAttribute)
+            typeof(StubAttribute),
+            typeof(BaseGuarder)
         ];
 
         foreach (Type type in typeof(Tools).Assembly.GetTypes()
