@@ -17,23 +17,62 @@ Make sure to refer to and follow the [code of conduct](CODE_OF_CONDUCT.md).
 
 Pull requests will be reviewed thoroughly to maintain project quality.
 
-## Windows Dev Environment Recommended Setup
+## Windows Environment Recommended Setup
 
 1) Install [VS Community](https://visualstudio.microsoft.com/vs/community/).
-2) Clone repo and run from cmd prompt "build/run.cmd test".
+2) Clone the repository locally.
+3) To see build options, run from cmd prompt: "./build/run.cmd --help"
+4) Verify project state by running from cmd prompt: "./build/run.cmd test"
 
-## Linux Dev Environment Recommended Setup
+May optionally use VS Code installs from other setups instead.
+
+## Linux Environment Recommended Setup
 
 1) Install packages for:
     A) [.NET frameworks](https://dotnet.microsoft.com/download/)
     B) [Mono](https://www.mono-project.com/download/stable/#download-lin/)
     C) [VS Code](https://code.visualstudio.com/download/)
 2) Install VS Code extensions:
-    A) C#
+    A) C# Dev Kit
     B) EditorConfig for VS Code
-    C) Powershell
-    D) Code Spell Checker
-3) Clone repo and run from terminal "./build/run.sh test".
+    C) Code Spell Checker
+    D) GitHub Pull Request and Issues
+    E) GitHub Actions
+3) Clone the repository in the editor, then:
+    A) Run from terminal: "chmod +x ./build/run.sh"
+    B) To see build options, run from terminal: "./build/run.sh --help"
+    C) Verify project state by running from terminal: "./build/run.sh test"
+
+## Mac Dev Environment Recommended Setup
+
+1) Install Command Line Developer Tools via the Terminal:
+    A) Check if installed: ‘xcode-select -p’
+    B) If not, run: ‘code-select —install’
+    C) Verify git works: ‘git —version’
+2) Install VS Code: https://code.visualstudio.com/download
+3) Install VS Code extensions:
+    A) C# Dev Kit
+    B) EditorConfig for VS Code
+    C) Code Spell Checker
+    D) GitHub Pull Request and Issues
+    E) GitHub Actions
+4) Clone the repository in the editor, then:
+    A) Follow all prompts for signing in/downloads.
+    B) To see build options, run from terminal: "./build/run.sh --help"
+    C) Verify project state by running from terminal: "./build/run.sh test"
+
+# Git & GPG Quick Setup Example
+
+Set the following git configuration settings, replacing [xxx] with valid personal values:
+
+1) git config --global user.name "[xxx]"
+2) git config --global user.email "[xxx]@users.noreply.github.com"
+3) git config --global user.signingKey [XXX]
+4) git config --global tag.gpgSign true
+5) git config --global commit.gpgSign true
+6) git config --global push.gpgSign "if-asked"
+
+Read more about GPG keys in the following section.
 
 ## Developer Certificate of Origin (DCO)
 

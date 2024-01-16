@@ -1,50 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 
-namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
+namespace CreateAndFake.Toolbox.ValuerTool.CompareHints;
+
+/// <summary>Handles comparing async collections for <see cref="IValuer"/>.</summary>
+public sealed class AsyncEnumerableCompareHint : CompareHint
 {
-    /// <summary>Handles comparing async collections for <see cref="IValuer"/>.</summary>
-    public sealed class AsyncEnumerableCompareHint : CompareHint
+    /// <inheritdoc/>
+    protected override bool Supports(object expected, object actual, ValuerChainer valuer)
     {
-        /// <inheritdoc/>
-        protected override bool Supports(object expected, object actual, ValuerChainer valuer)
+        ArgumentGuard.ThrowIfNull(expected, nameof(expected));
+        ArgumentGuard.ThrowIfNull(actual, nameof(actual));
+
+        return expected.GetType().Inherits(typeof(IAsyncEnumerable<>))
+            && actual.GetType().Inherits(typeof(IAsyncEnumerable<>));
+    }
+
+    /// <inheritdoc/>
+    protected override IEnumerable<Difference> Compare(
+        object expected, object actual, ValuerChainer valuer)
+    {
+        ArgumentGuard.ThrowIfNull(expected, nameof(expected));
+        ArgumentGuard.ThrowIfNull(actual, nameof(actual));
+        ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));
+
+        return Task.Run(() => (Task<IEnumerable<Difference>>)GetType()
+            .GetMethod(nameof(CompareAsync), BindingFlags.Static | BindingFlags.NonPublic)
+            .MakeGenericMethod(expected.GetType().GetGenericArguments().Single())
+            .Invoke(null, [expected, actual, valuer])).Result;
+    }
+
+    /// <inheritdoc cref="Compare"/>
+    /// <typeparam name="T">Item type being compared.</typeparam>
+    private static async Task<IEnumerable<Difference>> CompareAsync<T>(
+        IAsyncEnumerable<T> expected, IAsyncEnumerable<T> actual, ValuerChainer valuer)
+    {
+        List<Difference> differences = [];
+
+        IAsyncEnumerator<T> expectedEnumerator = expected.GetAsyncEnumerator();
+        IAsyncEnumerator<T> actualEnumerator = actual.GetAsyncEnumerator();
+        await using (expectedEnumerator.ConfigureAwait(false))
+        await using (actualEnumerator.ConfigureAwait(false))
         {
-            if (expected == null) throw new ArgumentNullException(nameof(expected));
-            if (actual == null) throw new ArgumentNullException(nameof(actual));
-
-            return expected.GetType().Inherits(typeof(IAsyncEnumerable<>))
-                && actual.GetType().Inherits(typeof(IAsyncEnumerable<>));
-        }
-
-        /// <inheritdoc/>
-        protected override IEnumerable<Difference> Compare(
-            object expected, object actual, ValuerChainer valuer)
-        {
-            if (expected == null) throw new ArgumentNullException(nameof(expected));
-            if (actual == null) throw new ArgumentNullException(nameof(actual));
-            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
-
-            return Task.Run(() => ((Task<IEnumerable<Difference>>)GetType()
-                .GetMethod(nameof(CompareAsync), BindingFlags.Static | BindingFlags.NonPublic)
-                .MakeGenericMethod(expected.GetType().GetGenericArguments().Single())
-                .Invoke(null, new object[] { expected, actual, valuer }))).Result;
-        }
-
-        /// <inheritdoc cref="Compare"/>
-        /// <typeparam name="T">Item type being compared.</typeparam>
-        private static async Task<IEnumerable<Difference>> CompareAsync<T>(
-            IAsyncEnumerable<T> expected, IAsyncEnumerable<T> actual, ValuerChainer valuer)
-        {
-            await using IAsyncEnumerator<T> expectedEnumerator = expected.GetAsyncEnumerator();
-            await using IAsyncEnumerator<T> actualEnumerator = actual.GetAsyncEnumerator();
             int index = 0;
-
-            List<Difference> differences = new();
-
             while (await expectedEnumerator.MoveNextAsync().ConfigureAwait(false))
             {
                 if (await actualEnumerator.MoveNextAsync().ConfigureAwait(false))
@@ -63,32 +65,32 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
             {
                 differences.Add(new Difference(index++, new Difference("'outofbounds'", actualEnumerator.Current)));
             }
-
-            return differences;
         }
 
-        /// <inheritdoc/>
-        protected override int GetHashCode(object item, ValuerChainer valuer)
+        return differences;
+    }
+
+    /// <inheritdoc/>
+    protected override int GetHashCode(object item, ValuerChainer valuer)
+    {
+        ArgumentGuard.ThrowIfNull(item, nameof(item));
+        ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));
+
+        return Task.Run(() => (Task<int>)GetType()
+            .GetMethod(nameof(GetHashCodeAsync), BindingFlags.Static | BindingFlags.NonPublic)
+            .MakeGenericMethod(item.GetType().GetGenericArguments().Single())
+            .Invoke(null, [item, valuer])).Result;
+    }
+
+    /// <inheritdoc cref="GetHashCode"/>
+    /// <typeparam name="T">Item type being compared.</typeparam>
+    private static async Task<int> GetHashCodeAsync<T>(IAsyncEnumerable<T> item, ValuerChainer valuer)
+    {
+        int hash = ValueComparer.BaseHash;
+        await foreach (T current in item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
-
-            return Task.Run(() => ((Task<int>)GetType()
-                .GetMethod(nameof(GetHashCodeAsync), BindingFlags.Static | BindingFlags.NonPublic)
-                .MakeGenericMethod(item.GetType().GetGenericArguments().Single())
-                .Invoke(null, new object[] { item, valuer }))).Result;
+            hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(current);
         }
-
-        /// <inheritdoc cref="GetHashCode"/>
-        /// <typeparam name="T">Item type being compared.</typeparam>
-        private static async Task<int> GetHashCodeAsync<T>(IAsyncEnumerable<T> item, ValuerChainer valuer)
-        {
-            int hash = ValueComparer.BaseHash;
-            await foreach (T current in item)
-            {
-                hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(current);
-            }
-            return hash;
-        }
+        return hash;
     }
 }

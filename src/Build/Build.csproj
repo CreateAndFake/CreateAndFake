@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Bullseye" Version="3.7.0" />
-    <PackageReference Include="SimpleExec" Version="7.0.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.11.0" PrivateAssets="All" />
+    <PackageReference Include="Bullseye" Version="4.2.1" />
+    <PackageReference Include="SimpleExec" Version="11.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.8.0" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

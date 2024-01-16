@@ -3,119 +3,106 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using CreateAndFake.Design;
 
 // Return isn't present on all .NET versions.
 #pragma warning disable IDE0058 // Expression value is never used
 
-namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints
+namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
+
+/// <summary>Handles generation of legacy collections for the randomizer.</summary>
+/// <param name="minSize">Min size for created collections.</param>
+/// <param name="range">Size variance for created collections.</param>
+/// <remarks>Specifies the size of generated collections.</remarks>
+public sealed class LegacyCollectionCreateHint(int minSize = 1, int range = 3) : CreateCollectionHint
 {
-    /// <summary>Handles generation of legacy collections for the randomizer.</summary>
-    public sealed class LegacyCollectionCreateHint : CreateCollectionHint
+    /// <summary>Supported types and the methods used to generate them.</summary>
+    private static readonly (Type, Func<string[], RandomizerChainer, object>)[] _Creators
+        =
+        [
+            (typeof(Hashtable), CreateDict<Hashtable>),
+            (typeof(SortedList), CreateDict<SortedList>),
+            (typeof(ListDictionary), CreateDict<ListDictionary>),
+            (typeof(HybridDictionary), CreateDict<HybridDictionary>),
+            (typeof(StringDictionary), CreateDict<StringDictionary>),
+            (typeof(OrderedDictionary), CreateDict<OrderedDictionary>),
+            (typeof(NameValueCollection), CreateDict<NameValueCollection>),
+
+            (typeof(Array), (data, gen) => data),
+            (typeof(Stack), (data, gen) => new Stack(data)),
+            (typeof(Queue), (data, gen) => new Queue(data)),
+            (typeof(ArrayList), (data, gen) => new ArrayList(data)),
+            (typeof(BitArray), (data, gen) => new BitArray(data.Select(d => gen.Create<bool>()).ToArray())),
+
+            (typeof(StringCollection), (data, gen) =>
+            {
+                StringCollection result = [.. data];
+                return result;
+            }
+            ),
+        ];
+
+    /// <summary>Collections that the hint will create.</summary>
+    internal static IEnumerable<Type> PotentialCollections => _Creators.Select(i => i.Item1);
+
+    /// <inheritdoc/>
+    protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
     {
-        /// <summary>Supported types and the methods used to generate them.</summary>
-        private static readonly (Type, Func<string[], RandomizerChainer, object>)[] _Creators
-            = new (Type, Func<string[], RandomizerChainer, object>)[]
-            {
-                (typeof(Hashtable), CreateDict<Hashtable>),
-                (typeof(SortedList), CreateDict<SortedList>),
-                (typeof(ListDictionary), CreateDict<ListDictionary>),
-                (typeof(HybridDictionary), CreateDict<HybridDictionary>),
-                (typeof(StringDictionary), CreateDict<StringDictionary>),
-                (typeof(OrderedDictionary), CreateDict<OrderedDictionary>),
-                (typeof(NameValueCollection), CreateDict<NameValueCollection>),
+        return TryCreate(type, minSize + randomizer?.Gen.Next(range) ?? 0, randomizer);
+    }
 
-                (typeof(Array), (data, gen) => data),
-                (typeof(Stack), (data, gen) => new Stack(data)),
-                (typeof(Queue), (data, gen) => new Queue(data)),
-                (typeof(ArrayList), (data, gen) => new ArrayList(data)),
-                (typeof(BitArray), (data, gen) => new BitArray(data.Select(d => gen.Create<bool>()).ToArray())),
+    /// <inheritdoc/>
+    protected internal override (bool, object) TryCreate(Type type, int size, RandomizerChainer randomizer)
+    {
+        ArgumentGuard.ThrowIfNull(type, nameof(type));
+        ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
 
-                (typeof(StringCollection), (data, gen) =>
-                {
-                    StringCollection result = new();
-                    foreach(string item in data)
-                    {
-                        result.Add(item);
-                    }
-                    return result;
-                }),
-            };
-
-        /// <summary>Collections that the hint will create.</summary>
-        internal static IEnumerable<Type> PotentialCollections => _Creators.Select(i => i.Item1);
-
-        /// <summary>Size details for created collections.</summary>
-        private readonly int _minSize, _range;
-
-        /// <summary>Initializes a new instance of the <see cref="LegacyCollectionCreateHint"/> class.</summary>
-        /// <param name="minSize">Min size for created collections.</param>
-        /// <param name="range">Size variance for created collections.</param>
-        /// <remarks>Specifies the size of generated collections.</remarks>
-        public LegacyCollectionCreateHint(int minSize = 1, int range = 3)
+        if (type.Inherits<IEnumerable>() && FindMatches(type).Any())
         {
-            _minSize = minSize;
-            _range = range;
+            return (true, randomizer.Gen.NextItem(FindMatches(type)).Item2
+                .Invoke(CreateInternalData(size, randomizer), randomizer));
         }
-
-        /// <inheritdoc/>
-        protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+        else
         {
-            return TryCreate(type, _minSize + randomizer?.Gen.Next(_range) ?? 0, randomizer);
+            return (false, null);
         }
+    }
 
-        /// <inheritdoc/>
-        protected internal override (bool, object) TryCreate(Type type, int size, RandomizerChainer randomizer)
+    /// <summary>Finds potential collection matches for a type.</summary>
+    /// <param name="type">Type to find matches for.</param>
+    /// <returns>All possible matches.</returns>
+    private static IEnumerable<(Type, Func<string[], RandomizerChainer, object>)> FindMatches(Type type)
+    {
+        return _Creators.Where(m => type.IsInheritedBy(m.Item1));
+    }
+
+    /// <summary>Creates the type and populates it with data.</summary>
+    /// <typeparam name="TDict">Type to create.</typeparam>
+    /// <param name="keys">Keys to create in the type.</param>
+    /// <param name="gen">Handles callback behavior for child values.</param>
+    /// <returns>The created instance.</returns>
+    private static TDict CreateDict<TDict>(string[] keys, RandomizerChainer gen)
+    {
+        dynamic data = Activator.CreateInstance<TDict>();
+        for (int i = 0; i < keys.Length; i++)
         {
-            if (type == null) throw new ArgumentNullException(nameof(type));
-            if (randomizer == null) throw new ArgumentNullException(nameof(randomizer));
-
-            if (type.Inherits<IEnumerable>() && FindMatches(type).Any())
-            {
-                return (true, randomizer.Gen.NextItem(FindMatches(type)).Item2
-                    .Invoke(CreateInternalData(size, randomizer), randomizer));
-            }
-            else
-            {
-                return (false, null);
-            }
+            data.Add(keys[i], gen.Create<string>());
         }
+        return data;
+    }
 
-        /// <summary>Finds potential collection matches for a type.</summary>
-        /// <param name="type">Type to find matches for.</param>
-        /// <returns>All possible matches.</returns>
-        private static IEnumerable<(Type, Func<string[], RandomizerChainer, object>)> FindMatches(Type type)
+    /// <summary>Creates populated string array of data to use.</summary>
+    /// <param name="size">Number of items to generate.</param>
+    /// <param name="randomizer">Callback to the randomizer to create child values.</param>
+    /// <returns>Data populated with random values.</returns>
+    private static string[] CreateInternalData(int size, RandomizerChainer randomizer)
+    {
+        string[] data = new string[size];
+        for (int i = 0; i < data.Length; i++)
         {
-            return _Creators.Where(m => type.IsInheritedBy(m.Item1));
+            data.SetValue(randomizer.Create<string>(), i);
         }
-
-        /// <summary>Creates the type and populates it with data.</summary>
-        /// <typeparam name="TDict">Type to create.</typeparam>
-        /// <param name="keys">Keys to create in the type.</param>
-        /// <param name="gen">Handles callback behavior for child values.</param>
-        /// <returns>The created instance.</returns>
-        private static TDict CreateDict<TDict>(string[] keys, RandomizerChainer gen)
-        {
-            dynamic data = Activator.CreateInstance<TDict>();
-            for (int i = 0; i < keys.Length; i++)
-            {
-                data.Add(keys[i], gen.Create<string>());
-            }
-            return data;
-        }
-
-        /// <summary>Creates populated string array of data to use.</summary>
-        /// <param name="size">Number of items to generate.</param>
-        /// <param name="randomizer">Callback to the randomizer to create child values.</param>
-        /// <returns>Data populated with random values.</returns>
-        private static string[] CreateInternalData(int size, RandomizerChainer randomizer)
-        {
-            string[] data = new string[size];
-            for (int i = 0; i < data.Length; i++)
-            {
-                data.SetValue(randomizer.Create<string>(), i);
-            }
-            return data;
-        }
+        return data;
     }
 }
 

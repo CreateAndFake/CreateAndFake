@@ -1,27 +1,27 @@
 using System;
 using CreateAndFake;
+using CreateAndFake.Design;
 using Xunit;
 
-namespace CreateAndFakeTests.IssueReplication
+namespace CreateAndFakeTests.IssueReplication;
+
+/// <summary>Verifies issue is resolved.</summary>
+public static class Issue015Tests
 {
-    /// <summary>Verifies issue is resolved.</summary>
-    public static class Issue015Tests
+    internal static class Sample
     {
-        internal static class Sample
+        public static void Bad(int[] value)
         {
-            public static void Bad(int[] value)
-            {
-                if (value == null) throw new ArgumentNullException(nameof(value));
+            ArgumentGuard.ThrowIfNull(value, nameof(value));
 
-                value[0] = Tools.Mutator.Variant(value[0]);
-            }
+            value[0] = Tools.Mutator.Variant(value[0]);
         }
+    }
 
-        [Fact]
-        internal static void Issue015_GuardsParameterMutation()
-        {
-            Tools.Asserter.Throws<AggregateException>(() =>
-                Tools.Tester.PreventsParameterMutation(typeof(Sample)));
-        }
+    [Fact]
+    internal static void Issue015_GuardsParameterMutation()
+    {
+        Tools.Asserter.Throws<AggregateException>(() =>
+            Tools.Tester.PreventsParameterMutation(typeof(Sample)));
     }
 }

@@ -2,86 +2,77 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 
-namespace CreateAndFake.Toolbox.ValuerTool.CompareHints
+namespace CreateAndFake.Toolbox.ValuerTool.CompareHints;
+
+/// <summary>Handles comparing objects for <see cref="IValuer"/>.</summary>
+/// <param name="scope">Flags used to find properties and fields.</param>
+public sealed class ObjectCompareHint(BindingFlags scope) : CompareHint
 {
-    /// <summary>Handles comparing objects for <see cref="IValuer"/>.</summary>
-    public sealed class ObjectCompareHint : CompareHint
+    /// <inheritdoc/>
+    protected override bool Supports(object expected, object actual, ValuerChainer valuer)
     {
-        /// <summary>Flags used to find properties and fields.</summary>
-        private readonly BindingFlags _scope;
+        ArgumentGuard.ThrowIfNull(expected, nameof(expected));
+        ArgumentGuard.ThrowIfNull(actual, nameof(actual));
 
-        /// <summary>Initializes a new instance of the <see cref="ObjectCompareHint"/> class.</summary>
-        /// <param name="scope">Flags used to find properties and fields.</param>
-        public ObjectCompareHint(BindingFlags scope)
+        Type type = expected.GetType();
+        return type.GetProperties(scope).Any(p => p.CanRead)
+            || type.GetFields(scope).Length != 0;
+    }
+
+    /// <inheritdoc/>
+    protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
+    {
+        ArgumentGuard.ThrowIfNull(expected, nameof(expected));
+        ArgumentGuard.ThrowIfNull(actual, nameof(actual));
+        ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));
+
+        return LazyCompare(expected, actual, valuer);
+    }
+
+    /// <inheritdoc cref="Compare"/>
+    private IEnumerable<Difference> LazyCompare(object expected, object actual, ValuerChainer valuer)
+    {
+        Type type = expected.GetType();
+
+        foreach (PropertyInfo property in type.GetProperties(scope).Where(p => p.CanRead))
         {
-            _scope = scope;
-        }
-
-        /// <inheritdoc/>
-        protected override bool Supports(object expected, object actual, ValuerChainer valuer)
-        {
-            if (expected == null) throw new ArgumentNullException(nameof(expected));
-            if (actual == null) throw new ArgumentNullException(nameof(actual));
-
-            Type type = expected.GetType();
-            return type.GetProperties(_scope).Any(p => p.CanRead)
-                || type.GetFields(_scope).Any();
-        }
-
-        /// <inheritdoc/>
-        protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
-        {
-            if (expected == null) throw new ArgumentNullException(nameof(expected));
-            if (actual == null) throw new ArgumentNullException(nameof(actual));
-            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
-
-            return LazyCompare(expected, actual, valuer);
-        }
-
-        /// <inheritdoc cref="Compare"/>
-        private IEnumerable<Difference> LazyCompare(object expected, object actual, ValuerChainer valuer)
-        {
-            Type type = expected.GetType();
-
-            foreach (PropertyInfo property in type.GetProperties(_scope).Where(p => p.CanRead))
+            foreach (Difference diff in valuer.Compare(property.GetValue(expected), property.GetValue(actual)))
             {
-                foreach (Difference diff in valuer.Compare(property.GetValue(expected), property.GetValue(actual)))
-                {
-                    yield return new Difference(property, diff);
-                }
-            }
-
-            foreach (FieldInfo field in expected.GetType().GetFields(_scope))
-            {
-                foreach (Difference diff in valuer.Compare(field.GetValue(expected), field.GetValue(actual)))
-                {
-                    yield return new Difference(field, diff);
-                }
+                yield return new Difference(property, diff);
             }
         }
 
-        /// <inheritdoc/>
-        protected override int GetHashCode(object item, ValuerChainer valuer)
+        foreach (FieldInfo field in expected.GetType().GetFields(scope))
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-            if (valuer == null) throw new ArgumentNullException(nameof(valuer));
-
-            Type type = item.GetType();
-            int hash = ValueComparer.BaseHash + type.GetHashCode();
-
-            foreach (PropertyInfo property in type.GetProperties(_scope).Where(p => p.CanRead))
+            foreach (Difference diff in valuer.Compare(field.GetValue(expected), field.GetValue(actual)))
             {
-                hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(property.GetValue(item));
+                yield return new Difference(field, diff);
             }
-
-            foreach (FieldInfo field in type.GetFields(_scope))
-            {
-                hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(field.GetValue(item));
-            }
-
-            return hash;
         }
+    }
+
+    /// <inheritdoc/>
+    protected override int GetHashCode(object item, ValuerChainer valuer)
+    {
+        ArgumentGuard.ThrowIfNull(item, nameof(item));
+        ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));
+
+        Type type = item.GetType();
+        int hash = ValueComparer.BaseHash + type.GetHashCode();
+
+        foreach (PropertyInfo property in type.GetProperties(scope).Where(p => p.CanRead))
+        {
+            hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(property.GetValue(item));
+        }
+
+        foreach (FieldInfo field in type.GetFields(scope))
+        {
+            hash = hash * ValueComparer.HashMultiplier + valuer.GetHashCode(field.GetValue(item));
+        }
+
+        return hash;
     }
 }

@@ -1,14 +1,13 @@
 ﻿using System;
 
-namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples
+namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
+
+/// <summary>For testing.</summary>
+public sealed class MethodThrowsSample
 {
     /// <summary>For testing.</summary>
-    public sealed class MethodThrowsSample
+    public void ThrowSomething()
     {
-        /// <summary>For testing.</summary>
-        public void ThrowSomething()
-        {
-            throw new InvalidOperationException(GetType().Name);
-        }
+        throw new InvalidOperationException(GetType().Name);
     }
 }
