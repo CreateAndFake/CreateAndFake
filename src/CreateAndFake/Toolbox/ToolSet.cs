@@ -30,7 +30,7 @@ public sealed record ToolSet
         IDuplicator duplicator = new Duplicator(asserter);
         Tester tester = new(gen, randomizer, duplicator, asserter);
 
-        return new ToolSet
+        return new ToolSet()
         {
             Gen = gen,
             Valuer = valuer,
