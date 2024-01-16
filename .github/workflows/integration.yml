@@ -11,12 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Setup dotnet
+    - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: | 
           8.0.x
-          7.0.x
     - name: Build & Test
       run: ./build/run.sh test
 
@@ -24,12 +23,11 @@ jobs:
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Setup dotnet
+    - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: | 
           8.0.x
-          7.0.x
     - name: Build & Test
       run: bash build/run.sh test
 
@@ -37,7 +35,7 @@ jobs:
     runs-on: windows-2019
     steps:
     - uses: actions/checkout@v4
-    - name: Setup dotnet
+    - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: | 
@@ -49,3 +47,4 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         directory: ./artifacts/coverage
+        token: ${{ secrets.CODECOV_TOKEN }}

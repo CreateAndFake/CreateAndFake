@@ -8,13 +8,14 @@ jobs:
   nuget:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-    - name: Setup .NET 8.0
-      uses: actions/setup-dotnet@v1
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: | 
+          8.0.x
     - name: Build & Pack
       run: ./build/run.sh pack
     - name: Publish to NuGet
