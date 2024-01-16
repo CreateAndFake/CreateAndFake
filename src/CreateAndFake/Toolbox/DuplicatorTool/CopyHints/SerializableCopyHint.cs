@@ -11,8 +11,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
-#pragma warning disable SYSLIB0050 // 'Type.IsSerializable' is obsolete
-
 /// <summary>Handles copying serializables for the duplicator.</summary>
 public sealed class SerializableCopyHint : CopyHint
 {
@@ -32,16 +30,13 @@ public sealed class SerializableCopyHint : CopyHint
         else if (source is ISerializable)
         {
 #if NETSTANDARD // Backwards compatibility.
-            if (source.GetType().IsSerializable)
-            {
-                BinaryFormatter binary = new();
-                using MemoryStream memory = new();
+            BinaryFormatter binary = new();
+            using MemoryStream memory = new();
 
-                binary.Serialize(memory, source);
-                _ = memory.Seek(0, SeekOrigin.Begin);
-                return (true, binary.Deserialize(memory));
-            }
-#endif
+            binary.Serialize(memory, source);
+            _ = memory.Seek(0, SeekOrigin.Begin);
+            return (true, binary.Deserialize(memory));
+#else
             HashSet<object> knownData = [];
             FlattenData(source, knownData);
 
@@ -52,6 +47,7 @@ public sealed class SerializableCopyHint : CopyHint
             serializer.WriteObject(stream, source);
             _ = stream.Seek(0, SeekOrigin.Begin);
             return (true, serializer.ReadObject(stream));
+#endif
         }
         else
         {
@@ -112,5 +108,3 @@ public sealed class SerializableCopyHint : CopyHint
         }
     }
 }
-
-#pragma warning restore SYSLIB0050 // 'Type.IsSerializable' is obsolete
