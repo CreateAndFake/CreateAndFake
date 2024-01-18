@@ -112,7 +112,26 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object ac
     /// <returns>Found name to use.</returns>
     protected string GetTypeName(object expected)
     {
-        return (expected ?? Actual)?.GetType().Name;
+        return ExpandTypeName((expected ?? Actual)?.GetType());
+    }
+
+    /// <summary>Builds type name with generic argument names.</summary>
+    /// <param name="type">Type to describe.</param>
+    /// <returns>Built name.</returns>
+    private static string ExpandTypeName(Type type)
+    {
+        if (type != null && type.IsGenericType)
+        {
+            return string.Concat(
+                type.Name.AsSpan(0, type.Name.IndexOf('`', StringComparison.InvariantCulture)),
+                "<",
+                string.Join(",", type.GetGenericArguments().Select(ExpandTypeName)),
+                ">");
+        }
+        else
+        {
+            return type?.Name;
+        }
     }
 
     /// <summary>Converts the instance to a chainer.</summary>

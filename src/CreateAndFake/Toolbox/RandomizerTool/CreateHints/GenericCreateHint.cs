@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using CreateAndFake.Design;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
@@ -69,7 +70,9 @@ public sealed class GenericCreateHint : CreateHint
             while (!constraints.All(c => arg.Inherits(c))
                 && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null))
             {
-                arg = randomizer.Create(randomizer.Gen.NextItem(constraints), randomizer.Parent).GetType();
+                object constraint = randomizer.Create(randomizer.Gen.NextItem(constraints), randomizer.Parent);
+                arg = constraint.GetType();
+                Disposer.Cleanup(constraint);
             }
         }).Wait();
 

@@ -101,7 +101,7 @@ public abstract class AssertComparableBase<T>(IRandom gen, IValuer valuer, IComp
         }
     }
 
-    /// <summary>Verifies value is matches the <paramref name="math"/>.</summary>
+    /// <summary>Verifies value matches the <paramref name="math"/>.</summary>
     /// <param name="math">Math used to check the value.</param>
     /// <param name="description">Math description to use for error message.</param>
     /// <param name="expected">Value to compare with.</param>

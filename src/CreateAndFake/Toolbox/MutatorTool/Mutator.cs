@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CreateAndFake.Design;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFake.Toolbox.ValuerTool;
 
@@ -39,7 +40,18 @@ public sealed class Mutator(IRandomizer randomizer, IValuer valuer, Limiter limi
         {
             _limiter.StallUntil(
                 () => result = _randomizer.Create(type),
-                () => values.All(o => !_valuer.Equals(result, o))).Wait();
+                () =>
+                {
+                    if (values.All(o => !_valuer.Equals(result, o)))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        Disposer.Cleanup(result);
+                        return false;
+                    }
+                }).Wait();
         }
         catch (AggregateException e)
         {
