@@ -1,12 +1,21 @@
 // Extension: EditorConfig for VS Code
 {
     "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.organizeImportsOnFormat": true,
+    "git.enableSmartCommit": true,
     "git.enableCommitSigning": true,
     "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.sortImports": "explicit",
+        "source.fixAll": "explicit"
+    },
     "editor.rulers": [
         120,
         140
     ],
+    "[csharp]": {
+        "editor.defaultFormatter": "ms-dotnettools.csharp"
+    },
     // Extension: Code Spell Checker
     "cSpell.words": [
         "autobuild",
@@ -23,6 +32,7 @@
         "codeql",
         "comparables",
         "Delegators",
+        "dotnettools",
         "Duplicatable",
         "duplicatables",
         "enumerables",

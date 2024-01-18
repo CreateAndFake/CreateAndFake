@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CreateAndFake.Design;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
@@ -79,7 +80,18 @@ public sealed class Randomizer : IRandomizer, IDuplicatable
         {
             _limiter.StallUntil(
                 () => result = Create(type, new RandomizerChainer(_faker, _gen, Create)),
-                () => condition?.Invoke(result) ?? true).Wait();
+                () =>
+                {
+                    if (condition?.Invoke(result) ?? true)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        Disposer.Cleanup(result);
+                        return false;
+                    }
+                }).Wait();
         }
         catch (AggregateException e)
         {
