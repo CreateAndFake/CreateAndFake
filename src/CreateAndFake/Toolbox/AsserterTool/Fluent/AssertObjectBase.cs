@@ -115,6 +115,8 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object ac
         return ExpandTypeName((expected ?? Actual)?.GetType());
     }
 
+#pragma warning disable CA1307 // Specify StringComparison for clarity
+
     /// <summary>Builds type name with generic argument names.</summary>
     /// <param name="type">Type to describe.</param>
     /// <returns>Built name.</returns>
@@ -123,7 +125,7 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object ac
         if (type != null && type.IsGenericType)
         {
             return string.Concat(
-                type.Name.AsSpan(0, type.Name.IndexOf('`', StringComparison.InvariantCulture)),
+                type.Name.AsSpan(0, type.Name.IndexOf('`')),
                 "<",
                 string.Join(",", type.GetGenericArguments().Select(ExpandTypeName)),
                 ">");
@@ -133,6 +135,8 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object ac
             return type?.Name;
         }
     }
+
+#pragma warning restore CA1307 // Specify StringComparison for clarity
 
     /// <summary>Converts the instance to a chainer.</summary>
     /// <returns>The created chainer.</returns>
