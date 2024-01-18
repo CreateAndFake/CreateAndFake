@@ -14,7 +14,7 @@ public static class Issue106Tests
         public T Content { get; set; }
     }
 
-    internal sealed class RandomNameItem
+    public sealed class RandomNameItem
     {
         public string Message { get; set; }
     }

@@ -125,7 +125,7 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object ac
         if (type != null && type.IsGenericType)
         {
             return string.Concat(
-                type.Name.AsSpan(0, type.Name.IndexOf('`')),
+                type.Name.Substring(0, type.Name.IndexOf('`')),
                 "<",
                 string.Join(",", type.GetGenericArguments().Select(ExpandTypeName)),
                 ">");
