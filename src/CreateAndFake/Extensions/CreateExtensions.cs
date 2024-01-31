@@ -1,5 +1,7 @@
+using System;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.MutatorTool;
+using CreateAndFake.Toolbox.RandomizerTool;
 
 namespace CreateAndFake.Fluent;
 
@@ -16,5 +18,11 @@ public static class CreateExtensions
     public static T CreateVariant<T>(this T source)
     {
         return Tools.Mutator.Variant(source);
+    }
+
+    /// <inheritdoc cref="IRandomizer.Create(Type, Func{object, bool})"/>
+    public static object CreateRandomInstance(this Type type)
+    {
+        return Tools.Randomizer.Create(type);
     }
 }

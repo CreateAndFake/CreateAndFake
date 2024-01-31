@@ -29,9 +29,9 @@ public sealed class FastRandomTests : ValueRandomTestBase<FastRandom>
         FastRandom random = new(false);
 
         Limiter limiter = new(15000);
-        await limiter.StallUntil(() =>
+        await limiter.StallUntil("", () =>
             _BadDoubles.Contains(random.Next<double>())).ConfigureAwait(true);
-        await limiter.StallUntil(() =>
+        await limiter.StallUntil("", () =>
             _BadFloats.Contains(random.Next<float>())).ConfigureAwait(true);
     }
 
@@ -40,9 +40,9 @@ public sealed class FastRandomTests : ValueRandomTestBase<FastRandom>
     {
         FastRandom random = new(true);
 
-        await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false,
+        await Limiter.Myriad.Repeat("", () => Tools.Asserter.Is(false,
             _BadDoubles.Contains(random.Next<double>()))).ConfigureAwait(true);
-        await Limiter.Myriad.Repeat(() => Tools.Asserter.Is(false,
+        await Limiter.Myriad.Repeat("", () => Tools.Asserter.Is(false,
             _BadFloats.Contains(random.Next<float>()))).ConfigureAwait(true);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CreateAndFake.Design;
+using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 
@@ -23,20 +24,25 @@ public sealed class ObjectCreateHint : CreateHint
         ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
 
-        object result = Create(type, randomizer);
+        object result = Limiter
+            .Dozen
+            .Attempt($"Create object of type '{type}'",
+                () => Create(FindTypeToCreate(type, randomizer), type, randomizer))
+            .Result;
+
         return (result != null, result);
     }
 
     /// <summary>Creates a random instance of the given type.</summary>
     /// <param name="type">Type to generate.</param>
+    /// <param name="rootType">Original type being generated.</param>
     /// <param name="randomizer">Handles callback behavior for child values.</param>
     /// <returns>Created instance.</returns>
-    private static object Create(Type type, RandomizerChainer randomizer)
+    private static object Create(Type type, Type rootType, RandomizerChainer randomizer)
     {
-        Type newType = FindTypeToCreate(type, randomizer);
-        if (newType != type)
+        if (type != rootType)
         {
-            return randomizer.Create(newType);
+            return randomizer.Create(type);
         }
 
         DataRandom smartData = randomizer.Gen.NextData();
@@ -46,24 +52,32 @@ public sealed class ObjectCreateHint : CreateHint
             return data;
         }
 
-        Type dataType = data.GetType();
+        try
+        {
+            Type dataType = data.GetType();
 
-        foreach (FieldInfo field in dataType.GetFields(BindingFlags.Instance | BindingFlags.Public)
-            .Where(f => !f.IsInitOnly && !f.IsLiteral))
-        {
-            string smartValue = (field.FieldType == typeof(string))
-                ? smartData.Find(field.Name)
-                : null;
-            field.SetValue(data, smartValue ?? randomizer.Create(field.FieldType, data));
+            foreach (FieldInfo field in dataType.GetFields(BindingFlags.Instance | BindingFlags.Public)
+                .Where(f => !f.IsInitOnly && !f.IsLiteral))
+            {
+                string smartValue = (field.FieldType == typeof(string))
+                    ? smartData.Find(field.Name)
+                    : null;
+                field.SetValue(data, smartValue ?? randomizer.Create(field.FieldType, data));
+            }
+            foreach (PropertyInfo property in dataType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(p => p.CanWrite)
+                .Where(p => p.GetSetMethod() != null))
+            {
+                string smartValue = (property.PropertyType == typeof(string))
+                    ? smartData.Find(property.Name)
+                    : null;
+                property.SetValue(data, smartValue ?? randomizer.Create(property.PropertyType, data));
+            }
         }
-        foreach (PropertyInfo property in dataType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-            .Where(p => p.CanWrite)
-            .Where(p => p.GetSetMethod() != null))
+        catch
         {
-            string smartValue = (property.PropertyType == typeof(string))
-                ? smartData.Find(property.Name)
-                : null;
-            property.SetValue(data, smartValue ?? randomizer.Create(property.PropertyType, data));
+            Disposer.Cleanup(data);
+            throw;
         }
 
         return data;
@@ -117,7 +131,7 @@ public sealed class ObjectCreateHint : CreateHint
             return CreateFrom(randomizer, smartData, (c, d) => c.Invoke(d),
                 FindConstructors(type, BindingFlags.NonPublic, randomizer));
         }
-        else if (!type.IsSealed)
+        else if (randomizer.FakerSupports(type))
         {
             return randomizer.Stub(type).Dummy;
         }
@@ -143,7 +157,7 @@ public sealed class ObjectCreateHint : CreateHint
         {
             creator = (T)(object)method.MakeGenericMethod(method
                 .GetGenericArguments()
-                .Select(a => GenericCreateHint.CreateArg(a, randomizer))
+                .Select(a => GenericCreateHint.CreateArg(a, method.ReturnType, randomizer))
                 .ToArray());
         }
 
@@ -169,25 +183,23 @@ public sealed class ObjectCreateHint : CreateHint
         {
             if (!_SubclassCache.TryGetValue(type, out subclasses))
             {
-                subclasses = FindSubclasses(type);
+                subclasses = FindSelfAndSubclasses(type);
                 _SubclassCache.Add(type, subclasses);
             }
         }
 
-        IEnumerable<Type> pruned = subclasses.Where(t => !randomizer.AlreadyCreated(t));
-        return pruned.Any()
-            ? randomizer.Gen.NextItem(pruned)
-            : type;
+        return randomizer.Gen.NextItemOrDefault(subclasses.Where(t => !randomizer.AlreadyCreated(t))) ?? type;
     }
 
     /// <summary>Finds subclasses of the given type.</summary>
     /// <param name="type">Parent type.</param>
     /// <returns>Found subclasses.</returns>
-    private static Type[] FindSubclasses(Type type)
+    private static Type[] FindSelfAndSubclasses(Type type)
     {
         BindingFlags anyScope = BindingFlags.Public | BindingFlags.NonPublic;
 
         Type[] subclasses = type.FindLocalSubclasses()
+            .Prepend(type)
             .Where(t => FindConstructors(t, anyScope).Any() || FindFactories(t, anyScope).Any())
             .Where(t => !t.IsNestedPrivate)
             .ToArray();
@@ -199,6 +211,7 @@ public sealed class ObjectCreateHint : CreateHint
         else
         {
             return type.FindLoadedSubclasses()
+                .Prepend(type)
                 .Where(t => FindConstructors(t, anyScope).Any() || FindFactories(t, anyScope).Any())
                 .Where(t => !t.IsNestedPrivate)
                 .ToArray();

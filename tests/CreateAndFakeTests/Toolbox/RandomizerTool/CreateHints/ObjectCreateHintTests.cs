@@ -1,5 +1,6 @@
 ﻿using System;
 using CreateAndFake;
+using CreateAndFake.Design;
 using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
@@ -38,5 +39,12 @@ public sealed class ObjectCreateHintTests : CreateHintTestBase<ObjectCreateHint>
     {
         sample1.Assert().IsNot(null);
         sample2.Assert().IsNot(null);
+    }
+
+    [Fact]
+    public async void Create_RetriesUntilGoodSample()
+    {
+        await Limiter.Dozen.Repeat("",
+            () => typeof(IIsGoodOrBadSample).CreateRandomInstance().Assert().IsNot(null)).ConfigureAwait(true);
     }
 }

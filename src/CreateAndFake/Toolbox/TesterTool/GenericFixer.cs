@@ -63,16 +63,18 @@ internal sealed class GenericFixer
 
         Type[] constraints = type.GetGenericParameterConstraints();
 
-        Limiter.Dozen.Repeat(() =>
-        {
-            while (!constraints.All(c => arg.Inherits(c))
-                && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null))
+        Limiter.Dozen.Repeat(
+            $"Creating generic argument of type '{type}'",
+            () =>
             {
-                object constraint = _randomizer.Create(_gen.NextItem(constraints));
-                arg = constraint.GetType();
-                Disposer.Cleanup(constraint);
-            }
-        }).Wait();
+                while (!constraints.All(c => arg.Inherits(c))
+                    && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null))
+                {
+                    object constraint = _randomizer.Create(_gen.NextItem(constraints));
+                    arg = constraint.GetType();
+                    Disposer.Cleanup(constraint);
+                }
+            }).Wait();
 
         return arg;
     }

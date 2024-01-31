@@ -120,7 +120,7 @@ public abstract class ValueRandomTestBase<T> where T : ValueRandom
         int min = int.MinValue / 2 - 1;
         int max = int.MaxValue / 2 + 1;
 
-        await Limiter.Myriad.Repeat(() =>
+        await Limiter.Myriad.Repeat("", () =>
         {
             int result = _TestInstance.Next(min, max);
 
@@ -222,11 +222,21 @@ public abstract class ValueRandomTestBase<T> where T : ValueRandom
     [Fact]
     public void NextItem_EmptyThrows()
     {
-        Tools.Asserter.Throws<ArgumentOutOfRangeException>(
+        Tools.Asserter.Throws<InvalidOperationException>(
             () => _TestInstance.NextItem(Array.Empty<object>()));
 
         Tools.Asserter.Throws<InvalidOperationException>(
             () => _TestInstance.NextItem(CreateEnum(0)));
+    }
+
+    /// <summary>Verifies empty enumerables give default values.</summary>
+    [Fact]
+    public void NextItemOrDefault_EmptyGivesDefault()
+    {
+        Tools.Asserter.Is(0, _TestInstance.NextItemOrDefault((int[])null));
+        Tools.Asserter.Is(null, _TestInstance.NextItemOrDefault((object[])null));
+        Tools.Asserter.Is(null, _TestInstance.NextItemOrDefault(Array.Empty<object>()));
+        Tools.Asserter.Is(null, _TestInstance.NextItemOrDefault(CreateEnum(0)));
     }
 
     /// <summary>Helper for creating linq enumerables.</summary>

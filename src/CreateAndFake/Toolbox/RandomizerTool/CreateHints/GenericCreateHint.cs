@@ -33,14 +33,15 @@ public sealed class GenericCreateHint : CreateHint
     private static object Create(Type type, RandomizerChainer randomizer)
     {
         return randomizer.Create(type.MakeGenericType(
-            type.GetGenericArguments().Select(a => CreateArg(a, randomizer)).ToArray()), randomizer.Parent);
+            type.GetGenericArguments().Select(a => CreateArg(a, type, randomizer)).ToArray()), type);
     }
 
     /// <summary>Creates a concrete arg type from the given generic arg.</summary>
     /// <param name="type">Generic arg to create.</param>
+    /// <param name="parent">Base type being created.</param>
     /// <param name="randomizer">Handles callback behavior for child values.</param>
     /// <returns>Created arg type.</returns>
-    internal static Type CreateArg(Type type, RandomizerChainer randomizer)
+    internal static Type CreateArg(Type type, Type parent, RandomizerChainer randomizer)
     {
         ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
@@ -63,18 +64,38 @@ public sealed class GenericCreateHint : CreateHint
             arg = typeof(string);
         }
 
-        Type[] constraints = type.GetGenericParameterConstraints();
+        Type[] constraints = type
+            .GetGenericParameterConstraints()
+            .Select(t => t.ContainsGenericParameters ? t.GetGenericTypeDefinition() : t)
+            .ToArray();
 
-        Limiter.Dozen.Repeat(() =>
+        bool isValidArg()
         {
-            while (!constraints.All(c => arg.Inherits(c))
-                && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null))
-            {
-                object constraint = randomizer.Create(randomizer.Gen.NextItem(constraints), randomizer.Parent);
-                arg = constraint.GetType();
-                Disposer.Cleanup(constraint);
-            }
-        }).Wait();
+            return constraints.All(c => arg.Inherits(c) || (arg.IsValueType && c == typeof(ValueType)))
+                && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null || arg.IsValueType);
+        }
+
+        if (!isValidArg())
+        {
+            Limiter.Few.Retry(
+                $"Creating generic arguments of type '{type}' for type '{parent}' [Retry]",
+                () => Limiter.Few.StallUntil(null, () =>
+                {
+                    Type constraint = randomizer.Gen.NextItem(constraints);
+                    if (parent == constraint)
+                    {
+                        arg = randomizer.Gen.NextItemOrDefault(parent.FindLoadedSubclasses())
+                            ?? throw new InvalidOperationException(
+                                $"Cannot create '{parent}' due to self-reference and no visible subclasses.");
+                    }
+                    else
+                    {
+                        object sample = randomizer.Create(constraint);
+                        arg = sample.GetType();
+                        Disposer.Cleanup(sample);
+                    }
+                }, isValidArg).Wait()).Wait();
+        }
 
         return arg;
     }

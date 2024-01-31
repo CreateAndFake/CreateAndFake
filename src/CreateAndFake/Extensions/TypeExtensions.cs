@@ -12,7 +12,7 @@ namespace CreateAndFake.Toolbox;
 public static class TypeExtensions
 {
     /// <summary>Keeps track of type inheritance.</summary>
-    private static readonly Dictionary<Type, HashSet<Type>> _ChildCache = [];
+    private static readonly Dictionary<Type, HashSet<Type>> _InheritCache = [];
 
     /// <summary>Finds subclasses of <paramref name="type"/> in the <paramref name="type"/>'s assembly.</summary>
     /// <param name="type"><see cref="Type"/> to locate subclasses for.</param>
@@ -39,7 +39,8 @@ public static class TypeExtensions
             .Where(a => !a.IsDynamic)
             .SelectMany(FindLoadedTypes)
             .Where(t => !t.IsAbstract)
-            .Where(t => t.Inherits(type));
+            .Where(t => t.Inherits(type))
+            .Where(t => IsVisibleTo(t, Assembly.GetCallingAssembly().GetName()));
     }
 
     /// <summary>Finds all types in <paramref name="assembly"/>.</summary>
@@ -49,7 +50,7 @@ public static class TypeExtensions
     {
         try
         {
-            return assembly?.GetExportedTypes() ?? Type.EmptyTypes;
+            return assembly?.GetTypes() ?? Type.EmptyTypes;
         }
         catch (FileNotFoundException)
         {
@@ -125,11 +126,11 @@ public static class TypeExtensions
     public static bool IsInheritedBy(this Type child, Type parent)
     {
         HashSet<Type> children;
-        lock (_ChildCache)
+        lock (_InheritCache)
         {
-            if (!_ChildCache.TryGetValue(parent, out children))
+            if (!_InheritCache.TryGetValue(parent, out children))
             {
-                _ChildCache[parent] = children = new HashSet<Type>(FindChildren(parent).Distinct());
+                _InheritCache[parent] = children = new HashSet<Type>(FindInheritance(parent).Distinct());
             }
         }
 
@@ -140,7 +141,7 @@ public static class TypeExtensions
     /// <summary>Finds all types <paramref name="type"/> inherits.</summary>
     /// <param name="type"><see cref="Type"/> to check.</param>
     /// <returns>The found types inherited by <paramref name="type"/>.</returns>
-    private static IEnumerable<Type> FindChildren(Type type)
+    private static IEnumerable<Type> FindInheritance(Type type)
     {
         if (type == null)
         {
@@ -154,12 +155,12 @@ public static class TypeExtensions
             yield return type.GetGenericTypeDefinition();
         }
 
-        foreach (Type child in type.GetInterfaces().SelectMany(FindChildren))
+        foreach (Type child in type.GetInterfaces().SelectMany(FindInheritance))
         {
             yield return child;
         }
 
-        foreach (Type child in FindChildren(type.BaseType))
+        foreach (Type child in FindInheritance(type.BaseType))
         {
             yield return child;
         }

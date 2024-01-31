@@ -33,7 +33,7 @@ public static class TypeExtensionsTests
     [Theory, RandomData]
     internal static void FindLoadedTypes_IgnoresMissingAssembly(Fake<Assembly> assembly, FileNotFoundException error)
     {
-        assembly.Setup(d => d.GetExportedTypes(), Behavior.Throw(error));
+        assembly.Setup(d => d.GetTypes(), Behavior.Throw(error));
 
         TypeExtensions.FindLoadedTypes(assembly.Dummy).Assert().IsEmpty();
     }
@@ -41,7 +41,7 @@ public static class TypeExtensionsTests
     [Theory, RandomData]
     internal static void FindLoadedTypes_IgnoresReflectError(Fake<Assembly> assembly, ReflectionTypeLoadException error)
     {
-        assembly.Setup(d => d.GetExportedTypes(), Behavior.Throw(error));
+        assembly.Setup(d => d.GetTypes(), Behavior.Throw(error));
 
         TypeExtensions.FindLoadedTypes(assembly.Dummy).Assert().IsEmpty();
     }

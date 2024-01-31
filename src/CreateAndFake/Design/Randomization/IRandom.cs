@@ -59,6 +59,12 @@ public interface IRandom
     /// <returns>The picked item from <paramref name="items"/>.</returns>
     T NextItem<T>(IEnumerable<T> items);
 
+    /// <summary>Picks a random item from <paramref name="items"/>.</summary>
+    /// <typeparam name="T">Type of items being picked from.</typeparam>
+    /// <param name="items">Collection of items to pick from.</param>
+    /// <returns>The picked item from <paramref name="items"/> if any; default for the type otherwise.</returns>
+    T NextItemOrDefault<T>(IEnumerable<T> items);
+
     /// <inheritdoc cref="DataRandom"/>
     /// <returns>New generated data.</returns>
     DataRandom NextData();

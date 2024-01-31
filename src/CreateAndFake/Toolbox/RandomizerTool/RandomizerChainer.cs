@@ -111,33 +111,25 @@ public sealed class RandomizerChainer
         return _randomizer.Invoke(type, new RandomizerChainer(this, (parent != Parent) ? parent : null));
     }
 
-    /// <summary>Calls the faker to create a stub <typeparamref name="T"/> instance.</summary>
-    /// <typeparam name="T">Type to stub.</typeparam>
-    /// <returns>The stubbed <typeparamref name="T"/> instance.</returns>
-    public Fake<T> Stub<T>()
+    /// <inheritdoc cref="IFaker.Stub{T}(Type[])"/>
+    public Fake<T> Stub<T>(params Type[] interfaces)
     {
-        return _faker.Stub<T>();
+        return _faker.Stub<T>(interfaces);
     }
 
-    /// <summary>Calls the faker to create a stub instance.</summary>
-    /// <param name="type">Type to stub.</param>
-    /// <returns>The stubbed instance.</returns>
-    public Fake Stub(Type type)
+    /// <inheritdoc cref="IFaker.Stub(Type,Type[])"/>
+    public Fake Stub(Type parent, params Type[] interfaces)
     {
-        return _faker.Stub(type);
+        return _faker.Stub(parent, interfaces);
     }
 
-    /// <summary>Determines if <typeparamref name="T"/> can be faked.</summary>
-    /// <typeparam name="T">Type to check.</typeparam>
-    /// <returns>True if possible; false otherwise.</returns>
+    /// <inheritdoc cref="IFaker.Supports{T}()"/>
     public bool FakerSupports<T>()
     {
         return _faker.Supports<T>();
     }
 
-    /// <summary>Determines if <paramref name="type"/> can be faked.</summary>
-    /// <param name="type">Type to check.</param>
-    /// <returns>True if possible; false otherwise.</returns>
+    /// <inheritdoc cref="IFaker.Supports(Type)"/>
     public bool FakerSupports(Type type)
     {
         return _faker.Supports(type);
