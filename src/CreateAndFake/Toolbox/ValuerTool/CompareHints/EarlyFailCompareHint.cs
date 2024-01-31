@@ -14,7 +14,8 @@ public sealed class EarlyFailCompareHint : CompareHint
         return objectType == null
             || actual == null
             || (objectType != actual.GetType()
-                && !objectType.Inherits(typeof(IAsyncEnumerable<>)))
+                && !objectType.Inherits(typeof(IAsyncEnumerable<>))
+                && !objectType.Inherits(typeof(IEnumerable<>)))
             || objectType.IsPrimitive
             || objectType.IsEnum
             || objectType == typeof(string)
