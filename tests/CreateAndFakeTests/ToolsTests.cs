@@ -99,7 +99,7 @@ public static class ToolsTests
             }
             catch (Exception e)
             {
-                Tools.Asserter.Fail(e, $"Failed testing type '{type.Name}'.");
+                Tools.Asserter.Fail(e, $"Failed testing type '{type}'.");
                 throw;
             }
         }

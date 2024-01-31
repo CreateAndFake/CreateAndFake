@@ -39,6 +39,7 @@ public sealed class Mutator(IRandomizer randomizer, IValuer valuer, Limiter limi
         try
         {
             _limiter.StallUntil(
+                $"Create variant of type '{type}'",
                 () => result = _randomizer.Create(type),
                 () =>
                 {

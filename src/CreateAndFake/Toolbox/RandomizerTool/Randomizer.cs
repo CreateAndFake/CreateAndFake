@@ -79,6 +79,7 @@ public sealed class Randomizer : IRandomizer, IDuplicatable
         try
         {
             _limiter.StallUntil(
+                $"Trying to create instance of '{type}'",
                 () => result = Create(type, new RandomizerChainer(_faker, _gen, Create)),
                 () =>
                 {
@@ -154,7 +155,6 @@ public sealed class Randomizer : IRandomizer, IDuplicatable
         try
         {
             result = CreateSized(type, count, new RandomizerChainer(_faker, _gen, Create));
-
         }
         catch (InsufficientExecutionStackException)
         {

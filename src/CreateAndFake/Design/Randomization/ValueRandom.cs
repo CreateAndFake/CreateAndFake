@@ -176,17 +176,24 @@ public abstract class ValueRandom(bool onlyValidValues) : IRandom
     /// <inheritdoc/>
     public T NextItem<T>(IEnumerable<T> items)
     {
+        return NextItemOrDefault(items)
+            ?? throw new InvalidOperationException("The source sequence is empty.");
+    }
+
+    /// <inheritdoc/>
+    public T NextItemOrDefault<T>(IEnumerable<T> items)
+    {
         if (items == null)
         {
-            throw new ArgumentNullException(nameof(items));
+            return default;
         }
-        else if (items is ICollection<T> collection)
+        else if (items is ICollection<T> collection && collection.Count > 0)
         {
             return collection.ElementAt(Next(collection.Count));
         }
         else
         {
-            return items.OrderBy(i => Next<int>()).First();
+            return items.OrderBy(i => Next<int>()).FirstOrDefault();
         }
     }
 

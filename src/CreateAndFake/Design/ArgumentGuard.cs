@@ -11,7 +11,7 @@ internal static class ArgumentGuard
     /// <exception cref="ArgumentNullException">If <paramref name="value"/> is null.</exception>
     internal static void ThrowIfNull(object value, string name)
     {
-        if (value == null)
+        if (value is null)
         {
             throw new ArgumentNullException(name);
         }
