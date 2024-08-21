@@ -2,6 +2,9 @@
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.FakerTool;
 using Xunit;
+using System.Linq;
+using System.Collections.Generic;
+using CreateAndFake.Fluent;
 
 namespace CreateAndFakeTests.Design.Content;
 
@@ -32,25 +35,38 @@ public static class ValueComparer_T_Tests
         equalFake.Setup(m => m.GetValueHash(), Behavior.Returns(1));
         unequalFake.Setup(m => m.GetValueHash(), Behavior.Returns(-1));
 
-        Tools.Asserter.Is(1, comparer.GetHashCode(fake.Dummy));
-        Tools.Asserter.Is(-1, comparer.GetHashCode(unequalFake.Dummy));
+        comparer.GetHashCode(fake.Dummy).Assert().Is(1);
+        comparer.GetHashCode(unequalFake.Dummy).Assert().Is(-1);
+        comparer.GetHashCode([fake.Dummy]).Assert().IsNot(0);
+        comparer.GetHashCode(MapByIndex([fake.Dummy])).Assert().IsNot(0);
 
         fake.Setup(m => m.ValuesEqual(equalFake.Dummy), Behavior.Returns(true));
-        Tools.Asserter.Is(true, comparer.Equals(fake.Dummy, equalFake.Dummy));
+        comparer.Equals(fake.Dummy, equalFake.Dummy).Assert().Is(true);
+        comparer.Equals([fake.Dummy], [fake.Dummy]).Assert().Is(true);
+        comparer.Equals(MapByIndex([fake.Dummy]), MapByIndex([fake.Dummy])).Assert().Is(true);
 
         fake.Setup(m => m.ValuesEqual(unequalFake.Dummy), Behavior.Returns(false));
-        Tools.Asserter.Is(false, comparer.Equals(fake.Dummy, unequalFake.Dummy));
+        comparer.Equals(fake.Dummy, unequalFake.Dummy).Assert().Is(false);
+        comparer.Equals([fake.Dummy], [unequalFake.Dummy]).Assert().Is(false);
+        comparer.Equals(MapByIndex([fake.Dummy]), MapByIndex([unequalFake.Dummy])).Assert().Is(false);
 
         fake.Setup(m => m.ValuesEqual(null), Behavior.Returns(false));
-        Tools.Asserter.Is(false, comparer.Equals(fake.Dummy, null));
-        Tools.Asserter.Is(false, comparer.Equals(null, fake.Dummy));
-        Tools.Asserter.Is(true, comparer.Equals(null, null));
+        comparer.Equals(fake.Dummy, null).Assert().Is(false);
+        comparer.Equals(null, fake.Dummy).Assert().Is(false);
+        comparer.Equals((IValueEquatable)null, null).Assert().Is(true);
 
-        Tools.Asserter.Is(0, comparer.Compare(fake.Dummy, fake.Dummy));
-        Tools.Asserter.Is(0, comparer.Compare(fake.Dummy, equalFake.Dummy));
-        Tools.Asserter.IsNot(0, comparer.Compare(fake.Dummy, unequalFake.Dummy));
-        Tools.Asserter.IsNot(0, comparer.Compare(fake.Dummy, null));
-        Tools.Asserter.IsNot(0, comparer.Compare(null, fake.Dummy));
-        Tools.Asserter.Is(0, comparer.Compare(null, null));
+        comparer.Compare(fake.Dummy, fake.Dummy).Assert().Is(0);
+        comparer.Compare(fake.Dummy, equalFake.Dummy).Assert().Is(0);
+        comparer.Compare(fake.Dummy, unequalFake.Dummy).Assert().IsNot(0);
+        comparer.Compare(fake.Dummy, null).Assert().IsNot(0);
+        comparer.Compare(null, fake.Dummy).Assert().IsNot(0);
+        comparer.Compare((IValueEquatable)null, null).Assert().Is(0);
+    }
+
+    private static Dictionary<int, T> MapByIndex<T>(IEnumerable<T> collection)
+    {
+        return collection
+            .Select((item, index) => new { index, item })
+            .ToDictionary(pair => pair.index, pair => pair.item);
     }
 }

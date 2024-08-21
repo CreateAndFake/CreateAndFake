@@ -1,22 +1,17 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
-/// <summary>Handles copying common types for the duplicator.</summary>
+/// <summary>Handles cloning common types for <see cref="IDuplicator"/> .</summary>
 public sealed class CommonSystemCopyHint : CopyHint
 {
     /// <inheritdoc/>
-    protected internal sealed override (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
+    protected internal sealed override (bool, object?) TryCopy(object source, DuplicatorChainer duplicator)
     {
         ArgumentGuard.ThrowIfNull(duplicator, nameof(duplicator));
 
-        if (source == null)
-        {
-            return (true, null);
-        }
-        else if (source is TimeSpan span)
+        if (source is TimeSpan span)
         {
             return (true, new TimeSpan(duplicator.Copy(span.Ticks)));
         }

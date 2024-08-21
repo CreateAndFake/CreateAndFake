@@ -8,13 +8,13 @@ namespace CreateAndFakeTests.Toolbox.AsserterTool.Fluent;
 public static class AssertCollectionTests
 {
     [Fact]
-    internal static void AssertCollection_GuardsNulls()
+    internal static void AssertGroup_GuardsNulls()
     {
         Tools.Tester.PreventsNullRefException<AssertGroup>();
     }
 
     [Fact]
-    internal static void AssertCollection_NoParameterMutation()
+    internal static void AssertGroup_NoParameterMutation()
     {
         Tools.Tester.PreventsParameterMutation<AssertGroup>();
     }

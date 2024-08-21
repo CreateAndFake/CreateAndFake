@@ -26,6 +26,7 @@ public sealed class MockDisposableSample(object value) : IDisposable
 
     /// <summary>For testing.</summary>
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Must ignore in finalizer.")]
+    [ExcludeFromCodeCoverage]
     ~MockDisposableSample()
     {
         try

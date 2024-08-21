@@ -4,7 +4,7 @@ using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Handles generation of fakes for the randomizer.</summary>
+/// <summary>Handles randomizing <see cref="IFaked"/> instances for <see cref="IRandomizer"/>.</summary>
 public sealed class FakedCreateHint : CreateHint<IFaked>
 {
     /// <inheritdoc/>

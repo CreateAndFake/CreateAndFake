@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Threading.Tasks;
 using CreateAndFake;
+using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
@@ -37,12 +38,22 @@ public sealed class TaskCompareHintTests : CompareHintTestBase<TaskCompareHint>
     [Theory, RandomData]
     internal void Compare_NonGenericTasksCompareByException(Exception ex)
     {
-        Tools.Asserter.IsNot(BuildExceptionTask(ex), BuildExceptionTask(Tools.Mutator.Variant(ex)));
+        BuildTask(ex)
+            .Assert()
+            .IsNot(BuildTask(Tools.Mutator.Variant(ex)))
+            .And
+            .IsNot(BuildTask(null));
     }
 
-    private static Task BuildExceptionTask(Exception ex)
+    private static Task BuildTask(Exception ex)
     {
-        Task task = new(() => { throw ex; });
+        Task task = new(() =>
+        {
+            if (ex != null)
+            {
+                throw ex;
+            }
+        });
         try
         {
             task.Start();

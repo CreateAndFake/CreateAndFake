@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CreateAndFakeTests.TestSamples;
 
 /// <summary>For testing.</summary>
+[ExcludeFromCodeCoverage]
 public sealed class InvalidCreateSample : IOnlyMockSample
 {
     /// <summary>For testing.</summary>

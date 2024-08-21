@@ -30,13 +30,12 @@ public abstract class ExceptionTestBase<T> where T : Exception
         DataContractSerializer formatter = new(typeof(T),
             new[] { original.InnerException }.Where(t => t != null).Select(t => t.GetType()));
 
-        using (MemoryStream stream = new())
-        {
-            formatter.WriteObject(stream, original);
-            _ = stream.Seek(0, SeekOrigin.Begin);
+        using MemoryStream stream = new();
 
-            Tools.Asserter.Is(original, formatter.ReadObject(stream));
-        }
+        formatter.WriteObject(stream, original);
+        _ = stream.Seek(0, SeekOrigin.Begin);
+
+        Tools.Asserter.Is(original, formatter.ReadObject(stream));
     }
 
     /// <summary>Verifies that the exception can make a json roundtrip.</summary>
@@ -51,12 +50,10 @@ public abstract class ExceptionTestBase<T> where T : Exception
 
         DataContractJsonSerializer formatter = new(typeof(T));
 
-        using (MemoryStream stream = new())
-        {
-            formatter.WriteObject(stream, original);
-            _ = stream.Seek(0, SeekOrigin.Begin);
+        using MemoryStream stream = new();
+        formatter.WriteObject(stream, original);
+        _ = stream.Seek(0, SeekOrigin.Begin);
 
-            Tools.Asserter.Is(original, formatter.ReadObject(stream));
-        }
+        Tools.Asserter.Is(original, formatter.ReadObject(stream));
     }
 }

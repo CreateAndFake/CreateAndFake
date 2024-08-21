@@ -82,26 +82,17 @@ public static class ToolsTests
             typeof(PersonContext),
             typeof(ToolSet),
             typeof(Tools),
-            typeof(FakeAttribute),
-            typeof(StubAttribute),
-            typeof(BaseGuarder)
+            typeof(BaseGuarder),
         ];
 
         foreach (Type type in typeof(Tools).Assembly.GetTypes()
             .Where(t => !(t.IsAbstract && t.IsSealed))
+            .Where(t => !t.Inherits<Attribute>())
             .Where(t => !ignore.Contains(t))
             .Where(t => !t.IsNestedPrivate)
             .Where(t => t.GetCustomAttribute<CompilerGeneratedAttribute>() == null))
         {
-            try
-            {
-                TestTrip(type);
-            }
-            catch (Exception e)
-            {
-                Tools.Asserter.Fail(e, $"Failed testing type '{type}'.");
-                throw;
-            }
+            TestTrip(type);
         }
     }
 

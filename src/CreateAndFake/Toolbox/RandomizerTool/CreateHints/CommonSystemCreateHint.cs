@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Reflection;
 using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Handles generation of common types for the randomizer.</summary>
+/// <summary>Handles randomizing common instances for <see cref="IRandomizer"/>.</summary>
 public sealed class CommonSystemCreateHint : CreateHint
 {
     /// <summary>Supported types and the methods used to generate them.</summary>
@@ -20,11 +17,11 @@ public sealed class CommonSystemCreateHint : CreateHint
             { typeof(Guid), rand => new Guid(Enumerable.Range(0, 16).Select(i => rand.Create<byte>()).ToArray()) },
 
             { typeof(Assembly), rand => rand.Gen.NextItem(AppDomain.CurrentDomain.GetAssemblies()) },
-            { typeof(AssemblyName), rand => rand.Create<Assembly>().GetName() },
-            { typeof(Type).GetType(), rand => rand.Create<Type>() },
+            { typeof(AssemblyName), rand => rand.Create<Assembly>()!.GetName() },
+            { typeof(Type).GetType(), rand => rand.Create<Type>()! },
             { typeof(Type), rand => rand.Gen.NextItem(Assembly.GetExecutingAssembly().GetTypes()) },
 
-            { typeof(Uri), rand => rand.Create<UriBuilder>().Uri },
+            { typeof(Uri), rand => rand.Create<UriBuilder>()!.Uri },
             { typeof(UriBuilder), rand => new UriBuilder(
                 rand.Create<bool>() ? "http" : "https", rand.Create<string>(), rand.Gen.Next(-1, 65535)) },
 
@@ -40,12 +37,11 @@ public sealed class CommonSystemCreateHint : CreateHint
         };
 
     /// <inheritdoc/>
-    protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+    protected internal override (bool, object?) TryCreate(Type type, RandomizerChainer randomizer)
     {
-        ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
 
-        if (_Gens.TryGetValue(type, out Func<RandomizerChainer, object> gen))
+        if (type != null && _Gens.TryGetValue(type, out Func<RandomizerChainer, object?>? gen))
         {
             return (true, gen.Invoke(randomizer));
         }
@@ -56,9 +52,9 @@ public sealed class CommonSystemCreateHint : CreateHint
     }
 
     /// <summary>Finds a random member info.</summary>
-    /// <typeparam name="T">Type being found.</typeparam>
-    /// <param name="randomizer">Handles callback behavior for child values.</param>
-    /// <param name="grabber">How members are found on a type.</param>
+    /// <typeparam name="T"><c>Type</c> being found.</typeparam>
+    /// <param name="randomizer">Handles randomizing child values.</param>
+    /// <param name="grabber">How members are found on a <c>Type</c>.</param>
     /// <returns>The found member.</returns>
     private static T FindTypeInfo<T>(RandomizerChainer randomizer, Func<Type, T[]> grabber)
     {

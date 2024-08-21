@@ -1,13 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Handles generation of fakes for the randomizer.</summary>
+/// <summary>Handles randomizing <see cref="Fake{T}"/> instances for <see cref="IRandomizer"/>.</summary>
 public sealed class FakeCreateHint : CreateHint
 {
     /// <summary>Possible action types to use.</summary>
@@ -33,7 +31,7 @@ public sealed class FakeCreateHint : CreateHint
     ];
 
     /// <summary>Possible func types to use.</summary>
-    private static readonly Type[] _FuncTypes =
+    private static readonly Type?[] _FuncTypes =
     [
         null,
         typeof(Func<>),
@@ -56,9 +54,8 @@ public sealed class FakeCreateHint : CreateHint
     ];
 
     /// <inheritdoc/>
-    protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+    protected internal override (bool, object?) TryCreate(Type type, RandomizerChainer randomizer)
     {
-        ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
 
         if (type.Inherits(typeof(Fake<>)))
@@ -71,10 +68,8 @@ public sealed class FakeCreateHint : CreateHint
         }
     }
 
-    /// <summary>Creates a random instance of the given type.</summary>
-    /// <param name="type">Type to generate.</param>
-    /// <param name="randomizer">Handles callback behavior for child values.</param>
-    /// <returns>Created instance.</returns>
+    /// <returns>The randomized instance.</returns>
+    /// <inheritdoc cref="CreateHint.TryCreate"/>
     private static Fake Create(Type type, RandomizerChainer randomizer)
     {
         Type target = type.GetGenericArguments().Single();
@@ -100,12 +95,12 @@ public sealed class FakeCreateHint : CreateHint
                 MakeBehavior(method, randomizer));
         }
 
-        return (Fake)type.GetConstructor([typeof(Fake)]).Invoke(new[] { mock });
+        return (Fake)type.GetConstructor([typeof(Fake)])!.Invoke(new[] { mock });
     }
 
     /// <summary>Sets up the random fake behavior for the method.</summary>
     /// <param name="method">Method to fake.</param>
-    /// <param name="randomizer">Handles callback behavior for child values.</param>
+    /// <param name="randomizer">Handles randomizing child values.</param>
     /// <returns>Behavior for the fake.</returns>
     private static Behavior MakeBehavior(MethodInfo method, RandomizerChainer randomizer)
     {
@@ -117,13 +112,13 @@ public sealed class FakeCreateHint : CreateHint
 
             return (Behavior)typeof(Behavior<>)
                 .MakeGenericType(method.ReturnType)
-                .GetConstructor([typeof(Delegate), typeof(Times)])
-                .Invoke([randomizer.Create(_FuncTypes[withOut.Length].MakeGenericType(withOut)), Times.Any()]);
+                .GetConstructor([typeof(Delegate), typeof(Times)])!
+                .Invoke([randomizer.Create(_FuncTypes[withOut.Length]!.MakeGenericType(withOut)), Times.Any()]);
         }
         else if (args.Length != 0)
         {
             return new Behavior<VoidType>((Delegate)randomizer
-                .Create(_ActionTypes[args.Length].MakeGenericType(args)), Times.Any());
+                .Create(_ActionTypes[args.Length].MakeGenericType(args))!, Times.Any());
         }
         else
         {
@@ -132,7 +127,7 @@ public sealed class FakeCreateHint : CreateHint
     }
 
     /// <summary>Sets up arg types for the fake behavior.</summary>
-    /// <param name="type">Type of the method to convert.</param>
+    /// <param name="type"><c>Type</c> of the method to convert.</param>
     /// <returns>Type to use for the fake behavior delegate.</returns>
     private static Type SetupArg(Type type)
     {
@@ -151,7 +146,7 @@ public sealed class FakeCreateHint : CreateHint
     }
 
     /// <summary>Sets up the arg matcher for a parameter.</summary>
-    /// <param name="type">Parameter type to allow.</param>
+    /// <param name="type">Parameter <c>Type</c> to allow.</param>
     /// <returns>Arg to use for setting up the mock.</returns>
     private static object SetupMatch(Type type)
     {
@@ -165,8 +160,10 @@ public sealed class FakeCreateHint : CreateHint
         }
         else
         {
-            return typeof(Arg).GetMethod(nameof(Arg.LambdaAny), BindingFlags.Static | BindingFlags.Public)
-                .MakeGenericMethod(type).Invoke(null, []);
+            return typeof(Arg)
+                .GetMethod(nameof(Arg.LambdaAny), BindingFlags.Static | BindingFlags.Public)!
+                .MakeGenericMethod(type)
+                .Invoke(null, [])!;
         }
     }
 }

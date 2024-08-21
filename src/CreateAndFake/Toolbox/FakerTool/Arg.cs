@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
+﻿using System.Diagnostics.CodeAnalysis;
 using CreateAndFake.Design.Content;
 
 namespace CreateAndFake.Toolbox.FakerTool;
@@ -10,15 +7,15 @@ namespace CreateAndFake.Toolbox.FakerTool;
 public sealed class Arg : IDeepCloneable
 {
     /// <summary>Current setup args.</summary>
-    private static readonly ThreadLocal<IList<Tuple<Arg, object>>> _ArgCache
-        = new(() => new List<Tuple<Arg, object>>());
+    private static readonly ThreadLocal<IList<Tuple<Arg, object?>>> _ArgCache
+        = new(() => new List<Tuple<Arg, object?>>());
 
     /// <summary>Condition to compare with.</summary>
-    private readonly Func<object, bool> _matcher;
+    private readonly Func<object?, bool> _matcher;
 
-    /// <summary>Initializes a new instance of the <see cref="Arg"/> class.</summary>
+    /// <inheritdoc cref="Arg"/>
     /// <param name="matcher">Condition to compare with.</param>
-    private Arg(Func<object, bool> matcher)
+    private Arg(Func<object?, bool> matcher)
     {
         _matcher = matcher;
     }
@@ -32,7 +29,7 @@ public sealed class Arg : IDeepCloneable
     /// <summary>Determines if the condition is matched.</summary>
     /// <param name="arg">Argument to compare with.</param>
     /// <returns>True if matched; false otherwise.</returns>
-    internal bool Matches(object arg)
+    internal bool Matches(object? arg)
     {
         return _matcher(arg);
     }
@@ -42,7 +39,7 @@ public sealed class Arg : IDeepCloneable
     internal static Tuple<Arg, object>[] CaptureSetArgs()
     {
         Tuple<Arg, object>[] result = [.. _ArgCache.Value];
-        _ArgCache.Value.Clear();
+        _ArgCache.Value!.Clear();
         return result;
     }
 
@@ -50,10 +47,10 @@ public sealed class Arg : IDeepCloneable
     /// <typeparam name="T">Type to match.</typeparam>
     /// <returns>Random instance of <typeparamref name="T"/> for the fake setup.</returns>
     /// <remarks>Use <see cref="LambdaAny{T}"/> when matching via method names.</remarks>
-    public static T Any<T>()
+    public static T? Any<T>()
     {
-        T value = Tools.Randomizer.Create<T>();
-        _ArgCache.Value.Add(Tuple.Create(LambdaAny<T>(), (object)value));
+        T? value = Tools.Randomizer.Create<T>();
+        _ArgCache.Value!.Add(Tuple.Create(LambdaAny<T>(), (object?)value));
         return value;
     }
 
@@ -70,10 +67,10 @@ public sealed class Arg : IDeepCloneable
     /// <typeparam name="T">Type to match.</typeparam>
     /// <returns>Random instance of <typeparamref name="T"/> for the fake setup.</returns>
     /// <remarks>Use <see cref="LambdaNotNull{T}"/> when matching via method names.</remarks>
-    public static T NotNull<T>() where T : class
+    public static T? NotNull<T>() where T : class
     {
-        T value = Tools.Randomizer.Create<T>();
-        _ArgCache.Value.Add(Tuple.Create(LambdaNotNull<T>(), (object)value));
+        T? value = Tools.Randomizer.Create<T>();
+        _ArgCache.Value!.Add(Tuple.Create(LambdaNotNull<T>(), (object?)value));
         return value;
     }
 
@@ -82,10 +79,10 @@ public sealed class Arg : IDeepCloneable
     /// <param name="condition">Condition to verify.</param>
     /// <returns>Random instance of <typeparamref name="T"/> for the fake setup.</returns>
     /// <remarks>Use <see cref="LambdaWhere{T}"/> when matching via method names.</remarks>
-    public static T Where<T>(Func<T, bool> condition)
+    public static T? Where<T>(Func<T, bool> condition)
     {
-        T value = Tools.Randomizer.Create<T>();
-        _ArgCache.Value.Add(Tuple.Create(LambdaWhere(condition), (object)value));
+        T? value = Tools.Randomizer.Create<T>();
+        _ArgCache.Value!.Add(Tuple.Create(LambdaWhere(condition), (object?)value));
         return value;
     }
 
@@ -131,7 +128,7 @@ public sealed class Arg : IDeepCloneable
     /// <typeparam name="T">Type to match.</typeparam>
     /// <param name="condition">Condition to verify.</param>
     /// <returns>Arg for the fake provider to match with.</returns>
-    public static Arg LambdaWhere<T>(Func<T, bool> condition)
+    public static Arg LambdaWhere<T>(Func<T, bool>? condition)
     {
         return new Arg(o => o is T value && (condition?.Invoke(value) ?? true));
     }
@@ -142,8 +139,8 @@ public sealed class Arg : IDeepCloneable
     /// <typeparam name="T">Type to match.</typeparam>
     /// <param name="condition">Condition to verify.</param>
     /// <returns>Container for the reference.</returns>
-    public static Arg LambdaWhereRef<T>(Func<T, bool> condition)
+    public static Arg LambdaWhereRef<T>(Func<T, bool>? condition)
     {
-        return LambdaWhere<OutRef<T>>(o => condition?.Invoke(o.Var) ?? true);
+        return LambdaWhere<OutRef<T>>(o => condition?.Invoke(o.Var!) ?? true);
     }
 }

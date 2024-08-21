@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Handles comparing fakes for <see cref="IValuer"/>.</summary>
+/// <summary>Handles comparing <see cref="IFaked"/> instances for <see cref="IValuer"/>.</summary>
 public sealed class FakedCompareHint : CompareHint<IFaked>
 {
     /// <inheritdoc/>
-    protected override IEnumerable<Difference> Compare(IFaked expected, IFaked actual, ValuerChainer valuer)
+    protected override IEnumerable<Difference> Compare(IFaked? expected, IFaked? actual, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));
 
@@ -16,7 +15,7 @@ public sealed class FakedCompareHint : CompareHint<IFaked>
     }
 
     /// <inheritdoc/>
-    protected override int GetHashCode(IFaked item, ValuerChainer valuer)
+    protected override int GetHashCode(IFaked? item, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));
 

@@ -1,26 +1,21 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
-/// <summary>Handles copying async collections for the duplicator.</summary>
+/// <summary>Handles cloning <see cref="IAsyncEnumerable{T}"/> collections for <see cref="IDuplicator"/> .</summary>
 public sealed class AsyncCollectionCopyHint : CopyHint
 {
     /// <inheritdoc/>
-    protected internal override (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
+    protected internal override (bool, object?) TryCopy(object source, DuplicatorChainer duplicator)
     {
+        ArgumentGuard.ThrowIfNull(source, nameof(source));
         ArgumentGuard.ThrowIfNull(duplicator, nameof(duplicator));
 
-        if (source == null)
-        {
-            return (true, null);
-        }
-        else if (source.GetType().Inherits(typeof(IAsyncEnumerable<>)))
+        if (source.GetType().Inherits(typeof(IAsyncEnumerable<>)))
         {
             return (true, typeof(AsyncCollectionCopyHint)
-                .GetMethod(nameof(CopyAsync), BindingFlags.Static | BindingFlags.NonPublic)
+                .GetMethod(nameof(CopyAsync), BindingFlags.Static | BindingFlags.NonPublic)!
                 .MakeGenericMethod(source.GetType().GetGenericArguments().Single())
                 .Invoke(null, [source, duplicator]));
         }
@@ -35,7 +30,7 @@ public sealed class AsyncCollectionCopyHint : CopyHint
     /// <param name="source">Object to clone.</param>
     /// <param name="duplicator">Handles callback behavior for child values.</param>
     /// <returns>Clone of <paramref name="source"/>.</returns>
-    private static async IAsyncEnumerable<T> CopyAsync<T>(IAsyncEnumerable<T> source, DuplicatorChainer duplicator)
+    private static async IAsyncEnumerable<T?> CopyAsync<T>(IAsyncEnumerable<T> source, DuplicatorChainer duplicator)
     {
         await foreach (T item in source)
         {

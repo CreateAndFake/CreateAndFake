@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Text;
 using CreateAndFake.Design.Context;
 
 namespace CreateAndFake.Design.Randomization;
 
-/// <summary>For generating random predefined values.</summary>
+/// <summary>Collects random predefined values to use for data generation.</summary>
 public sealed class DataRandom
 {
     /// <summary>Supported searchable property names for values.</summary>
@@ -30,28 +28,28 @@ public sealed class DataRandom
     /// <inheritdoc cref="PersonContext"/>
     public PersonContext Person => _person.Value;
 
-    /// <summary>Initializes a new instance of the <see cref="DataRandom"/> class.</summary>
-    /// <param name="gen">Manages the randomization process.</param>
+    /// <inheritdoc cref="DataRandom"/>
+    /// <param name="gen"><inheritdoc cref="_gen" path="/summary"/></param>
     internal DataRandom(IRandom gen)
     {
         _gen = gen ?? throw new ArgumentNullException(nameof(gen));
         _person = new(() => new PersonContext(_gen));
     }
 
-    /// <summary>Finds a value for the identifying <paramref name="name"/>.</summary>
-    /// <param name="name">Name to find a value for.</param>
-    /// <returns>The value if found; <c>null</c> otherwise.</returns>
-    public string Find(string name)
+    /// <summary>Searches for a value representing the identifying <paramref name="name"/>.</summary>
+    /// <param name="name">Name to match a value with.</param>
+    /// <returns>The value representing <paramref name="name"/> if found; <c>null</c> otherwise.</returns>
+    public string? Find(string? name)
     {
-        return _Matcher.TryGetValue(ToUpperOnly(name), out Func<DataRandom, string> finder)
+        return _Matcher.TryGetValue(ToUpperOnly(name), out Func<DataRandom, string>? finder)
             ? finder.Invoke(this)
             : null;
     }
 
-    /// <summary>Converts <paramref name="value"/> to upper case letters only.</summary>
-    /// <param name="value">String to convert.</param>
-    /// <returns>The converted string.</returns>
-    private static string ToUpperOnly(string value)
+    /// <summary>Converts <paramref name="value"/> to uppercase letters only.</summary>
+    /// <param name="value">Text to convert.</param>
+    /// <returns>The uppercase converted text.</returns>
+    private static string ToUpperOnly(string? value)
     {
         StringBuilder result = new();
         foreach (char c in value?.ToUpperInvariant() ?? "")

@@ -1,31 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using CreateAndFake.Design.Content;
+﻿using CreateAndFake.Design.Content;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Handles basic type compare issues for <see cref="IValuer"/>.</summary>
+/// <summary>Handles basic <c>Type</c> compare issues for <see cref="IValuer"/>.</summary>
 public sealed class EarlyFailCompareHint : CompareHint
 {
+    /// <summary>Specific types to control via this hint.</summary>
+    private static readonly HashSet<Type> _SupportedTypes = [typeof(string), typeof(object)];
+
     /// <inheritdoc/>
-    protected override bool Supports(object expected, object actual, ValuerChainer valuer)
+    protected override bool Supports(object? expected, object? actual, ValuerChainer valuer)
     {
-        Type objectType = expected?.GetType();
-        return objectType == null
+        return expected == null
             || actual == null
-            || (objectType != actual.GetType()
-                && !objectType.Inherits(typeof(IAsyncEnumerable<>))
-                && !objectType.Inherits(typeof(IEnumerable<>)))
-            || objectType.IsPrimitive
-            || objectType.IsEnum
-            || objectType == typeof(string)
-            || objectType == typeof(object)
+            || Supports(expected.GetType(), actual.GetType())
             || expected is Delegate
             || expected is Type;
     }
 
+    /// <inheritdoc cref="CompareHint.Supports"/>
+    private static bool Supports(Type expected, Type actual)
+    {
+        return (expected != actual
+                && !(expected.Inherits(typeof(IAsyncEnumerable<>)) && actual.Inherits(typeof(IAsyncEnumerable<>)))
+                && !(expected.Inherits(typeof(IEnumerable<>)) && actual.Inherits(typeof(IEnumerable<>))))
+            || expected.IsPrimitive
+            || expected.IsEnum
+            || _SupportedTypes.Contains(expected);
+    }
+
     /// <inheritdoc/>
-    protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
+    protected override IEnumerable<Difference> Compare(object? expected, object? actual, ValuerChainer valuer)
     {
         if (expected == null && actual == null)
         {
@@ -46,7 +51,7 @@ public sealed class EarlyFailCompareHint : CompareHint
     }
 
     /// <inheritdoc/>
-    protected override int GetHashCode(object item, ValuerChainer valuer)
+    protected override int GetHashCode(object? item, ValuerChainer valuer)
     {
         return ValueComparer.Use.GetHashCode(item);
     }

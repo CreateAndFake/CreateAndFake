@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
-/// <summary>Handles copying collections for the duplicator.</summary>
+/// <summary>Handles cloning collections for <see cref="IDuplicator"/> .</summary>
+
 public sealed class CollectionCopyHint : CopyHint<IEnumerable>
 {
     /// <summary>Special cases where the data needs to be reversed.</summary>
@@ -21,17 +19,14 @@ public sealed class CollectionCopyHint : CopyHint<IEnumerable>
     /// <inheritdoc/>
     protected override IEnumerable Copy(IEnumerable source, DuplicatorChainer duplicator)
     {
+        ArgumentGuard.ThrowIfNull(source, nameof(source));
         ArgumentGuard.ThrowIfNull(duplicator, nameof(duplicator));
 
-        if (source == null)
-        {
-            return source;
-        }
-        else if (source.GetType().IsArray)
+        if (source.GetType().IsArray)
         {
             return CopyContents(source, duplicator);
         }
-#if NETSTANDARD // Constructor missing in .NET full.
+#if NETFRAMEWORK // Constructor missing in .NET full.
         else if (source.GetType().AsGenericType() == typeof(Dictionary<,>))
         {
             dynamic result = Activator.CreateInstance(source.GetType());
@@ -44,7 +39,7 @@ public sealed class CollectionCopyHint : CopyHint<IEnumerable>
 #endif
         else
         {
-            return (IEnumerable)Activator.CreateInstance(source.GetType(), CopyContents(source, duplicator));
+            return (IEnumerable)Activator.CreateInstance(source.GetType(), CopyContents(source, duplicator))!;
         }
     }
 
@@ -55,9 +50,9 @@ public sealed class CollectionCopyHint : CopyHint<IEnumerable>
     private static IEnumerable CopyContents(IEnumerable source, DuplicatorChainer duplicator)
     {
         Type type = source.GetType();
-        Type genericType = type.AsGenericType();
+        Type? genericType = type.AsGenericType();
 
-        object[] data = CopyContentsHelper(source, duplicator,
+        object?[] data = CopyContentsHelper(source, duplicator,
             _ReverseCases.Contains(genericType ?? type));
 
         if (genericType != null)
@@ -71,7 +66,7 @@ public sealed class CollectionCopyHint : CopyHint<IEnumerable>
         }
         else if (type.IsArray)
         {
-            return ArrayCast(type.GetElementType(), data);
+            return ArrayCast(type.GetElementType()!, data);
         }
         else
         {
@@ -83,7 +78,7 @@ public sealed class CollectionCopyHint : CopyHint<IEnumerable>
     /// <param name="elementType">Array type to create.</param>
     /// <param name="data">Array to convert.</param>
     /// <returns>The converted array.</returns>
-    private static Array ArrayCast(Type elementType, object[] data)
+    private static Array ArrayCast(Type elementType, object?[] data)
     {
         Array result = Array.CreateInstance(elementType, data.Length);
         for (int i = 0; i < data.Length; i++)
@@ -98,9 +93,9 @@ public sealed class CollectionCopyHint : CopyHint<IEnumerable>
     /// <param name="duplicator">Handles callback behavior for child values.</param>
     /// <param name="reverse">If the copy process should reverse the order of items from the enumerator.</param>
     /// <returns>The duplicate object.</returns>
-    private static object[] CopyContentsHelper(IEnumerable source, DuplicatorChainer duplicator, bool reverse)
+    private static object?[] CopyContentsHelper(IEnumerable source, DuplicatorChainer duplicator, bool reverse)
     {
-        List<object> copy = [];
+        List<object?> copy = [];
 
         IEnumerator enumerator = source.GetEnumerator();
         while (enumerator.MoveNext())

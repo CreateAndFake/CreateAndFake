@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Collections.Specialized;
-using System.Linq;
 using CreateAndFake.Design;
 
 // Return isn't present on all .NET versions.
@@ -10,10 +7,8 @@ using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Handles generation of legacy collections for the randomizer.</summary>
-/// <param name="minSize">Min size for created collections.</param>
-/// <param name="range">Size variance for created collections.</param>
-/// <remarks>Specifies the size of generated collections.</remarks>
+/// <summary>Handles randomizing legacy collections for <see cref="IRandomizer"/>.</summary>
+/// <inheritdoc cref="CollectionCreateHint"/>
 public sealed class LegacyCollectionCreateHint(int minSize = 1, int range = 3) : CreateCollectionHint
 {
     /// <summary>Supported types and the methods used to generate them.</summary>
@@ -46,15 +41,14 @@ public sealed class LegacyCollectionCreateHint(int minSize = 1, int range = 3) :
     internal static IEnumerable<Type> PotentialCollections => _Creators.Select(i => i.Item1);
 
     /// <inheritdoc/>
-    protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+    protected internal override (bool, object?) TryCreate(Type type, RandomizerChainer? randomizer)
     {
         return TryCreate(type, minSize + randomizer?.Gen.Next(range) ?? 0, randomizer);
     }
 
     /// <inheritdoc/>
-    protected internal override (bool, object) TryCreate(Type type, int size, RandomizerChainer randomizer)
+    protected internal override (bool, object?) TryCreate(Type type, int size, RandomizerChainer? randomizer)
     {
-        ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
 
         if (type.Inherits<IEnumerable>() && FindMatches(type).Any())
@@ -68,22 +62,22 @@ public sealed class LegacyCollectionCreateHint(int minSize = 1, int range = 3) :
         }
     }
 
-    /// <summary>Finds potential collection matches for a type.</summary>
-    /// <param name="type">Type to find matches for.</param>
+    /// <summary>Finds potential collection matches for <paramref name="type"/>.</summary>
+    /// <param name="type"><c>Type</c> to find matches for.</param>
     /// <returns>All possible matches.</returns>
     private static IEnumerable<(Type, Func<string[], RandomizerChainer, object>)> FindMatches(Type type)
     {
         return _Creators.Where(m => type.IsInheritedBy(m.Item1));
     }
 
-    /// <summary>Creates the type and populates it with data.</summary>
-    /// <typeparam name="TDict">Type to create.</typeparam>
-    /// <param name="keys">Keys to create in the type.</param>
-    /// <param name="gen">Handles callback behavior for child values.</param>
+    /// <summary>Creates the <typeparamref name="TDict"/> and populates it with data.</summary>
+    /// <typeparam name="TDict"><c>Type</c> to create.</typeparam>
+    /// <param name="keys">Keys to create in the <typeparamref name="TDict"/>.</param>
+    /// <param name="gen">Handles randomizing child values.</param>
     /// <returns>The created instance.</returns>
     private static TDict CreateDict<TDict>(string[] keys, RandomizerChainer gen)
     {
-        dynamic data = Activator.CreateInstance<TDict>();
+        dynamic data = Activator.CreateInstance<TDict>()!;
         for (int i = 0; i < keys.Length; i++)
         {
             data.Add(keys[i], gen.Create<string>());
@@ -91,9 +85,9 @@ public sealed class LegacyCollectionCreateHint(int minSize = 1, int range = 3) :
         return data;
     }
 
-    /// <summary>Creates populated string array of data to use.</summary>
+    /// <summary>Creates populated collection of data to use.</summary>
     /// <param name="size">Number of items to generate.</param>
-    /// <param name="randomizer">Callback to the randomizer to create child values.</param>
+    /// <param name="randomizer">Handles randomizing child values.</param>
     /// <returns>Data populated with random values.</returns>
     private static string[] CreateInternalData(int size, RandomizerChainer randomizer)
     {

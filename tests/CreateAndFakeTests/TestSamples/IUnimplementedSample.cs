@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace CreateAndFakeTests.TestSamples;
+﻿namespace CreateAndFakeTests.TestSamples;
 
 /// <summary>For testing.</summary>
 public interface IUnimplementedSample
@@ -9,7 +7,6 @@ public interface IUnimplementedSample
     int Flag { get; }
 
     /// <summary>For testing.</summary>
-    [SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly", Justification = "For testing.")]
     bool Funny { set; }
 
     /// <summary>For testing.</summary>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
@@ -70,8 +68,11 @@ internal sealed class GenericFixer
                 while (!constraints.All(c => arg.Inherits(c))
                     && (!newNeeded || arg.GetConstructor(Type.EmptyTypes) != null))
                 {
-                    object constraint = _randomizer.Create(_gen.NextItem(constraints));
-                    arg = constraint.GetType();
+                    object? constraint = _randomizer.Create(_gen.NextItem(constraints));
+                    if (constraint != null)
+                    {
+                        arg = constraint.GetType();
+                    }
                     Disposer.Cleanup(constraint);
                 }
             }).Wait();

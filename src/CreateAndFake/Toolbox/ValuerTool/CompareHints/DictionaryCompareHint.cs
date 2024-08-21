@@ -1,17 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Handles comparing dictionaries for <see cref="IValuer"/>.</summary>
+/// <summary>Handles comparing <see cref="IDictionary"/> collections for <see cref="IValuer"/>.</summary>
 public sealed class DictionaryCompareHint : CompareHint<IDictionary>
 {
     /// <inheritdoc/>
     protected override IEnumerable<Difference> Compare(
-        IDictionary expected, IDictionary actual, ValuerChainer valuer)
+        IDictionary? expected, IDictionary? actual, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(expected, nameof(expected));
         ArgumentGuard.ThrowIfNull(actual, nameof(actual));
@@ -29,7 +27,7 @@ public sealed class DictionaryCompareHint : CompareHint<IDictionary>
 
         foreach (object key in expectedKeys)
         {
-            object match = actualKeys.FirstOrDefault(k => valuer.Equals(key, k));
+            object? match = actualKeys.FirstOrDefault(k => valuer.Equals(key, k));
             if (match != null)
             {
                 foreach (Difference diff in valuer.Compare(expected[key], actual[match]))
@@ -53,7 +51,7 @@ public sealed class DictionaryCompareHint : CompareHint<IDictionary>
     }
 
     /// <inheritdoc/>
-    protected override int GetHashCode(IDictionary item, ValuerChainer valuer)
+    protected override int GetHashCode(IDictionary? item, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(item, nameof(item));
         ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));

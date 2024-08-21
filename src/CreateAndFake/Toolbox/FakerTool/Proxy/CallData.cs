@@ -1,39 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.FakerTool.Proxy;
 
 /// <summary>Method call details.</summary>
-internal sealed class CallData : IDuplicatable
+/// <param name="methodName"><inheritdoc cref="_methodName" path="/summary"/></param>
+/// <param name="generics"><inheritdoc cref="_generics" path="/summary"/></param>
+/// <param name="args"><inheritdoc cref="_args" path="/summary"/></param>
+/// <param name="valuer"><inheritdoc cref="_valuer" path="/summary"/></param>
+internal sealed class CallData(string methodName, Type[] generics, object?[] args, IValuer? valuer) : IDuplicatable
 {
     /// <summary>Name tied to the call.</summary>
-    private readonly string _methodName;
+    private readonly string _methodName = methodName ?? throw new ArgumentNullException(nameof(methodName));
 
     /// <summary>Generics tied to the call.</summary>
-    private readonly Type[] _generics;
+    private readonly Type[] _generics = generics ?? throw new ArgumentNullException(nameof(generics));
 
     /// <summary>Args tied to the call.</summary>
-    private readonly object[] _args;
+    private readonly object?[] _args = args ?? throw new ArgumentNullException(nameof(args));
 
     /// <summary>How to compare call data.</summary>
-    private readonly IValuer _valuer;
-
-    /// <summary>Initializes a new instance of the <see cref="CallData"/> class.</summary>
-    /// <param name="methodName">Name tied to the call.</param>
-    /// <param name="generics">Generics tied to the call.</param>
-    /// <param name="args">Args tied to the call.</param>
-    /// <param name="valuer">How to compare call data.</param>
-    internal CallData(string methodName, Type[] generics, object[] args, IValuer valuer)
-    {
-        _methodName = methodName ?? throw new ArgumentNullException(nameof(methodName));
-        _generics = generics ?? throw new ArgumentNullException(nameof(generics));
-        _args = args ?? throw new ArgumentNullException(nameof(args));
-        _valuer = valuer;
-    }
+    private readonly IValuer? _valuer = valuer;
 
     /// <summary>Converts arg values to designated Arg matchers.</summary>
     /// <param name="argChanges">Created Args to substitute on the given values.</param>
@@ -44,7 +32,7 @@ internal sealed class CallData : IDuplicatable
         List<Tuple<Arg, object>> changes = [.. argChanges];
         for (int i = 0; i < _args.Length; i++)
         {
-            Tuple<Arg, object> change = changes.FirstOrDefault(c => Equals(c.Item2, _args[i]));
+            Tuple<Arg, object>? change = changes.FirstOrDefault(c => Equals(c.Item2, _args[i]));
             if (change != default)
             {
                 _args[i] = change.Item1;
@@ -58,12 +46,12 @@ internal sealed class CallData : IDuplicatable
     {
         ArgumentGuard.ThrowIfNull(duplicator, nameof(duplicator));
 
-        return new CallData(_methodName, [.. _generics], duplicator.Copy(_args), duplicator.Copy(_valuer));
+        return new CallData(_methodName, [.. _generics], duplicator.Copy(_args)!, duplicator.Copy(_valuer));
     }
 
     /// <summary>Determines if behavior is intended for a call.</summary>
     /// <param name="input">Details of the call.</param>
-    /// <returns>True if matched; false otherwise.</returns>
+    /// <returns><c>true</c> if matched; <c>false</c> otherwise.</returns>
     internal bool MatchesCall(CallData input)
     {
         ArgumentGuard.ThrowIfNull(input, nameof(input));
@@ -75,7 +63,7 @@ internal sealed class CallData : IDuplicatable
 
     /// <summary>Determines if the call generics match the expected ones.</summary>
     /// <param name="inputGenerics">Generics used in the call.</param>
-    /// <returns>True if matched; false otherwise.</returns>
+    /// <returns><c>true</c> if matched; <c>false</c> otherwise.</returns>
     private bool GenericsMatch(Type[] inputGenerics)
     {
         bool matches = inputGenerics.Length == _generics.Length;
@@ -92,8 +80,8 @@ internal sealed class CallData : IDuplicatable
 
     /// <summary>Determines if the call args match the expected ones.</summary>
     /// <param name="inputArgs">Args used in the call.</param>
-    /// <returns>True if matched; false otherwise.</returns>
-    private bool ArgsMatch(object[] inputArgs)
+    /// <returns><c>true</c> if matched; <c>false</c> otherwise.</returns>
+    private bool ArgsMatch(object?[] inputArgs)
     {
         bool matches = inputArgs.Length == _args.Length;
 
@@ -115,8 +103,8 @@ internal sealed class CallData : IDuplicatable
         return matches;
     }
 
-    /// <summary>Converts this object to a string.</summary>
-    /// <returns>String representation of the call.</returns>
+    /// <summary>Converts <c>this</c> to a <c>string</c>.</summary>
+    /// <returns><c>string</c> representation of <c>this</c>.</returns>
     public override string ToString()
     {
         string gen = _generics.Length != 0

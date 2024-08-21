@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using CreateAndFake.Design.Content;
+﻿using CreateAndFake.Design.Content;
 
 namespace CreateAndFakeTests.TestSamples;
 
@@ -10,7 +9,6 @@ public class ValueEquatableSample : IValueEquatable
     public string StringValue { get; set; }
 
     /// <summary>For testing.</summary>
-    [SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "For testing.")]
     public int NumberValue;
 
     /// <summary>Compares by value.</summary>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using CreateAndFake.Design;
@@ -46,7 +43,7 @@ public static class TypeExtensions
     /// <summary>Finds all types in <paramref name="assembly"/>.</summary>
     /// <param name="assembly"><see cref="Assembly"/> to load types from.</param>
     /// <returns>The found types if <paramref name="assembly"/> can load; none otherwise.</returns>
-    internal static Type[] FindLoadedTypes(Assembly assembly)
+    internal static Type[] FindLoadedTypes(Assembly? assembly)
     {
         try
         {
@@ -69,24 +66,23 @@ public static class TypeExtensions
     ///     <c>true</c> if <paramref name="type"/> is visible to
     ///     <paramref name="assembly"/>; <c>false</c> otherwise.
     /// </returns>
-    public static bool IsVisibleTo(this Type type, AssemblyName assembly)
+    public static bool IsVisibleTo([NotNullWhen(true)] this Type? type, AssemblyName assembly)
     {
-        ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(assembly, nameof(assembly));
 
-        return type.IsVisible || type.Assembly
+        return type != null && (type.IsVisible || type.Assembly
             .GetCustomAttributes<InternalsVisibleToAttribute>()
-            .Any(a => a.AssemblyName == assembly.Name);
+            .Any(a => a.AssemblyName == assembly.Name));
     }
 
     /// <summary>Attempts to get the root generic type of <paramref name="type"/>.</summary>
     /// <param name="type"><see cref="Type"/> to cast.</param>
     /// <returns>The casted <paramref name="type"/> if generic; null otherwise.</returns>
-    public static Type AsGenericType(this Type type)
+    public static Type? AsGenericType(this Type? type)
     {
-        ArgumentGuard.ThrowIfNull(type, nameof(type));
-
-        return type.IsGenericType ? type.GetGenericTypeDefinition() : null;
+        return type != null && type.IsGenericType
+            ? type.GetGenericTypeDefinition()
+            : null;
     }
 
     /// <summary>Checks if <paramref name="parent"/> inherits <typeparamref name="T"/>.</summary>
@@ -95,7 +91,7 @@ public static class TypeExtensions
     /// <returns>
     ///     <c>true</c> if <paramref name="parent"/> inherits <typeparamref name="T"/>; <c>false</c> otherwise.
     /// </returns>
-    public static bool Inherits<T>(this Type parent)
+    public static bool Inherits<T>([NotNullWhen(true)] this Type? parent)
     {
         return Inherits(parent, typeof(T));
     }
@@ -106,7 +102,7 @@ public static class TypeExtensions
     /// <returns>
     ///     <c>true</c> if <paramref name="parent"/> inherits <paramref name="child"/>; <c>false</c> otherwise.
     /// </returns>
-    public static bool Inherits(this Type parent, Type child)
+    public static bool Inherits([NotNullWhen(true)] this Type? parent, [NotNullWhen(true)] Type? child)
     {
         return IsInheritedBy(child, parent);
     }
@@ -117,15 +113,20 @@ public static class TypeExtensions
     /// <returns>
     ///     <c>true</c> if <typeparamref name="T"/> inherits <paramref name="child"/>; <c>false</c> otherwise.
     /// </returns>
-    public static bool IsInheritedBy<T>(this Type child)
+    public static bool IsInheritedBy<T>([NotNullWhen(true)] this Type? child)
     {
         return IsInheritedBy(child, typeof(T));
     }
 
     /// <inheritdoc cref="Inherits"/>
-    public static bool IsInheritedBy(this Type child, Type parent)
+    public static bool IsInheritedBy([NotNullWhen(true)] this Type? child, [NotNullWhen(true)] Type? parent)
     {
-        HashSet<Type> children;
+        if (child == null || parent == null)
+        {
+            return false;
+        }
+
+        HashSet<Type>? children;
         lock (_InheritCache)
         {
             if (!_InheritCache.TryGetValue(parent, out children))
@@ -134,14 +135,13 @@ public static class TypeExtensions
             }
         }
 
-        return children.Contains(child)
-            || children.Contains(Nullable.GetUnderlyingType(child));
+        return children.Contains(Nullable.GetUnderlyingType(child) ?? child);
     }
 
     /// <summary>Finds all types <paramref name="type"/> inherits.</summary>
     /// <param name="type"><see cref="Type"/> to check.</param>
     /// <returns>The found types inherited by <paramref name="type"/>.</returns>
-    private static IEnumerable<Type> FindInheritance(Type type)
+    private static IEnumerable<Type> FindInheritance(Type? type)
     {
         if (type == null)
         {

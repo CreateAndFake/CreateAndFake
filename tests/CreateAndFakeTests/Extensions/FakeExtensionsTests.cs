@@ -1,7 +1,6 @@
 using System;
 using CreateAndFake;
 using CreateAndFake.Fluent;
-using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using Xunit;
 
 namespace CreateAndFakeTests.Extensions;
@@ -9,6 +8,12 @@ namespace CreateAndFakeTests.Extensions;
 /// <summary>Verifies behavior.</summary>
 public static class FakeExtensionsTests
 {
+    [Fact]
+    internal static void FakeExtensions_GuardsNulls()
+    {
+        Tools.Tester.PreventsNullRefException(typeof(FakeExtensions));
+    }
+
     [Theory, RandomData]
     internal static void Called_PassesAsserters(int[] group, int comparable,
         string text, Action behavior, object item, [Fake] object data)
@@ -18,15 +23,5 @@ public static class FakeExtensionsTests
         comparable.Assert().Called(data).And.Is(comparable);
         text.Assert().Called(data).And.Is(text);
         behavior.Assert().Called(data).And.Is(behavior);
-    }
-
-    [Theory, RandomData]
-    internal static void Called_HandlesNullAsserters([Fake] object data)
-    {
-        ((AssertObject)null).Called(data);
-        ((AssertGroup)null).Called(data);
-        ((AssertComparable)null).Called(data);
-        ((AssertText)null).Called(data);
-        ((AssertBehavior)null).Called(data);
     }
 }

@@ -6,8 +6,7 @@
     "git.enableCommitSigning": true,
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-        "source.sortImports": "explicit",
-        "source.fixAll": "explicit"
+        "source.organizeImports": "explicit"
     },
     "editor.rulers": [
         120,
@@ -18,6 +17,7 @@
     },
     // Extension: Code Spell Checker
     "cSpell.words": [
+        "Assem",
         "autobuild",
         "Browsable",
         "Callvirt",
@@ -52,10 +52,11 @@
         "Ldloc",
         "Ldstr",
         "Ldtoken",
+        "Memberwise",
         "MIDDLENAME",
         "Mutatable",
-        "NEEDINIT",
-        "NETSTANDARD",
+        "NETCOREAPP",
+        "NETFRAMEWORK",
         "Newarr",
         "Newobj",
         "noreply",

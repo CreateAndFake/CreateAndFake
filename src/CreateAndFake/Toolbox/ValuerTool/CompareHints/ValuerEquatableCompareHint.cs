@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Handles comparing equatables for <see cref="IValuer"/>.</summary>
+/// <summary>Handles comparing <see cref="IValuerEquatable"/> instances for <see cref="IValuer"/>.</summary>
 public sealed class ValuerEquatableCompareHint : CompareHint<IValuerEquatable>
 {
     /// <summary>Compares equatables by value as well.</summary>
@@ -13,9 +12,8 @@ public sealed class ValuerEquatableCompareHint : CompareHint<IValuerEquatable>
 
     /// <inheritdoc/>
     protected override IEnumerable<Difference> Compare(
-        IValuerEquatable expected, IValuerEquatable actual, ValuerChainer valuer)
+        IValuerEquatable? expected, IValuerEquatable? actual, ValuerChainer valuer)
     {
-        ArgumentGuard.ThrowIfNull(expected, nameof(expected));
         ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));
 
         return LazyCompare(expected, actual, valuer);
@@ -23,16 +21,18 @@ public sealed class ValuerEquatableCompareHint : CompareHint<IValuerEquatable>
 
     /// <inheritdoc cref="Compare"/>
     private static IEnumerable<Difference> LazyCompare(
-        IValuerEquatable expected, IValuerEquatable actual, ValuerChainer valuer)
+        IValuerEquatable? expected, IValuerEquatable? actual, ValuerChainer valuer)
     {
+        ArgumentGuard.ThrowIfNull(expected, nameof(expected));
+
         if (!expected.ValuesEqual(actual, valuer.Valuer))
         {
             yield return new Difference(".ValuesEqual", new Difference(true, false));
 
-            (bool, IEnumerable<Difference>) byValues = _NestedHint.TryCompare(expected, actual, valuer);
+            (bool, IEnumerable<Difference>?) byValues = _NestedHint.TryCompare(expected, actual, valuer);
             if (byValues.Item1)
             {
-                foreach (Difference difference in byValues.Item2)
+                foreach (Difference difference in byValues.Item2!)
                 {
                     yield return difference;
                 }
@@ -41,7 +41,7 @@ public sealed class ValuerEquatableCompareHint : CompareHint<IValuerEquatable>
     }
 
     /// <inheritdoc/>
-    protected override int GetHashCode(IValuerEquatable item, ValuerChainer valuer)
+    protected override int GetHashCode(IValuerEquatable? item, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(item, nameof(item));
         ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));

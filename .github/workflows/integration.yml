@@ -12,10 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: | 
           8.0.x
+          7.0.x
     - name: Build & Test
       run: ./build/run.sh test
 
@@ -24,10 +25,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: | 
           8.0.x
+          7.0.x
     - name: Build & Test
       run: bash build/run.sh test
 
@@ -36,7 +38,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: | 
           8.0.x
@@ -44,7 +46,7 @@ jobs:
     - name: Build & Test & Coverage
       run: ./build/run.cmd test coverage
     - name: Upload coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         directory: ./artifacts/coverage
         token: ${{ secrets.CODECOV_TOKEN }}

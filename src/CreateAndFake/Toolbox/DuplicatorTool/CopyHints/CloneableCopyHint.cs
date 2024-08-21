@@ -1,13 +1,15 @@
-﻿using System;
+﻿using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
-/// <summary>Handles copying cloneables for the duplicator.</summary>
+/// <summary>Handles cloning <see cref="ICloneable"/> instances for <see cref="IDuplicator"/> .</summary>
 public sealed class CloneableCopyHint : CopyHint<ICloneable>
 {
     /// <inheritdoc/>
     protected override ICloneable Copy(ICloneable source, DuplicatorChainer duplicator)
     {
-        return (ICloneable)source?.Clone();
+        ArgumentGuard.ThrowIfNull(source, nameof(source));
+
+        return (ICloneable)source.Clone();
     }
 }

@@ -1,3 +1,4 @@
+using CreateAndFake.Design;
 using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
@@ -6,7 +7,7 @@ using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Fluent;
 
-/// <summary>Provides fluent assertions.</summary>
+/// <summary>Provides fluent handling of fakes.</summary>
 public static class FakeExtensions
 {
     /// <summary>Ties a method call to fake behavior.</summary>
@@ -20,7 +21,7 @@ public static class FakeExtensions
     ///         db.Find(id).SetupReturn(data);
     ///     </code>
     /// </example>
-    public static void SetupReturn<T>(this T fakeCallResult, T returnValue, Times times = null)
+    public static void SetupReturn<T>(this T fakeCallResult, T returnValue, Times? times = null)
     {
         SetupCall(fakeCallResult, Behavior.Returns(returnValue, times));
     }
@@ -41,7 +42,7 @@ public static class FakeExtensions
     /// <remarks>For use on <see cref="IFaked"/> stubs from the <see cref="Faker"/> tool only.</remarks>
     public static Fake<T> ToFake<T>(this T fakeDummy)
     {
-        return new((IFaked)fakeDummy);
+        return new((IFaked)fakeDummy!);
     }
 
     /// <summary>Accesses the raw fake wrapper.</summary>
@@ -61,7 +62,7 @@ public static class FakeExtensions
     ///     For use on <see cref="IFaked"/> stubs from the <see cref="Faker"/> tool only.
     ///     When specifying <paramref name="total"/>, be aware of test framework calls for info/display.
     /// </remarks>
-    public static void VerifyAllCalls(this object fake, Times total = null)
+    public static void VerifyAllCalls(this object fake, Times? total = null)
     {
         new Fake((IFaked)fake).VerifyAll(total);
     }
@@ -70,38 +71,48 @@ public static class FakeExtensions
     /// <param name="fake">Fake instance with behavior set.</param>
     /// <param name="total">Expected total number of calls to test as well.</param>
     /// <inheritdoc cref="VerifyAllCalls"/>
-    public static AssertChainer<AssertObject> Called(this AssertObject asserter, object fake, Times total = null)
+    public static AssertChainer<AssertObject> Called(this AssertObject asserter, object fake, Times? total = null)
     {
+        ArgumentGuard.ThrowIfNull(asserter, nameof(asserter));
+
         VerifyAllCalls(fake, total);
-        return asserter?.ToChainer();
+        return asserter.ToChainer();
     }
 
     /// <inheritdoc cref="Called(AssertObject,object,Times)"/>
-    public static AssertChainer<AssertGroup> Called(this AssertGroup asserter, object fake, Times total = null)
+    public static AssertChainer<AssertGroup> Called(this AssertGroup asserter, object fake, Times? total = null)
     {
+        ArgumentGuard.ThrowIfNull(asserter, nameof(asserter));
+
         VerifyAllCalls(fake, total);
-        return asserter?.ToChainer();
+        return asserter.ToChainer();
     }
 
     /// <inheritdoc cref="Called(AssertObject,object,Times)"/>
-    public static AssertChainer<AssertBehavior> Called(this AssertBehavior asserter, object fake, Times total = null)
+    public static AssertChainer<AssertBehavior> Called(this AssertBehavior asserter, object fake, Times? total = null)
     {
+        ArgumentGuard.ThrowIfNull(asserter, nameof(asserter));
+
         VerifyAllCalls(fake, total);
-        return asserter?.ToChainer();
+        return asserter.ToChainer();
     }
 
     /// <inheritdoc cref="Called(AssertObject,object,Times)"/>
-    public static AssertChainer<AssertText> Called(this AssertText asserter, object fake, Times total = null)
+    public static AssertChainer<AssertText> Called(this AssertText asserter, object fake, Times? total = null)
     {
+        ArgumentGuard.ThrowIfNull(asserter, nameof(asserter));
+
         VerifyAllCalls(fake, total);
-        return asserter?.ToChainer();
+        return asserter.ToChainer();
     }
 
     /// <inheritdoc cref="Called(AssertObject,object,Times)"/>
-    public static AssertChainer<AssertComparable> Called(this AssertComparable asserter, object fake, Times total = null)
+    public static AssertChainer<AssertComparable> Called(this AssertComparable asserter, object fake, Times? total = null)
     {
+        ArgumentGuard.ThrowIfNull(asserter, nameof(asserter));
+
         VerifyAllCalls(fake, total);
-        return asserter?.ToChainer();
+        return asserter.ToChainer();
     }
 }
 

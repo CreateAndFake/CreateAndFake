@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CreateAndFake;
 using CreateAndFake.Design;
 using CreateAndFake.Fluent;
@@ -42,7 +43,7 @@ public sealed class ObjectCreateHintTests : CreateHintTestBase<ObjectCreateHint>
     }
 
     [Fact]
-    public async void Create_RetriesUntilGoodSample()
+    public async Task Create_RetriesUntilGoodSample()
     {
         await Limiter.Dozen.Repeat("",
             () => typeof(IIsGoodOrBadSample).CreateRandomInstance().Assert().IsNot(null)).ConfigureAwait(true);

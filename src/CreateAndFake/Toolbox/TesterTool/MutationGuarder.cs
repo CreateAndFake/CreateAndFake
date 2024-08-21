@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.DuplicatorTool;
@@ -48,7 +46,7 @@ internal sealed class MutationGuarder : BaseGuarder
     /// <summary>Verifies mutations are prevented on methods.</summary>
     /// <param name="instance">Instance to test the methods on.</param>
     /// <param name="injectionValues">Values to inject into the method.</param>
-    internal void PreventsMutationOnMethods(object instance, params object[] injectionValues)
+    internal void PreventsMutationOnMethods(object instance, params object?[]? injectionValues)
     {
         ArgumentGuard.ThrowIfNull(instance, nameof(instance));
 
@@ -79,12 +77,12 @@ internal sealed class MutationGuarder : BaseGuarder
     /// <param name="method">Method under test.</param>
     /// <param name="callAllMethods">If all instance methods should be called after the method.</param>
     /// <param name="injectionValues">Values to inject into the method.</param>
-    private void PreventsMutation(object instance,
-        MethodBase method, bool callAllMethods, object[] injectionValues)
+    private void PreventsMutation(object? instance,
+        MethodBase method, bool callAllMethods, object?[]? injectionValues)
     {
-        object[] data = null;
-        object[] copy = null;
-        object result = null;
+        object?[]? data = null;
+        object?[]? copy = null;
+        object? result = null;
         try
         {
             data = Randomizer.CreateFor(method, injectionValues).Args.ToArray();
@@ -92,7 +90,7 @@ internal sealed class MutationGuarder : BaseGuarder
 
             result = (instance == null && method is ConstructorInfo builder)
                 ? RunCheck(method, null, () => builder.Invoke(data))
-                : RunCheck(method, null, () => method.Invoke(instance, data));
+                : RunCheck(method, null, () => method.Invoke(instance, data!)!);
 
             if (result != null && callAllMethods)
             {
@@ -109,6 +107,6 @@ internal sealed class MutationGuarder : BaseGuarder
 
     /// <inheritdoc/>
     protected override void HandleCheckException(MethodBase testOrigin,
-        ParameterInfo testParam, Exception taskException)
+        ParameterInfo? testParam, Exception taskException)
     { }
 }

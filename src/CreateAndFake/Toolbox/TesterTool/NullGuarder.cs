@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.RandomizerTool;
@@ -50,7 +48,7 @@ internal sealed class NullGuarder : BaseGuarder
     /// </summary>
     /// <param name="instance">Instance to test the methods on.</param>
     /// <param name="injectionValues">Values to inject into the method.</param>
-    internal void PreventsNullRefExceptionOnMethods(object instance, params object[] injectionValues)
+    internal void PreventsNullRefExceptionOnMethods(object instance, params object?[]? injectionValues)
     {
         ArgumentGuard.ThrowIfNull(instance, nameof(instance));
 
@@ -86,11 +84,11 @@ internal sealed class NullGuarder : BaseGuarder
     /// <param name="method">Method under test.</param>
     /// <param name="callAllMethods">If all instance methods should be called after the method.</param>
     /// <param name="injectionValues">Values to inject into the method.</param>
-    private void PreventsNullRefException(object instance,
-        MethodBase method, bool callAllMethods, object[] injectionValues)
+    private void PreventsNullRefException(object? instance,
+        MethodBase method, bool callAllMethods, object?[]? injectionValues)
     {
-        object[] data = null;
-        object result = null;
+        object?[]? data = null;
+        object? result = null;
         try
         {
             data = Randomizer.CreateFor(method, injectionValues).Args.ToArray();
@@ -104,13 +102,13 @@ internal sealed class NullGuarder : BaseGuarder
                     continue;
                 }
 
-                object original = data[i];
+                object? original = data[i];
                 data[i] = null;
                 try
                 {
                     result = (instance == null && method is ConstructorInfo builder)
                         ? RunCheck(method, param, () => builder.Invoke(data))
-                        : RunCheck(method, param, () => method.Invoke(instance, data));
+                        : RunCheck(method, param, () => method.Invoke(instance, data)!);
 
                     if (result != null && callAllMethods)
                     {
@@ -131,7 +129,7 @@ internal sealed class NullGuarder : BaseGuarder
 
     /// <inheritdoc/>
     protected override void HandleCheckException(MethodBase testOrigin,
-        ParameterInfo testParam, Exception taskException)
+        ParameterInfo? testParam, Exception taskException)
     {
         ArgumentGuard.ThrowIfNull(testOrigin, nameof(testOrigin));
         ArgumentGuard.ThrowIfNull(testParam, nameof(testParam));

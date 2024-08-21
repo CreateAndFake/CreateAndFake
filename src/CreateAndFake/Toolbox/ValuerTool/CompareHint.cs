@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace CreateAndFake.Toolbox.ValuerTool;
+﻿namespace CreateAndFake.Toolbox.ValuerTool;
 
 /// <summary>Handles comparing specific types for <see cref="IValuer"/>.</summary>
 public abstract class CompareHint
@@ -10,12 +8,12 @@ public abstract class CompareHint
     /// </summary>
     /// <param name="expected">Object to compare with <paramref name="actual"/>.</param>
     /// <param name="actual">Potentially different object to compare against <paramref name="expected"/>.</param>
-    /// <param name="valuer">Handles callback behavior for child values.</param>
+    /// <param name="valuer">Handles comparing child values.</param>
     /// <returns>
     ///     (<c>true</c>, found differences) if successful;
     ///     (<c>false</c>, <c>null</c>) otherwise.
     /// </returns>
-    internal (bool, IEnumerable<Difference>) TryCompare(object expected, object actual, ValuerChainer valuer)
+    internal (bool, IEnumerable<Difference>?) TryCompare(object? expected, object? actual, ValuerChainer valuer)
     {
         if (Supports(expected, actual, valuer))
         {
@@ -27,14 +25,14 @@ public abstract class CompareHint
         }
     }
 
-    /// <summary>Tries to calculate a hash code for <paramref name="item"/> based upon value.</summary>
-    /// <param name="item">Object to generate a code for.</param>
-    /// <param name="valuer">Handles callback behavior for child values.</param>
+    /// <summary>Tries to compute an identifying hash code for <paramref name="item"/> based upon value.</summary>
+    /// <param name="item">Object to generate a hash code for.</param>
+    /// <param name="valuer">Handles hashing behavior for child values.</param>
     /// <returns>
-    ///     (<c>true</c>, generated hash) if successful;
+    ///     (<c>true</c>, value computed hash code) if successful;
     ///     (<c>false</c>, <c>0</c>) otherwise.
     /// </returns>
-    internal (bool, int) TryGetHashCode(object item, ValuerChainer valuer)
+    internal (bool, int) TryGetHashCode(object? item, ValuerChainer valuer)
     {
         if (Supports(item, item, valuer))
         {
@@ -51,15 +49,15 @@ public abstract class CompareHint
     /// </summary>
     /// <returns><c>true</c> if the objects can be compared; <c>false</c> otherwise.</returns>
     /// <inheritdoc cref="TryCompare"/>
-    protected abstract bool Supports(object expected, object actual, ValuerChainer valuer);
+    protected abstract bool Supports(object? expected, object? actual, ValuerChainer valuer);
 
     /// <summary>Finds the differences between <paramref name="expected"/> and <paramref name="actual"/>.</summary>
     /// <returns>The found differences between <paramref name="expected"/> and <paramref name="actual"/>.</returns>
     /// <inheritdoc cref="TryCompare"/>
-    protected abstract IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer);
+    protected abstract IEnumerable<Difference> Compare(object? expected, object? actual, ValuerChainer valuer);
 
-    /// <summary>Calculates a hash code for <paramref name="item"/> based upon value.</summary>
-    /// <returns>The generated hash for <paramref name="item"/>.</returns>
+    /// <summary>Computes an identifying hash code for <paramref name="item"/> based upon value.</summary>
+    /// <returns>The value computed hash code for <paramref name="item"/>.</returns>
     /// <inheritdoc cref="TryGetHashCode"/>
-    protected abstract int GetHashCode(object item, ValuerChainer valuer);
+    protected abstract int GetHashCode(object? item, ValuerChainer valuer);
 }

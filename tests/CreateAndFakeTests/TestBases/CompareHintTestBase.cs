@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using CreateAndFake;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.ValuerTool;
@@ -29,8 +28,8 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
     protected CompareHintTestBase(T testInstance, IEnumerable<Type> validTypes, IEnumerable<Type> invalidTypes)
     {
         TestInstance = testInstance;
-        _validTypes = validTypes ?? Type.EmptyTypes;
-        _invalidTypes = invalidTypes ?? Type.EmptyTypes;
+        _validTypes = validTypes;
+        _invalidTypes = invalidTypes;
     }
 
     /// <summary>Verifies null reference exceptions are prevented.</summary>
@@ -58,11 +57,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                 Tools.Asserter.IsEmpty(result.Item2,
                     $"Hint '{typeof(T).Name}' found differences with same '{type.Name}' of '{data.GetType()}'.");
             }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
-            }
             finally
             {
                 Disposer.Cleanup(data);
@@ -89,11 +83,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                 Tools.Asserter.IsNotEmpty(result.Item2.ToArray(),
                     $"Hint '{typeof(T).Name}' didn't find differences with two random '{type.Name}'.");
             }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
-            }
             finally
             {
                 Disposer.Cleanup(one, two);
@@ -116,11 +105,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                 Tools.Asserter.Is((false, (IEnumerable<Difference>)null),
                     TestInstance.TryCompare(one, two, CreateChainer()),
                     $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
-            }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
             }
             finally
             {
@@ -149,11 +133,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                 Tools.Asserter.Is(dataHash, TestInstance.TryGetHashCode(dataCopy, CreateChainer()),
                     $"Hint '{typeof(T).Name}' generated different hash for dupe '{type.Name}'.");
             }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
-            }
             finally
             {
                 Disposer.Cleanup(data, dataCopy);
@@ -179,11 +158,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                 Tools.Asserter.IsNot(dataHash, TestInstance.TryGetHashCode(dataDiffer, CreateChainer()),
                     $"Hint '{typeof(T).Name}' generated same hash for different '{type.Name}'.");
             }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
-            }
             finally
             {
                 Disposer.Cleanup(data, dataDiffer);
@@ -206,11 +180,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                     TestInstance.TryGetHashCode(data, CreateChainer()),
                     $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
             }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
-            }
             finally
             {
                 Disposer.Cleanup(data);
@@ -224,19 +193,5 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
         return new ValuerChainer(Tools.Valuer,
             (o, c) => Tools.Valuer.GetHashCode(o),
             (e, a, c) => Tools.Valuer.Compare(e, a));
-    }
-
-    private static void ExpandReflectionException(Exception ex)
-    {
-        if (ex is ReflectionTypeLoadException refEx)
-        {
-            throw new InvalidOperationException(
-                "Reflection failure:" + refEx.LoaderExceptions.Select(e => e.Message), ex);
-        }
-        else if (ex.InnerException is ReflectionTypeLoadException refExInner)
-        {
-            throw new InvalidOperationException(
-                "Reflection failure:" + refExInner.LoaderExceptions.Select(e => e.Message), ex);
-        }
     }
 }

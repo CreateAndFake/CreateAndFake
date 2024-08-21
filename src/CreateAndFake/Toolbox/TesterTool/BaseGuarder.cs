@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Reflection;
-using System.Threading.Tasks;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.RandomizerTool;
@@ -49,7 +45,7 @@ internal abstract class BaseGuarder(GenericFixer fixer, IRandomizer randomizer, 
         return type
             .GetMethods(kind | BindingFlags.Public | BindingFlags.NonPublic)
             .Where(m => m.IsPublic || m.IsAssembly || m.IsFamily || m.IsFamilyOrAssembly)
-            .Where(m => m.DeclaringType == type || m.DeclaringType.IsAbstract)
+            .Where(m => m.DeclaringType == type || m.DeclaringType!.IsAbstract)
             .Where(m => !m.IsPrivate);
     }
 
@@ -58,8 +54,8 @@ internal abstract class BaseGuarder(GenericFixer fixer, IRandomizer randomizer, 
     /// <param name="testParam">Parameter being set to null.</param>
     /// <param name="instance">Instance whose methods to test.</param>
     /// <param name="injectionValues">Values to inject into the method.</param>
-    protected void CallAllMethods(MethodBase testOrigin,
-        ParameterInfo testParam, object instance, object[] injectionValues)
+    protected void CallAllMethods(MethodBase? testOrigin,
+        ParameterInfo? testParam, object instance, object?[]? injectionValues)
     {
         ArgumentGuard.ThrowIfNull(instance, nameof(instance));
 
@@ -68,10 +64,10 @@ internal abstract class BaseGuarder(GenericFixer fixer, IRandomizer randomizer, 
             .Where(m => !m.IsFamily)
             .Select(Fixer.FixMethod))
         {
-            object[] data = Randomizer.CreateFor(method, injectionValues).Args.ToArray();
+            object?[] data = Randomizer.CreateFor(method, injectionValues).Args.ToArray();
             try
             {
-                Disposer.Cleanup(RunCheck(testOrigin ?? method, testParam, () => method.Invoke(instance, data)));
+                Disposer.Cleanup(RunCheck(testOrigin ?? method, testParam, () => method.Invoke(instance, data)!));
             }
             finally
             {
@@ -85,7 +81,7 @@ internal abstract class BaseGuarder(GenericFixer fixer, IRandomizer randomizer, 
     /// <param name="testParam">Parameter being set to null.</param>
     /// <param name="call">Call to invoke and test.</param>
     /// <returns>Returned result from the call.</returns>
-    protected object RunCheck(MethodBase testOrigin, ParameterInfo testParam, Func<object> call)
+    protected object? RunCheck(MethodBase testOrigin, ParameterInfo? testParam, Func<object> call)
     {
         ArgumentGuard.ThrowIfNull(testOrigin, nameof(testOrigin));
         ArgumentGuard.ThrowIfNull(call, nameof(call));
@@ -115,7 +111,7 @@ internal abstract class BaseGuarder(GenericFixer fixer, IRandomizer randomizer, 
             Exception actual = taskException.InnerExceptions.Single();
             if (actual is TargetInvocationException ex)
             {
-                actual = ex.InnerException;
+                actual = ex.InnerException!;
             }
 
             HandleCheckException(testOrigin, testParam, actual);
@@ -126,11 +122,11 @@ internal abstract class BaseGuarder(GenericFixer fixer, IRandomizer randomizer, 
     /// <summary>Checks data for disposables and disposes them.</summary>
     /// <param name="injectedValues">Injected values to ignore.</param>
     /// <param name="data">Data to check and dispose.</param>
-    protected void DisposeAllButInjected(object[] injectedValues, params object[] data)
+    protected void DisposeAllButInjected(object?[]? injectedValues, params object?[]? data)
     {
-        foreach (object item in data ?? [])
+        foreach (object? item in data ?? [])
         {
-            if (item is object[] nested)
+            if (item is object?[] nested)
             {
                 DisposeAllButInjected(injectedValues, nested);
             }
@@ -146,7 +142,7 @@ internal abstract class BaseGuarder(GenericFixer fixer, IRandomizer randomizer, 
     /// <param name="testParam">Parameter being set to null.</param>
     /// <param name="taskException">Exception encountered.</param>
     protected abstract void HandleCheckException(MethodBase testOrigin,
-        ParameterInfo testParam, Exception taskException);
+        ParameterInfo? testParam, Exception taskException);
 }
 
 #pragma warning restore CA1822 // Member does not access instance data and can be marked static

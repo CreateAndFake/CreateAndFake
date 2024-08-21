@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections;
 using System.Reflection;
 using System.Runtime.Serialization;
-#if NETSTANDARD
+#if !NET5_0_OR_GREATER
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
-/// <summary>Handles copying serializables for the duplicator.</summary>
+/// <summary>Handles cloning <see cref="ISerializable"/> instances for <see cref="IDuplicator"/> .</summary>
 public sealed class SerializableCopyHint : CopyHint
 {
     /// <summary>Scope used to search for inner types.</summary>
@@ -21,15 +17,11 @@ public sealed class SerializableCopyHint : CopyHint
         | BindingFlags.Instance;
 
     /// <inheritdoc/>
-    protected internal override (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
+    protected internal override (bool, object?) TryCopy(object source, DuplicatorChainer duplicator)
     {
-        if (source == null)
+        if (source is ISerializable)
         {
-            return (true, null);
-        }
-        else if (source is ISerializable)
-        {
-#if NETSTANDARD // Backwards compatibility.
+#if !NET5_0_OR_GREATER // Backwards compatibility.
             BinaryFormatter binary = new();
             using MemoryStream memory = new();
 
@@ -55,38 +47,23 @@ public sealed class SerializableCopyHint : CopyHint
         }
     }
 
-    /// <summary>Finds used objects inside <paramref name="source"/></summary>
-    /// <param name="source">Instance being serialized.</param>
-    /// <param name="foundData">Set to populate with found data.</param>
-    private static void FindInnerData(object source, HashSet<object> foundData)
-    {
-        Type type = source.GetType();
-
-        foreach (PropertyInfo property in type.GetProperties(_Scope).Where(p => p.CanRead))
-        {
-            FlattenData(property.GetValue(source), foundData);
-        }
-
-        foreach (FieldInfo field in type.GetFields(_Scope))
-        {
-            FlattenData(field.GetValue(source), foundData);
-        }
-    }
-
     /// <summary>Finds data associated with <paramref name="source"/></summary>
     /// <param name="source">Instance being serialized.</param>
     /// <param name="foundData">Set to populate with found data.</param>
-    private static void FlattenData(object source, HashSet<object> foundData)
+    private static void FlattenData(object? source, HashSet<object> foundData)
     {
-        if (source == null)
+        if (source != null && foundData.Add(source) && !source.GetType().Inherits<string>())
         {
-            return;
+            FlattenComplexData(source, foundData);
         }
-        else if (!foundData.Add(source) || source.GetType().Inherits<string>())
-        {
-            return;
-        }
-        else if (source is IDictionary map)
+    }
+
+    /// <summary>Finds nested data associated with <paramref name="source"/>.</summary>
+    /// <param name="source">Instance being serialized.</param>
+    /// <param name="foundData">Set to populate with found data.</param>
+    private static void FlattenComplexData(object source, HashSet<object> foundData)
+    {
+        if (source is IDictionary map)
         {
             foreach (DictionaryEntry item in map)
             {
@@ -104,7 +81,25 @@ public sealed class SerializableCopyHint : CopyHint
         }
         else if (!source.GetType().IsValueType)
         {
-            FindInnerData(source, foundData);
+            FlattenInnerData(source, foundData);
+        }
+    }
+
+    /// <summary>Finds member data inside <paramref name="source"/>.</summary>
+    /// <param name="source">Instance being serialized.</param>
+    /// <param name="foundData">Set to populate with found data.</param>
+    private static void FlattenInnerData(object source, HashSet<object> foundData)
+    {
+        Type type = source.GetType();
+
+        foreach (PropertyInfo property in type.GetProperties(_Scope).Where(p => p.CanRead))
+        {
+            FlattenData(property.GetValue(source), foundData);
+        }
+
+        foreach (FieldInfo field in type.GetFields(_Scope))
+        {
+            FlattenData(field.GetValue(source), foundData);
         }
     }
 }

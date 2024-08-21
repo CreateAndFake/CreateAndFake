@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using CreateAndFake.Design.Content;
 
 namespace CreateAndFakeTests.TestSamples;
@@ -7,6 +8,7 @@ namespace CreateAndFakeTests.TestSamples;
 #pragma warning disable IDE0251 // Member can be made 'readonly'
 
 /// <summary>For testing.</summary>
+[ExcludeFromCodeCoverage]
 internal struct StructSample(string stringValue) : IEquatable<StructSample>, IComparable<StructSample>, IComparable
 {
     /// <summary>For testing.</summary>

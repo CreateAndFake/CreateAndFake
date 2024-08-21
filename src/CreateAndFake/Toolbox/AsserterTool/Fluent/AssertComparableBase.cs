@@ -1,81 +1,69 @@
-using System;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.AsserterTool.Fluent;
 
-/// <summary>Handles assertion calls for comparables.</summary>
-/// <remarks>Initializes a new instance of the <see cref="AssertComparableBase{T}"/> class.</remarks>
-/// <param name="gen">Core value random handler.</param>
-/// <param name="valuer">Handles comparisons.</param>
-/// <param name="value">Value to check.</param>
-public abstract class AssertComparableBase<T>(IRandom gen, IValuer valuer, IComparable value)
+/// <summary>Handles common comparables assertion calls.</summary>
+/// <param name="value"><inheritdoc cref="Value" path="/summary"/></param>
+/// <inheritdoc cref="AssertGroupBase{T}"/>
+public abstract class AssertComparableBase<T>(IRandom gen, IValuer valuer, IComparable? value)
     : AssertObjectBase<T>(gen, valuer, value) where T : AssertComparableBase<T>
 {
-    /// <summary>Value to check.</summary>
-    protected IComparable Value { get; } = value;
+    /// <summary>Value to run assertion checks with.</summary>
+    protected IComparable? Value { get; } = value;
 
-    /// <summary>Verifies value is &gt; <paramref name="expected"/>.</summary>
-    /// <exception cref="AssertException">If value is not &lt;= <paramref name="expected"/>.</exception>
+    /// <summary>Verifies <c>value</c> &gt; <paramref name="expected"/>.</summary>
     /// <inheritdoc cref="HandleMathCheck"/>
-    public virtual AssertChainer<T> GreaterThan(IComparable expected, string details = null)
+    public virtual AssertChainer<T> GreaterThan(IComparable expected, string? details = null)
     {
-        return HandleMathCheck(() => Value.CompareTo(expected) > 0, "greater than", expected, details);
+        return HandleMathCheck(() => Value!.CompareTo(expected) > 0, "greater than", expected, details);
     }
 
-    /// <summary>Verifies value is &gt;= <paramref name="expected"/>.</summary>
-    /// <exception cref="AssertException">If value is &lt; <paramref name="expected"/>.</exception>
+    /// <summary>Verifies <c>value</c> &gt;= <paramref name="expected"/>.</summary>
     /// <inheritdoc cref="HandleMathCheck"/>
-    public virtual AssertChainer<T> GreaterThanOrEqualTo(IComparable expected, string details = null)
+    public virtual AssertChainer<T> GreaterThanOrEqualTo(IComparable expected, string? details = null)
     {
-        return HandleMathCheck(() => Value.CompareTo(expected) >= 0, "greater than or equal to", expected, details);
+        return HandleMathCheck(() => Value!.CompareTo(expected) >= 0, "greater than or equal to", expected, details);
     }
 
-    /// <summary>Verifies value is &gt; <paramref name="expected"/> or equals by value.</summary>
-    /// <exception cref="AssertException">If value is &lt; <paramref name="expected"/>.</exception>
+    /// <summary>Verifies <c>value</c> &gt; <paramref name="expected"/> or equals by value.</summary>
     /// <inheritdoc cref="HandleMathCheck"/>
-    public virtual AssertChainer<T> GreaterThanOrIs(IComparable expected, string details = null)
+    public virtual AssertChainer<T> GreaterThanOrIs(IComparable expected, string? details = null)
     {
         return Valuer.Equals(Value, expected)
             ? ToChainer()
             : GreaterThanOrEqualTo(expected, details);
     }
 
-    /// <summary>Verifies value is &lt; <paramref name="expected"/>.</summary>
-    /// <exception cref="AssertException">If value is &gt;= <paramref name="expected"/>.</exception>
+    /// <summary>Verifies <c>value</c> &lt; <paramref name="expected"/>.</summary>
     /// <inheritdoc cref="HandleMathCheck"/>
-    public virtual AssertChainer<T> LessThan(IComparable expected, string details = null)
+    public virtual AssertChainer<T> LessThan(IComparable expected, string? details = null)
     {
-        return HandleMathCheck(() => Value.CompareTo(expected) < 0, "less than", expected, details);
+        return HandleMathCheck(() => Value!.CompareTo(expected) < 0, "less than", expected, details);
     }
 
     /// <summary>Verifies value is &lt;= <paramref name="expected"/>.</summary>
-    /// <exception cref="AssertException">If value is &gt; <paramref name="expected"/>.</exception>
     /// <inheritdoc cref="HandleMathCheck"/>
-    public virtual AssertChainer<T> LessThanOrEqualTo(IComparable expected, string details = null)
+    public virtual AssertChainer<T> LessThanOrEqualTo(IComparable expected, string? details = null)
     {
-        return HandleMathCheck(() => Value.CompareTo(expected) <= 0, "less than or equal to", expected, details);
+        return HandleMathCheck(() => Value!.CompareTo(expected) <= 0, "less than or equal to", expected, details);
     }
 
-    /// <summary>Verifies value is &lt; <paramref name="expected"/> or equals by value.</summary>
-    /// <exception cref="AssertException">If value is &gt; <paramref name="expected"/>.</exception>
+    /// <summary>Verifies <c>value</c> &lt; <paramref name="expected"/> or equals by value.</summary>
     /// <inheritdoc cref="HandleMathCheck"/>
-    public virtual AssertChainer<T> LessThanOrIs(IComparable expected, string details = null)
+    public virtual AssertChainer<T> LessThanOrIs(IComparable expected, string? details = null)
     {
         return Valuer.Equals(Value, expected)
             ? ToChainer()
             : LessThanOrEqualTo(expected, details);
     }
 
-    /// <summary>Verifies <paramref name="min"/> &lt;= value &lt;= <paramref name="max"/>.</summary>
+    /// <summary>Verifies <paramref name="min"/> &lt;= <c>value</c> &lt;= <paramref name="max"/>.</summary>
     /// <param name="min">Inclusive lower bound.</param>
     /// <param name="max">Inclusive upper bound.</param>
-    /// <param name="details">Optional failure details.</param>
+    /// <param name="details">Optional failure details to include.</param>
     /// <returns>Chainer to make additional assertions with.</returns>
-    /// <exception cref="AssertException">
-    ///     If value &lt; <paramref name="min"/> or &gt; <paramref name="max"/>.
-    /// </exception>
-    public virtual AssertChainer<T> InRange(IComparable min, IComparable max, string details = null)
+    public virtual AssertChainer<T> InRange(IComparable min, IComparable max, string? details = null)
     {
         if (Value == null)
         {
@@ -101,14 +89,14 @@ public abstract class AssertComparableBase<T>(IRandom gen, IValuer valuer, IComp
         }
     }
 
-    /// <summary>Verifies value matches the <paramref name="math"/>.</summary>
-    /// <param name="math">Math used to check the value.</param>
+    /// <summary>Verifies <c>value</c> matches the <paramref name="math"/>.</summary>
+    /// <param name="math">Math used to check the <c>value</c>.</param>
     /// <param name="description">Math description to use for error message.</param>
     /// <param name="expected">Value to compare with.</param>
-    /// <param name="details">Optional failure details.</param>
+    /// <param name="details">Optional failure details to include.</param>
     /// <returns>Chainer to make additional assertions with.</returns>
-    /// <exception cref="AssertException">If value does not match <paramref name="math"/>.</exception>
-    private AssertChainer<T> HandleMathCheck(Func<bool> math, string description, IComparable expected, string details)
+    /// <exception cref="AssertException">If <c>value</c> does not match <paramref name="math"/>.</exception>
+    private AssertChainer<T> HandleMathCheck(Func<bool> math, string description, IComparable expected, string? details)
     {
         if (Value == null)
         {

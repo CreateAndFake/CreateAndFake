@@ -1,16 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Handles comparing collections for <see cref="IValuer"/>.</summary>
+/// <summary>Handles comparing <see cref="IEnumerable"/> collections for <see cref="IValuer"/>.</summary>
 public sealed class EnumerableCompareHint : CompareHint<IEnumerable>
 {
     /// <inheritdoc/>
     protected override IEnumerable<Difference> Compare(
-        IEnumerable expected, IEnumerable actual, ValuerChainer valuer)
+        IEnumerable? expected, IEnumerable? actual, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(expected, nameof(expected));
         ArgumentGuard.ThrowIfNull(actual, nameof(actual));
@@ -49,7 +48,7 @@ public sealed class EnumerableCompareHint : CompareHint<IEnumerable>
     }
 
     /// <inheritdoc/>
-    protected override int GetHashCode(IEnumerable item, ValuerChainer valuer)
+    protected override int GetHashCode(IEnumerable? item, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(item, nameof(item));
         ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));

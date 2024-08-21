@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.ValuerTool;
 
@@ -80,34 +77,11 @@ public sealed class Faker(IValuer valuer) : IFaker
             .Select(v => v.GetType())
             .ToArray();
 
-        ConstructorInfo maker = FindBestConstructor<T>(startingTypes);
-
-        List<Tuple<Type, object>> data = values
-            .Where(v => v != null)
-            .Select(v => Tuple.Create((v is Fake fake) ? fake.Dummy.GetType() : v.GetType(), v))
-            .ToList();
-
+        ConstructorInfo? maker = FindBestConstructor<T>(startingTypes);
         if (maker != null)
         {
-            ParameterInfo[] info = maker.GetParameters();
-            object[] args = new object[info.Length];
-            for (int i = 0; i < args.Length; i++)
-            {
-                Tuple<Type, object> match = data.FirstOrDefault(t => t.Item1.Inherits(info[i].ParameterType));
-                if (match != default)
-                {
-                    args[i] = match.Item2;
-                    _ = data.Remove(match);
-                }
-                else if (Supports(info[i].ParameterType))
-                {
-                    args[i] = subclasser.Invoke(info[i].ParameterType);
-                }
-                else
-                {
-                    args[i] = null;
-                }
-            }
+            object?[] args = CreateInjectArgs(maker, values, subclasser);
+
             return new Injected<T>((T)maker.Invoke(args
                 .Select(v => (v is Fake fake) ? fake.Dummy : v)
                 .ToArray()), args.OfType<Fake>());
@@ -118,11 +92,46 @@ public sealed class Faker(IValuer valuer) : IFaker
         }
     }
 
+    /// <summary>Creates the args to inject an instance with.</summary>
+    /// <param name="maker">Constructor to use.</param>
+    ///  <param name="values">Values to inject instead where possible.</param>
+    /// <param name="subclasser">Fake creation method to use.</param>
+    /// <returns>The created args to inject an instance with.</returns>
+    private object?[] CreateInjectArgs(ConstructorInfo maker, object[] values, Func<Type, Fake> subclasser)
+    {
+        List<Tuple<Type, object>> data = values
+            .Where(v => v != null)
+            .Select(v => Tuple.Create((v is Fake fake) ? fake.Dummy.GetType() : v.GetType(), v))
+            .ToList();
+
+        ParameterInfo[] info = maker.GetParameters();
+        object?[] args = new object[info.Length];
+
+        for (int i = 0; i < args.Length; i++)
+        {
+            Tuple<Type, object>? match = data.FirstOrDefault(t => t.Item1.Inherits(info[i].ParameterType));
+            if (match != default)
+            {
+                args[i] = match.Item2;
+                _ = data.Remove(match);
+            }
+            else if (Supports(info[i].ParameterType))
+            {
+                args[i] = subclasser.Invoke(info[i].ParameterType);
+            }
+            else
+            {
+                args[i] = null;
+            }
+        }
+        return args;
+    }
+
     /// <summary>Finds the constructor with the most matches then by most parameters.</summary>
     /// <typeparam name="T">Type to search.</typeparam>
     /// <param name="startingTypes">Argument types to search on.</param>
     /// <returns>The constructor best fitted to the types.</returns>
-    private static ConstructorInfo FindBestConstructor<T>(Type[] startingTypes)
+    private static ConstructorInfo? FindBestConstructor<T>(Type[] startingTypes)
     {
         return typeof(T).GetConstructors(BindingFlags.Instance | BindingFlags.Public)
             .GroupBy(c => c.GetParameters().Count(p => startingTypes.Any(t => t.Inherits(p.ParameterType))))
