@@ -221,6 +221,6 @@ public sealed class FakeMetaProvider : IDuplicatable
 
         return (methodInfo.ReturnType == typeof(void))
             ? Expression.GetActionType(args.ToArray())
-            : Expression.GetFuncType(args.Concat(new[] { methodInfo.ReturnType }).ToArray());
+            : Expression.GetFuncType(args.Concat([methodInfo.ReturnType]).ToArray());
     }
 }

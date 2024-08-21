@@ -40,7 +40,7 @@ public sealed class ValuerChainer(
 
             return _compareHistory.Add(refHash)
                 ? _comparer.Invoke(expected, actual, this)
-                : Enumerable.Empty<Difference>();
+                : [];
         }
         else
         {

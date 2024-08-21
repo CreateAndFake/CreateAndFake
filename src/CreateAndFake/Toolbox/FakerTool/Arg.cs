@@ -7,8 +7,7 @@ namespace CreateAndFake.Toolbox.FakerTool;
 public sealed class Arg : IDeepCloneable
 {
     /// <summary>Current setup args.</summary>
-    private static readonly ThreadLocal<IList<Tuple<Arg, object?>>> _ArgCache
-        = new(() => new List<Tuple<Arg, object?>>());
+    private static readonly ThreadLocal<IList<Tuple<Arg, object?>>> _ArgCache = new(() => []);
 
     /// <summary>Condition to compare with.</summary>
     private readonly Func<object?, bool> _matcher;

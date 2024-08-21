@@ -44,7 +44,7 @@ public static class Subclasser
     {
         return (IFaked)CreateInfo(parent, interfaces).AsType()
             .GetConstructor([Emitter.MetaType])!
-            .Invoke(new[] { new FakeMetaProvider() });
+            .Invoke([new FakeMetaProvider()]);
     }
 
     /// <summary>Creates a subclass of the given type.</summary>

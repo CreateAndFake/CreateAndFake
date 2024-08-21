@@ -105,7 +105,7 @@ public sealed class Valuer(bool includeDefaultHints = true, params CompareHint[]
     {
         if (ReferenceEquals(expected, actual))
         {
-            return Enumerable.Empty<Difference>();
+            return [];
         }
 
         (bool, IEnumerable<Difference>?) result = _hints

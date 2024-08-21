@@ -132,8 +132,8 @@ public sealed class Fake<T> : Fake
         {
             PropertyInfo info = (PropertyInfo)memberExpression.Member;
             return onlySetter
-                ? (info.GetSetMethod()!, Type.EmptyTypes, Array.Empty<object>())
-                : (info.GetGetMethod()!, Type.EmptyTypes, Array.Empty<object>());
+                ? (info.GetSetMethod()!, Type.EmptyTypes, [])
+                : (info.GetGetMethod()!, Type.EmptyTypes, []);
         }
         else
         {

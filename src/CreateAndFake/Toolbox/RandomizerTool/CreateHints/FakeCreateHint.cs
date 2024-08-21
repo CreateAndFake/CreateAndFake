@@ -95,7 +95,7 @@ public sealed class FakeCreateHint : CreateHint
                 MakeBehavior(method, randomizer));
         }
 
-        return (Fake)type.GetConstructor([typeof(Fake)])!.Invoke(new[] { mock });
+        return (Fake)type.GetConstructor([typeof(Fake)])!.Invoke([mock]);
     }
 
     /// <summary>Sets up the random fake behavior for the method.</summary>

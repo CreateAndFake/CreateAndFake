@@ -21,11 +21,11 @@ public sealed class EquatableCompareHint : CompareHint
 
         if (!expected.Equals(actual))
         {
-            return new[] { new Difference(expected, actual) };
+            return [new Difference(expected, actual)];
         }
         else
         {
-            return Enumerable.Empty<Difference>();
+            return [];
         }
     }
 

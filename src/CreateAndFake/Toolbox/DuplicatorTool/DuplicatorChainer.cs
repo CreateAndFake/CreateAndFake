@@ -4,8 +4,6 @@ using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool;
 
-#pragma warning disable IDE0028 // Collection initialization can be simplified
-
 /// <summary>Provides a callback into <see cref="IDuplicator"/> to create child values.</summary>
 /// <param name="duplicator"><inheritdoc cref="Duplicator" path="/summary"/></param>
 /// <param name="callback"><inheritdoc cref="_callback" path="/summary"/></param>
@@ -73,5 +71,3 @@ public sealed class DuplicatorChainer(IDuplicator duplicator, Func<object?, Dupl
         return !(source == null || source is IFaked || source.GetType().IsValueType);
     }
 }
-
-#pragma warning restore IDE0028 // Collection initialization can be simplified

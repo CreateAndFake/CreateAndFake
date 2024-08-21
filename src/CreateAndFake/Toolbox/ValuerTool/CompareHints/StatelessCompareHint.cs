@@ -25,7 +25,7 @@ public sealed class StatelessCompareHint : CompareHint
     /// <inheritdoc/>
     protected override IEnumerable<Difference> Compare(object? expected, object? actual, ValuerChainer valuer)
     {
-        return Enumerable.Empty<Difference>();
+        return [];
     }
 
     /// <inheritdoc/>
