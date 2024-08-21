@@ -11,6 +11,7 @@ using CreateAndFake.Toolbox.TesterTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
 using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CreateAndFakeTests;
 
@@ -53,7 +54,7 @@ public static class ToolsTests
         Tools.Asserter.Is(Tools.Valuer.GetHashCode(sample), Tools.Valuer.GetHashCode(dupe));
     }
 
-    [Fact]
+    [Fact, ExcludeFromCodeCoverage]
     internal static void Tools_AllCreateAndFakeTypesWork()
     {
         Type[] ignore = [
@@ -89,7 +90,15 @@ public static class ToolsTests
             .Where(t => t.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
             .Where(t => !t.FullName.Contains("<PrivateImplementationDetails>")))
         {
-            TestTrip(type);
+            try
+            {
+                TestTrip(type);
+            }
+            catch (Exception e)
+            {
+                Tools.Asserter.Fail(e, $"Failed testing type '{type}'.");
+                throw;
+            }
         }
     }
 
