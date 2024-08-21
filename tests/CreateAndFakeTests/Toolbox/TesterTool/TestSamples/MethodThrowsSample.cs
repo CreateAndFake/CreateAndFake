@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
+﻿namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 
 /// <summary>For testing.</summary>
 public sealed class MethodThrowsSample

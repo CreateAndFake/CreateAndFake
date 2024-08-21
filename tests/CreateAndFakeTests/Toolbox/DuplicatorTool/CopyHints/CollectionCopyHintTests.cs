@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
+﻿using System.Collections;
 using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;

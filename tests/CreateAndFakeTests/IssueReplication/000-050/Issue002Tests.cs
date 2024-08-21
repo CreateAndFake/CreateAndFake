@@ -1,6 +1,4 @@
-using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
-using Xunit;
 
 namespace CreateAndFakeTests.IssueReplication;
 

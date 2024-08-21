@@ -1,10 +1,5 @@
-﻿using CreateAndFake;
-using CreateAndFake.Design.Content;
+﻿using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.FakerTool;
-using Xunit;
-using System.Linq;
-using System.Collections.Generic;
-using CreateAndFake.Fluent;
 
 namespace CreateAndFakeTests.Design.Content;
 

@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using CreateAndFake;
 using CreateAndFake.Design;
-using Xunit;
 
 namespace CreateAndFakeTests.Design;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using CreateAndFake.Toolbox.FakerTool.Proxy;
+﻿using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
 

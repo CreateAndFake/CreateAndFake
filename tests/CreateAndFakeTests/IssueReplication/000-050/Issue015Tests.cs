@@ -1,7 +1,4 @@
-using System;
-using CreateAndFake;
 using CreateAndFake.Design;
-using Xunit;
 
 namespace CreateAndFakeTests.IssueReplication;
 

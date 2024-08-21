@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CreateAndFake;
-using CreateAndFake.Toolbox.FakerTool;
+﻿using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.ValuerTool;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool;
 

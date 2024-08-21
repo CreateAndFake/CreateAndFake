@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using CreateAndFake;
-using CreateAndFake.Design.Content;
+﻿using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.DuplicatorTool;
-using Xunit;
 
 namespace CreateAndFakeTests.TestBases;
 

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using CreateAndFake;
-using CreateAndFake.Fluent;
-using CreateAndFake.Toolbox.AsserterTool;
-using Xunit;
+﻿using CreateAndFake.Toolbox.AsserterTool;
 
 namespace CreateAndFakeTests.IssueReplication;
 

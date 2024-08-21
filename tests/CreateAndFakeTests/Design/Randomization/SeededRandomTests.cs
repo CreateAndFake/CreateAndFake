@@ -1,7 +1,5 @@
-﻿using CreateAndFake;
-using CreateAndFake.Design.Randomization;
+﻿using CreateAndFake.Design.Randomization;
 using CreateAndFakeTests.TestBases;
-using Xunit;
 
 namespace CreateAndFakeTests.Design.Randomization;
 

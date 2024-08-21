@@ -1,8 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using CreateAndFake;
-using CreateAndFake.Fluent;
-using Xunit;
 
 namespace CreateAndFakeTests.IssueReplication;
 

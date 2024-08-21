@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CreateAndFake;
-using CreateAndFake.Design.Content;
+﻿using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.ValuerTool;
-using Xunit;
 
 namespace CreateAndFakeTests.TestBases;
 

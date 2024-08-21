@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using CreateAndFake;
+﻿using System.Reflection;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Context;
 using CreateAndFake.Design.Randomization;
@@ -14,7 +10,7 @@ using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.TesterTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
+using System.Runtime.CompilerServices;
 
 namespace CreateAndFakeTests;
 
@@ -90,7 +86,8 @@ public static class ToolsTests
             .Where(t => !t.Inherits<Attribute>())
             .Where(t => !ignore.Contains(t))
             .Where(t => !t.IsNestedPrivate)
-            .Where(t => t.GetCustomAttribute<CompilerGeneratedAttribute>() == null))
+            .Where(t => t.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+            .Where(t => !t.FullName.Contains("<PrivateImplementationDetails>")))
         {
             TestTrip(type);
         }

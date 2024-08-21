@@ -1,10 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using CreateAndFake;
-using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
+﻿using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints;
 

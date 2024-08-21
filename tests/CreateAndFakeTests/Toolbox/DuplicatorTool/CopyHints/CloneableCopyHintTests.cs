@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
+﻿using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints;

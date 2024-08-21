@@ -1,5 +1,4 @@
-﻿using System;
-using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
+﻿using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints;

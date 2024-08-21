@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using CreateAndFake;
+﻿using System.Collections;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.RandomizerTool;
-using Xunit;
 
 namespace CreateAndFakeTests.TestBases;
 

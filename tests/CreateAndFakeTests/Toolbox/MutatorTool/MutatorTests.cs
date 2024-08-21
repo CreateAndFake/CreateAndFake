@@ -1,12 +1,8 @@
-﻿using System;
-using System.Linq;
-using CreateAndFake;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.MutatorTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.MutatorTool;
 

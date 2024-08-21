@@ -1,8 +1,5 @@
-﻿using System;
-using CreateAndFake;
-using CreateAndFake.Toolbox.FakerTool;
+﻿using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy;
 

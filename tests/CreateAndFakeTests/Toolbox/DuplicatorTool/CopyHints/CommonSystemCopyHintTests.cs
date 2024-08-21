@@ -1,9 +1,6 @@
-﻿using System;
-using System.Reflection;
-using CreateAndFake;
+﻿using System.Reflection;
 using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 using CreateAndFakeTests.TestBases;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints;
 

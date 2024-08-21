@@ -1,7 +1,3 @@
-using System.Threading.Tasks;
-using CreateAndFake;
-using Xunit;
-
 namespace CreateAndFakeTests.IssueReplication;
 
 /// <summary>Verifies issue is resolved.</summary>

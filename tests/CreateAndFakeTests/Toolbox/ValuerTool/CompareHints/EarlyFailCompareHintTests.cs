@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Reflection;
-using CreateAndFake;
 using CreateAndFake.Design.Content;
-using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints;
 

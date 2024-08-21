@@ -8,6 +8,7 @@
 
   <PropertyGroup Condition="'$(OS)'!='Windows_NT'">
     <TargetFrameworks>net8.0;net7.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 
@@ -17,10 +18,13 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" PrivateAssets="All" />
     <PackageReference Include="coverlet.collector" Version="6.0.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.10.0" PrivateAssets="All" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\CreateAndFake\CreateAndFake.csproj" />
+    <Using Include="CreateAndFake" />
+    <Using Include="CreateAndFake.Fluent" />
   </ItemGroup>
 
   <ItemGroup>

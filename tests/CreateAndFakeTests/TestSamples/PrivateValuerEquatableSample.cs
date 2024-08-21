@@ -1,5 +1,4 @@
-﻿using System;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFakeTests.TestSamples;

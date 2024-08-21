@@ -1,8 +1,4 @@
-﻿using CreateAndFake;
-using CreateAndFake.Fluent;
-using Xunit;
-
-namespace CreateAndFakeTests.Toolbox;
+﻿namespace CreateAndFakeTests.Toolbox;
 
 /// <summary>Verifies issue is resolved.</summary>
 public static class ToolSetTests

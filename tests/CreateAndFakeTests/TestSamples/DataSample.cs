@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace CreateAndFakeTests.TestSamples;
+﻿namespace CreateAndFakeTests.TestSamples;
 
 /// <summary>For testing.</summary>
 public class DataSample

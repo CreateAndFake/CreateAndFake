@@ -1,7 +1,3 @@
-using System;
-using CreateAndFake;
-using Xunit;
-
 namespace CreateAndFakeTests.IssueReplication;
 
 /// <summary>Verifies issue is resolved.</summary>

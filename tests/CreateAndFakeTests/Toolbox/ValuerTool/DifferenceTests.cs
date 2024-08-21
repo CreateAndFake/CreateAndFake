@@ -1,6 +1,4 @@
-﻿using CreateAndFake;
-using CreateAndFake.Toolbox.ValuerTool;
-using Xunit;
+﻿using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool;
 

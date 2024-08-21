@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using CreateAndFake;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
 
 namespace CreateAndFakeTests.TestBases;
 

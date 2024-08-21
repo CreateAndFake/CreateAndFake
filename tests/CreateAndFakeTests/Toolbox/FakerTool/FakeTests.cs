@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using CreateAndFake;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool;
 

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using CreateAndFake;
-using CreateAndFake.Fluent;
-using CreateAndFake.Toolbox.DuplicatorTool;
+﻿using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
-using Xunit;
 
 namespace CreateAndFakeTests.IssueReplication;
 

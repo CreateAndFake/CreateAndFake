@@ -1,8 +1,5 @@
-﻿using System.Linq;
-using System.Reflection;
-using CreateAndFake;
+﻿using System.Reflection;
 using CreateAndFake.Toolbox.FakerTool;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool;
 

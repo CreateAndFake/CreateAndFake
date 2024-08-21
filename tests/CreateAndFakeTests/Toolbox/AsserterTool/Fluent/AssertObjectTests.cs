@@ -1,6 +1,4 @@
-﻿using CreateAndFake;
-using CreateAndFake.Toolbox.AsserterTool.Fluent;
-using Xunit;
+﻿using CreateAndFake.Toolbox.AsserterTool.Fluent;
 
 namespace CreateAndFakeTests.Toolbox.AsserterTool.Fluent;
 

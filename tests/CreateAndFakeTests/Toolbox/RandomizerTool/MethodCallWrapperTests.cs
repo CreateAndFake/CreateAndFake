@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using CreateAndFake;
+﻿using System.Reflection;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool;
 
@@ -53,7 +49,7 @@ public static class MethodCallWrapperTests
     internal static void InvokeOn_UsesArgs(DataSample sample)
     {
         MethodCallWrapper wrapper = Tools.Randomizer.CreateFor(
-            typeof(DataSample).GetMethod(nameof(DataSample.Equals)));
+            typeof(DataSample).GetMethod(nameof(Equals)));
 
         Tools.Asserter.Is(false, wrapper.InvokeOn(sample));
         wrapper.ModifyArg("obj", sample);

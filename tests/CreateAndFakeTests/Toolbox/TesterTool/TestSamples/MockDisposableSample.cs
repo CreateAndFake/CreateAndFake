@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using CreateAndFake;
+﻿using System.Diagnostics.CodeAnalysis;
 using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
