@@ -2,7 +2,7 @@
 
 namespace CreateAndFake.Design.Randomization;
 
-/// <summary>For generating secure but slow random values.</summary>
+/// <summary>For slowly generating cryptographically secure random values.</summary>
 /// <inheritdoc/>
 public sealed class SecureRandom(bool onlyValidValues = true) : ValueRandom(onlyValidValues)
 {

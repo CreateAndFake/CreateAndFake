@@ -1,7 +1,4 @@
-using CreateAndFake;
-using CreateAndFake.Fluent;
 using CreateAndFake.Toolbox.FakerTool;
-using Xunit;
 
 namespace CreateAndFakeTests.IssueReplication;
 

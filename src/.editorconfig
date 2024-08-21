@@ -3,28 +3,40 @@
 # Default severity for all analyzer diagnostics
 dotnet_analyzer_diagnostic.severity = warning
 
+# CA1000:DoNotDeclareStaticMembersOnGenericTypes
+# Per generic static behavior is a valuable tool that can reduce complexity.
+dotnet_diagnostic.CA1000.severity = none
+
 # CA1032: Implement standard exception constructors
+# Message based constructors unnecessary and hurts design.
 dotnet_diagnostic.CA1032.severity = none
-# CA1508: Avoid dead conditional code
-dotnet_diagnostic.CA1508.severity = silent
+
 # CA1805: Do not initialize unnecessarily
+# Important for clarity and understanding intention.
 dotnet_diagnostic.CA1805.severity = none
 
-# IDE0045: 'if' statement can be simplified
-dotnet_diagnostic.IDE0045.severity = none
-# IDE0046: Convert to conditional expression
-dotnet_diagnostic.IDE0046.severity = none
-# IDE0048: Add parentheses for clarity
-dotnet_diagnostic.IDE0048.severity = none
-# IDE0057 Substring can be simplified
-dotnet_diagnostic.IDE0057.severity = none
-# IDE0063: 'using' statement can be simplified
-dotnet_diagnostic.IDE0063.severity = none
-# IDE0065: Using directives placed outside namespaces
-dotnet_diagnostic.IDE0065.severity = none
+# CA1812:AvoidUninstantiatedInternalClasses
+# For testing, called via Activator/library dynamically.
+dotnet_diagnostic.CA1812.severity = none
 
-# CA1062: Validate parameter is non-null
-dotnet_diagnostic.CA1062.severity = none
+# IDE0045: 'if' statement can be simplified
+# IDE0046: Convert to conditional expression
+# Choice should be left to developer to maximize readability.
+dotnet_diagnostic.IDE0045.severity = none
+dotnet_diagnostic.IDE0046.severity = none
+
+# IDE0048: Add parentheses for clarity
+# Unneeded parentheses can hurt readability.
+dotnet_diagnostic.IDE0048.severity = none
+
+# IDE0057: Substring can be simplified
+# No support in legacy frameworks.
+dotnet_diagnostic.IDE0057.severity = none
 
 # IDE0130: Namespace does not match folder structure
+# More important to provide a good public surface and backwards compatibility.
 dotnet_diagnostic.IDE0130.severity = none
+
+# CS1573: Parameter has no matching param tag in the XML comment (but other parameters do)
+# False positive when adding a <param/> tag while also using <inheritdoc/> tag.
+dotnet_diagnostic.CS1573.severity = none

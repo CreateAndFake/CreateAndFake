@@ -1,27 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using CreateAndFake;
 using CreateAndFake.Design;
-using Xunit;
 
 namespace CreateAndFakeTests.Design;
 
-#pragma warning disable xUnit1031 // Test methods should not use blocking code
+#pragma warning disable xUnit1031 // Test methods should not use blocking code: Ensures blocking code works for library.
 
 /// <summary>Verifies behavior.</summary>
 public static class LimiterTests
 {
     /// <summary>Accuracy of wait resolution for delays.</summary>
-    private const int _WaitAccuracy = 15;
+    private const int _WaitAccuracy = 5;
 
     /// <summary>Small delay to test with.</summary>
-    private static readonly TimeSpan _SmallDelay = new(0, 0, 0, 0, 60);
+    private static readonly TimeSpan _SmallDelay = new(0, 0, 0, 0, 20);
 
     [Fact]
     internal static void Limiter_GuardsNulls()
@@ -272,7 +264,7 @@ public static class LimiterTests
         using (CancellationTokenSource tokenSource = new())
         {
             _ = Tools.Asserter.Throws<TaskCanceledException>(() => Limiter.Few.Retry(
-                "", () => throw exception, () => tokenSource.Cancel(), tokenSource.Token).Wait());
+                "Message", () => throw exception, () => tokenSource.Cancel(), tokenSource.Token).Wait());
         }
 
         _ = Tools.Asserter.Throws<TaskCanceledException>(
@@ -496,7 +488,7 @@ public static class LimiterTests
     internal static void Attempt_WrongExceptionThrows(NotSupportedException exception)
     {
         Tools.Asserter.Is(exception, Tools.Asserter.Throws<NotSupportedException>(
-            () => new Limiter(3).Attempt<InvalidOperationException>("", (Action)(() => throw exception)).Wait()));
+            () => new Limiter(3).Attempt<InvalidOperationException>(null, (Action)(() => throw exception)).Wait()));
 
         IOException exception2 = new();
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using CreateAndFake.Design;
 using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
@@ -8,7 +6,10 @@ using CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 namespace CreateAndFake.Toolbox.DuplicatorTool;
 
 /// <inheritdoc cref="IDuplicator"/>
-public sealed class Duplicator : IDuplicator, IDuplicatable
+/// <param name="asserter"><inheritdoc cref="_asserter" path="/summary"/> </param>
+/// <param name="includeDefaultHints">If the default set of hints should be added.</param>
+/// <param name="hints"><inheritdoc cref="_hints" path="/summary"/> </param>
+public sealed class Duplicator(Asserter asserter, bool includeDefaultHints = true, params CopyHint[]? hints) : IDuplicator, IDuplicatable
 {
     /// <summary>Default set of hints to use for copying.</summary>
     private static readonly CopyHint[] _DefaultHints =
@@ -27,26 +28,15 @@ public sealed class Duplicator : IDuplicator, IDuplicatable
     ];
 
     /// <summary>Verifies duplicates are valid.</summary>
-    private readonly Asserter _asserter;
+    private readonly Asserter _asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
 
     /// <summary>Hints used to copy specific types.</summary>
-    private readonly List<CopyHint> _hints;
-
-    /// <summary>Initializes a new instance of the <see cref="Duplicator"/> class.</summary>
-    /// <param name="asserter">Verifies duplicates are valid.</param>
-    /// <param name="includeDefaultHints">If the default set of hints should be added.</param>
-    /// <param name="hints">Hints used to copy specific types.</param>
-    public Duplicator(Asserter asserter, bool includeDefaultHints = true, params CopyHint[] hints)
-    {
-        _asserter = asserter ?? throw new ArgumentNullException(nameof(asserter));
-
-        IEnumerable<CopyHint> inputHints = hints ?? Enumerable.Empty<CopyHint>();
-        _hints = includeDefaultHints
-            ? inputHints.Concat(_DefaultHints).ToList()
-            : inputHints.ToList();
-    }
+    private readonly List<CopyHint> _hints = (hints ?? Enumerable.Empty<CopyHint>())
+            .Concat(includeDefaultHints ? _DefaultHints : [])
+            .ToList();
 
     /// <inheritdoc/>
+    [return: NotNullIfNotNull(nameof(source))]
     public T Copy<T>(T source)
     {
         try
@@ -60,30 +50,26 @@ public sealed class Duplicator : IDuplicator, IDuplicatable
         catch (InsufficientExecutionStackException)
         {
             throw new InsufficientExecutionStackException(
-                $"Ran into infinite generation trying to duplicate type '{source.GetType().Name}'.");
+                $"Ran into infinite generation trying to duplicate type '{source!.GetType().Name}'.");
         }
     }
 
-    /// <summary>Deep clones <paramref name="source"/>.</summary>
-    /// <typeparam name="T">Type being cloned.</typeparam>
-    /// <param name="source">Object to clone.</param>
-    /// <param name="chainer">Handles callback behavior for child values.</param>
-    /// <returns>Clone of <paramref name="source"/>.</returns>
-    /// <exception cref="NotSupportedException">If no hint supports cloning the object.</exception>
+    /// <param name="chainer">Handles cloning child values.</param>
+    /// <inheritdoc cref="Copy{T}(T)"/>
+    [return: NotNullIfNotNull(nameof(source))]
     private T Copy<T>(T source, DuplicatorChainer chainer)
     {
         if (source == null)
         {
-            return default;
+            return default!;
         }
-
-        (bool, object) result = _hints
+        (bool, object?) result = _hints
             .Select(h => h.TryCopy(source, chainer))
             .FirstOrDefault(r => r.Item1);
 
         if (!result.Equals(default))
         {
-            return (T)result.Item2;
+            return (T)result.Item2!;
         }
         else
         {
@@ -98,7 +84,7 @@ public sealed class Duplicator : IDuplicator, IDuplicatable
     {
         ArgumentGuard.ThrowIfNull(duplicator, nameof(duplicator));
 
-        return new Duplicator(duplicator.Copy(_asserter), false, [.. duplicator.Copy(_hints)]);
+        return new Duplicator(duplicator.Copy(_asserter)!, false, [.. duplicator.Copy(_hints)]);
     }
 
     /// <inheritdoc/>

@@ -1,16 +1,15 @@
-using System;
 using CreateAndFake.Design.Data;
 using CreateAndFake.Design.Randomization;
 
 namespace CreateAndFake.Design.Context;
 
-/// <summary>Random values for people.</summary>
+/// <summary>Bundled random values for a person.</summary>
 public sealed class PersonContext : BaseDataContext
 {
     /// <summary>Name fragment.</summary>
     private readonly Lazy<string> _firstName, _middleName, _lastName;
 
-    /// <summary>Initializes a new instance of the <see cref="PersonContext"/> class.</summary>
+    /// <inheritdoc cref="PersonContext"/>
     /// <inheritdoc/>
     internal PersonContext(IRandom gen) : base(gen)
     {
@@ -31,6 +30,6 @@ public sealed class PersonContext : BaseDataContext
     /// <summary>First and last name for the person.</summary>
     public string FullName => $"{FirstName} {LastName}";
 
-    /// <summary>Initials for the name.</summary>
+    /// <summary>Initials for the person's name.</summary>
     public string Initials => $"{FirstName[0]}{MiddleName[0]}{LastName[0]}";
 }

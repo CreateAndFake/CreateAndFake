@@ -3,7 +3,7 @@
 namespace CreateAndFakeTests.TestSamples;
 
 /// <summary>For testing.</summary>
-[SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly", Justification = "For testing.")]
+[ExcludeFromCodeCoverage]
 public class ScopeSample
 {
     /// <summary>For testing.</summary>

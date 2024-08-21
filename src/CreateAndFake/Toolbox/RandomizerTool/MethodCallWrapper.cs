@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Toolbox.DuplicatorTool;
 
@@ -16,16 +13,16 @@ public sealed class MethodCallWrapper : IDuplicatable
     /// <summary>Ordered parameter names.</summary>
     private readonly IEnumerable<string> _names;
 
-    /// <summary>Parameter values.</summary>
-    private readonly Dictionary<string, object> _args;
+    /// <summary>Parameter names with associated data to pass.</summary>
+    private readonly Dictionary<string, object?> _args;
 
     /// <summary>Parameter data for the method.</summary>
-    public IEnumerable<object> Args => _names.Select(n => _args[n]).ToArray();
+    public IEnumerable<object?> Args => _names.Select(n => _args[n]).ToArray();
 
-    /// <summary>Initializes a new instance of the <see cref="MethodCallWrapper"/> class.</summary>
-    /// <param name="method">Associated method.</param>
-    /// <param name="args">Parameter data for the method.</param>
-    public MethodCallWrapper(MethodBase method, IEnumerable<Tuple<string, object>> args)
+    /// <inheritdoc cref="MethodCallWrapper"/>
+    /// <param name="method"><inheritdoc cref="_method" path="/summary"/></param>
+    /// <param name="args"><inheritdoc cref="_args" path="/summary"/></param>
+    public MethodCallWrapper(MethodBase method, IEnumerable<Tuple<string, object?>> args)
     {
         ArgumentGuard.ThrowIfNull(args, nameof(args));
 
@@ -33,7 +30,7 @@ public sealed class MethodCallWrapper : IDuplicatable
         _args = [];
 
         List<string> names = [];
-        foreach (Tuple<string, object> arg in args)
+        foreach (Tuple<string, object?> arg in args)
         {
             names.Add(arg.Item1);
             _args.Add(arg.Item1, arg.Item2);
@@ -59,7 +56,7 @@ public sealed class MethodCallWrapper : IDuplicatable
     /// <summary>Invokes the method on <paramref name="instance"/>.</summary>
     /// <param name="instance">Instance to call the method with the data on.</param>
     /// <returns>Results from the call.</returns>
-    public object InvokeOn(object instance)
+    public object? InvokeOn(object instance)
     {
         return _method.Invoke(instance, Args.ToArray());
     }
@@ -69,7 +66,7 @@ public sealed class MethodCallWrapper : IDuplicatable
     {
         ArgumentGuard.ThrowIfNull(duplicator, nameof(duplicator));
 
-        return new MethodCallWrapper(duplicator.Copy(_method),
-            duplicator.Copy(_names.Select(n => Tuple.Create(n, _args[n])).ToArray()));
+        return new MethodCallWrapper(duplicator.Copy(_method)!,
+            duplicator.Copy(_names.Select(n => Tuple.Create(n, _args[n])).ToArray())!);
     }
 }

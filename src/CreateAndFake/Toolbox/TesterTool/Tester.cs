@@ -1,5 +1,4 @@
-﻿using System;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.AsserterTool;
@@ -73,12 +72,12 @@ public class Tester(IRandom gen, IRandomizer randomizer,
                 $"Null reference check on methods for type '{type}'",
                 () =>
                 {
-                    object instance = (injectionValues?.Length > 0)
+                    object? instance = (injectionValues?.Length > 0)
                         ? Randomizer.Inject(type, injectionValues)
                         : Randomizer.Create(type);
                     try
                     {
-                        checker.PreventsNullRefExceptionOnMethods(instance, injectionValues);
+                        checker.PreventsNullRefExceptionOnMethods(instance!, injectionValues);
                     }
                     finally
                     {
@@ -107,7 +106,7 @@ public class Tester(IRandom gen, IRandomizer randomizer,
         _Limiter.Retry<TimeoutException>($"Null reference check on constructors for type '{typeof(T).Name}'",
             () => checker.PreventsNullRefExceptionOnConstructors(typeof(T), false, injectionValues)).Wait();
         _Limiter.Retry<TimeoutException>($"Null reference check on methods for type '{typeof(T).Name}'",
-            () => checker.PreventsNullRefExceptionOnMethods(instance, injectionValues)).Wait();
+            () => checker.PreventsNullRefExceptionOnMethods(instance!, injectionValues)).Wait();
         _Limiter.Retry<TimeoutException>($"Null reference check on static methods for type '{typeof(T).Name}'",
             () => checker.PreventsNullRefExceptionOnStatics(typeof(T), false, injectionValues)).Wait();
     }
@@ -147,12 +146,12 @@ public class Tester(IRandom gen, IRandomizer randomizer,
                 $"Parameter mutation check on methods for type '{type}'",
                 () =>
                 {
-                    object instance = (injectionValues?.Length > 0)
+                    object? instance = (injectionValues?.Length > 0)
                         ? Randomizer.Inject(type, injectionValues)
                         : Randomizer.Create(type);
                     try
                     {
-                        checker.PreventsMutationOnMethods(instance, injectionValues);
+                        checker.PreventsMutationOnMethods(instance!, injectionValues);
                     }
                     finally
                     {
@@ -181,7 +180,7 @@ public class Tester(IRandom gen, IRandomizer randomizer,
         _Limiter.Retry<TimeoutException>($"Parameter mutation check on constructors for type '{typeof(T).Name}'",
             () => checker.PreventsMutationOnConstructors(typeof(T), false, injectionValues)).Wait();
         _Limiter.Retry<TimeoutException>($"Parameter mutation check on methods for type '{typeof(T).Name}'",
-            () => checker.PreventsMutationOnMethods(instance, injectionValues)).Wait();
+            () => checker.PreventsMutationOnMethods(instance!, injectionValues)).Wait();
         _Limiter.Retry<TimeoutException>($"Parameter mutation check on static methods for type '{typeof(T).Name}'",
             () => checker.PreventsMutationOnStatics(typeof(T), false, injectionValues)).Wait();
     }
@@ -191,7 +190,7 @@ public class Tester(IRandom gen, IRandomizer randomizer,
     /// <param name="injectionValues">Values to inject into called methods.</param>
     public virtual void PassthroughWithNoExceptions<T>(params object[] injectionValues)
     {
-        PassthroughWithNoExceptions(Randomizer.Create<Injected<T>>().Dummy, injectionValues);
+        PassthroughWithNoExceptions(Randomizer.Create<Injected<T>>()!.Dummy!, injectionValues);
     }
 
     /// <summary>Verifies no exceptions are thrown on any method.</summary>

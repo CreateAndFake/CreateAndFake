@@ -1,37 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using CreateAndFake;
-using CreateAndFake.Design.Content;
+﻿using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.ValuerTool;
-using Xunit;
 
 namespace CreateAndFakeTests.TestBases;
 
 /// <summary>Handles testing compare hints.</summary>
 /// <typeparam name="T">Compare hint to test.</typeparam>
-public abstract class CompareHintTestBase<T> where T : CompareHint
+/// <param name="testInstance">Instance to test with.</param>
+/// <param name="validTypes">Types that can be compared by the hint.</param>
+/// <param name="invalidTypes">Types that can't be compared by the hint.</param>
+public abstract class CompareHintTestBase<T>(
+    T testInstance,
+    IEnumerable<Type> validTypes,
+    IEnumerable<Type> invalidTypes) where T : CompareHint
 {
     /// <summary>Instance to test with.</summary>
-    protected T TestInstance { get; }
+    protected T TestInstance { get; } = testInstance;
 
     /// <summary>Types that can be compared by the hint.</summary>
-    private readonly IEnumerable<Type> _validTypes;
+    private readonly IEnumerable<Type> _validTypes = validTypes;
 
     /// <summary>Types that can't be compared by the hint.</summary>
-    private readonly IEnumerable<Type> _invalidTypes;
-
-    /// <summary>Sets up the tests.</summary>
-    /// <param name="testInstance">Instance to test with.</param>
-    /// <param name="validTypes">Types that can be compared by the hint.</param>
-    /// <param name="invalidTypes">Types that can't be compared by the hint.</param>
-    protected CompareHintTestBase(T testInstance, IEnumerable<Type> validTypes, IEnumerable<Type> invalidTypes)
-    {
-        TestInstance = testInstance;
-        _validTypes = validTypes ?? Type.EmptyTypes;
-        _invalidTypes = invalidTypes ?? Type.EmptyTypes;
-    }
+    private readonly IEnumerable<Type> _invalidTypes = invalidTypes;
 
     /// <summary>Verifies null reference exceptions are prevented.</summary>
     [Fact]
@@ -57,11 +46,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                     $"Hint '{typeof(T).Name}' failed to support '{type.Name}'.");
                 Tools.Asserter.IsEmpty(result.Item2,
                     $"Hint '{typeof(T).Name}' found differences with same '{type.Name}' of '{data.GetType()}'.");
-            }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
             }
             finally
             {
@@ -89,11 +73,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                 Tools.Asserter.IsNotEmpty(result.Item2.ToArray(),
                     $"Hint '{typeof(T).Name}' didn't find differences with two random '{type.Name}'.");
             }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
-            }
             finally
             {
                 Disposer.Cleanup(one, two);
@@ -116,11 +95,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                 Tools.Asserter.Is((false, (IEnumerable<Difference>)null),
                     TestInstance.TryCompare(one, two, CreateChainer()),
                     $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
-            }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
             }
             finally
             {
@@ -149,11 +123,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                 Tools.Asserter.Is(dataHash, TestInstance.TryGetHashCode(dataCopy, CreateChainer()),
                     $"Hint '{typeof(T).Name}' generated different hash for dupe '{type.Name}'.");
             }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
-            }
             finally
             {
                 Disposer.Cleanup(data, dataCopy);
@@ -179,11 +148,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                 Tools.Asserter.IsNot(dataHash, TestInstance.TryGetHashCode(dataDiffer, CreateChainer()),
                     $"Hint '{typeof(T).Name}' generated same hash for different '{type.Name}'.");
             }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
-            }
             finally
             {
                 Disposer.Cleanup(data, dataDiffer);
@@ -206,11 +170,6 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
                     TestInstance.TryGetHashCode(data, CreateChainer()),
                     $"Hint '{typeof(T).Name}' should not support type '{type.Name}'.");
             }
-            catch (Exception e)
-            {
-                ExpandReflectionException(e);
-                throw;
-            }
             finally
             {
                 Disposer.Cleanup(data);
@@ -224,19 +183,5 @@ public abstract class CompareHintTestBase<T> where T : CompareHint
         return new ValuerChainer(Tools.Valuer,
             (o, c) => Tools.Valuer.GetHashCode(o),
             (e, a, c) => Tools.Valuer.Compare(e, a));
-    }
-
-    private static void ExpandReflectionException(Exception ex)
-    {
-        if (ex is ReflectionTypeLoadException refEx)
-        {
-            throw new InvalidOperationException(
-                "Reflection failure:" + refEx.LoaderExceptions.Select(e => e.Message), ex);
-        }
-        else if (ex.InnerException is ReflectionTypeLoadException refExInner)
-        {
-            throw new InvalidOperationException(
-                "Reflection failure:" + refExInner.LoaderExceptions.Select(e => e.Message), ex);
-        }
     }
 }

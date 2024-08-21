@@ -1,6 +1,4 @@
-﻿using CreateAndFake;
-using CreateAndFake.Toolbox.FakerTool;
-using Xunit;
+﻿using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool;
 

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Linq;
-using CreateAndFake;
-using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
+﻿using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints;
 
@@ -27,7 +23,7 @@ public sealed class StringCreateHintTests : CreateHintTestBase<StringCreateHint>
     {
         int minSize = 2;
         int range = 3;
-        StringCreateHint hint = new(minSize, range, Enumerable.Empty<char>());
+        StringCreateHint hint = new(minSize, range, []);
 
         for (int i = 0; i < 1000; i++)
         {

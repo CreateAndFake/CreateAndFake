@@ -1,9 +1,5 @@
-﻿using System;
-using CreateAndFake;
-using CreateAndFake.Fluent;
-using CreateAndFake.Toolbox.AsserterTool;
+﻿using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFakeTests.TestBases;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.AsserterTool;
 

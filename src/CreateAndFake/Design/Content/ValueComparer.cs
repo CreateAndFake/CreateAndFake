@@ -1,9 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
 namespace CreateAndFake.Design.Content;
 
-/// <summary>Compares objects by value.</summary>
+/// <summary>Compares objects/collections by value via <see cref="IValueEquatable"/> if possible.</summary>
 public sealed class ValueComparer :
     IComparer,
     IComparer<object>,
@@ -16,7 +15,7 @@ public sealed class ValueComparer :
     IEqualityComparer<IEnumerable>,
     IEqualityComparer<IDictionary>
 {
-    /// <summary>Hash used for null values.</summary>
+    /// <summary>Hash used for <c>null</c> values.</summary>
     public static int NullHash { get; } = 0;
 
     /// <summary>Starting hash value.</summary>
@@ -25,7 +24,7 @@ public sealed class ValueComparer :
     /// <summary>Multiplier for computing hashes.</summary>
     public static int HashMultiplier { get; } = 92821;
 
-    /// <summary>Default instance for use.</summary>
+    /// <summary>Default instance to use for comparing objects by value.</summary>
     public static ValueComparer Use { get; } = new ValueComparer();
 
     /// <summary>Determines if <paramref name="x"/> equals <paramref name="y"/> by value.</summary>
@@ -34,7 +33,7 @@ public sealed class ValueComparer :
     /// <returns>
     ///     <c>true</c> if <paramref name="x"/> equals <paramref name="y"/> by value; <c>false</c> otherwise.
     /// </returns>
-    public new bool Equals(object x, object y)
+    public new bool Equals(object? x, object? y)
     {
         if (ReferenceEquals(x, y))
         {
@@ -59,13 +58,13 @@ public sealed class ValueComparer :
     }
 
     /// <inheritdoc cref="Equals(object,object)"/>
-    public bool Equals(IValueEquatable x, IValueEquatable y)
+    public bool Equals(IValueEquatable? x, IValueEquatable? y)
     {
         return x?.ValuesEqual(y) ?? y?.ValuesEqual(x) ?? true;
     }
 
     /// <inheritdoc cref="Equals(object,object)"/>
-    public bool Equals(IEnumerable x, IEnumerable y)
+    public bool Equals(IEnumerable? x, IEnumerable? y)
     {
         if (ReferenceEquals(x, y))
         {
@@ -75,13 +74,22 @@ public sealed class ValueComparer :
         {
             return false;
         }
-        else if (x is string)
-        {
-            return x.Equals(y);
-        }
         else if (x is IDictionary asDict)
         {
             return Equals(asDict, y as IDictionary);
+        }
+        else
+        {
+            return EqualsBySequence(x, y);
+        }
+    }
+
+    /// <inheritdoc cref="Equals(object,object)"/>
+    private bool EqualsBySequence(IEnumerable x, IEnumerable y)
+    {
+        if (x is string)
+        {
+            return x.Equals(y);
         }
         else
         {
@@ -100,7 +108,7 @@ public sealed class ValueComparer :
     }
 
     /// <inheritdoc cref="Equals(object,object)"/>
-    public bool Equals(IDictionary x, IDictionary y)
+    public bool Equals(IDictionary? x, IDictionary? y)
     {
         if (ReferenceEquals(x, y))
         {
@@ -127,18 +135,18 @@ public sealed class ValueComparer :
         }
     }
 
-    /// <summary>Computes an identifying hash code for <paramref name="items"/>.</summary>
-    /// <param name="items">Objects to generate a hash code for.</param>
-    /// <returns>The computed hash code.</returns>
-    public int GetHashCode(params object[] items)
+    /// <summary>Computes an identifying hash code for <paramref name="items"/> based upon value.</summary>
+    /// <param name="items">Bundled objects to generate a single value hash code for.</param>
+    /// <returns>The value computed hash code for <paramref name="items"/>.</returns>
+    public int GetHashCode(params object?[]? items)
     {
-        return GetHashCode((IEnumerable)items);
+        return GetHashCode((IEnumerable?)items);
     }
 
-    /// <summary>Computes an identifying hash code for <paramref name="obj"/>.</summary>
+    /// <summary>Computes an identifying hash code for <paramref name="obj"/> based upon value.</summary>
     /// <param name="obj">Object to generate a hash code for.</param>
-    /// <returns>The computed hash code.</returns>
-    public int GetHashCode(object obj)
+    /// <returns>The value computed hash code for <paramref name="obj"/>.</returns>
+    public int GetHashCode(object? obj)
     {
         if (obj is null)
         {
@@ -159,13 +167,13 @@ public sealed class ValueComparer :
     }
 
     /// <inheritdoc cref="GetHashCode(object)"/>
-    public int GetHashCode(IValueEquatable obj)
+    public int GetHashCode(IValueEquatable? obj)
     {
         return obj?.GetValueHash() ?? NullHash;
     }
 
     /// <inheritdoc cref="GetHashCode(object)"/>
-    public int GetHashCode(IEnumerable obj)
+    public int GetHashCode(IEnumerable? obj)
     {
         if (obj is null)
         {
@@ -191,7 +199,7 @@ public sealed class ValueComparer :
     }
 
     /// <inheritdoc cref="GetHashCode(object)"/>
-    public int GetHashCode(IDictionary obj)
+    public int GetHashCode(IDictionary? obj)
     {
         if (obj is null)
         {
@@ -219,25 +227,25 @@ public sealed class ValueComparer :
     ///     <para>Zero if <paramref name="x"/> = <paramref name="y"/>.</para>
     ///     <para>Negative value if <paramref name="x"/> &lt; <paramref name="y"/>.</para>
     /// </returns>
-    public int Compare(object x, object y)
+    public int Compare(object? x, object? y)
     {
         return ReferenceEquals(x, y) ? 0 : GetHashCode(x).CompareTo(GetHashCode(y));
     }
 
     /// <inheritdoc cref="Compare(object,object)"/>
-    public int Compare(IValueEquatable x, IValueEquatable y)
+    public int Compare(IValueEquatable? x, IValueEquatable? y)
     {
         return ReferenceEquals(x, y) ? 0 : GetHashCode(x).CompareTo(GetHashCode(y));
     }
 
     /// <inheritdoc cref="Compare(object,object)"/>
-    public int Compare(IEnumerable x, IEnumerable y)
+    public int Compare(IEnumerable? x, IEnumerable? y)
     {
         return ReferenceEquals(x, y) ? 0 : GetHashCode(x).CompareTo(GetHashCode(y));
     }
 
     /// <inheritdoc cref="Compare(object,object)"/>
-    public int Compare(IDictionary x, IDictionary y)
+    public int Compare(IDictionary? x, IDictionary? y)
     {
         return ReferenceEquals(x, y) ? 0 : GetHashCode(x).CompareTo(GetHashCode(y));
     }

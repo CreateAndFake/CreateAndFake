@@ -1,13 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using CreateAndFake;
-using CreateAndFake.Fluent;
+﻿using System.Reflection;
 using CreateAndFake.Toolbox;
 using CreateAndFake.Toolbox.FakerTool;
-using Xunit;
 using TypeExtensions = CreateAndFake.Toolbox.TypeExtensions;
 
 namespace CreateAndFakeTests.Extensions;

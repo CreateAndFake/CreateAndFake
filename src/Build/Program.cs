@@ -1,5 +1,3 @@
-using System.IO;
-using System.Threading.Tasks;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
 
@@ -12,6 +10,7 @@ public static class Program
     private static readonly string _ArtifactDir = Path.Combine(Directory.GetCurrentDirectory(), "artifacts");
 
     /// <summary>Console application entry point.</summary>
+    /// <param name="args">Command-line arguments.</param>
     public static async Task Main(string[] args)
     {
         Target("default", DependsOn("coverage"));

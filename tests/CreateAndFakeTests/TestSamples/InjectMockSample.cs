@@ -1,7 +1,4 @@
-﻿using System;
-using CreateAndFake;
-
-namespace CreateAndFakeTests.TestSamples;
+﻿namespace CreateAndFakeTests.TestSamples;
 
 /// <summary>For testing.</summary>
 /// <remarks>For testing.</remarks>

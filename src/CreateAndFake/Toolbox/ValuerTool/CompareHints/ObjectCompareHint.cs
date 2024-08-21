@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 
@@ -12,10 +9,12 @@ namespace CreateAndFake.Toolbox.ValuerTool.CompareHints;
 public sealed class ObjectCompareHint(BindingFlags scope) : CompareHint
 {
     /// <inheritdoc/>
-    protected override bool Supports(object expected, object actual, ValuerChainer valuer)
+    protected override bool Supports(object? expected, object? actual, ValuerChainer valuer)
     {
-        ArgumentGuard.ThrowIfNull(expected, nameof(expected));
-        ArgumentGuard.ThrowIfNull(actual, nameof(actual));
+        if (expected == null || actual == null)
+        {
+            return false;
+        }
 
         Type type = expected.GetType();
         return type.GetProperties(scope).Any(p => p.CanRead)
@@ -23,7 +22,7 @@ public sealed class ObjectCompareHint(BindingFlags scope) : CompareHint
     }
 
     /// <inheritdoc/>
-    protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
+    protected override IEnumerable<Difference> Compare(object? expected, object? actual, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(expected, nameof(expected));
         ArgumentGuard.ThrowIfNull(actual, nameof(actual));
@@ -55,7 +54,7 @@ public sealed class ObjectCompareHint(BindingFlags scope) : CompareHint
     }
 
     /// <inheritdoc/>
-    protected override int GetHashCode(object item, ValuerChainer valuer)
+    protected override int GetHashCode(object? item, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(item, nameof(item));
         ArgumentGuard.ThrowIfNull(valuer, nameof(valuer));

@@ -1,10 +1,9 @@
-﻿using System;
-using CreateAndFake.Toolbox.FakerTool.Proxy;
+﻿using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.FakerTool;
 
-/// <summary>Manages faking objects.</summary>
+/// <summary>Manages faking behavior.</summary>
 /// <param name="fake">Faked implementation.</param>
 public class Fake(IFaked fake)
 {
@@ -12,7 +11,7 @@ public class Fake(IFaked fake)
     public IFaked Dummy { get; } = fake ?? throw new ArgumentNullException(nameof(fake));
 
     /// <summary>How to compare call data.</summary>
-    protected IValuer Valuer => Dummy.FakeMeta.Valuer;
+    protected IValuer? Valuer => Dummy.FakeMeta.Valuer;
 
     /// <summary>Determines behavior when missing set behavior for a call.</summary>
     public bool ThrowByDefault
@@ -37,14 +36,14 @@ public class Fake(IFaked fake)
     /// <param name="args">Args to match on the call.</param>
     /// <param name="callback">Fake behavior to invoke.</param>
     /// <returns>Representation of the call.</returns>
-    public void Setup(string methodName, Type[] generics, object[] args, Behavior callback)
+    public void Setup(string methodName, Type[] generics, object?[] args, Behavior callback)
     {
         Dummy.FakeMeta.SetCallBehavior(new CallData(methodName, generics, args, Valuer), callback);
     }
 
     /// <summary>Verifies all behaviors with associated times were called as expected.</summary>
     /// <param name="total">Expected total number of calls to test as well.</param>
-    public void VerifyAll(Times total = null)
+    public void VerifyAll(Times? total = null)
     {
         Dummy.FakeMeta.Verify();
         if (total != null)
@@ -67,7 +66,7 @@ public class Fake(IFaked fake)
     /// <param name="methodName">Method name of the call.</param>
     /// <param name="generics">Generics tied to the call.</param>
     /// <param name="args">Args to match on the call.</param>
-    public void Verify(Times times, string methodName, Type[] generics, object[] args)
+    public void Verify(Times times, string methodName, Type[] generics, object?[] args)
     {
         Verify(times, new CallData(methodName, generics, args, Valuer));
     }

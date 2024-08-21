@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Handles generation of strings for the randomizer.</summary>
-/// <remarks>Initializes a new instance of the <see cref="StringCreateHint"/> class.</remarks>
-/// <param name="minSize">Minimum size for created collections.</param>
-/// <param name="range">Size variance for created collections.</param>
-/// <param name="charSet">Character set to use for randomization.</param>
-public sealed class StringCreateHint(int minSize = 7, int range = 5, IEnumerable<char> charSet = null)
+/// <summary>Handles randomizing <see cref="string"/> collections for <see cref="IRandomizer"/>.</summary>
+/// <param name="charSet"><inheritdoc cref="_charSet" path=""/></param>
+/// <inheritdoc cref="CollectionCreateHint"/>
+public sealed class StringCreateHint(int minSize = 7, int range = 5, IEnumerable<char>? charSet = null)
     : CreateHint<string>
 {
     /// <summary>Default characters to include in random strings.</summary>

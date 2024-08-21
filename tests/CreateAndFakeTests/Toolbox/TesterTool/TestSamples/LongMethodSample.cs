@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 
@@ -7,6 +6,7 @@ namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 public static class LongMethodSample
 {
     /// <summary>For testing.</summary>
+    [ExcludeFromCodeCoverage]
     public static void BeSlow<T>(string data, out T output) where T : new()
     {
         Thread.Sleep(new TimeSpan(0, 0, 2));

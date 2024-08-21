@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace CreateAndFake.Toolbox.FakerTool.Proxy;
 
@@ -46,8 +43,8 @@ public static class Subclasser
     public static IFaked Create(Type parent, params Type[] interfaces)
     {
         return (IFaked)CreateInfo(parent, interfaces).AsType()
-            .GetConstructor([Emitter.MetaType])
-            .Invoke(new[] { new FakeMetaProvider() });
+            .GetConstructor([Emitter.MetaType])!
+            .Invoke([new FakeMetaProvider()]);
     }
 
     /// <summary>Creates a subclass of the given type.</summary>
@@ -66,10 +63,10 @@ public static class Subclasser
             realParent = typeof(object);
         }
 
-        (bool, Exception) possible = CanBeSubclassed(realParent);
+        (bool, Exception?) possible = CanBeSubclassed(realParent);
         if (!possible.Item1)
         {
-            throw possible.Item2;
+            throw possible.Item2!;
         }
 
         IEnumerable<Type> invalidInterfaces = allInterfaces.Where(t => !t.IsInterface);
@@ -85,7 +82,7 @@ public static class Subclasser
     /// <summary>Determines if type can be subclassed.</summary>
     /// <param name="parent">Type to check.</param>
     /// <returns>True if possible; false if not with exception to throw.</returns>
-    private static (bool, Exception) CanBeSubclassed(Type parent)
+    private static (bool, Exception?) CanBeSubclassed(Type parent)
     {
         if (parent == null)
         {

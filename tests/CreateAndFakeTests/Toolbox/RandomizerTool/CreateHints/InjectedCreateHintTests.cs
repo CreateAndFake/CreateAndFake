@@ -1,11 +1,8 @@
-﻿using System;
-using CreateAndFake;
-using CreateAndFake.Toolbox.FakerTool;
+﻿using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
 using CreateAndFakeTests.Toolbox.FakerTool.TestSamples;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints;
 

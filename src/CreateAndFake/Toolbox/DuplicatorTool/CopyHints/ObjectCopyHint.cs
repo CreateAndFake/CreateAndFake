@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
-/// <summary>Handles copying objects for the duplicator.</summary>
+/// <summary>Handles cloning objects for <see cref="IDuplicator"/> .</summary>
 public sealed class ObjectCopyHint : CopyHint
 {
     /// <summary>Flags used to identify members.</summary>
@@ -14,28 +11,19 @@ public sealed class ObjectCopyHint : CopyHint
         | BindingFlags.NonPublic | BindingFlags.Instance;
 
     /// <inheritdoc/>
-    protected internal sealed override (bool, object) TryCopy(object source, DuplicatorChainer duplicator)
+    protected internal sealed override (bool, object?) TryCopy(object source, DuplicatorChainer duplicator)
     {
+        ArgumentGuard.ThrowIfNull(source, nameof(source));
         ArgumentGuard.ThrowIfNull(duplicator, nameof(duplicator));
 
-        if (source == null)
-        {
-            return (true, null);
-        }
-        else
-        {
-            object result = Copy(source, duplicator);
-            return (result != null, result);
-        }
+        object? result = Copy(source, duplicator);
+        return (result != null, result);
     }
 
-    /// <summary>Deep clones <paramref name="source"/>.</summary>
-    /// <param name="source">Object to clone.</param>
-    /// <param name="duplicator">Handles callback behavior for child values.</param>
-    /// <returns>Clone of <paramref name="source"/>.</returns>
-    private static object Copy(object source, DuplicatorChainer duplicator)
+    /// <inheritdoc cref="CopyHint{T}.CopyHint"/>
+    private static object? Copy(object source, DuplicatorChainer duplicator)
     {
-        object dupe = CreateNew(source, duplicator);
+        object? dupe = CreateNew(source, duplicator);
         if (dupe == null)
         {
             return dupe;
@@ -63,7 +51,7 @@ public sealed class ObjectCopyHint : CopyHint
     /// <param name="source">Object whose <see cref="Type"/> is to be created.</param>
     /// <param name="duplicator">Handles callback behavior for child values.</param>
     /// <returns>The created instance.</returns>
-    private static object CreateNew(object source, DuplicatorChainer duplicator)
+    private static object? CreateNew(object source, DuplicatorChainer duplicator)
     {
         Type type = source.GetType();
 
@@ -91,7 +79,7 @@ public sealed class ObjectCopyHint : CopyHint
     /// <param name="props">Properties on <paramref name="source"/>.</param>
     /// <param name="fields">Fields on <paramref name="source"/>.</param>
     /// <returns>Null if failed; created instance otherwise.</returns>
-    private static object TryCreate(object source, DuplicatorChainer duplicator,
+    private static object? TryCreate(object source, DuplicatorChainer duplicator,
         ConstructorInfo constructor, IEnumerable<PropertyInfo> props, IEnumerable<FieldInfo> fields)
     {
         List<PropertyInfo> propList = props.ToList();
@@ -106,7 +94,7 @@ public sealed class ObjectCopyHint : CopyHint
                 .ToArray();
             if (potentialProps.Length != 0)
             {
-                PropertyInfo directPropMatch = potentialProps.FirstOrDefault(
+                PropertyInfo? directPropMatch = potentialProps.FirstOrDefault(
                     p => p.Name.Equals(param.Name, StringComparison.OrdinalIgnoreCase));
                 if (directPropMatch != null)
                 {
@@ -126,7 +114,7 @@ public sealed class ObjectCopyHint : CopyHint
                 .ToArray();
             if (potentialFields.Length != 0)
             {
-                FieldInfo directFieldMatch = potentialFields.FirstOrDefault(
+                FieldInfo? directFieldMatch = potentialFields.FirstOrDefault(
                     f => f.Name.Equals(param.Name, StringComparison.OrdinalIgnoreCase));
                 if (directFieldMatch != null)
                 {
@@ -152,7 +140,7 @@ public sealed class ObjectCopyHint : CopyHint
     /// <param name="source">Instance containing the member.</param>
     /// <param name="duplicator">Duplicator handling the cloning.</param>
     /// <returns>The duplicate object.</returns>
-    private static object CopyMember(MemberInfo member, object source, DuplicatorChainer duplicator)
+    private static object? CopyMember(MemberInfo member, object source, DuplicatorChainer duplicator)
     {
         if (member is PropertyInfo prop)
         {

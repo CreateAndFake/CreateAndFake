@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
+﻿using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
 

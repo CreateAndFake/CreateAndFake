@@ -1,8 +1,4 @@
-﻿using CreateAndFake;
-using CreateAndFake.Fluent;
-using Xunit;
-
-namespace CreateAndFakeTests.IssueReplication;
+﻿namespace CreateAndFakeTests.IssueReplication;
 
 /// <summary>Verifies issue is resolved.</summary>
 public static class Issue108Tests

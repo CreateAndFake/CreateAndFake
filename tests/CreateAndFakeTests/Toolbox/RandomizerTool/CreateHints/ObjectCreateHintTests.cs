@@ -1,12 +1,8 @@
-﻿using System;
-using CreateAndFake;
-using CreateAndFake.Design;
-using CreateAndFake.Fluent;
+﻿using CreateAndFake.Design;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints;
 
@@ -42,7 +38,7 @@ public sealed class ObjectCreateHintTests : CreateHintTestBase<ObjectCreateHint>
     }
 
     [Fact]
-    public async void Create_RetriesUntilGoodSample()
+    public async Task Create_RetriesUntilGoodSample()
     {
         await Limiter.Dozen.Repeat("",
             () => typeof(IIsGoodOrBadSample).CreateRandomInstance().Assert().IsNot(null)).ConfigureAwait(true);

@@ -1,9 +1,12 @@
-﻿namespace CreateAndFakeTests.TestSamples;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace CreateAndFakeTests.TestSamples;
 
 /// <summary>For testing.</summary>
 public sealed class FactorySample
 {
     /// <summary>For testing.</summary>
+    [ExcludeFromCodeCoverage]
     public string Data { get; }
 
     /// <summary>For testing.</summary>

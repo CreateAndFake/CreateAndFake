@@ -1,7 +1,8 @@
-using System;
-
 namespace CreateAndFake;
 
-/// <summary>Flag to create the object as a random stub.</summary>
+/// <summary>Flag to create the attached <c>object</c> as a stub with injected random behavior.</summary>
+/// <seealso cref="Toolbox.RandomizerTool.IRandomizer.CreateFor"/>
+/// <seealso cref="Toolbox.RandomizerTool.IRandomizer.Inject"/> 
+/// <seealso cref="Toolbox.FakerTool.IFaker.Stub"/>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
 public sealed class FakeAttribute : Attribute { }

@@ -1,4 +1,5 @@
 [*.cs]
 
 # CA2007: Consider calling ConfigureAwait on the awaited task
+# Not needed for the build project.
 dotnet_diagnostic.CA2007.severity = none

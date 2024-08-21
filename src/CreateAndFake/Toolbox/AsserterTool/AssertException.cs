@@ -1,46 +1,45 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace CreateAndFake.Toolbox.AsserterTool;
 
-/// <summary>Exception for a failed asserter case.</summary>
+/// <summary>Exception for a failed <see cref="Asserter"/> case.</summary>
 [Serializable, KnownType(typeof(Exception)), KnownType(typeof(Exception[]))]
 public sealed class AssertException : Exception
 {
-    /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
+    /// <inheritdoc cref="AssertException"/>
     /// <remarks>Serialization constructor.</remarks>
     private AssertException() : base() { }
 
-    /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
+    /// <inheritdoc cref="AssertException"/>
     /// <param name="message">Reason for the exception.</param>
     /// <param name="details">Optional fail details.</param>
     /// <param name="seed">Seed used for data generation.</param>
     /// <param name="content">Optional related content.</param>
-    public AssertException(string message, string details, int? seed, string content = null)
+    public AssertException(string? message, string? details, int? seed, string? content = null)
         : base(BuildMessage(message, details, seed, content)) { }
 
-    /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
+    /// <inheritdoc cref="AssertException"/>
     /// <param name="message">Reason for the exception.</param>
     /// <param name="details">Optional fail details.</param>
     /// <param name="seed">Seed used for data generation.</param>
     /// <param name="innerException">Inner exception that occurred.</param>
-    public AssertException(string message, string details, int? seed, Exception innerException)
+    public AssertException(string? message, string? details, int? seed, Exception innerException)
         : base(BuildMessage(message, details, seed), innerException) { }
 
-    /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
+    /// <inheritdoc cref="AssertException"/>
     /// <param name="message">Reason for the exception.</param>
     /// <param name="details">Optional fail details.</param>
     /// <param name="seed">Seed used for data generation.</param>
     /// <param name="content">Optional related content.</param>
     /// <param name="innerException">Inner exception that occurred.</param>
-    public AssertException(string message, string details, int? seed, string content, Exception innerException)
+    public AssertException(string? message, string? details, int? seed, string? content, Exception innerException)
         : base(BuildMessage(message, details, seed, content), innerException) { }
 
-    /// <summary>Initializes a new instance of the <see cref="AssertException"/> class.</summary>
+    /// <inheritdoc cref="AssertException"/>
     /// <param name="info">Object data.</param>
     /// <param name="context">Additional info.</param>
     /// <remarks>Serialization constructor.</remarks>
-#if NET8_0_OR_GREATER
+#if NET5_0_OR_GREATER
     [Obsolete(DiagnosticId = "SYSLIB0051")]
 #endif
     private AssertException(SerializationInfo info, StreamingContext context) : base(info, context) { }
@@ -51,7 +50,7 @@ public sealed class AssertException : Exception
     /// <param name="seed">Seed used for data generation.</param>
     /// <param name="content">Content to integrate.</param>
     /// <returns>Message to use for the exception.</returns>
-    private static string BuildMessage(string message, string details, int? seed, string content = null)
+    private static string BuildMessage(string? message, string? details, int? seed, string? content = null)
     {
         string nl = Environment.NewLine;
 

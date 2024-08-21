@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
@@ -20,10 +17,11 @@ public sealed class CollectionCreateHintTests : CreateHintTestBase<CollectionCre
 
     /// <summary>Types that can be created by the hint.</summary>
     private static readonly Type[] _ValidTypes = CollectionCreateHint.PotentialCollections
-        .Concat(new[] { typeof(IEnumerable<>), typeof(IList<>), typeof(ISet<>), typeof(IDictionary<,>) })
-        .Concat(new[] { typeof(IReadOnlyCollection<>), typeof(IReadOnlyList<>), typeof(IReadOnlyDictionary<,>) })
-        .Concat(new[] { typeof(int[]), typeof(string[]), typeof(object[]) })
-        .Select(MakeDefined).ToArray();
+        .Concat([typeof(IEnumerable<>), typeof(IList<>), typeof(ISet<>), typeof(IDictionary<,>)])
+        .Concat([typeof(IReadOnlyCollection<>), typeof(IReadOnlyList<>), typeof(IReadOnlyDictionary<,>)])
+        .Concat([typeof(int[]), typeof(string[]), typeof(object[])])
+        .Select(MakeDefined)
+        .ToArray();
 
     /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes

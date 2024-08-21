@@ -1,4 +1,5 @@
-﻿using CreateAndFake.Design.Content;
+﻿using System.Diagnostics.CodeAnalysis;
+using CreateAndFake.Design.Content;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 
@@ -15,6 +16,7 @@ public sealed class NullReferenceSample
     }
 
     /// <summary>For testing.</summary>
+    [ExcludeFromCodeCoverage]
     public override string ToString()
     {
         return _data.ToString();

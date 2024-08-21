@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.RandomizerTool;
@@ -10,9 +7,9 @@ using CreateAndFake.Toolbox.ValuerTool;
 namespace CreateAndFake.Toolbox.MutatorTool;
 
 /// <inheritdoc cref="IMutator"/>
-/// <param name="randomizer">Handles randomization.</param>
-/// <param name="valuer">Ensures object variance.</param>
-/// <param name="limiter">Limits attempts at creating variants.</param>
+/// <param name="randomizer"><inheritdoc cref="_randomizer" path="/summary"/></param>
+/// <param name="valuer"><inheritdoc cref="_valuer" path="/summary"/></param>
+/// <param name="limiter"><inheritdoc cref="_limiter" path="/summary"/></param>
 public sealed class Mutator(IRandomizer randomizer, IValuer valuer, Limiter limiter) : IMutator
 {
     /// <summary>Handles randomization.</summary>
@@ -25,23 +22,21 @@ public sealed class Mutator(IRandomizer randomizer, IValuer valuer, Limiter limi
     private readonly Limiter _limiter = limiter ?? throw new ArgumentNullException(nameof(limiter));
 
     /// <inheritdoc/>
-    public T Variant<T>(T instance, params T[] extraInstances)
+    public T Variant<T>(T instance, params T?[]? extraInstances)
     {
         return (T)Variant(typeof(T), instance, extraInstances?.Cast<object>().ToArray());
     }
 
     /// <inheritdoc/>
-    public object Variant(Type type, object instance, params object[] extraInstances)
+    public object Variant(Type type, object? instance, params object?[]? extraInstances)
     {
-        IEnumerable<object> values = (extraInstances ?? Enumerable.Empty<object>()).Prepend(instance);
-
-        object result = default;
+        IEnumerable<object?> values = (extraInstances ?? Enumerable.Empty<object?>()).Prepend(instance);
         try
         {
-            _limiter.StallUntil(
+            return _limiter.StallUntil(
                 $"Create variant of type '{type}'",
-                () => result = _randomizer.Create(type),
-                () =>
+                () => _randomizer.Create(type),
+                result =>
                 {
                     if (values.All(o => !_valuer.Equals(result, o)))
                     {
@@ -52,17 +47,16 @@ public sealed class Mutator(IRandomizer randomizer, IValuer valuer, Limiter limi
                         Disposer.Cleanup(result);
                         return false;
                     }
-                }).Wait();
+                }).Result.Last();
         }
         catch (AggregateException e)
         {
             throw new TimeoutException($"Could not create different instance of type '{type}'.", e);
         }
-        return result;
     }
 
     /// <inheritdoc/>
-    public bool Modify(object instance)
+    public bool Modify(object? instance)
     {
         if (instance == null)
         {

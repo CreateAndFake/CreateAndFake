@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
 
@@ -21,4 +19,11 @@ public sealed class AsyncEnumerableCompareHintTests : CompareHintTestBase<AsyncE
 
     /// <summary>Sets up the tests.</summary>
     public AsyncEnumerableCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
+
+    [Theory, RandomData]
+    internal void Supports_NullTest(IAsyncEnumerable<string> data)
+    {
+        TestInstance.TryCompare(null, data, CreateChainer()).Item1.Assert().Is(false);
+        TestInstance.TryCompare(data, null, CreateChainer()).Item1.Assert().Is(false);
+    }
 }

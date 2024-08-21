@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using CreateAndFake;
-using Xunit;
 
 namespace CreateAndFakeTests.Attributes;
 

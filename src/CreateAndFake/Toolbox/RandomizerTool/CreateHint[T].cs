@@ -1,16 +1,14 @@
-﻿using System;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.RandomizerTool;
 
-/// <summary>Handles generation of <typeparamref name="T"/> instances for the randomizer.</summary>
-/// <typeparam name="T">Type capable of being randomized.</typeparam>
+/// <typeparam name="T"><c>Type</c> being supported for randomization.</typeparam>
+/// <inheritdoc/>
 public abstract class CreateHint<T> : CreateHint
 {
     /// <inheritdoc/>
-    protected internal sealed override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+    protected internal sealed override (bool, object?) TryCreate(Type type, RandomizerChainer randomizer)
     {
-        ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
 
         if (type.IsInheritedBy<T>()
@@ -26,7 +24,7 @@ public abstract class CreateHint<T> : CreateHint
     }
 
     /// <summary>Creates a random <typeparamref name="T"/> instance.</summary>
-    /// <param name="randomizer">Handles callback behavior for child values.</param>
+    /// <param name="randomizer">Handles randomizing child values.</param>
     /// <returns>The created <typeparamref name="T"/> instance.</returns>
     protected abstract T Create(RandomizerChainer randomizer);
 }

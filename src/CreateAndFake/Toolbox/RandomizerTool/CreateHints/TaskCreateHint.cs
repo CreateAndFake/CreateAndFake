@@ -1,17 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Handles generation of injected dummies for the randomizer.</summary>
+/// <summary>Handles randomizing <see cref="Task{T}"/> instances for <see cref="IRandomizer"/>.</summary>
 public sealed class TaskCreateHint : CreateHint
 {
     /// <inheritdoc/>
-    protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+    protected internal override (bool, object?) TryCreate(Type type, RandomizerChainer randomizer)
     {
-        ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
 
         if (type.Inherits<Task>() || typeof(TaskCompletionSource<>).IsInheritedBy(type))
@@ -24,18 +20,16 @@ public sealed class TaskCreateHint : CreateHint
         }
     }
 
-    /// <summary>Creates a random instance of the given type.</summary>
-    /// <param name="type">Type to generate.</param>
-    /// <param name="randomizer">Handles callback behavior for child values.</param>
-    /// <returns>The created instance.</returns>
-    private static object Create(Type type, RandomizerChainer randomizer)
+    /// <returns>The randomized instance.</returns>
+    /// <inheritdoc cref="CreateHint.TryCreate"/>
+    private static object? Create(Type type, RandomizerChainer randomizer)
     {
         if (type.IsGenericType)
         {
             Type content = type.GetGenericArguments().Single();
 
             return typeof(Task)
-                .GetMethod(nameof(Task.FromResult))
+                .GetMethod(nameof(Task.FromResult))!
                 .MakeGenericMethod(content)
                 .Invoke(null, [randomizer.Create(content, randomizer.Parent)]);
         }

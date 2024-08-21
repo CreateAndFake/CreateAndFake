@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Threading.Tasks;
-using CreateAndFake;
+﻿using System.Collections;
 using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
+
+#pragma warning disable CA1849 // Task await synchronously blocks: For testing.
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints;
-
-#pragma warning disable CA1849 // Task await synchronously blocks
 
 /// <summary>Verifies behavior.</summary>
 public sealed class TaskCompareHintTests : CompareHintTestBase<TaskCompareHint>
@@ -37,12 +33,22 @@ public sealed class TaskCompareHintTests : CompareHintTestBase<TaskCompareHint>
     [Theory, RandomData]
     internal void Compare_NonGenericTasksCompareByException(Exception ex)
     {
-        Tools.Asserter.IsNot(BuildExceptionTask(ex), BuildExceptionTask(Tools.Mutator.Variant(ex)));
+        BuildTask(ex)
+            .Assert()
+            .IsNot(BuildTask(Tools.Mutator.Variant(ex)))
+            .And
+            .IsNot(BuildTask(null));
     }
 
-    private static Task BuildExceptionTask(Exception ex)
+    private static Task BuildTask(Exception ex)
     {
-        Task task = new(() => { throw ex; });
+        Task task = new(() =>
+        {
+            if (ex != null)
+            {
+                throw ex;
+            }
+        });
         try
         {
             task.Start();

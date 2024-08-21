@@ -1,8 +1,5 @@
-﻿using System;
-using CreateAndFake;
-using CreateAndFake.Toolbox.DuplicatorTool;
+﻿using CreateAndFake.Toolbox.DuplicatorTool;
 using CreateAndFake.Toolbox.FakerTool;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool;
 

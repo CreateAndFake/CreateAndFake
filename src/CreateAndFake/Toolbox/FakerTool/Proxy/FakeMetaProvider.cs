@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Toolbox.DuplicatorTool;
@@ -14,7 +11,7 @@ public sealed class FakeMetaProvider : IDuplicatable
 {
     /// <summary>Last called method.</summary>
     [ThreadStatic]
-    private static Tuple<FakeMetaProvider, CallData> _LastCall;
+    private static Tuple<FakeMetaProvider, CallData>? _LastCall;
 
     /// <summary>Faked behavior.</summary>
     private readonly Stack<(CallData, Behavior)> _behavior = new();
@@ -32,12 +29,12 @@ public sealed class FakeMetaProvider : IDuplicatable
     public bool ThrowByDefault { get; set; } = true;
 
     /// <inheritdoc cref="IValuer"/>
-    internal IValuer Valuer { get; set; }
+    internal IValuer? Valuer { get; set; }
 
-    /// <summary>Initializes a new instance of the <see cref="FakeMetaProvider"/> class.</summary>
+    /// <inheritdoc cref="FakeMetaProvider"/>
     public FakeMetaProvider() { }
 
-    /// <summary>Initializes a new instance of the <see cref="FakeMetaProvider"/> class.</summary>
+    /// <inheritdoc cref="FakeMetaProvider"/>
     /// <param name="behavior">Behavior to pass in.</param>
     /// <param name="log">Record of calls to pass in.</param>
     /// <remarks>Copy constructor.</remarks>
@@ -63,7 +60,7 @@ public sealed class FakeMetaProvider : IDuplicatable
 
         return new FakeMetaProvider(
             _behavior.Reverse().Select(t => duplicator.Copy(t)),
-            _log.Select(t => duplicator.Copy(t)))
+            _log.Select(t => duplicator.Copy(t)!))
         {
             Valuer = duplicator.Copy(Valuer),
             Identifier = Identifier,
@@ -143,7 +140,7 @@ public sealed class FakeMetaProvider : IDuplicatable
     /// <param name="args">Provided args to the call.</param>
     internal void CallVoid(object instance, string name, Type[] generics, object[] args)
     {
-        object result = CallRet<object>(instance, name, generics, args);
+        object? result = CallRet<object>(instance, name, generics, args);
         if (result != null)
         {
             throw new InvalidOperationException(
@@ -158,7 +155,7 @@ public sealed class FakeMetaProvider : IDuplicatable
     /// <param name="generics">Generics tied to the call.</param>
     /// <param name="args">Provided args to the call.</param>
     /// <returns>Faked result previously set up.</returns>
-    internal T CallRet<T>(object instance, string name, Type[] generics, object[] args)
+    internal T? CallRet<T>(object instance, string name, Type[] generics, object[] args)
     {
         CallData data = new(name, generics, args, Valuer);
         _log.Add(data);
@@ -184,7 +181,7 @@ public sealed class FakeMetaProvider : IDuplicatable
         }
         else
         {
-            return (T)match.Item2.Invoke(args);
+            return (T?)match.Item2.Invoke(args);
         }
     }
 
@@ -195,9 +192,9 @@ public sealed class FakeMetaProvider : IDuplicatable
     /// <param name="match">Behavior details.</param>
     /// <param name="args">Provided args to the call.</param>
     /// <returns>Base method result.</returns>
-    private static T CallBase<T>(object instance, string name, (CallData, Behavior) match, object[] args)
+    private static T? CallBase<T>(object instance, string name, (CallData, Behavior) match, object[] args)
     {
-        MethodInfo method = match.Item2.BaseCallType.GetMethod(name);
+        MethodInfo? method = match.Item2.BaseCallType!.GetMethod(name);
         if (method == null)
         {
             throw new MissingMethodException($"Method '{name}' does not exist on '{match.Item2.BaseCallType}'");
@@ -209,9 +206,9 @@ public sealed class FakeMetaProvider : IDuplicatable
         else
         {
             Delegate caller = (Delegate)Activator.CreateInstance(
-                FindDelegateType(method), instance, method.MethodHandle.GetFunctionPointer());
+                FindDelegateType(method), instance, method.MethodHandle.GetFunctionPointer())!;
 
-            return (T)match.Item2.Invoke(caller, args);
+            return (T?)match.Item2.Invoke(caller, args);
         }
     }
 
@@ -224,6 +221,6 @@ public sealed class FakeMetaProvider : IDuplicatable
 
         return (methodInfo.ReturnType == typeof(void))
             ? Expression.GetActionType(args.ToArray())
-            : Expression.GetFuncType(args.Concat(new[] { methodInfo.ReturnType }).ToArray());
+            : Expression.GetFuncType(args.Concat([methodInfo.ReturnType]).ToArray());
     }
 }

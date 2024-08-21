@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace CreateAndFakeTests.TestSamples;
 
@@ -6,6 +6,7 @@ namespace CreateAndFakeTests.TestSamples;
 public class IsBadSample : IIsGoodOrBadSample
 {
     /// <summary>For testing.</summary>
+    [ExcludeFromCodeCoverage]
     public int GoodOrBadProp
     {
         get => 0;

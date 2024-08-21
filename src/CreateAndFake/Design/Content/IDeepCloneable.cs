@@ -1,12 +1,12 @@
 ﻿namespace CreateAndFake.Design.Content;
 
-/// <summary>Provides self deep copying functionality.</summary>
+/// <summary>Provides self copy-by-value functionality.</summary>
 public interface IDeepCloneable
 {
     /// <summary>
-    ///     Makes a clone such that any mutation to the source
-    ///     or copy only affects that object and not the other.
+    ///     Creates a clone where any mutation to <c>this</c> or the
+    ///     created copy only affects that object and not the other.
     /// </summary>
-    /// <returns>Created clone that is equal in value to the instance.</returns>
+    /// <returns>The created clone that is equal by value to <c>this</c>.</returns>
     IDeepCloneable DeepClone();
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using CreateAndFake;
+﻿using System.Reflection;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Context;
 using CreateAndFake.Design.Randomization;
@@ -14,7 +10,8 @@ using CreateAndFake.Toolbox.FakerTool.Proxy;
 using CreateAndFake.Toolbox.TesterTool;
 using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
+using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CreateAndFakeTests;
 
@@ -57,7 +54,7 @@ public static class ToolsTests
         Tools.Asserter.Is(Tools.Valuer.GetHashCode(sample), Tools.Valuer.GetHashCode(dupe));
     }
 
-    [Fact]
+    [Fact, ExcludeFromCodeCoverage]
     internal static void Tools_AllCreateAndFakeTypesWork()
     {
         Type[] ignore = [
@@ -82,16 +79,17 @@ public static class ToolsTests
             typeof(PersonContext),
             typeof(ToolSet),
             typeof(Tools),
-            typeof(FakeAttribute),
-            typeof(StubAttribute),
-            typeof(BaseGuarder)
+            typeof(BaseGuarder),
         ];
 
         foreach (Type type in typeof(Tools).Assembly.GetTypes()
             .Where(t => !(t.IsAbstract && t.IsSealed))
+            .Where(t => !t.Inherits<Attribute>())
             .Where(t => !ignore.Contains(t))
             .Where(t => !t.IsNestedPrivate)
-            .Where(t => t.GetCustomAttribute<CompilerGeneratedAttribute>() == null))
+            .Where(t => t.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
+            .Where(t => !t.FullName.Contains("<PrivateImplementationDetails>"))
+            .Where(t => !t.FullName.Contains("<>z__ReadOnly")))
         {
             try
             {

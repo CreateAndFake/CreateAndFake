@@ -5,30 +5,27 @@ using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFake.Toolbox.AsserterTool.Fluent;
 
-/// <summary>Handles assertion calls for collections.</summary>
-/// <param name="gen">Core value random handler.</param>
-/// <param name="valuer">Handles comparisons.</param>
-/// <param name="collection">Collection to check.</param>
-public abstract class AssertGroupBase<T>(IRandom gen, IValuer valuer, IEnumerable collection)
+/// <summary>Handles common collection assertion calls.</summary>
+/// <param name="collection"><inheritdoc cref="Collection" path="/summary"/></param>
+/// <inheritdoc cref="AssertObjectBase{T}"/>
+public abstract class AssertGroupBase<T>(IRandom gen, IValuer valuer, IEnumerable? collection)
     : AssertObjectBase<T>(gen, valuer, collection) where T : AssertGroupBase<T>
 {
-    /// <summary>Collection to check.</summary>
-    protected IEnumerable Collection { get; } = collection;
+    /// <summary>Collection to run assertion checks with.</summary>
+    protected IEnumerable? Collection { get; } = collection;
 
-    /// <summary>Verifies the collection is empty.</summary>
-    /// <param name="details">Optional failure details.</param>
+    /// <summary>Verifies <c>collection</c> is empty.</summary>
+    /// <param name="details">Optional failure details to include.</param>
     /// <returns>Chainer to make additional assertions with.</returns>
-    /// <exception cref="AssertException">If collection has elements.</exception>
-    public virtual AssertChainer<T> IsEmpty(string details = null)
+    /// <exception cref="AssertException">If <c>collection</c> fails to match the expected behavior.</exception>
+    public virtual AssertChainer<T> IsEmpty(string? details = null)
     {
         return HasCount(0, details);
     }
 
-    /// <summary>Verifies the collection is not empty.</summary>
-    /// <param name="details">Optional failure details.</param>
-    /// <returns>Chainer to make additional assertions with.</returns>
-    /// <exception cref="AssertException">If collection is null or has no elements.</exception>
-    public virtual AssertChainer<T> IsNotEmpty(string details = null)
+    /// <summary>Verifies <c>collection</c> is not empty.</summary>
+    /// <inheritdoc cref="IsEmpty"/>
+    public virtual AssertChainer<T> IsNotEmpty(string? details = null)
     {
         if (Collection == null)
         {
@@ -46,12 +43,10 @@ public abstract class AssertGroupBase<T>(IRandom gen, IValuer valuer, IEnumerabl
         }
     }
 
-    /// <summary>Verifies the collection has <paramref name="count"/> elements.</summary>
-    /// <param name="count">Size to check for.</param>
-    /// <param name="details">Optional failure details.</param>
-    /// <returns>Chainer to make additional assertions with.</returns>
-    /// <exception cref="AssertException">If collection size does not match <paramref name="count"/>.</exception>
-    public virtual AssertChainer<T> HasCount(int count, string details = null)
+    /// <summary>Verifies <c>collection</c> has <paramref name="count"/> elements.</summary>
+    /// <param name="count">Size that the <c>collection</c> should be.</param>
+    /// <inheritdoc cref="IsEmpty"/>
+    public virtual AssertChainer<T> HasCount(int count, string? details = null)
     {
         if (Collection == null)
         {
@@ -59,8 +54,8 @@ public abstract class AssertGroupBase<T>(IRandom gen, IValuer valuer, IEnumerabl
                 $"Expected collection of '{count}' elements, but was 'null'.", details, Gen.InitialSeed);
         }
 
-        StringBuilder contents = new();
         int i = 0;
+        StringBuilder contents = new();
         for (IEnumerator data = Collection.GetEnumerator(); data.MoveNext(); i++)
         {
             _ = contents.Append('[').Append(i).Append("]:").Append(data.Current).AppendLine();

@@ -1,37 +1,28 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using CreateAndFake;
+﻿using System.Collections;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.RandomizerTool;
-using Xunit;
 
 namespace CreateAndFakeTests.TestBases;
 
 /// <summary>Handles testing create hints.</summary>
 /// <typeparam name="T">Create hint to test.</typeparam>
-public abstract class CreateHintTestBase<T> where T : CreateHint
+/// <param name="testInstance">Instance to test with.</param>
+/// <param name="validTypes">Types that can be created by the hint.</param>
+/// <param name="invalidTypes">Types that can't be created by the hint.</param>
+public abstract class CreateHintTestBase<T>(
+    T testInstance,
+    IEnumerable<Type> validTypes,
+    IEnumerable<Type> invalidTypes) where T : CreateHint
 {
     /// <summary>Instance to test with.</summary>
-    protected T TestInstance { get; }
+    protected T TestInstance { get; } = testInstance;
 
     /// <summary>Types that can be created by the hint.</summary>
-    private readonly IEnumerable<Type> _validTypes;
+    private readonly IEnumerable<Type> _validTypes = validTypes ?? Type.EmptyTypes;
 
     /// <summary>Types that can't be created by the hint.</summary>
-    private readonly IEnumerable<Type> _invalidTypes;
-
-    /// <summary>Sets up the tests.</summary>
-    /// <param name="testInstance">Instance to test with.</param>
-    /// <param name="validTypes">Types that can be created by the hint.</param>
-    /// <param name="invalidTypes">Types that can't be created by the hint.</param>
-    protected CreateHintTestBase(T testInstance, IEnumerable<Type> validTypes, IEnumerable<Type> invalidTypes)
-    {
-        TestInstance = testInstance;
-        _validTypes = validTypes ?? Type.EmptyTypes;
-        _invalidTypes = invalidTypes ?? Type.EmptyTypes;
-    }
+    private readonly IEnumerable<Type> _invalidTypes = invalidTypes ?? Type.EmptyTypes;
 
     /// <summary>Verifies null reference exceptions are prevented.</summary>
     [Fact]

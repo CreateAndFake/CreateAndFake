@@ -1,8 +1,5 @@
 using System.Reflection;
-using CreateAndFake;
 using CreateAndFake.Design.Context;
-using CreateAndFake.Fluent;
-using Xunit;
 
 namespace CreateAndFakeTests.TestBases;
 

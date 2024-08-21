@@ -1,7 +1,5 @@
-﻿using CreateAndFake;
-using CreateAndFake.Toolbox.RandomizerTool;
+﻿using CreateAndFake.Toolbox.RandomizerTool;
 using CreateAndFakeTests.TestSamples;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool;
 

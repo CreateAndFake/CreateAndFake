@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CreateAndFake.Design;
+﻿using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.FakerTool;
 
 /// <summary>Instance with dynamically injected fakes.</summary>
-/// <typeparam name="T">Type being injected by fakes.</typeparam>
+/// <typeparam name="T"><c>Type</c> being injected by fakes.</typeparam>
 public sealed class Injected<T>
 {
     /// <summary>Faked implementation.</summary>
@@ -14,7 +12,7 @@ public sealed class Injected<T>
     /// <summary>Fakes injected into the dummy.</summary>
     public IEnumerable<Fake> Fakes { get; }
 
-    /// <summary>Initializes a new instance of the <see cref="Injected{T}"/> class.</summary>
+    /// <inheritdoc cref="Injected{T}"/>
     /// <param name="dummy">Faked implementation.</param>
     /// <param name="fakes">Fakes injected into the dummy.</param>
     public Injected(T dummy, IEnumerable<Fake> fakes)
@@ -27,12 +25,12 @@ public sealed class Injected<T>
     }
 
     /// <summary>Finds the <typeparamref name="TInject"/> fake.</summary>
-    /// <typeparam name="TInject">Type of fake to look for.</typeparam>
-    /// <param name="skip">How many fakes of the given type to ignore first.</param>
+    /// <typeparam name="TInject"><c>Type</c> of fake to look for.</typeparam>
+    /// <param name="skip">How many fakes of the <typeparamref name="TInject"/> to ignore first.</param>
     /// <returns>The found <typeparamref name="TInject"/> fake.</returns>
     public Fake<TInject> Fake<TInject>(int skip = 0)
     {
-        Fake<TInject> direct = Fakes
+        Fake<TInject>? direct = Fakes
             .OfType<Fake<TInject>>()
             .Skip(skip)
             .FirstOrDefault();
@@ -45,7 +43,7 @@ public sealed class Injected<T>
     }
 
     /// <summary>Finds the fake owner of the given dummy.</summary>
-    /// <typeparam name="TInject">Type of fake to look for.</typeparam>
+    /// <typeparam name="TInject"><c>Type</c> of fake to look for.</typeparam>
     /// <param name="dummy">Dummy of a fake to search on.</param>
     /// <returns>The found fake.</returns>
     public Fake<TInject> Fake<TInject>(TInject dummy)

@@ -12,31 +12,31 @@ namespace CreateAndFake;
 /// <summary>Manages implementations of all reflection tools.</summary>
 public static class Tools
 {
-    /// <summary>Manages currently used tools.</summary>
+    /// <summary>Manages currently used tools globally.</summary>
     /// <remarks>Should only be modified in module initializer once.</remarks>
     public static ToolSet Source { get; set; } = ToolSet.DefaultSet;
 
-    /// <summary>Core value random handler.</summary>
+    /// <inheritdoc cref="ToolSet.Gen"/>
     public static IRandom Gen => Source.Gen;
 
-    /// <summary>Compares objects by value.</summary>
+    /// <inheritdoc cref="ToolSet.Valuer"/>
     public static IValuer Valuer => Source.Valuer;
 
-    /// <summary>Creates fake objects.</summary>
+    /// <inheritdoc cref="ToolSet.Faker"/>
     public static IFaker Faker => Source.Faker;
 
-    /// <summary>Creates objects and populates them with random values.</summary>
+    /// <inheritdoc cref="ToolSet.Randomizer"/>
     public static IRandomizer Randomizer => Source.Randomizer;
 
-    /// <summary>Changes the value of objects or creates alternatives.</summary>
+    /// <inheritdoc cref="ToolSet.Mutator"/>
     public static IMutator Mutator => Source.Mutator;
 
-    /// <summary>Handles common test scenarios.</summary>
+    /// <inheritdoc cref="ToolSet.Asserter"/>
     public static Asserter Asserter => Source.Asserter;
 
-    /// <summary>Deep clones objects.</summary>
+    /// <inheritdoc cref="ToolSet.Duplicator"/>
     public static IDuplicator Duplicator => Source.Duplicator;
 
-    /// <summary>Automates common tests.</summary>
+    /// <inheritdoc cref="ToolSet.Tester"/>
     public static Tester Tester => Source.Tester;
 }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using CreateAndFake;
+﻿using System.Reflection;
 using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.ValuerTool;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.AsserterTool;
 
@@ -218,7 +213,7 @@ public sealed class AsserterTests
             {
                 return (!o1.Equals(o2))
                     ? Tools.Randomizer.Create<IEnumerable<Difference>>()
-                    : Enumerable.Empty<Difference>();
+                    : [];
             }));
 
         _testInstance.IsNotEmpty(Tools.Randomizer.Create<string[]>());

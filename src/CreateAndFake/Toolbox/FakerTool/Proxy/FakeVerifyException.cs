@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace CreateAndFake.Toolbox.FakerTool.Proxy;
 
@@ -9,11 +6,11 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy;
 [Serializable, KnownType(typeof(Exception))]
 public sealed class FakeVerifyException : Exception
 {
-    /// <summary>Initializes a new instance of the <see cref="FakeVerifyException"/> class.</summary>
+    /// <inheritdoc cref="FakeVerifyException"/>
     /// <remarks>Serialization constructor.</remarks>
     private FakeVerifyException() : base() { }
 
-    /// <summary>Initializes a new instance of the <see cref="FakeVerifyException"/> class.</summary>
+    /// <inheritdoc cref="FakeVerifyException"/>
     /// <param name="data">Associated call data.</param>
     /// <param name="expected">Expected number of calls.</param>
     /// <param name="actual">Actual number of calls.</param>
@@ -21,13 +18,13 @@ public sealed class FakeVerifyException : Exception
     internal FakeVerifyException(CallData data, Times expected, int actual, IEnumerable<CallData> log)
         : base(BuildMessage(data, expected.ToString(), actual, log)) { }
 
-    /// <summary>Initializes a new instance of the <see cref="FakeVerifyException"/> class.</summary>
+    /// <inheritdoc cref="FakeVerifyException"/>
     /// <param name="expected">Expected number of calls.</param>
     /// <param name="log">Log of all made calls.</param>
     internal FakeVerifyException(Times expected, IEnumerable<CallData> log)
         : base(BuildMessage(null, expected.ToString(), log.Count(), log)) { }
 
-    /// <summary>Initializes a new instance of the <see cref="FakeVerifyException"/> class.</summary>
+    /// <inheritdoc cref="FakeVerifyException"/>
     /// <param name="invalid">Call data with behavior that aren't valid.</param>
     /// <param name="log">Log of all made calls.</param>
     internal FakeVerifyException(IEnumerable<(CallData, Behavior)> invalid, IEnumerable<CallData> log)
@@ -36,11 +33,11 @@ public sealed class FakeVerifyException : Exception
             .Append(BuildMessage(log))))
     { }
 
-    /// <summary>Initializes a new instance of the <see cref="FakeVerifyException"/> class.</summary>
+    /// <inheritdoc cref="FakeVerifyException"/>
     /// <param name="info">Object data.</param>
     /// <param name="context">Additional info.</param>
     /// <remarks>Serialization constructor.</remarks>
-#if NET8_0_OR_GREATER
+#if NET5_0_OR_GREATER
     [Obsolete(DiagnosticId = "SYSLIB0051")]
 #endif
     private FakeVerifyException(SerializationInfo info, StreamingContext context) : base(info, context) { }
@@ -51,7 +48,7 @@ public sealed class FakeVerifyException : Exception
     /// <param name="actual">Actual number of calls.</param>
     /// <param name="log">Log of all made calls.</param>
     /// <returns>Message to use for the exception.</returns>
-    private static string BuildMessage(CallData source, string expected, int actual, IEnumerable<CallData> log)
+    private static string BuildMessage(CallData? source, string expected, int actual, IEnumerable<CallData>? log)
     {
         string nl = Environment.NewLine;
 

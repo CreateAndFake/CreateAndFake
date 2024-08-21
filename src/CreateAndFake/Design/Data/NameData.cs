@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace CreateAndFake.Design.Data;
 
 /// <summary>Provides a pool of names.</summary>
@@ -653,6 +651,7 @@ public static class NameData
         "Ozzie",
         "Ozzy",
         // Pa
+        "Palmer",
         "Pam",
         "Pamela",
         "Parker",
@@ -731,6 +730,7 @@ public static class NameData
         // Rh
         // Ri
         "Rianna",
+        "Rin",
         // Rj
         // Rk
         // Rl
@@ -757,6 +757,8 @@ public static class NameData
         "Ryzen",
         // Rz
         // Sa
+        "Saber",
+        "Sabrina",
         "Santa",
         // Sb
         // Sc
@@ -893,6 +895,7 @@ public static class NameData
         // Vj
         // Vk
         // Vl
+        "Vlad",
         // Vm
         // Vn
         // Vo
@@ -931,6 +934,7 @@ public static class NameData
         // Wm
         // Wn
         // Wo
+        "Won",
         // Wp
         // Wq
         // Wr
@@ -984,6 +988,7 @@ public static class NameData
         // Yg
         // Yh
         // Yi
+        "Yin",
         // Yj
         // Yk
         // Yl

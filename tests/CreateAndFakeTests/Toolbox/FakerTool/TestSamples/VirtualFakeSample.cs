@@ -1,13 +1,11 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool.TestSamples;
 
 /// <summary>For testing.</summary>
-[SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses",
-    Justification = "False positive; created by the activator.")]
 [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations",
     Justification = "For testing.")]
+[ExcludeFromCodeCoverage]
 public class VirtualFakeSample : AbstractFakeSample
 {
     /// <summary>For testing.</summary>

@@ -1,7 +1,4 @@
 ﻿using System.Collections;
-using CreateAndFake;
-using CreateAndFake.Fluent;
-using Xunit;
 
 namespace CreateAndFakeTests.Extensions;
 

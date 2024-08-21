@@ -1,11 +1,8 @@
-﻿using System;
-using CreateAndFake;
-using CreateAndFake.Toolbox.AsserterTool;
+﻿using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.TesterTool;
 using CreateAndFakeTests.TestSamples;
 using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
-using Xunit;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool;
 
@@ -104,13 +101,11 @@ public static class NullGuarderTests
             MockDisposableSample._FinalizerDisposes = 0;
             MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
 
-            using (MockDisposableSample sample = new(null))
-            {
-                _LongTestInstance.PreventsNullRefExceptionOnMethods(sample);
-                Tools.Asserter.Is(0, MockDisposableSample._ClassDisposes);
-                Tools.Asserter.Is(0, MockDisposableSample._FinalizerDisposes);
-                MockDisposableSample._Fake.Verify(Times.Once, d => d.Dispose());
-            }
+            using MockDisposableSample sample = new(null);
+            _LongTestInstance.PreventsNullRefExceptionOnMethods(sample);
+            Tools.Asserter.Is(0, MockDisposableSample._ClassDisposes);
+            Tools.Asserter.Is(0, MockDisposableSample._FinalizerDisposes);
+            MockDisposableSample._Fake.Verify(Times.Once, d => d.Dispose());
         }
     }
 }

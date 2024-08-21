@@ -1,7 +1,3 @@
-using CreateAndFake;
-using CreateAndFake.Fluent;
-using Xunit;
-
 namespace CreateAndFakeTests.Extensions;
 
 /// <summary>Verifies behavior.</summary>

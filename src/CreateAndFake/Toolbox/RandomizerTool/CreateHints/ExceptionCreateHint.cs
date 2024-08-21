@@ -1,19 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
+
+#pragma warning disable SYSLIB0050 // 'Type.IsSerializable' is obsolete: Needed for backwards compatibility.
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
-#pragma warning disable SYSLIB0050 // 'Type.IsSerializable' is obsolete
-
-/// <summary>Handles generation of exceptions.</summary>
+/// <summary>Handles randomizing <see cref="Exception"/> instances for <see cref="IRandomizer"/>.</summary>
 public sealed class ExceptionCreateHint : CreateHint
 {
     /// <inheritdoc/>
-    protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+    protected internal override (bool, object?) TryCreate(Type type, RandomizerChainer randomizer)
     {
-        ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
 
         if (!type.Inherits<Exception>())
@@ -24,11 +21,12 @@ public sealed class ExceptionCreateHint : CreateHint
         ConstructorInfo[] options = type.FindLocalSubclasses()
             .Where(t => t.IsVisible)
             .Where(t => t.IsSerializable)
-#if NETSTANDARD // Security exceptions don't work with default serialization in .NET full.
+#if LEGACY // Security exceptions don't work with default serialization in .NET full.
             .Where(t => !t.Namespace.StartsWith("System.Security", StringComparison.Ordinal))
 #endif
             .Select(t => t.GetConstructor([typeof(string)]))
             .Where(c => c != null)
+            .Select(c => c!)
             .ToArray();
 
         return (options.Length != 0)

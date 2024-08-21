@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Toolbox.DuplicatorTool;
@@ -10,7 +7,9 @@ using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 namespace CreateAndFake.Toolbox.ValuerTool;
 
 /// <inheritdoc cref="IValuer"/>
-public sealed class Valuer : IValuer, IDuplicatable
+/// <param name="includeDefaultHints">If the default set of hints should be used.</param>
+/// <param name="hints"><inheritdoc cref="_hints" path="/summary"/></param>
+public sealed class Valuer(bool includeDefaultHints = true, params CompareHint[]? hints) : IValuer, IDuplicatable
 {
     /// <summary>Default set of hints to use for comparisons.</summary>
     private static readonly CompareHint[] _DefaultHints =
@@ -31,31 +30,23 @@ public sealed class Valuer : IValuer, IDuplicatable
     ];
 
     /// <summary>Hints used to compare specific types.</summary>
-    private readonly List<CompareHint> _hints;
-
-    /// <summary>Initializes a new instance of the <see cref="Valuer"/> class.</summary>
-    /// <param name="includeDefaultHints">If the default set of hints should be added.</param>
-    /// <param name="hints">Hints used to compare specific types.</param>
-    public Valuer(bool includeDefaultHints = true, params CompareHint[] hints)
-    {
-        IEnumerable<CompareHint> inputHints = hints ?? Enumerable.Empty<CompareHint>();
-        _hints = includeDefaultHints
-            ? inputHints.Concat(_DefaultHints).ToList()
-            : inputHints.ToList();
-    }
+    private readonly List<CompareHint> _hints = (hints ?? Enumerable.Empty<CompareHint>())
+            .Concat(includeDefaultHints ? _DefaultHints : [])
+            .ToList();
 
     /// <inheritdoc/>
-    public new bool Equals(object x, object y)
+    public new bool Equals(object? x, object? y)
     {
         return !Compare(x, y).Any();
     }
 
     /// <inheritdoc/>
     [SuppressMessage("Microsoft.Design",
-        "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "Forwarded.")]
-    public int GetHashCode(object item)
+        "CA1065:DoNotRaiseExceptionsInUnexpectedLocations",
+        Justification = "Forwarded.")]
+    public int GetHashCode(object? item)
     {
-        string typeName = item?.GetType().Name;
+        string? typeName = item?.GetType().Name;
         try
         {
             return GetHashCode(item, new ValuerChainer(this, GetHashCode, Compare));
@@ -67,10 +58,9 @@ public sealed class Valuer : IValuer, IDuplicatable
         }
     }
 
-    /// <param name="item">Object to generate a code for.</param>
     /// <param name="chainer">Handles callback behavior for child values.</param>
     /// <inheritdoc cref="GetHashCode(object)"/>
-    private int GetHashCode(object item, ValuerChainer chainer)
+    private int GetHashCode(object? item, ValuerChainer chainer)
     {
         (bool, int) result = _hints
             .Select(h => h.TryGetHashCode(item, chainer))
@@ -89,15 +79,15 @@ public sealed class Valuer : IValuer, IDuplicatable
     }
 
     /// <inheritdoc/>
-    public int GetHashCode(params object[] items)
+    public int GetHashCode(params object?[]? items)
     {
-        return GetHashCode((object)items);
+        return GetHashCode((object?)items);
     }
 
     /// <inheritdoc/>
-    public IEnumerable<Difference> Compare(object expected, object actual)
+    public IEnumerable<Difference> Compare(object? expected, object? actual)
     {
-        string typeName = (expected ?? actual)?.GetType().Name;
+        string? typeName = (expected ?? actual)?.GetType().Name;
         try
         {
             return Compare(expected, actual, new ValuerChainer(this, GetHashCode, Compare));
@@ -109,24 +99,22 @@ public sealed class Valuer : IValuer, IDuplicatable
         }
     }
 
-    /// <param name="expected">First object to compare.</param>
-    /// <param name="actual">Second object to compare.</param>
     /// <param name="chainer">Handles callback behavior for child values.</param>
     /// <inheritdoc cref="Compare(object,object)"/>
-    private IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer chainer)
+    private IEnumerable<Difference> Compare(object? expected, object? actual, ValuerChainer chainer)
     {
         if (ReferenceEquals(expected, actual))
         {
-            return Enumerable.Empty<Difference>();
+            return [];
         }
 
-        (bool, IEnumerable<Difference>) result = _hints
+        (bool, IEnumerable<Difference>?) result = _hints
             .Select(h => h.TryCompare(expected, actual, chainer))
             .FirstOrDefault(r => r.Item1);
 
         if (!result.Equals(default))
         {
-            return result.Item2;
+            return result.Item2!;
         }
         else
         {

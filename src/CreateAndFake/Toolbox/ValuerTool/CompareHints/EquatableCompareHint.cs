@@ -1,41 +1,36 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using CreateAndFake.Design;
 
 namespace CreateAndFake.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Handles comparing equatables for <see cref="IValuer"/>.</summary>
+/// <summary>Handles comparing <see cref="IEquatable{T}"/> instances for <see cref="IValuer"/>.</summary>
 public sealed class EquatableCompareHint : CompareHint
 {
     /// <inheritdoc/>
-    protected override bool Supports(object expected, object actual, ValuerChainer valuer)
+    protected override bool Supports(object? expected, object? actual, ValuerChainer valuer)
     {
-        ArgumentGuard.ThrowIfNull(expected, nameof(expected));
-        ArgumentGuard.ThrowIfNull(actual, nameof(actual));
-
-        return expected.GetType().Inherits(typeof(IEquatable<>).MakeGenericType(expected.GetType()))
+        return expected != null
+            && expected.GetType().Inherits(typeof(IEquatable<>).MakeGenericType(expected.GetType()))
             && expected is not IStructuralEquatable;
     }
 
     /// <inheritdoc/>
-    protected override IEnumerable<Difference> Compare(object expected, object actual, ValuerChainer valuer)
+    protected override IEnumerable<Difference> Compare(object? expected, object? actual, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(expected, nameof(expected));
 
         if (!expected.Equals(actual))
         {
-            return new[] { new Difference(expected, actual) };
+            return [new Difference(expected, actual)];
         }
         else
         {
-            return Enumerable.Empty<Difference>();
+            return [];
         }
     }
 
     /// <inheritdoc/>
-    protected override int GetHashCode(object item, ValuerChainer valuer)
+    protected override int GetHashCode(object? item, ValuerChainer valuer)
     {
         ArgumentGuard.ThrowIfNull(item, nameof(item));
 

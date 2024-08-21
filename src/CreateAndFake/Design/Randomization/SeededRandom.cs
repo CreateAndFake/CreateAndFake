@@ -1,6 +1,4 @@
-﻿using System;
-
-#pragma warning disable CA5394 // Do not use insecure randomness
+﻿#pragma warning disable CA5394 // Do not use insecure randomness: Valid option and secure alternative provided.
 
 namespace CreateAndFake.Design.Randomization;
 
@@ -25,9 +23,9 @@ public sealed class SeededRandom : ValueRandom
     /// <inheritdoc cref="SeededRandom(bool,int?)"/>
     public SeededRandom(int? seed = null) : this(true, seed) { }
 
-    /// <summary>Initializes a new instance of the <see cref="SeededRandom"/> class.</summary>
-    /// <param name="onlyValidValues">Flag to prevent generating invalid values.</param>
-    /// <param name="seed">Current seed to be used for the next randomized value.</param>
+    /// <inheritdoc cref="SeededRandom"/>
+    /// <param name="onlyValidValues"><inheritdoc cref="ValueRandom.OnlyValidValues" path="/summary"/></param>
+    /// <param name="seed"><inheritdoc cref="InitialSeed" path="/summary"/></param>
     public SeededRandom(bool onlyValidValues, int? seed = null) : base(onlyValidValues)
     {
         InitialSeed = seed ?? Environment.TickCount;

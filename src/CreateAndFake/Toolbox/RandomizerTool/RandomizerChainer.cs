@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.FakerTool;
 
@@ -10,7 +7,7 @@ namespace CreateAndFake.Toolbox.RandomizerTool;
 /// <summary>Provides a callback into <see cref="IRandomizer"/> to create child values.</summary>
 public sealed class RandomizerChainer
 {
-    /// <summary>Callback to the randomizer to create child values.</summary>
+    /// <summary>Callback to <see cref="IRandomizer"/> to randomize child values.</summary>
     private readonly Func<Type, RandomizerChainer, object> _randomizer;
 
     /// <summary>Types not to create as to prevent infinite recursion.</summary>
@@ -22,13 +19,13 @@ public sealed class RandomizerChainer
     /// <summary>Value generator to use for base randomization.</summary>
     public IRandom Gen { get; }
 
-    /// <summary>Created object using this instance.</summary>
-    public object Parent { get; }
+    /// <summary>Container of the instance to create.</summary>
+    public object? Parent { get; }
 
-    /// <summary>Initializes a new instance of the <see cref="RandomizerChainer"/> class.</summary>
-    /// <param name="faker">Provides stubs.</param>
-    /// <param name="gen">Value generator to use for base randomization.</param>
-    /// <param name="randomizer">Callback to the randomizer to create child values.</param>
+    /// <inheritdoc cref="RandomizerChainer"/>
+    /// <param name="faker"><inheritdoc cref="_faker" path="/summary"/></param>
+    /// <param name="gen"><inheritdoc cref="Gen" path="/summary"/></param>
+    /// <param name="randomizer"><inheritdoc cref="_randomizer" path="/summary"/></param>
     public RandomizerChainer(IFaker faker, IRandom gen, Func<Type, RandomizerChainer, object> randomizer)
     {
         _faker = faker ?? throw new ArgumentNullException(nameof(faker));
@@ -39,10 +36,10 @@ public sealed class RandomizerChainer
         Parent = null;
     }
 
-    /// <summary>Initializes a new instance of the <see cref="RandomizerChainer"/> class.</summary>
+    /// <inheritdoc cref="RandomizerChainer"/>
     /// <param name="prevChainer">Previous chainer to build upon.</param>
-    /// <param name="parent">Container of the instance to create.</param>
-    private RandomizerChainer(RandomizerChainer prevChainer, object parent)
+    /// <param name="parent"><inheritdoc cref="Parent" path="/summary"/></param>
+    private RandomizerChainer(RandomizerChainer prevChainer, object? parent)
     {
         Parent = parent;
         Gen = prevChainer.Gen;
@@ -62,16 +59,16 @@ public sealed class RandomizerChainer
     }
 
     /// <summary>Checks if <typeparamref name="T"/> has already been created by the randomizer.</summary>
-    /// <typeparam name="T">Type to check.</typeparam>
-    /// <returns>True if <typeparamref name="T"/> already created; false otherwise.</returns>
+    /// <typeparam name="T"><c>Type</c> to check.</typeparam>
+    /// <returns><c>true</c> if <typeparamref name="T"/> already created; <c>false</c> otherwise.</returns>
     public bool AlreadyCreated<T>()
     {
         return AlreadyCreated(typeof(T));
     }
 
     /// <summary>Checks if <paramref name="type"/> has already been created by the randomizer.</summary>
-    /// <param name="type">Type to check.</param>
-    /// <returns>True if <paramref name="type"/> already created; false otherwise.</returns>
+    /// <param name="type"><c>Type</c> to check.</param>
+    /// <returns><c>true</c> if <paramref name="type"/> already created; <c>false</c> otherwise.</returns>
     public bool AlreadyCreated(Type type)
     {
         return _history.ContainsKey(type);
@@ -85,11 +82,11 @@ public sealed class RandomizerChainer
         return (T)Create(typeof(T), null);
     }
 
-    /// <summary>Calls the randomizer to create a random instance.</summary>
+    /// <summary>Calls the randomizer to create a random instance of the given <paramref name="type"/>.</summary>
     /// <param name="type">Type to create.</param>
-    /// <param name="parent">Container of the instance to create.</param>
+    /// <param name="parent"><inheritdoc cref="Parent" path="/summary"/></param>
     /// <returns>The created instance.</returns>
-    public object Create(Type type, object parent = null)
+    public object Create(Type type, object? parent = null)
     {
         if (parent != null)
         {

@@ -1,7 +1,4 @@
-﻿using System;
-using CreateAndFake;
-using CreateAndFake.Design;
-using Xunit;
+﻿using CreateAndFake.Design;
 
 namespace CreateAndFakeTests.Design;
 

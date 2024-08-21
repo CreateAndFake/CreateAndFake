@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using CreateAndFake.Design;
 using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Handles generation of injected dummies for the randomizer.</summary>
+/// <summary>Handles randomizing injected dummies for <see cref="IRandomizer"/>.</summary>
 public sealed class InjectedCreateHint : CreateHint
 {
     /// <inheritdoc/>
-    protected internal override (bool, object) TryCreate(Type type, RandomizerChainer randomizer)
+    protected internal override (bool, object?) TryCreate(Type type, RandomizerChainer randomizer)
     {
-        ArgumentGuard.ThrowIfNull(type, nameof(type));
         ArgumentGuard.ThrowIfNull(randomizer, nameof(randomizer));
 
         if (type.Inherits(typeof(Injected<>)))
@@ -26,21 +22,19 @@ public sealed class InjectedCreateHint : CreateHint
         }
     }
 
-    /// <summary>Creates a random instance of the given type.</summary>
-    /// <param name="type">Type to generate.</param>
-    /// <param name="randomizer">Handles callback behavior for child values.</param>
-    /// <returns>Created instance.</returns>
+    /// <returns>The randomized instance.</returns>
+    /// <inheritdoc cref="CreateHint.TryCreate"/>
     private static object Create(Type type, RandomizerChainer randomizer)
     {
         Type target = type.GetGenericArguments().Single();
 
-        ConstructorInfo maker = FindConstructor(target, randomizer, BindingFlags.Public)
+        ConstructorInfo? maker = FindConstructor(target, randomizer, BindingFlags.Public)
             ?? FindConstructor(target, randomizer, BindingFlags.NonPublic);
 
         if (maker != null)
         {
             ParameterInfo[] info = maker.GetParameters();
-            object[] args = new object[info.Length];
+            object?[] args = new object[info.Length];
             for (int i = 0; i < args.Length; i++)
             {
                 args[i] = randomizer.FakerSupports(info[i].ParameterType)
@@ -49,7 +43,7 @@ public sealed class InjectedCreateHint : CreateHint
             }
 
             return type
-                .GetConstructor([target, typeof(IEnumerable<Fake>)])
+                .GetConstructor([target, typeof(IEnumerable<Fake>)])!
                 .Invoke(
                 [
                     maker.Invoke(args.Select(v => (v is Fake fake) ? fake.Dummy : v).ToArray()),
@@ -63,11 +57,11 @@ public sealed class InjectedCreateHint : CreateHint
     }
 
     /// <summary>Finds the constructor with the most class references then by fewest parameters.</summary>
-    /// <param name="target">Type to find a constructor for.</param>
-    /// <param name="randomizer">Handles callback behavior for child values.</param>
+    /// <param name="target"><c>Type</c> to find a constructor for.</param>
+    /// <param name="randomizer">Handles randomizing child values.</param>
     /// <param name="scope">Scope of constructors to find.</param>
-    /// <returns>Constructor if found; null otherwise.</returns>
-    private static ConstructorInfo FindConstructor(Type target, RandomizerChainer randomizer, BindingFlags scope)
+    /// <returns>Constructor if found; <c>null</c> otherwise.</returns>
+    private static ConstructorInfo? FindConstructor(Type target, RandomizerChainer randomizer, BindingFlags scope)
     {
         return target.GetConstructors(BindingFlags.Instance | scope)
             .GroupBy(c => c.GetParameters().Count(p => randomizer.FakerSupports(p.ParameterType)))

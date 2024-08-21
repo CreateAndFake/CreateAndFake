@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace CreateAndFake.Toolbox.FakerTool.Proxy;
 
@@ -8,20 +6,20 @@ namespace CreateAndFake.Toolbox.FakerTool.Proxy;
 [Serializable, KnownType(typeof(Exception))]
 public sealed class FakeCallException : Exception
 {
-    /// <summary>Initializes a new instance of the <see cref="FakeCallException"/> class.</summary>
+    /// <inheritdoc cref="FakeCallException"/>
     /// <remarks>Serialization constructor.</remarks>
     private FakeCallException() : base() { }
 
-    /// <summary>Initializes a new instance of the <see cref="FakeCallException"/> class.</summary>
+    /// <inheritdoc cref="FakeCallException"/>
     /// <param name="data">Associated call data.</param>
     /// <param name="setup">Call data with behavior.</param>
     internal FakeCallException(CallData data, IEnumerable<CallData> setup) : base(BuildMessage(data, setup)) { }
 
-    /// <summary>Initializes a new instance of the <see cref="FakeCallException"/> class.</summary>
+    /// <inheritdoc cref="FakeCallException"/>
     /// <param name="info">Object data.</param>
     /// <param name="context">Additional info.</param>
     /// <remarks>Serialization constructor.</remarks>
-#if NET8_0_OR_GREATER
+#if NET5_0_OR_GREATER
     [Obsolete(DiagnosticId = "SYSLIB0051")]
 #endif
     private FakeCallException(SerializationInfo info, StreamingContext context) : base(info, context) { }
@@ -39,9 +37,7 @@ public sealed class FakeCallException : Exception
             ((setup == null) ? "" : $"{nl}Calls with behavior set: {BuildMessage(setup)}");
     }
 
-    /// <summary>Integrates the details into the message.</summary>
-    /// <param name="setup">Call data with behavior.</param>
-    /// <returns>Message to use for the exception.</returns>
+    /// <inheritdoc cref="BuildMessage(CallData,IEnumerable{CallData})"/>
     private static string BuildMessage(IEnumerable<CallData> setup)
     {
         return Environment.NewLine + string.Join(Environment.NewLine, setup);

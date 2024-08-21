@@ -1,5 +1,4 @@
-﻿using System;
-using CreateAndFake.Design.Randomization;
+﻿using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 using CreateAndFakeTests.TestBases;
 
