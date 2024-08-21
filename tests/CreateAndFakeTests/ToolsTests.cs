@@ -88,7 +88,8 @@ public static class ToolsTests
             .Where(t => !ignore.Contains(t))
             .Where(t => !t.IsNestedPrivate)
             .Where(t => t.GetCustomAttribute<CompilerGeneratedAttribute>() == null)
-            .Where(t => !t.FullName.Contains("<PrivateImplementationDetails>")))
+            .Where(t => !t.FullName.Contains("<PrivateImplementationDetails>"))
+            .Where(t => !t.FullName.Contains("<>z__ReadOnly")))
         {
             try
             {
