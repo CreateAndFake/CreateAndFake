@@ -26,7 +26,7 @@ public sealed class CollectionCopyHint : CopyHint<IEnumerable>
         {
             return CopyContents(source, duplicator);
         }
-#if NETFRAMEWORK // Constructor missing in .NET full.
+#if LEGACY // Constructor missing in .NET full.
         else if (source.GetType().AsGenericType() == typeof(Dictionary<,>))
         {
             dynamic result = Activator.CreateInstance(source.GetType());

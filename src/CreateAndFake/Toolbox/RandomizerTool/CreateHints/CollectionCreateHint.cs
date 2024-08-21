@@ -71,7 +71,7 @@ public sealed class CollectionCreateHint(int minSize = 1, int range = 3) : Creat
         {
             return internalData;
         }
-#if NETFRAMEWORK // Constructor missing in .NET full.
+#if LEGACY // Constructor missing in .NET full.
         else if (newType.AsGenericType() == typeof(Dictionary<,>))
         {
             dynamic result = Activator.CreateInstance(newType);

@@ -1,4 +1,4 @@
-﻿#if !(NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_0_OR_GREATER) // Attribute added in .NET Standard 2.1.
+﻿#if LEGACY // Attribute added in .NET Standard 2.1 & Core 3.0
 
 namespace System.Diagnostics.CodeAnalysis;
 

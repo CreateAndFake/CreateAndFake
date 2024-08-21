@@ -5,6 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <DefineConstants>LEGACY</DefineConstants>
+  </PropertyGroup>
 
   <PropertyGroup>
     <Authors>CreateAndFake Contributors</Authors>
