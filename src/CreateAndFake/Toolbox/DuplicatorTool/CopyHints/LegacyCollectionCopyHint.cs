@@ -2,8 +2,7 @@
 using System.Collections.Specialized;
 using CreateAndFake.Design;
 
-// Return not available on all .NET versions.
-#pragma warning disable IDE0058 // Expression value is never used
+#pragma warning disable IDE0058 // Expression value is never used: Return not available on all versions.
 
 namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 

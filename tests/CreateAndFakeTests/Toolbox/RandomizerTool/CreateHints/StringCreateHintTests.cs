@@ -23,7 +23,7 @@ public sealed class StringCreateHintTests : CreateHintTestBase<StringCreateHint>
     {
         int minSize = 2;
         int range = 3;
-        StringCreateHint hint = new(minSize, range, Enumerable.Empty<char>());
+        StringCreateHint hint = new(minSize, range, []);
 
         for (int i = 0; i < 1000; i++)
         {

@@ -3,9 +3,9 @@ using CreateAndFake.Toolbox.ValuerTool.CompareHints;
 using CreateAndFakeTests.TestBases;
 using CreateAndFakeTests.TestSamples;
 
-namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints;
+#pragma warning disable CA1849 // Task await synchronously blocks: For testing.
 
-#pragma warning disable CA1849 // Task await synchronously blocks
+namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints;
 
 /// <summary>Verifies behavior.</summary>
 public sealed class TaskCompareHintTests : CompareHintTestBase<TaskCompareHint>

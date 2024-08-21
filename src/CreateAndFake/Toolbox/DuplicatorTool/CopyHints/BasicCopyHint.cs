@@ -2,9 +2,9 @@
 using CreateAndFake.Design;
 using CreateAndFake.Design.Randomization;
 
-namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
+#pragma warning disable SYSLIB0050 // 'IObjectReference' is obsolete: Still needed for compatibility.
 
-#pragma warning disable SYSLIB0050 // 'IObjectReference' is obsolete
+namespace CreateAndFake.Toolbox.DuplicatorTool.CopyHints;
 
 /// <summary>Handles cloning basic types for <see cref="IDuplicator"/> .</summary>
 public sealed class BasicCopyHint : CopyHint

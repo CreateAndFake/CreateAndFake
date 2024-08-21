@@ -5,27 +5,22 @@ namespace CreateAndFakeTests.TestBases;
 
 /// <summary>Handles testing compare hints.</summary>
 /// <typeparam name="T">Compare hint to test.</typeparam>
-public abstract class CompareHintTestBase<T> where T : CompareHint
+/// <param name="testInstance">Instance to test with.</param>
+/// <param name="validTypes">Types that can be compared by the hint.</param>
+/// <param name="invalidTypes">Types that can't be compared by the hint.</param>
+public abstract class CompareHintTestBase<T>(
+    T testInstance,
+    IEnumerable<Type> validTypes,
+    IEnumerable<Type> invalidTypes) where T : CompareHint
 {
     /// <summary>Instance to test with.</summary>
-    protected T TestInstance { get; }
+    protected T TestInstance { get; } = testInstance;
 
     /// <summary>Types that can be compared by the hint.</summary>
-    private readonly IEnumerable<Type> _validTypes;
+    private readonly IEnumerable<Type> _validTypes = validTypes;
 
     /// <summary>Types that can't be compared by the hint.</summary>
-    private readonly IEnumerable<Type> _invalidTypes;
-
-    /// <summary>Sets up the tests.</summary>
-    /// <param name="testInstance">Instance to test with.</param>
-    /// <param name="validTypes">Types that can be compared by the hint.</param>
-    /// <param name="invalidTypes">Types that can't be compared by the hint.</param>
-    protected CompareHintTestBase(T testInstance, IEnumerable<Type> validTypes, IEnumerable<Type> invalidTypes)
-    {
-        TestInstance = testInstance;
-        _validTypes = validTypes;
-        _invalidTypes = invalidTypes;
-    }
+    private readonly IEnumerable<Type> _invalidTypes = invalidTypes;
 
     /// <summary>Verifies null reference exceptions are prevented.</summary>
     [Fact]

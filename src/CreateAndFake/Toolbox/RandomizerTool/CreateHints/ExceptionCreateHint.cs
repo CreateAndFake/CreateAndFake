@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using CreateAndFake.Design;
 
-namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
+#pragma warning disable SYSLIB0050 // 'Type.IsSerializable' is obsolete: Needed for backwards compatibility.
 
-#pragma warning disable SYSLIB0050 // 'Type.IsSerializable' is obsolete
+namespace CreateAndFake.Toolbox.RandomizerTool.CreateHints;
 
 /// <summary>Handles randomizing <see cref="Exception"/> instances for <see cref="IRandomizer"/>.</summary>
 public sealed class ExceptionCreateHint : CreateHint

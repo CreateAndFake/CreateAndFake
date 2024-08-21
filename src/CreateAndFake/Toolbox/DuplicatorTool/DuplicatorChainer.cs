@@ -2,6 +2,8 @@
 using System.Runtime.CompilerServices;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 
+#pragma warning disable IDE0028 // Collection initialization can be simplified: Invalid because it's not constructible.
+
 namespace CreateAndFake.Toolbox.DuplicatorTool;
 
 /// <summary>Provides a callback into <see cref="IDuplicator"/> to create child values.</summary>
@@ -71,3 +73,5 @@ public sealed class DuplicatorChainer(IDuplicator duplicator, Func<object?, Dupl
         return !(source == null || source is IFaked || source.GetType().IsValueType);
     }
 }
+
+#pragma warning restore IDE0028 // Collection initialization can be simplified

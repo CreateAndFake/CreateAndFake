@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using CreateAndFake.Design.Content;
 
-namespace CreateAndFakeTests.TestSamples;
+#pragma warning disable IDE0250 // Struct can be made 'readonly': For testing.
+#pragma warning disable IDE0251 // Member can be made 'readonly': For testing.
 
-#pragma warning disable IDE0250 // Struct can be made 'readonly'
-#pragma warning disable IDE0251 // Member can be made 'readonly'
+namespace CreateAndFakeTests.TestSamples;
 
 /// <summary>For testing.</summary>
 [ExcludeFromCodeCoverage]

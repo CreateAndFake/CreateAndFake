@@ -10,7 +10,8 @@ public sealed class LegacyCollectionCopyHintTests : CopyHintTestBase<LegacyColle
 {
     /// <summary>Types that can be created by the hint.</summary>
     private static readonly Type[] _ValidTypes = LegacyCollectionCreateHint.PotentialCollections
-        .Except(new[] { typeof(ArrayList), typeof(Queue), typeof(Stack), typeof(Array) }).ToArray();
+        .Except([typeof(ArrayList), typeof(Queue), typeof(Stack), typeof(Array)])
+        .ToArray();
 
     /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes = [typeof(object)];

@@ -4,9 +4,9 @@ using CreateAndFake.Design;
 using CreateAndFake.Design.Content;
 using CreateAndFake.Toolbox.RandomizerTool;
 
-namespace CreateAndFake.Toolbox.TesterTool;
-
 #pragma warning disable CA1822 // Member does not access instance data and can be marked static
+
+namespace CreateAndFake.Toolbox.TesterTool;
 
 /// <summary>Automates checks.</summary>
 /// <param name="fixer">Handles generic resolution.</param>

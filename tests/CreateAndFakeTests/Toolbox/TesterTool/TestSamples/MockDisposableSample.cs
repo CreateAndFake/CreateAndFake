@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using CreateAndFake.Toolbox.FakerTool;
 
-namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
+#pragma warning disable IDE0060 // Remove unused parameter: For testing.
+#pragma warning disable CS9113 // Parameter is unread: For testing.
 
-#pragma warning disable IDE0060 // Remove unused parameter
-#pragma warning disable CS9113 // Parameter is unread
+namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 
 /// <summary>For testing.</summary>
 [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "For testing.")]

@@ -213,7 +213,7 @@ public sealed class AsserterTests
             {
                 return (!o1.Equals(o2))
                     ? Tools.Randomizer.Create<IEnumerable<Difference>>()
-                    : Enumerable.Empty<Difference>();
+                    : [];
             }));
 
         _testInstance.IsNotEmpty(Tools.Randomizer.Create<string[]>());

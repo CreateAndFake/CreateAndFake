@@ -1,8 +1,8 @@
 using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.ValuerTool;
 
-#pragma warning disable CA1307 // Specify StringComparison for clarity
-#pragma warning disable CA1310 // Specify StringComparison for correctness
+#pragma warning disable CA1307 // Specify StringComparison for clarity: Not available for all versions.
+#pragma warning disable CA1310 // Specify StringComparison for correctness: Not available for all versions.
 
 namespace CreateAndFake.Toolbox.AsserterTool.Fluent;
 

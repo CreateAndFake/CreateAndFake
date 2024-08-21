@@ -1,6 +1,8 @@
 ﻿using CreateAndFake.Design.Randomization;
 using CreateAndFake.Toolbox.ValuerTool;
 
+#pragma warning disable CA1307 // Specify StringComparison for clarity: Not available for all versions.
+
 namespace CreateAndFake.Toolbox.AsserterTool.Fluent;
 
 /// <summary>Handles common <see cref="object"/> assertion calls.</summary>
@@ -96,8 +98,6 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object? a
         return ExpandTypeName((expected ?? Actual)?.GetType());
     }
 
-#pragma warning disable CA1307 // Specify StringComparison for clarity
-
     /// <summary>Builds <c>Type</c> name with generic argument names.</summary>
     /// <param name="type"><c>Type</c> to describe.</param>
     /// <returns>The built name.</returns>
@@ -117,8 +117,6 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object? a
         }
     }
 
-#pragma warning restore CA1307 // Specify StringComparison for clarity
-
     /// <summary>Converts <c>this</c> to a chainer for additional assertions on <c>actual</c>.</summary>
     /// <returns>The created chainer.</returns>
     protected internal AssertChainer<T> ToChainer()
@@ -126,3 +124,5 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object? a
         return new AssertChainer<T>((T)this, Gen, Valuer);
     }
 }
+
+#pragma warning restore CA1307 // Specify StringComparison for clarity

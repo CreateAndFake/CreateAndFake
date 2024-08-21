@@ -5,30 +5,25 @@ namespace CreateAndFakeTests.TestBases;
 
 /// <summary>Handles testing copy hints.</summary>
 /// <typeparam name="T">Copy hint to test.</typeparam>
-public abstract class CopyHintTestBase<T> where T : CopyHint, new()
+/// <param name="validTypes">Types that can be copied by the hint.</param>
+/// <param name="invalidTypes">Types that can't be copied by the hint.</param>
+/// <param name="copiesByRef">If the hint copies by reference instead for value types.</param>
+public abstract class CopyHintTestBase<T>(
+    IEnumerable<Type> validTypes,
+    IEnumerable<Type> invalidTypes,
+    bool copiesByRef = false) where T : CopyHint, new()
 {
     /// <summary>Instance to test with.</summary>
     protected T TestInstance { get; } = new T();
 
     /// <summary>Types that can be copied by the hint.</summary>
-    private readonly IEnumerable<Type> _validTypes;
+    private readonly IEnumerable<Type> _validTypes = validTypes ?? Type.EmptyTypes;
 
     /// <summary>Types that can't be copied by the hint.</summary>
-    private readonly IEnumerable<Type> _invalidTypes;
+    private readonly IEnumerable<Type> _invalidTypes = invalidTypes ?? Type.EmptyTypes;
 
     /// <summary>If the hint copies by reference instead for value types.</summary>
-    private readonly bool _copiesByRef;
-
-    /// <summary>Sets up the tests.</summary>
-    /// <param name="validTypes">Types that can be copied by the hint.</param>
-    /// <param name="invalidTypes">Types that can't be copied by the hint.</param>
-    /// <param name="copiesByRef">If the hint copies by reference instead for value types.</param>
-    protected CopyHintTestBase(IEnumerable<Type> validTypes, IEnumerable<Type> invalidTypes, bool copiesByRef = false)
-    {
-        _validTypes = validTypes ?? Type.EmptyTypes;
-        _invalidTypes = invalidTypes ?? Type.EmptyTypes;
-        _copiesByRef = copiesByRef;
-    }
+    private readonly bool _copiesByRef = copiesByRef;
 
     /// <summary>Verifies null reference exceptions are prevented.</summary>
     [Fact]

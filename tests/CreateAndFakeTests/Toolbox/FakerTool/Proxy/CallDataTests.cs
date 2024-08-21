@@ -31,7 +31,7 @@ public static class CallDataTests
     [Theory, RandomData]
     internal static void MatchesCall_GenericsMismatch(DataHolderSample[] data, string name)
     {
-        Type[] generics1 = Tools.Randomizer.Create<Type[]>().Except(new[] { typeof(AnyGeneric) }).ToArray();
+        Type[] generics1 = Tools.Randomizer.Create<Type[]>().Except([typeof(AnyGeneric)]).ToArray();
         Type[] generics2 = Tools.Mutator.Variant(generics1);
 
         Tools.Asserter.Is(false, new CallData(name, generics1, data, Tools.Valuer)

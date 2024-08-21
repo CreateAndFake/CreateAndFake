@@ -4,7 +4,7 @@ using CreateAndFake.Design;
 
 namespace CreateAndFakeTests.Design;
 
-#pragma warning disable xUnit1031 // Test methods should not use blocking code
+#pragma warning disable xUnit1031 // Test methods should not use blocking code: Ensures blocking code works for library.
 
 /// <summary>Verifies behavior.</summary>
 public static class LimiterTests

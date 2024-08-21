@@ -3,7 +3,7 @@ using CreateAndFake.Toolbox.AsserterTool.Fluent;
 using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
 
-#pragma warning disable IDE0060 // Remove unused parameter
+#pragma warning disable IDE0060 // Remove unused parameter: Provides fluent attachment.
 
 namespace CreateAndFake.Fluent;
 
