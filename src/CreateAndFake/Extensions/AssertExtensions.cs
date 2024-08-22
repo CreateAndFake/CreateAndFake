@@ -38,6 +38,14 @@ public static class AssertExtensions
         return new AssertComparable(Tools.Gen, Tools.Valuer, value);
     }
 
+    /// <inheritdoc cref="AssertType"/>
+    /// <param name="type"><inheritdoc cref="AssertTypeBase{T}.Type" path="/summary"/></param>
+    /// <returns>Asserter to test <paramref name="type"/> with.</returns>
+    public static AssertType Assert(this Type? type)
+    {
+        return new AssertType(Tools.Gen, Tools.Valuer, type);
+    }
+
     /// <inheritdoc cref="AssertBehavior"/>
     /// <param name="behavior"><inheritdoc cref="AssertBehaviorBase{T}.Behavior" path="/summary"/></param>
     /// <returns>Asserter to test <paramref name="behavior"/> with.</returns>

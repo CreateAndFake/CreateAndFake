@@ -54,4 +54,26 @@ public abstract class AssertBehaviorBase<T>(IRandom gen, IValuer valuer, Delegat
 
         throw new AssertException(errorMessage, details, Gen.InitialSeed);
     }
+
+    /// <summary>Verifies <c>behavior</c> does not throw an exception.</summary>
+    /// <param name="details">Optional failure details to include.</param>
+    /// <exception cref="AssertException">If the expected behavior doesn't happen.</exception>
+    public virtual void ThrowsNoException(string? details = null)
+    {
+        try
+        {
+            if (Behavior is Action action)
+            {
+                action.Invoke();
+            }
+            else
+            {
+                Disposer.Cleanup(((dynamic?)Behavior)?.Invoke());
+            }
+        }
+        catch (Exception e)
+        {
+            throw new AssertException("Expected no exception.", details, Gen.InitialSeed, e);
+        }
+    }
 }
