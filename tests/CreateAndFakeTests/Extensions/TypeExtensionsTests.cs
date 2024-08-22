@@ -18,7 +18,7 @@ public static class TypeExtensionsTests
     internal static void Inherits_RaceConditionPrevented()
     {
         Type testType = Tools.Faker.Stub<object>(Assembly.GetExecutingAssembly()
-            .GetTypes().Where(t => t.IsInterface).ToArray()).GetType();
+            .GetTypes().Where(t => t.IsInterface).Where(t => t.IsVisible).ToArray()).GetType();
 
         Tools.Asserter.Is(true, Parallel.For(0, 10, i => testType.Inherits<object>()).IsCompleted);
     }

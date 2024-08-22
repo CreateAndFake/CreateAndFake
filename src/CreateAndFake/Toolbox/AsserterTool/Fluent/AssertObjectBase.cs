@@ -101,7 +101,7 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object? a
     /// <summary>Builds <c>Type</c> name with generic argument names.</summary>
     /// <param name="type"><c>Type</c> to describe.</param>
     /// <returns>The built name.</returns>
-    private static string? ExpandTypeName(Type? type)
+    protected static string? ExpandTypeName(Type? type)
     {
         if (type != null && type.IsGenericType)
         {

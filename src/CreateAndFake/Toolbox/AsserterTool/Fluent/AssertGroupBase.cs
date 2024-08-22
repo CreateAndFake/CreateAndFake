@@ -70,4 +70,86 @@ public abstract class AssertGroupBase<T>(IRandom gen, IValuer valuer, IEnumerabl
 
         return ToChainer();
     }
+
+    /// <summary>Verifies <c>collection</c> contains an element equal to <paramref name="content"/> by value.</summary>
+    /// <param name="content">Potential element to check for.</param>
+    /// <inheritdoc cref="IsEmpty"/>
+    public virtual AssertChainer<T> Contains(object? content, string? details = null)
+    {
+        if (Collection == null)
+        {
+            throw new AssertException(
+                $"Expected collection to contain '{content}', but was 'null'.", details, Gen.InitialSeed);
+        }
+
+        int i = 0;
+        bool success = false;
+        StringBuilder contents = new();
+        for (IEnumerator data = Collection.GetEnumerator(); data.MoveNext(); i++)
+        {
+            success = success || Valuer.Equals(content, data.Current);
+
+            _ = contents.Append('[').Append(i).Append("]:").Append(data.Current).AppendLine();
+        }
+
+        if (!success)
+        {
+            throw new AssertException(
+                $"Expected collection to contain '{content}' but didn't.",
+                details, Gen.InitialSeed, contents.ToString());
+        }
+
+        return ToChainer();
+    }
+
+    /// <summary>
+    ///     Verifies <c>collection</c> contains an element unequal to <paramref name="content"/> by value.
+    /// </summary>
+    /// <param name="content">Potential element to check for.</param>
+    /// <inheritdoc cref="Contains"/>
+    public virtual AssertChainer<T> ContainsNot(object? content, string? details = null)
+    {
+        if (Collection == null)
+        {
+            throw new AssertException(
+                $"Expected collection to contain '{content}', but was 'null'.", details, Gen.InitialSeed);
+        }
+
+        int i = 0;
+        bool success = true;
+        StringBuilder contents = new();
+        for (IEnumerator data = Collection.GetEnumerator(); data.MoveNext(); i++)
+        {
+            success &= !Valuer.Equals(content, data.Current);
+
+            _ = contents.Append('[').Append(i).Append("]:").Append(data.Current).AppendLine();
+        }
+
+        if (!success)
+        {
+            throw new AssertException(
+                $"Expected collection to contain '{content}' but didn't.",
+                details, Gen.InitialSeed, contents.ToString());
+        }
+
+        return ToChainer();
+    }
+
+    /// <inheritdoc/>
+    public override void Fail(string? details = null)
+    {
+        if (Collection == null)
+        {
+            throw new AssertException($"Test failed.", details, Gen.InitialSeed, (string?)null);
+        }
+
+        int i = 0;
+        StringBuilder contents = new();
+        for (IEnumerator data = Collection.GetEnumerator(); data.MoveNext(); i++)
+        {
+            _ = contents.Append('[').Append(i).Append("]:").Append(data.Current).AppendLine();
+        }
+
+        throw new AssertException("Test failed.", details, Gen.InitialSeed, contents.ToString());
+    }
 }
