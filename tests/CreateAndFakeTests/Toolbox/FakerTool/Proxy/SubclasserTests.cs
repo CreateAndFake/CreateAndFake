@@ -105,19 +105,20 @@ public static class SubclasserTests
         typeof(InternalSample).Assert(t => Subclasser.Create(t)).Throws<ArgumentException>();
     }
 
-    [Theory, RandomData]
-    internal static void Supports_FalseWithWithNonVisibleTypes([Stub] Type type)
+    [Fact]
+    internal static void Supports_FalseWithWithNonVisibleTypes()
     {
         TypeAttributes invisibleAttributes
             = TypeAttributes.NotPublic
             | TypeAttributes.Class;
+
+        Type type = Tools.Faker.Stub<Type>().Dummy;
 
         type.ToFake().Setup("GetAttributeFlagsImpl", [], Behavior.Returns(invisibleAttributes));
         type.ToFake().Setup("HasElementTypeImpl", [], Behavior.Returns(false));
         type.ToFake().Setup("IsPointerImpl", [], Behavior.Returns(false));
         type.Assembly.SetupReturn(typeof(object).Assembly);
         type.Name.SetupReturn("TestInvisibleType");
-        type.GetInterfaces().SetupReturn([]);
 
         type.Assert(t => Subclasser.Create(t))
             .Throws<ArgumentException>().Message

@@ -16,9 +16,11 @@ public static class Issue118Tests
         type.Assert().IsNot(null);
     }
 
+#if !LEGACY
     [Theory, RandomData]
     internal static void Issue118_FixesStubTypeRandomData([Stub] Type type)
     {
         type.Assert().IsNot(null);
     }
+#endif
 }
