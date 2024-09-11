@@ -117,6 +117,7 @@ public static class SubclasserTests
         type.ToFake().Setup("IsPointerImpl", [], Behavior.Returns(false));
         type.Assembly.SetupReturn(typeof(object).Assembly);
         type.Name.SetupReturn("TestInvisibleType");
+        type.GetInterfaces().SetupReturn([]);
 
         type.Assert(t => Subclasser.Create(t))
             .Throws<ArgumentException>().Message

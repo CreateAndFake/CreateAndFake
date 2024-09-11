@@ -63,6 +63,13 @@ public static class Subclasser
             realParent = typeof(object);
         }
 
+#if LEGACY
+        if (realParent.Inherits<Type>())
+        {
+            allInterfaces.Add(typeof(IReflectableType));
+        }
+#endif
+
         (bool, Exception?) possible = CanBeSubclassed(realParent);
         if (!possible.Item1)
         {

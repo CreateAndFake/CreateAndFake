@@ -35,6 +35,11 @@ public sealed class RandomDataAttribute : DataAttribute
             type.FullName.SetupReturn(typeof(Type).FullName);
             type.IsArray.SetupReturn(typeof(Type).IsArray);
         }
+        if (arg is IFaked and IReflectableType reflectable)
+        {
+            TypeInfo info = Tools.Faker.Stub<TypeInfo>().Dummy;
+            reflectable.GetTypeInfo().SetupReturn(info);
+        }
         return arg;
     }
 }
