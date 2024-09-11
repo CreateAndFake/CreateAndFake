@@ -4,7 +4,6 @@ using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class FakeTests
 {
     [Fact]

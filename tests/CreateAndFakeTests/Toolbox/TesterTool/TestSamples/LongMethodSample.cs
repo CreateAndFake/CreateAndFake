@@ -2,10 +2,8 @@
 
 namespace CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 
-/// <summary>For testing.</summary>
 public static class LongMethodSample
 {
-    /// <summary>For testing.</summary>
     [ExcludeFromCodeCoverage]
     public static void BeSlow<T>(string data, out T output) where T : new()
     {

@@ -2,24 +2,23 @@ using System.Collections;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue086Tests
 {
     [Theory, RandomData]
     internal static void Issue086_SizeWorks([Size(5)] string[] items)
     {
-        items.Length.Assert().Is(5);
+        items.Assert().HasCount(5);
     }
 
     [Theory, RandomData]
     internal static void Issue086_EmptyCollection([Size(0)] List<int> items)
     {
-        (items.Count != 0).Assert().Is(false);
+        items.Assert().IsEmpty();
     }
 
     [Theory, RandomData]
     internal static void Issue086_LegacyCollection([Size(3)] Hashtable items)
     {
-        items.Keys.Count.Assert().Is(3);
+        items.Keys.Assert().HasCount(3);
     }
 }

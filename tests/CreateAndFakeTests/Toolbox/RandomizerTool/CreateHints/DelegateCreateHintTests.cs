@@ -5,10 +5,8 @@ using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class DelegateCreateHintTests : CreateHintTestBase<DelegateCreateHint>
 {
-    /// <summary>Possible action types to use.</summary>
     private static readonly Type[] _ActionTypes =
     [
         typeof(Action),
@@ -30,7 +28,6 @@ public sealed class DelegateCreateHintTests : CreateHintTestBase<DelegateCreateH
         typeof(Action<,,,,,,,,,,,,,,,>)
     ];
 
-    /// <summary>Possible func types to use.</summary>
     private static readonly Type[] _FuncTypes =
     [
         typeof(Func<>),
@@ -52,20 +49,18 @@ public sealed class DelegateCreateHintTests : CreateHintTestBase<DelegateCreateH
         typeof(Func<,,,,,,,,,,,,,,,,>)
     ];
 
-    /// <summary>Instance to test with.</summary>
     private static readonly DelegateCreateHint _TestInstance = new();
 
-    /// <summary>Types that can be created by the hint.</summary>
-    private static readonly Type[] _ValidTypes = [
+    private static readonly Type[] _ValidTypes =
+    [
         typeof(Action<string, object, int>),
         typeof(Func<int, string, object>),
         typeof(Delegate),
-        typeof(Action)];
+        typeof(Action)
+    ];
 
-    /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes = [typeof(object)];
 
-    /// <summary>Sets up the tests.</summary>
     public DelegateCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
     [Fact]
@@ -73,7 +68,7 @@ public sealed class DelegateCreateHintTests : CreateHintTestBase<DelegateCreateH
     {
         foreach (Type type in _ActionTypes.Concat(_FuncTypes))
         {
-            Tools.Asserter.Is(true, _TestInstance.TryCreate(type, CreateChainer()).Item1);
+            _TestInstance.TryCreate(type, CreateChainer()).Item1.Assert().Is(true);
         }
     }
 
@@ -81,16 +76,16 @@ public sealed class DelegateCreateHintTests : CreateHintTestBase<DelegateCreateH
     internal static void Create_HandlesOutRef()
     {
         (bool, object) result = _TestInstance.TryCreate(typeof(Action<IOutRef>), CreateChainer());
-        Tools.Asserter.Is(true, result.Item1);
+        result.Item1.Assert().Is(true);
 
         Action<IOutRef> action = (Action<IOutRef>)result.Item2;
 
         OutRef<int> sampleInt = new();
         action.Invoke(sampleInt);
-        Tools.Asserter.IsNot(default(int), sampleInt.Var);
+        sampleInt.Var.Assert().IsNot(default(int));
 
         OutRef<string> sampleString = new();
         action.Invoke(sampleString);
-        Tools.Asserter.IsNot(default(string), sampleString.Var);
+        sampleString.Var.Assert().IsNot(default(string));
     }
 }

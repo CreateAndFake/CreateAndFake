@@ -54,6 +54,14 @@ public sealed class AssertChainer<T>(T chain, IRandom gen, IValuer valuer)
         return new AssertType(Tools.Gen, Tools.Valuer, type);
     }
 
+    /// <param name="error"><inheritdoc cref="AssertErrorBase{T}.Error" path="/summary"/></param>
+    /// <returns>Asserter to test <paramref name="error"/> with.</returns>
+    /// <inheritdoc cref="Also(object)"/>
+    public AssertError Also(Exception? error)
+    {
+        return new AssertError(Tools.Gen, Tools.Valuer, error);
+    }
+
     /// <param name="behavior"><inheritdoc cref="AssertBehaviorBase{T}.Behavior" path="/summary"/></param>
     /// <returns>Asserter to test <paramref name="behavior"/> with.</returns>
     /// <inheritdoc cref="Also(object)"/>

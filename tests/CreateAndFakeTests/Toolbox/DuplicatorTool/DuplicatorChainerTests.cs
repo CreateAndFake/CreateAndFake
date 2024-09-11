@@ -2,7 +2,6 @@
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class DuplicatorChainerTests
 {
     [Fact]

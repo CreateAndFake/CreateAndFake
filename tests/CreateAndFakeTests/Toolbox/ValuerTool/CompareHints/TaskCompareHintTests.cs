@@ -7,13 +7,10 @@ using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class TaskCompareHintTests : CompareHintTestBase<TaskCompareHint>
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly TaskCompareHint _TestInstance = new();
 
-    /// <summary>Types that can be created by the hint.</summary>
     private static readonly Type[] _ValidTypes =
     [
         typeof(Task<DataHolderSample>),
@@ -24,10 +21,13 @@ public sealed class TaskCompareHintTests : CompareHintTestBase<TaskCompareHint>
         typeof(Task)
     ];
 
-    /// <summary>Types that can't be created by the hint.</summary>
-    private static readonly Type[] _InvalidTypes = [typeof(IEnumerable), typeof(string), typeof(int)];
+    private static readonly Type[] _InvalidTypes =
+    [
+        typeof(IEnumerable),
+        typeof(string),
+        typeof(int)
+    ];
 
-    /// <summary>Sets up the tests.</summary>
     public TaskCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
     [Theory, RandomData]

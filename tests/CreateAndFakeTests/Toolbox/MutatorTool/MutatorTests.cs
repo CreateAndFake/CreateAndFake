@@ -6,7 +6,6 @@ using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.MutatorTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class MutatorTests
 {
     [Fact]
@@ -24,76 +23,70 @@ public static class MutatorTests
     [Theory, RandomData]
     internal static void Variant_AcceptsNull(string value)
     {
-        Tools.Asserter.IsNot(null, Tools.Mutator.Variant<string>(null));
-        Tools.Asserter.IsNot(value, Tools.Mutator.Variant(value, null));
+        Tools.Mutator.Variant<string>(null).Assert().IsNot(null);
+        Tools.Mutator.Variant(value, null).Assert().IsNot(value).And.IsNot(null);
     }
 
     [Theory, RandomData]
-    internal static void Variant_ManyValuesWorks(int value)
+    internal static void Variant_ManyValuesWorks(int value, [Size(10000)] int[] data)
     {
-        int[] data = Enumerable.Repeat(0, 10000)
-            .Select(v => Tools.Randomizer.Create<int>()).ToArray();
-
         int result = Tools.Mutator.Variant(value, data);
-        Tools.Asserter.IsNot(value, result);
-        Tools.Asserter.Is(false, data.Contains(result));
+        result.Assert().IsNot(value).Also(data).ContainsNot(result);
     }
 
     [Theory, RandomData]
-    internal static void Variant_TimesOut(Fake<IValuer> fakeValuer)
+    internal static void Variant_TimesOut([Fake] IValuer fakeValuer, DataSample sample)
     {
-        fakeValuer.Setup(
-            m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
-            Behavior.Returns(true));
+        fakeValuer.Equals(Arg.Any<object>(), Arg.Any<object>()).SetupReturn(true);
 
-        Mutator testInstance = new(Tools.Randomizer, fakeValuer.Dummy, new Limiter(3));
+        new Mutator(Tools.Randomizer, fakeValuer, new Limiter(3))
+            .Assert(t => t.Variant(sample))
+            .Throws<TimeoutException>();
 
-        Tools.Asserter.Throws<TimeoutException>(
-            () => testInstance.Variant(Tools.Randomizer.Create<DataSample>()));
-
-        fakeValuer.VerifyTotalCalls(3);
+        fakeValuer.VerifyAllCalls(Times.Exactly(3));
     }
 
     [Theory, RandomData]
-    internal static void Variant_RepeatsUntilUnequal(Fake<IValuer> fakeValuer)
+    internal static void Variant_RepeatsUntilUnequal([Fake] IValuer fakeValuer, DataSample sample)
     {
-        fakeValuer.Setup(
-            m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
-            Behavior.Series(true, true, true, false));
+        fakeValuer.Equals(Arg.Any<object>(), Arg.Any<object>()).SetupCall(Behavior.Series(true, true, true, false));
 
-        Mutator testInstance = new(Tools.Randomizer, fakeValuer.Dummy, new Limiter(5));
+        new Mutator(Tools.Randomizer, fakeValuer, new Limiter(5))
+            .Variant(sample)
+            .Assert()
+            .IsNot(null);
 
-        Tools.Asserter.IsNot(null, testInstance.Variant(Tools.Randomizer.Create<DataSample>()));
-        fakeValuer.VerifyTotalCalls(4);
+        fakeValuer.VerifyAllCalls(Times.Exactly(4));
     }
 
     [Theory, RandomData]
-    internal static void Variant_RepeatsUntilBothUnequal(Fake<IValuer> fakeValuer)
+    internal static void Variant_RepeatsUntilBothUnequal(
+        [Fake] IValuer fakeValuer, DataSample sample1, DataSample sample2)
     {
-        fakeValuer.Setup(
-            m => m.Equals(Arg.Any<object>(), Arg.Any<object>()),
+        fakeValuer.Equals(Arg.Any<object>(), Arg.Any<object>()).SetupCall(
             Behavior.Series(false, true, true, false, true, true, false, false));
 
-        Mutator testInstance = new(Tools.Randomizer, fakeValuer.Dummy, new Limiter(5));
+        new Mutator(Tools.Randomizer, fakeValuer, new Limiter(5))
+            .Variant(sample1, sample2)
+            .Assert()
+            .IsNot(null);
 
-        Tools.Asserter.IsNot(null, testInstance.Variant(
-            Tools.Randomizer.Create<DataSample>(),
-            Tools.Randomizer.Create<DataSample>()));
-        fakeValuer.VerifyTotalCalls(8);
+        fakeValuer.VerifyAllCalls(8);
     }
 
     [Theory, RandomData]
     internal static void Modify_DataChanged(DataHolderSample data)
     {
-        DataHolderSample dupe = Tools.Duplicator.Copy(data);
+        DataHolderSample dupe = data.CreateDeepClone();
 
-        Tools.Asserter.Is(true, Tools.Mutator.Modify(data));
-        Tools.Asserter.ValuesNotEqual(dupe, data);
+        Tools.Mutator.Modify(data).Assert().Is(true);
+
+        data.Assert().IsNot(dupe);
     }
 
     [Theory, RandomData]
     internal static void Modify_StatelessUnchanged(StatelessSample data)
     {
-        Tools.Asserter.Is(false, Tools.Mutator.Modify(data));
+        Tools.Mutator.Modify(data).Assert().Is(false);
     }
 }

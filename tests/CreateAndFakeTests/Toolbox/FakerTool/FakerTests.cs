@@ -5,7 +5,6 @@ using CreateAndFakeTests.Toolbox.FakerTool.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class FakerTests
 {
     [Fact]
@@ -23,47 +22,47 @@ public static class FakerTests
     [Fact]
     internal static void New_NullValuerValid()
     {
-        Tools.Asserter.IsNot(null, new Faker(null));
+        new Faker(null).Assert().Pass();
     }
 
     [Fact]
     internal static void Mock_SampleWorks()
     {
-        Fake<DataHolderSample> sample = new Faker(Tools.Valuer).Mock<DataHolderSample>();
-        Tools.Asserter.Is(true, sample.ThrowByDefault);
-        Tools.Asserter.Throws<FakeCallException>(() => sample.Dummy.HasNested(sample.Dummy.NestedValue));
+        Fake<DataHolderSample> sample = Tools.Faker.Mock<DataHolderSample>();
+        sample.ThrowByDefault.Assert().Is(true);
+        sample.Dummy.Assert(d => d.HasNested(sample.Dummy.NestedValue)).Throws<FakeCallException>();
     }
 
     [Fact]
     internal static void Stub_SampleWorks()
     {
-        Fake<DataHolderSample> sample = new Faker(Tools.Valuer).Stub<DataHolderSample>();
-        Tools.Asserter.Is(false, sample.ThrowByDefault);
-        Tools.Asserter.Is(false, sample.Dummy.HasNested(null));
+        Fake<DataHolderSample> sample = Tools.Faker.Stub<DataHolderSample>();
+        sample.ThrowByDefault.Assert().Is(false);
+        sample.Dummy.HasNested(null).Assert().Is(false);
     }
 
     [Fact]
     internal static void Supports_InvalidTypesFalse()
     {
-        Tools.Asserter.Is(false, Tools.Faker.Supports<int>());
-        Tools.Asserter.Is(false, Tools.Faker.Supports<Array>());
-        Tools.Asserter.Is(false, Tools.Faker.Supports<InternalSample>());
-        Tools.Asserter.Is(false, Tools.Faker.Supports(typeof(void*)));
-        Tools.Asserter.Is(false, Tools.Faker.Supports(typeof(ConstraintSample<,>)));
+        Tools.Faker.Supports<int>().Assert().Is(false);
+        Tools.Faker.Supports<Array>().Assert().Is(false);
+        Tools.Faker.Supports<InternalSample>().Assert().Is(false);
+        Tools.Faker.Supports(typeof(void*)).Assert().Is(false);
+        Tools.Faker.Supports(typeof(ConstraintSample<,>)).Assert().Is(false);
     }
 
     [Fact]
     internal static void Inject_HandlesValues()
     {
         Injected<FakeHolderSample> sample = Tools.Faker.InjectMocks<FakeHolderSample>();
-        Tools.Asserter.Is(0, sample.Dummy.Value1);
-        Tools.Asserter.Is(null, sample.Dummy.Value2);
+        sample.Dummy.Value1.Assert().Is(0);
+        sample.Dummy.Value2.Assert().Is(null);
     }
 
     [Fact]
     internal static void Inject_ConstructorRequired()
     {
-        Tools.Asserter.Throws<InvalidOperationException>(() => Tools.Faker.InjectStubs<IOnlyMockSample>());
+        Tools.Faker.Assert(f => f.InjectStubs<IOnlyMockSample>()).Throws<InvalidOperationException>();
     }
 
     [Theory, RandomData]
@@ -72,10 +71,10 @@ public static class FakerTests
         Injected<FakeHolderSample> sample = Tools.Faker.InjectMocks<FakeHolderSample>(
             null, Tools.Faker.Stub<AbstractFakeSample>(), num, text);
 
-        Tools.Asserter.Is(null, sample.Dummy.Sample1.Text);
-        Tools.Asserter.Throws<FakeCallException>(() => sample.Dummy.Sample2.Calc());
-        Tools.Asserter.Is(num, sample.Dummy.Value1);
-        Tools.Asserter.Is(text, sample.Dummy.Value2);
+        sample.Dummy.Sample1.Text.Assert().Is(null);
+        sample.Dummy.Sample2.Assert(s => s.Calc()).Throws<FakeCallException>();
+        sample.Dummy.Value1.Assert().Is(num);
+        sample.Dummy.Value2.Assert().Is(text);
     }
 
     [Fact]
@@ -83,8 +82,8 @@ public static class FakerTests
     {
         Injected<FakeHolderSample> sample = Tools.Faker.InjectMocks<FakeHolderSample>();
 
-        Tools.Asserter.Throws<FakeCallException>(() => sample.Dummy.Sample1.Calc());
-        Tools.Asserter.Throws<FakeCallException>(() => sample.Dummy.Sample2.Text);
+        sample.Dummy.Sample1.Assert(s => s.Calc()).Throws<FakeCallException>();
+        sample.Dummy.Sample2.Assert(s => s.Text).Throws<FakeCallException>();
     }
 
     [Fact]
@@ -92,7 +91,7 @@ public static class FakerTests
     {
         Injected<FakeHolderSample> sample = Tools.Faker.InjectStubs<FakeHolderSample>();
 
-        Tools.Asserter.Is(0, sample.Dummy.Sample1.Calc());
-        Tools.Asserter.Is(null, sample.Dummy.Sample2.Text);
+        sample.Dummy.Sample1.Calc().Assert().Is(0);
+        sample.Dummy.Sample2.Text.Assert().Is(null);
     }
 }

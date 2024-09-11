@@ -15,43 +15,31 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace CreateAndFakeTests;
 
-/// <summary>Verifies behavior.</summary>
 public static class ToolsTests
 {
-    /// <summary>Flags representing mutable data.</summary>
     private const BindingFlags _Mutable = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
-    [Fact]
-    internal static void Tools_IntegrationWorks()
+    [Theory, RandomData]
+    internal static void Tools_IntegrationWorks(DataHolderSample original, [Fake] DataHolderSample faked)
     {
-        DataHolderSample original = Tools.Randomizer.Create<DataHolderSample>();
-        DataHolderSample variant = Tools.Mutator.Variant(original);
-        DataHolderSample dupe = Tools.Duplicator.Copy(original);
+        DataHolderSample dupe = original.CreateDeepClone();
 
-        Tools.Asserter.ValuesEqual(original, dupe);
-        Tools.Asserter.ValuesNotEqual(original, variant);
+        original.Assert().Is(dupe).And.IsNot(original.CreateVariant());
 
-        Fake<DataHolderSample> faked = Tools.Faker.Mock<DataHolderSample>();
-        faked.Setup(
-            m => m.HasNested(dupe),
-            Behavior.Returns(true, Times.Once));
-
-        Tools.Asserter.Is(true, faked.Dummy.HasNested(original),
-            "Value equality did not work for args.");
-
-        faked.VerifyAll(Times.Once);
+        faked.HasNested(dupe).SetupReturn(true, Times.Once);
+        faked.HasNested(original).Assert().Is(true, "Value equality did not work for args.");
+        faked.VerifyAllCalls();
     }
 
     [Theory, RandomData]
     internal static void Tools_HandlesInfinites(InfiniteSample sample)
     {
-        Tools.Asserter.Throws<TimeoutException>(
-            () => Tools.Mutator.Variant(sample));
+        Tools.Mutator.Assert(m => m.Variant(sample)).Throws<TimeoutException>();
 
         InfiniteSample dupe = Tools.Duplicator.Copy(sample);
 
-        Tools.Asserter.Is(sample, dupe);
-        Tools.Asserter.Is(Tools.Valuer.GetHashCode(sample), Tools.Valuer.GetHashCode(dupe));
+        dupe.Assert().Is(sample);
+        Tools.Valuer.GetHashCode(dupe).Assert().Is(Tools.Valuer.GetHashCode(sample));
     }
 
     [Fact, ExcludeFromCodeCoverage]
@@ -97,7 +85,7 @@ public static class ToolsTests
             }
             catch (Exception e)
             {
-                Tools.Asserter.Fail(e, $"Failed testing type '{type}'.");
+                e.Assert().Fail($"Failed testing type '{type}'.");
                 throw;
             }
         }
@@ -127,6 +115,7 @@ public static class ToolsTests
         {
             original = Tools.Randomizer.Create(type);
             dupe = Tools.Duplicator.Copy(original);
+
             Tools.Asserter.ValuesEqual(original, dupe, failMessage);
             Tools.Asserter.ValuesEqual(
                 Tools.Valuer.GetHashCode(original),
@@ -135,6 +124,7 @@ public static class ToolsTests
             if (type.GetProperties(_Mutable).Length != 0 || type.GetFields(_Mutable).Length != 0)
             {
                 variant = Tools.Mutator.Variant(type, original);
+
                 Tools.Asserter.ValuesNotEqual(original, variant, failMessage);
                 Tools.Asserter.ValuesNotEqual(
                     Tools.Valuer.GetHashCode(original),

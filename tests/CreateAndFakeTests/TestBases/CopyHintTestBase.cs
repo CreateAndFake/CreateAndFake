@@ -45,17 +45,17 @@ public abstract class CopyHintTestBase<T>(
                 data = Tools.Randomizer.Create(type);
                 result = TestInstance.TryCopy(data, CreateChainer());
 
-                Tools.Asserter.Is((true, data), result,
+                result.Assert().Is((true, data),
                     "Hint '" + typeof(T).Name + "' failed to clone type '" + type.Name + "'.");
 
                 if (_copiesByRef || data is string)
                 {
-                    Tools.Asserter.ReferenceEqual(data, result.Item2,
+                    result.Item2.Assert().ReferenceEqual(data,
                         "Hint '" + typeof(T).Name + "' expected to copy value types by ref of type '" + type.Name + "'.");
                 }
                 else
                 {
-                    Tools.Asserter.ReferenceNotEqual(data, result.Item2,
+                    result.Item2.Assert().ReferenceNotEqual(data,
                         "Hint '" + typeof(T).Name + "' copied by ref instead of a deep clone of type '" + type.Name + "'.");
                 }
             }
@@ -75,7 +75,7 @@ public abstract class CopyHintTestBase<T>(
             object data = Tools.Randomizer.Create(type);
             try
             {
-                Tools.Asserter.Is((false, (object)null), TestInstance.TryCopy(data, CreateChainer()),
+                TestInstance.TryCopy(data, CreateChainer()).Assert().Is((false, (object)null),
                     "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
             }
             finally

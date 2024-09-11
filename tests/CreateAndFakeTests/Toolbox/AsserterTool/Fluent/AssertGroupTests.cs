@@ -1,16 +1,11 @@
 ﻿using CreateAndFake.Toolbox.AsserterTool;
 using CreateAndFake.Toolbox.AsserterTool.Fluent;
+using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.AsserterTool.Fluent;
 
 public static class AssertCollectionTests
 {
-    internal sealed class Item()
-    {
-        public int Number { get; set; }
-        public string Text { get; set; }
-    }
-
     [Fact]
     internal static void AssertGroup_GuardsNulls()
     {
@@ -24,49 +19,49 @@ public static class AssertCollectionTests
     }
 
     [Theory, RandomData]
-    internal static void IsEmpty_NoItems_Success([Size(0)] IEnumerable<Item> items)
+    internal static void IsEmpty_NoItems([Size(0)] IEnumerable<DataSample> items)
     {
         items.Assert().IsEmpty();
     }
 
     [Theory, RandomData]
-    internal static void IsEmpty_WithItems_Failure(IEnumerable<Item> items)
+    internal static void IsEmpty_WithItems(IEnumerable<DataSample> items)
     {
         items.Assert(d => d.Assert().IsEmpty()).Throws<AssertException>();
     }
 
     [Theory, RandomData]
-    internal static void IsNotEmpty_WithItems_Success(IEnumerable<Item> items)
+    internal static void IsNotEmpty_WithItems(IEnumerable<DataSample> items)
     {
         items.Assert().IsNotEmpty();
     }
 
     [Theory, RandomData]
-    internal static void IsNotEmpty_NoItems_Failure([Size(0)] IEnumerable<Item> items)
+    internal static void IsNotEmpty_NoItems([Size(0)] IEnumerable<DataSample> items)
     {
         items.Assert(d => d.Assert().IsNotEmpty()).Throws<AssertException>();
     }
 
     [Theory, RandomData]
-    internal static void HasCount_SameSize_Success(ICollection<Item> items)
+    internal static void HasCount_SameSize(ICollection<DataSample> items)
     {
         items.Assert().HasCount(items.Count);
     }
 
     [Theory, RandomData]
-    internal static void HasCount_MismatchedSize_Failure(ICollection<Item> items)
+    internal static void HasCount_MismatchedSize(ICollection<DataSample> items)
     {
-        items.Assert(d => d.Assert().HasCount(Tools.Mutator.Variant(items.Count))).Throws<AssertException>();
+        items.Assert(d => d.Assert().HasCount(items.Count.CreateVariant())).Throws<AssertException>();
     }
 
     [Theory, RandomData]
-    internal static void Contains_UsingSubitem_Success(ICollection<Item> items)
+    internal static void Contains_UsingSubitem(ICollection<DataSample> items)
     {
         items.Assert().Contains(Tools.Gen.NextItem(items));
     }
 
     [Theory, RandomData]
-    internal static void Contains_RandomOther_Failure(ICollection<Item> items)
+    internal static void Contains_RandomOther(ICollection<DataSample> items)
     {
         items
             .Assert(d => d.Assert().Contains(Tools.Mutator.Variant(items.First(), items.Skip(1).ToArray())))
@@ -74,13 +69,13 @@ public static class AssertCollectionTests
     }
 
     [Theory, RandomData]
-    internal static void ContainsNot_RandomOther_Success(ICollection<Item> items)
+    internal static void ContainsNot_RandomOther(ICollection<DataSample> items)
     {
         items.Assert().ContainsNot(Tools.Mutator.Variant(items.First(), items.Skip(1).ToArray()));
     }
 
     [Theory, RandomData]
-    internal static void ContainsNot_UsingSubitem_Failure(ICollection<Item> items)
+    internal static void ContainsNot_UsingSubitem(ICollection<DataSample> items)
     {
         items
             .Assert(d => d.Assert().ContainsNot(Tools.Gen.NextItem(items)))
@@ -88,7 +83,7 @@ public static class AssertCollectionTests
     }
 
     [Theory, RandomData]
-    internal static void Fail_Throws_Success(IEnumerable<Item> items)
+    internal static void Fail_Throws(IEnumerable<DataSample> items)
     {
         items.Assert(d => d.Assert().Fail()).Throws<AssertException>();
     }

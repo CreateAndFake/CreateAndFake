@@ -2,7 +2,6 @@ using CreateAndFake.Design;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue015Tests
 {
     internal static class Sample
@@ -11,14 +10,13 @@ public static class Issue015Tests
         {
             ArgumentGuard.ThrowIfNull(value, nameof(value));
 
-            value[0] = Tools.Mutator.Variant(value[0]);
+            value[0] = value[0].CreateVariant();
         }
     }
 
     [Fact]
     internal static void Issue015_GuardsParameterMutation()
     {
-        Tools.Asserter.Throws<AggregateException>(() =>
-            Tools.Tester.PreventsParameterMutation(typeof(Sample)));
+        typeof(Sample).Assert(t => Tools.Tester.PreventsParameterMutation(t)).Throws<AggregateException>();
     }
 }

@@ -6,7 +6,6 @@ using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class ExceptionGuarderTests
 {
     [Fact]
@@ -30,20 +29,22 @@ public static class ExceptionGuarderTests
     [Fact]
     internal static void CallAllMethods_FailsWithException()
     {
-        Tools.Asserter.Throws<AssertException>(
-            () => Tools.Tester.PassthroughWithNoExceptions<MethodThrowsSample>());
+        Tools.Tester
+            .Assert(t => t.PassthroughWithNoExceptions<MethodThrowsSample>())
+            .Throws<AssertException>();
     }
 
     [Theory, RandomData]
-    internal static void HandleCheckException_UsesAsserterFail(GenericFixer fixer, Fake<Asserter> asserter, TimeSpan timeout)
+    internal static void HandleCheckException_UsesAsserterFail(
+        GenericFixer fixer, [Fake] Asserter asserter, TimeSpan timeout)
     {
-        asserter.Setup(
+        asserter.ToFake().Setup(
             d => d.Fail(Arg.Any<Exception>(), Arg.Any<string>()),
             Behavior.None(Times.Once));
 
-        new ExceptionGuarder(fixer, Tools.Randomizer, asserter.Dummy, timeout)
+        new ExceptionGuarder(fixer, Tools.Randomizer, asserter, timeout)
             .CallAllMethods(new MethodThrowsSample(), null);
 
-        asserter.VerifyAll();
+        asserter.VerifyAllCalls();
     }
 }

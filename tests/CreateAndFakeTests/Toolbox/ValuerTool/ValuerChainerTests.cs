@@ -2,7 +2,6 @@
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class ValuerChainerTests
 {
     [Fact]

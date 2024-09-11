@@ -3,7 +3,6 @@ using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class RandomizerChainerTests
 {
     [Fact]
@@ -21,9 +20,8 @@ public static class RandomizerChainerTests
     [Fact]
     internal static void Create_HandlesInfinites()
     {
-        RandomizerChainer chainer = null;
-        chainer = new RandomizerChainer(Tools.Faker, Tools.Gen, (t, c) => c.Create<ParentLoopSample>());
-
-        Tools.Asserter.Throws<InfiniteLoopException>(() => chainer.Create(typeof(ChildWithParentSample), new ParentLoopSample()));
+        new RandomizerChainer(Tools.Faker, Tools.Gen, (t, c) => c.Create<ParentLoopSample>())
+            .Assert(c => c.Create(typeof(ChildWithParentSample), new ParentLoopSample()))
+            .Throws<InfiniteLoopException>();
     }
 }

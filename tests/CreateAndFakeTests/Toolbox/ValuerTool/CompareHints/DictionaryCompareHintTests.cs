@@ -4,31 +4,34 @@ using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class DictionaryCompareHintTests : CompareHintTestBase<DictionaryCompareHint>
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly DictionaryCompareHint _TestInstance = new();
 
-    /// <summary>Types that can be created by the hint.</summary>
-    private static readonly Type[] _ValidTypes
-        = [typeof(IDictionary), typeof(Dictionary<string, int>)];
+    private static readonly Type[] _ValidTypes =
+    [
+        typeof(IDictionary),
+        typeof(Dictionary<string, int>)
+    ];
 
-    /// <summary>Types that can't be created by the hint.</summary>
-    private static readonly Type[] _InvalidTypes
-        = [typeof(object), typeof(string), typeof(IList), typeof(int)];
+    private static readonly Type[] _InvalidTypes =
+    [
+        typeof(object),
+        typeof(string),
+        typeof(IList),
+        typeof(int)
+    ];
 
-    /// <summary>Sets up the tests.</summary>
     public DictionaryCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
     [Theory, RandomData]
     internal void TryCompare_SameKeyDifferentValuesWorks(Dictionary<string, int> data)
     {
-        Dictionary<string, int> dupe = Tools.Duplicator.Copy(data);
+        Dictionary<string, int> dupe = data.CreateDeepClone();
         string key = data.First().Key;
-        dupe[key] = Tools.Mutator.Variant(data[key]);
+        dupe[key] = data[key].CreateVariant();
 
-        Tools.Asserter.IsNotEmpty(TestInstance.TryCompare(data, dupe, CreateChainer()).Item2.ToArray(),
-            "Hint didn't find differences with a modified key on '" + data.GetType().Name + "'.");
+        TestInstance.TryCompare(data, dupe, CreateChainer()).Item2.ToArray()
+            .Assert().IsNotEmpty("Hint didn't find differences with a modified key on '" + data.GetType().Name + "'.");
     }
 }

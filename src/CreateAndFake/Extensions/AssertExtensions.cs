@@ -46,6 +46,14 @@ public static class AssertExtensions
         return new AssertType(Tools.Gen, Tools.Valuer, type);
     }
 
+    /// <inheritdoc cref="AssertError"/>
+    /// <param name="error"><inheritdoc cref="AssertErrorBase{T}.Error" path="/summary"/></param>
+    /// <returns>Asserter to test <paramref name="error"/> with.</returns>
+    public static AssertError Assert(this Exception? error)
+    {
+        return new AssertError(Tools.Gen, Tools.Valuer, error);
+    }
+
     /// <inheritdoc cref="AssertBehavior"/>
     /// <param name="behavior"><inheritdoc cref="AssertBehaviorBase{T}.Behavior" path="/summary"/></param>
     /// <returns>Asserter to test <paramref name="behavior"/> with.</returns>

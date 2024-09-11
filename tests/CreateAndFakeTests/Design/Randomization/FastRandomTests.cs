@@ -4,16 +4,13 @@ using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Design.Randomization;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class FastRandomTests : ValueRandomTestBase<FastRandom>
 {
-    /// <summary>Invalid values to test for.</summary>
     private static readonly double[] _BadDoubles = [
         double.NaN,
         double.NegativeInfinity,
         double.PositiveInfinity];
 
-    /// <summary>Invalid values to test for.</summary>
     private static readonly float[] _BadFloats = [
         float.NaN,
         float.NegativeInfinity,
@@ -25,10 +22,10 @@ public sealed class FastRandomTests : ValueRandomTestBase<FastRandom>
         FastRandom random = new(false);
 
         Limiter limiter = new(15000);
-        await limiter.StallUntil("", () =>
-            _BadDoubles.Contains(random.Next<double>())).ConfigureAwait(true);
-        await limiter.StallUntil("", () =>
-            _BadFloats.Contains(random.Next<float>())).ConfigureAwait(true);
+        await limiter.StallUntil("Trying to create bad double.",
+            () => _BadDoubles.Contains(random.Next<double>()));
+        await limiter.StallUntil("Trying to create bad float.",
+            () => _BadFloats.Contains(random.Next<float>()));
     }
 
     [Fact]
@@ -36,9 +33,9 @@ public sealed class FastRandomTests : ValueRandomTestBase<FastRandom>
     {
         FastRandom random = new(true);
 
-        await Limiter.Myriad.Repeat("", () => Tools.Asserter.Is(false,
-            _BadDoubles.Contains(random.Next<double>()))).ConfigureAwait(true);
-        await Limiter.Myriad.Repeat("", () => Tools.Asserter.Is(false,
-            _BadFloats.Contains(random.Next<float>()))).ConfigureAwait(true);
+        await Limiter.Myriad.Repeat("Trying to avoid bad doubles.",
+            () => _BadDoubles.Assert().ContainsNot(random.Next<double>()));
+        await Limiter.Myriad.Repeat("Trying to avoid bad floats.",
+            () => _BadFloats.Assert().ContainsNot(random.Next<float>()));
     }
 }

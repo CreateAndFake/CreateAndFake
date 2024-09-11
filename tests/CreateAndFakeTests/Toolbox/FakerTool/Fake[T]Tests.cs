@@ -1,25 +1,27 @@
-﻿using CreateAndFake.Toolbox.FakerTool;
+﻿using CreateAndFake.Toolbox.AsserterTool;
+using CreateAndFake.Toolbox.FakerTool;
 using CreateAndFake.Toolbox.FakerTool.Proxy;
+using CreateAndFake.Toolbox.ValuerTool;
 using CreateAndFakeTests.TestSamples;
 using CreateAndFakeTests.Toolbox.FakerTool.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class Fake_T_Tests
 {
     [Fact]
     internal static void Fake_GuardsNulls()
     {
-        Tools.Asserter.Throws<ArgumentNullException>(() => new Fake<object>((IFaked)null));
-        Tools.Asserter.Throws<ArgumentNullException>(() => new Fake<object>((Fake)null));
+        ((IFaked)null).Assert(v => new Fake<object>(v)).Throws<ArgumentNullException>();
+        ((Fake)null).Assert(v => new Fake<object>(v)).Throws<ArgumentNullException>();
     }
 
     [Fact]
     internal static void Setup_GuardsNulls()
     {
-        Tools.Asserter.Throws<ArgumentNullException>(
-            () => Tools.Faker.Stub<IFakeSample>().Setup(null, Behavior.None()));
+        Tools.Faker.Stub<IFakeSample>()
+            .Assert(s => s.Setup(null, Behavior.None()))
+            .Throws<ArgumentNullException>();
     }
 
     [Fact]
@@ -35,35 +37,34 @@ public static class Fake_T_Tests
         FakeTester<VirtualFakeSample>();
     }
 
-    [Fact]
-    internal static void Fake_ScopeBehavior()
+    [Theory, RandomData]
+    internal static void Fake_ScopeBehavior(string name)
     {
         Fake<ScopeSample> fake = Tools.Faker.Mock<ScopeSample>();
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.PublicProp);
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.PublicProp = "Value");
-        Tools.Asserter.Throws<FakeCallException>(fake.Dummy.PublicMethod);
+        fake.Dummy.Assert(d => d.PublicProp).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.PublicProp = name).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.PublicMethod()).Throws<FakeCallException>();
 
-        Tools.Asserter.Throws<FakeCallException>(fake.Dummy.CallProtectProp);
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.SetProtectProp("Value"));
-        Tools.Asserter.Throws<FakeCallException>(fake.Dummy.CallProtectGet);
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.SetProtectSet("Value"));
-        Tools.Asserter.Throws<FakeCallException>(fake.Dummy.CallProtectMethod);
+        fake.Dummy.Assert(d => d.CallProtectProp()).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.SetProtectProp(name)).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.CallProtectGet()).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.SetProtectSet(name)).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.CallProtectMethod()).Throws<FakeCallException>();
 
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.ProIntProp);
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.ProIntProp = "Value");
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.ProIntGet);
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.ProIntSet = "Value");
-        Tools.Asserter.Throws<FakeCallException>(fake.Dummy.ProIntMethod);
+        fake.Dummy.Assert(d => d.ProIntProp).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.ProIntProp = name).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.ProIntGet).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.ProIntSet = name).Throws<FakeCallException>();
+        fake.Dummy.Assert(d => d.ProIntMethod()).Throws<FakeCallException>();
 
-        string data = Tools.Randomizer.Create<string>();
-        fake.Dummy.InternalProp = data;
-        Tools.Asserter.Is(data, fake.Dummy.InternalProp);
-        Tools.Asserter.IsNot(null, fake.Dummy.InternalMethod());
+        fake.Dummy.InternalProp = name;
+        fake.Dummy.InternalProp.Assert().Is(name);
+        fake.Dummy.InternalMethod().Assert().IsNot(null);
 
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.InternalGet = data);
-        Tools.Asserter.Is(null, fake.Dummy.InternalGet);
-        fake.Dummy.InternalSet = data;
-        Tools.Asserter.Throws<FakeCallException>(() => fake.Dummy.InternalSet);
+        fake.Dummy.Assert(d => d.InternalGet = name).Throws<FakeCallException>();
+        fake.Dummy.InternalGet.Assert().Is(null);
+        fake.Dummy.InternalSet = name;
+        fake.Dummy.Assert(d => d.InternalSet).Throws<FakeCallException>();
     }
 
     [Theory, RandomData]
@@ -76,7 +77,7 @@ public static class Fake_T_Tests
 
         fake.Dummy.ReturnVoid(out string value);
 
-        Tools.Asserter.Is(data, value);
+        value.Assert().Is(data);
         fake.VerifyAll(Times.Once);
     }
 
@@ -94,7 +95,7 @@ public static class Fake_T_Tests
 
         fake.Dummy.ReturnValue(out int value).Assert().Is(plain);
 
-        Tools.Asserter.Is(data, value);
+        value.Assert().Is(data);
         fake.VerifyAll(Times.Once);
     }
 
@@ -109,7 +110,7 @@ public static class Fake_T_Tests
         string value = start;
         fake.Dummy.ReturnVoid(ref value);
 
-        Tools.Asserter.Is(data, value);
+        value.Assert().Is(data);
         fake.VerifyAll(Times.Once);
     }
 
@@ -125,26 +126,42 @@ public static class Fake_T_Tests
             m => m.Run<DataSample, int>(text, sample),
             Behavior.Returns(5, Times.Once));
 
-        Tools.Asserter.Is(true, fake.Dummy.Run<DataSample, bool>(text, sample));
-        Tools.Asserter.Is(5, fake.Dummy.Run<DataSample, int>(text, sample));
+        fake.Dummy.Run<DataSample, bool>(text, sample).Assert().Is(true);
+        fake.Dummy.Run<DataSample, int>(text, sample).Assert().Is(5);
 
         fake.VerifyAll(Times.Exactly(2));
-
-        Tools.Asserter.Throws<FakeCallException>(
-            () => fake.Dummy.Run<DataSample, object>(text, sample));
+        fake.Dummy.Assert(d => d.Run<DataSample, object>(text, sample)).Throws<FakeCallException>();
     }
 
     [Fact]
     internal static void Setup_InvalidExpressionThrows()
     {
-        Fake<object> fake = Tools.Faker.Mock<object>();
-
-        Tools.Asserter.Throws<InvalidOperationException>(
-            () => fake.Setup(d => new object(), Behavior.Returns(new object())));
+        Tools.Faker.Mock<object>()
+            .Assert(f => f.Setup(d => new object(), Behavior.Returns(new object())))
+            .Throws<InvalidOperationException>();
     }
 
-    /// <summary>Handles the testing of fake samples.</summary>
-    /// <typeparam name="T">Type of sample to test.</typeparam>
+    [Theory, RandomData]
+    internal static void ConvertArg_ConvertExpression([Stub] IValuer valuer, string[] data)
+    {
+        valuer.ToFake().Setup(
+            m => m.Equals(true, true),
+            Behavior.Returns(true));
+        valuer.ToFake().Setup(
+            m => m.Compare(true, Arg.Any<bool?>()),
+            Behavior.Set((object o1, object o2) =>
+            {
+                return (!o1.Equals(o2))
+                    ? Tools.Randomizer.Create<IEnumerable<Difference>>()
+                    : [];
+            }));
+
+        Asserter tester = new(Tools.Gen, valuer);
+        tester.IsNotEmpty(data);
+        tester.Assert(t => t.IsNotEmpty(null)).Throws<AssertException>();
+        tester.Assert(t => t.IsNotEmpty(Array.Empty<string>())).Throws<AssertException>();
+    }
+
     private static void FakeTester<T>() where T : IFakeSample
     {
         Fake<T> fake = Tools.Faker.Mock<T>(typeof(IClashingFakeSample));
@@ -152,9 +169,9 @@ public static class Fake_T_Tests
         Behavior<string> hintBehavior = Behavior.Returns("Hint");
         fake.Setup(m => m.Hint, hintBehavior);
         fake.Verify(Times.Never, m => m.Hint);
-        Tools.Asserter.Is("Hint", fake.Dummy.Hint);
+        fake.Dummy.Hint.Assert().Is("Hint");
         fake.Verify(Times.Once, m => m.Hint);
-        Tools.Asserter.Is("Hint", fake.Dummy.Hint);
+        fake.Dummy.Hint.Assert().Is("Hint");
         fake.Verify(Times.Exactly(2), m => m.Hint);
 
         Fake<IClashingFakeSample> fake2 = fake.ToFake<IClashingFakeSample>();
@@ -171,25 +188,25 @@ public static class Fake_T_Tests
 
         fake.Setup(m => m.Read(), Behavior.Set(() => "Test"));
         fake.Verify(Times.Never, m => m.Read());
-        Tools.Asserter.Is("Test", fake.Dummy.Read());
+        fake.Dummy.Read().Assert().Is("Test");
         fake.Verify(Times.Once, m => m.Read());
 
         fake.Setup(m => m.Calc(), Behavior.Returns(5));
         fake.Verify(Times.Never, m => m.Calc());
-        Tools.Asserter.Is(5, fake.Dummy.Calc());
+        fake.Dummy.Calc().Assert().Is(5);
         fake.Verify(Times.Once, m => m.Calc());
 
         fake.Setup(m => m.Read("Hey"), Behavior.Returns("Test2"));
         fake.Verify(Times.Never, m => m.Read("Hey"));
-        Tools.Asserter.Is("Test2", fake.Dummy.Read("Hey"));
+        fake.Dummy.Read("Hey").Assert().Is("Test2");
         fake.Verify(Times.Once, m => m.Read("Hey"));
 
         fake.Setup(m => m.Calc(3), Behavior.Returns(4));
-        Tools.Asserter.Is(4, fake.Dummy.Calc(3));
+        fake.Dummy.Calc(3).Assert().Is(4);
 
-        Tools.Asserter.Is("Test", fake.Dummy.Read());
-        Tools.Asserter.Is(5, fake.Dummy.Calc());
-        Tools.Asserter.Is("Test2", fake.Dummy.Read("Hey"));
+        fake.Dummy.Read().Assert().Is("Test");
+        fake.Dummy.Calc().Assert().Is(5);
+        fake.Dummy.Read("Hey").Assert().Is("Test2");
 
         fake.Setup(m => m.Calc(Arg.Where<int>(i => i > 8)), Behavior.Returns(1));
         fake.Verify(Times.Never, m => m.Calc(Arg.Where<int>(i => i > 8)));
@@ -197,17 +214,16 @@ public static class Fake_T_Tests
         fake.Verify(Times.Once, m => m.Calc(Arg.Where<int>(i => i > 8)));
 
         fake.Setup(m => m.Calc(Arg.Any<int>()), Behavior.Returns(7));
-        Tools.Asserter.Is(7, fake.Dummy.Calc(0));
+        fake.Dummy.Calc(0).Assert().Is(7);
 
         fake.Setup(m => m.Read(Arg.Any<string>()), Behavior.Returns("Wow!"));
-        Tools.Asserter.Is("Wow!", fake.Dummy.Read("Okay?"));
+        fake.Dummy.Read("Okay?").Assert().Is("Wow!");
 
-        fake.Setup(m => m.Combo(2, "Finally"),
-            Behavior.Set((int num, string text) => { }));
+        fake.Setup(m => m.Combo(2, "Finally"), Behavior.Set((int num, string text) => { }));
         fake.Verify(Times.Never, m => m.Combo(2, "Finally"));
         fake.Dummy.Combo(2, "Finally");
         fake.Verify(Times.Once, m => m.Combo(2, "Finally"));
 
-        Tools.Asserter.Is(2, hintBehavior.Calls);
+        hintBehavior.Calls.Assert().Is(2);
     }
 }

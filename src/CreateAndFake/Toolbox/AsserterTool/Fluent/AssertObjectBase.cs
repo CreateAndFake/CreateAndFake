@@ -90,6 +90,9 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object? a
         throw new AssertException("Test failed.", details, Gen.InitialSeed, Actual?.ToString());
     }
 
+    /// <summary>Stipulates the test is successful if it reaches this point.</summary>
+    public virtual void Pass() { }
+
     /// <summary>Finds a suitable <c>Type</c> name to use for assertion messages.</summary>
     /// <param name="expected">Instance being compared to <c>actual</c>.</param>
     /// <returns>The <c>Type</c> name to use if found; <c>null</c> otherwise.</returns>

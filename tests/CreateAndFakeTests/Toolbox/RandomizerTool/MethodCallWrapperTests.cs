@@ -5,7 +5,6 @@ using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class MethodCallWrapperTests
 {
     [Fact]
@@ -17,21 +16,21 @@ public static class MethodCallWrapperTests
     [Fact]
     internal static void MethodCallWrapper_CanRandomize()
     {
-        Tools.Asserter.IsNot(null, Tools.Randomizer.Create<MethodCallWrapper>());
+        Tools.Randomizer.Create<MethodCallWrapper>().Assert().IsNot(null);
     }
 
     [Theory, RandomData]
-    internal static void MethodCallWrapper_WorksInFake(MethodCallWrapper method, Fake<IRandomizer> rand)
+    internal static void MethodCallWrapper_WorksInFake(
+        [Stub] IRandomizer rand, MethodCallWrapper wrapper, MethodBase method)
     {
-        rand.Setup(m => m.CreateFor(Arg.Any<MethodBase>(), Arg.Any<object[]>()), Behavior.Returns(method));
-
-        Tools.Asserter.Is(method, rand.Dummy.CreateFor(Tools.Randomizer.Create<MethodBase>()));
+        rand.CreateFor(Arg.Any<MethodBase>(), Arg.Any<object[]>()).SetupReturn(wrapper);
+        rand.CreateFor(method).Assert().Is(wrapper);
     }
 
     [Theory, RandomData]
     internal static void ModifyArg_ThrowsWithUnknownParameter(MethodCallWrapper method, string parameter, object value)
     {
-        Tools.Asserter.Throws<KeyNotFoundException>(() => method.ModifyArg(parameter, value));
+        method.Assert(m => m.ModifyArg(parameter, value)).Throws<KeyNotFoundException>();
     }
 
     [Theory, RandomData]
@@ -41,8 +40,7 @@ public static class MethodCallWrapperTests
             typeof(DataHolderSample).GetMethod(nameof(DataHolderSample.HasNested)));
 
         wrapper.ModifyArg("value", sample);
-
-        Tools.Asserter.Is(true, wrapper.Args.Contains(sample));
+        wrapper.Args.Assert().Contains(sample);
     }
 
     [Theory, RandomData]
@@ -51,8 +49,8 @@ public static class MethodCallWrapperTests
         MethodCallWrapper wrapper = Tools.Randomizer.CreateFor(
             typeof(DataSample).GetMethod(nameof(Equals)));
 
-        Tools.Asserter.Is(false, wrapper.InvokeOn(sample));
+        wrapper.InvokeOn(sample).Assert().Is(false);
         wrapper.ModifyArg("obj", sample);
-        Tools.Asserter.Is(true, wrapper.InvokeOn(sample));
+        wrapper.InvokeOn(sample).Assert().Is(true);
     }
 }

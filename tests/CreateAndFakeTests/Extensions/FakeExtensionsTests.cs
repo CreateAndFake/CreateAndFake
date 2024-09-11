@@ -1,6 +1,5 @@
 namespace CreateAndFakeTests.Extensions;
 
-/// <summary>Verifies behavior.</summary>
 public static class FakeExtensionsTests
 {
     [Fact]

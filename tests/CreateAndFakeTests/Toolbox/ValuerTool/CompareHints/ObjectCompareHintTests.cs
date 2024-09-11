@@ -6,33 +6,26 @@ using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class ObjectCompareHintTests : CompareHintTestBase<ObjectCompareHint>
 {
-    /// <summary>Instance to test with.</summary>
-    private static readonly ObjectCompareHint _TestInstance
-        = new(BindingFlags.Public | BindingFlags.Instance);
+    private static readonly ObjectCompareHint _TestInstance = new(BindingFlags.Public | BindingFlags.Instance);
 
-    /// <summary>Types that can be created by the hint.</summary>
-    private static readonly Type[] _ValidTypes
-        = [typeof(object), typeof(DataHolderSample), typeof(FieldSample)];
+    private static readonly Type[] _ValidTypes = [typeof(object), typeof(DataHolderSample), typeof(FieldSample)];
 
-    /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes = Type.EmptyTypes;
 
-    /// <summary>Sets up the tests.</summary>
     public ObjectCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-    [Fact]
-    internal void Compare_DifferentObjectsDifferences()
+    [Theory, RandomData]
+    internal void Compare_DifferentObjectsDifferences(string value1, string value2)
     {
-        var expected = new { Value = Tools.Randomizer.Create<string>() };
-        var actual = new { Value = Tools.Randomizer.Create<string>() };
+        var expected = new { Value = value1 };
+        var actual = new { Value = value2 };
 
         (bool, IEnumerable<Difference>) result = TestInstance
             .TryCompare(expected, actual, CreateChainer());
 
-        Tools.Asserter.Is(true, result.Item1);
-        Tools.Asserter.IsNotEmpty(result.Item2);
+        result.Item1.Assert().Is(true);
+        result.Item2.Assert().IsNotEmpty();
     }
 }

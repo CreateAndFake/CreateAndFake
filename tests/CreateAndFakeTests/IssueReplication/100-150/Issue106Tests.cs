@@ -2,7 +2,6 @@
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue106Tests
 {
     internal sealed class RandomNameContainer<T>

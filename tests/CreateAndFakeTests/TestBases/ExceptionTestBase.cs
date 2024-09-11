@@ -1,6 +1,5 @@
 ﻿using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using CreateAndFake.Design;
 
 namespace CreateAndFakeTests.TestBases;
 
@@ -12,16 +11,14 @@ public abstract class ExceptionTestBase<T> where T : Exception
     [Fact]
     public void Exception_DefaultConstructorPrivate()
     {
-        Tools.Asserter.Is(null, typeof(T).GetConstructor(Type.EmptyTypes));
-        Tools.Asserter.IsNot(null, Activator.CreateInstance(typeof(T), true));
+        typeof(T).GetConstructor(Type.EmptyTypes).Assert().Is(null);
+        Activator.CreateInstance(typeof(T), true).Assert().IsNot(null);
     }
 
     /// <summary>Verifies that the exception can make an xml roundtrip.</summary>
     [Theory, RandomData]
     public void Exception_XmlSerializes(T original)
     {
-        ArgumentGuard.ThrowIfNull(original, nameof(original));
-
         DataContractSerializer formatter = new(typeof(T),
             new[] { original.InnerException }.Where(t => t != null).Select(t => t.GetType()));
 
@@ -30,7 +27,7 @@ public abstract class ExceptionTestBase<T> where T : Exception
         formatter.WriteObject(stream, original);
         _ = stream.Seek(0, SeekOrigin.Begin);
 
-        Tools.Asserter.Is(original, formatter.ReadObject(stream));
+        formatter.ReadObject(stream).Assert().Is(original);
     }
 
     /// <summary>Verifies that the exception can make a json roundtrip.</summary>
@@ -49,6 +46,6 @@ public abstract class ExceptionTestBase<T> where T : Exception
         formatter.WriteObject(stream, original);
         _ = stream.Seek(0, SeekOrigin.Begin);
 
-        Tools.Asserter.Is(original, formatter.ReadObject(stream));
+        formatter.ReadObject(stream).Assert().Is(original);
     }
 }

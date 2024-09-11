@@ -3,7 +3,6 @@ using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Design.Randomization;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class SeededRandomTests : ValueRandomTestBase<SeededRandom>
 {
     [Fact]
@@ -12,12 +11,12 @@ public sealed class SeededRandomTests : ValueRandomTestBase<SeededRandom>
         SeededRandom random1 = new();
         SeededRandom random2 = new(random1.Seed);
 
-        Tools.Asserter.Is(random1.Next<int>(), random2.Next<int>());
-        Tools.Asserter.Is(random1.Next<int>(), random2.Next<int>());
+        random1.Next<int>().Assert().Is(random2.Next<int>());
+        random1.Next<int>().Assert().Is(random2.Next<int>());
 
         random2 = new SeededRandom(random1.Seed);
 
-        Tools.Asserter.Is(random1.Next<int>(), random2.Next<int>());
-        Tools.Asserter.Is(random1.Seed, random2.Seed);
+        random1.Next<int>().Assert().Is(random2.Next<int>());
+        random1.Seed.Assert().Is(random2.Seed);
     }
 }

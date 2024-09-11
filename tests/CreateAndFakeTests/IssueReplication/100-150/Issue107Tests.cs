@@ -1,6 +1,5 @@
 ﻿namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue107Tests
 {
     internal abstract class SelfReferenceContainer<T> where T : SelfReferenceContainer<T> { }

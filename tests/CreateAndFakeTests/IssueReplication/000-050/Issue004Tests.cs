@@ -2,7 +2,6 @@ using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue004Tests
 {
     public interface IBaseHolder
@@ -82,7 +81,7 @@ public static class Issue004Tests
     internal static void Issue004_MockCanCallBaseThrow(Fake<BaseHolder> sample, Exception e)
     {
         sample.Setup(d => d.ThrowError(e), Behavior.Base<BaseHolder>());
-        Tools.Asserter.Throws<Exception>(() => sample.Dummy.ThrowError(e)).Assert().Is(e);
+        sample.Dummy.Assert(d => d.ThrowError(e)).Throws<Exception>().Assert().Is(e);
         sample.VerifyAll();
     }
 
@@ -90,13 +89,13 @@ public static class Issue004Tests
     internal static void Issue004_MockCallBaseAbstractInvalid(Fake<BaseHolder> sample)
     {
         sample.Setup(d => d.GetValueUnset(), Behavior.Base<BaseHolder>());
-        Tools.Asserter.Throws<InvalidOperationException>(sample.Dummy.GetValueUnset);
+        sample.Dummy.Assert(d => d.GetValueUnset()).Throws<InvalidOperationException>();
     }
 
     [Theory, RandomData]
     internal static void Issue004_MockCallBaseWrongTypeInvalid(Fake<IBaseHolder> sample)
     {
         sample.Setup(d => d.GetValueUnset(), Behavior.Base<string>());
-        Tools.Asserter.Throws<MissingMethodException>(sample.Dummy.GetValueUnset);
+        sample.Dummy.Assert(d => d.GetValueUnset()).Throws<MissingMethodException>();
     }
 }

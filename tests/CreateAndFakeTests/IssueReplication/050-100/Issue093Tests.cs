@@ -3,7 +3,6 @@ using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue093Tests
 {
     public abstract class Provider

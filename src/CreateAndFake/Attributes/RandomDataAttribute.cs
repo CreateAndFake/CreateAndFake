@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using CreateAndFake.Fluent;
+using CreateAndFake.Toolbox.FakerTool.Proxy;
 using Xunit.Sdk;
 
 namespace CreateAndFake;
@@ -17,7 +19,22 @@ public sealed class RandomDataAttribute : DataAttribute
     /// <returns>The generated data to run the test with.</returns>
     public override IEnumerable<object?[]> GetData(MethodInfo testMethod)
     {
-        return Enumerable.Range(0, Math.Max(0, Trials))
-            .Select(_ => Tools.Randomizer.CreateFor(testMethod).Args.ToArray());
+        return Enumerable
+            .Range(0, Math.Max(0, Trials))
+            .Select(_ => Tools.Randomizer.CreateFor(testMethod).Args.Select(FixArg).ToArray());
+    }
+
+    /// <summary>Fixes <paramref name="arg"/> to be suitable for Xunit.</summary>
+    /// <param name="arg">Instance to fix.</param>
+    /// <returns><paramref name="arg"/> modified (if necessary) for Xunit.</returns>
+    private object? FixArg(object? arg)
+    {
+        if (arg is IFaked and Type type)
+        {
+            type.UnderlyingSystemType.SetupReturn(typeof(Type).UnderlyingSystemType);
+            type.FullName.SetupReturn(typeof(Type).FullName);
+            type.IsArray.SetupReturn(typeof(Type).IsArray);
+        }
+        return arg;
     }
 }

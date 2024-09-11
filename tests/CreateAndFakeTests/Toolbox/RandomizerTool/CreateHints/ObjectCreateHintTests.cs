@@ -6,13 +6,10 @@ using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class ObjectCreateHintTests : CreateHintTestBase<ObjectCreateHint>
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly ObjectCreateHint _TestInstance = new();
 
-    /// <summary>Types that can be created by the hint.</summary>
     private static readonly Type[] _ValidTypes =
     [
         typeof(object),
@@ -23,13 +20,10 @@ public sealed class ObjectCreateHintTests : CreateHintTestBase<ObjectCreateHint>
         typeof(FactorySample)
     ];
 
-    /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes = [typeof(VoidType)];
 
-    /// <summary>Sets up the tests.</summary>
     public ObjectCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
-    /// <summary>Verifies that looping objects can be created.</summary>
     [Theory, RandomData]
     public void ObjectCreateHint_CanHandleInfinites(InfiniteSample sample1, ParentLoopSample sample2)
     {
