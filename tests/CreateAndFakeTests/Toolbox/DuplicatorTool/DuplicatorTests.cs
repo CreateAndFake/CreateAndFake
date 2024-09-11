@@ -3,7 +3,6 @@ using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class DuplicatorTests
 {
     [Fact]
@@ -15,47 +14,44 @@ public static class DuplicatorTests
     [Fact]
     internal static void New_NullHintsValid()
     {
-        Tools.Asserter.IsNot(null, new Duplicator(Tools.Asserter, true, null));
-        Tools.Asserter.IsNot(null, new Duplicator(Tools.Asserter, false, null));
+        new Duplicator(Tools.Asserter, true, null).Assert().IsNot(null);
+        new Duplicator(Tools.Asserter, false, null).Assert().IsNot(null);
     }
 
     [Fact]
     internal static void Copy_MissingMatchThrows()
     {
-        _ = Tools.Asserter.Throws<NotSupportedException>(
-            () => new Duplicator(Tools.Asserter, false).Copy(new object()));
+        new Duplicator(Tools.Asserter, false)
+            .Assert(d => d.Copy(new object()))
+            .Throws<NotSupportedException>();
     }
 
     [Fact]
     internal static void Copy_NullWorks()
     {
-        Tools.Asserter.Is(null, new Duplicator(Tools.Asserter, false).Copy<object>(null));
+        new Duplicator(Tools.Asserter, false).Copy<object>(null).Assert().Is(null);
     }
 
     [Theory, RandomData]
-    internal static void Copy_ValidHintWorks(object data, Fake<CopyHint> hint)
+    internal static void Copy_ValidHintWorks(object data, [Stub] CopyHint hint)
     {
-        hint.Setup(
-            m => m.TryCopy(data, Arg.Any<DuplicatorChainer>()),
-            Behavior.Returns((true, data), Times.Once));
+        hint.TryCopy(data, Arg.Any<DuplicatorChainer>()).SetupReturn((true, data), Times.Once);
 
-        object result = new Duplicator(Tools.Asserter, false, hint.Dummy).Copy(data);
+        new Duplicator(Tools.Asserter, false, hint).Copy(data).Assert().Is(data);
 
-        Tools.Asserter.CheckAll(
-            () => Tools.Asserter.Is(data, result),
-            () => hint.VerifyAll(Times.Once));
+        hint.VerifyAllCalls(Times.Once);
     }
 
     [Theory, RandomData]
-    internal static void Copy_InfiniteLoopDetails(object instance, Fake<CopyHint> hint)
+    internal static void Copy_InfiniteLoopDetails(object instance, [Stub] CopyHint hint)
     {
-        hint.Setup(
+        hint.ToFake().Setup(
             m => m.TryCopy(instance, Arg.Any<DuplicatorChainer>()),
             Behavior.Throw<InsufficientExecutionStackException>(Times.Once));
 
-        InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
-            () => new Duplicator(Tools.Asserter, false, hint.Dummy).Copy(instance));
-
-        Tools.Asserter.Is(true, e.Message.Contains(instance.GetType().Name));
+        new Duplicator(Tools.Asserter, false, hint)
+            .Assert(d => d.Copy(instance))
+            .Throws<InsufficientExecutionStackException>().Message
+            .Assert().Contains(instance.GetType().Name);
     }
 }

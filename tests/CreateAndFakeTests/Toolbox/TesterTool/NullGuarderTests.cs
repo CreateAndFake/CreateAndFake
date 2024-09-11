@@ -6,15 +6,12 @@ using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class NullGuarderTests
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly NullGuarder _ShortTestInstance = new(
         new GenericFixer(Tools.Gen, Tools.Randomizer),
         Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
-    /// <summary>Instance to test with.</summary>
     private static readonly NullGuarder _LongTestInstance = new(
         new GenericFixer(Tools.Gen, Tools.Randomizer),
         Tools.Randomizer, Tools.Asserter, new TimeSpan(0, 0, 10));
@@ -34,19 +31,22 @@ public static class NullGuarderTests
     [Fact]
     internal static void NullCheck_TimesOut()
     {
-        Tools.Asserter.Throws<TimeoutException>(() => _ShortTestInstance
-            .PreventsNullRefExceptionOnStatics(typeof(LongMethodSample), false));
+        _ShortTestInstance
+            .Assert(t => t.PreventsNullRefExceptionOnStatics(typeof(LongMethodSample), false))
+            .Throws<TimeoutException>();
     }
 
     [Fact]
     internal static void NullCheck_NullReferenceThrows()
     {
-        Tools.Asserter.Throws<AssertException>(() => _ShortTestInstance
-            .PreventsNullRefExceptionOnConstructors(typeof(NullReferenceSample), true));
+        _ShortTestInstance
+            .Assert(t => t.PreventsNullRefExceptionOnConstructors(typeof(NullReferenceSample), true))
+            .Throws<AssertException>();
     }
 
     [Theory, RandomData]
-    internal static void PreventsNullRefException_InjectsMultipleValues(Fake<IOnlyMockSample> fake1, Fake<IOnlyMockSample> fake2)
+    internal static void PreventsNullRefException_InjectsMultipleValues(
+        Fake<IOnlyMockSample> fake1, Fake<IOnlyMockSample> fake2)
     {
         Tools.Tester.PreventsNullRefException<InjectMockSample>(fake1, fake2);
     }
@@ -60,8 +60,9 @@ public static class NullGuarderTests
     [Fact]
     internal static void PreventsNullRefException_OnStatics()
     {
-        Tools.Asserter.Throws<AssertException>(() =>
-            Tools.Tester.PreventsNullRefException(typeof(StaticMutationSample)));
+        Tools.Tester
+            .Assert(t => t.PreventsNullRefException(typeof(StaticMutationSample)))
+            .Throws<AssertException>();
     }
 
     [Fact]
@@ -76,14 +77,14 @@ public static class NullGuarderTests
         Tools.Tester.PreventsNullRefException<StatelessSample>((object[])null);
     }
 
-    [Fact]
-    internal static void PreventsNullRefExceptionOnConstructors_Disposes()
+    [Theory, RandomData]
+    internal static void PreventsNullRefExceptionOnConstructors_Disposes([Stub] IDisposable disposable)
     {
         lock (MockDisposableSample._Lock)
         {
             MockDisposableSample._ClassDisposes = 0;
             MockDisposableSample._FinalizerDisposes = 0;
-            MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
+            MockDisposableSample._Fake = disposable.ToFake();
 
             _LongTestInstance.PreventsNullRefExceptionOnConstructors(typeof(MockDisposableSample), true);
             Tools.Asserter.Is(1, MockDisposableSample._ClassDisposes);
@@ -92,14 +93,14 @@ public static class NullGuarderTests
         }
     }
 
-    [Fact]
-    internal static void PreventsNullRefExceptionOnMethods_Disposes()
+    [Theory, RandomData]
+    internal static void PreventsNullRefExceptionOnMethods_Disposes([Stub] IDisposable disposable)
     {
         lock (MockDisposableSample._Lock)
         {
             MockDisposableSample._ClassDisposes = 0;
             MockDisposableSample._FinalizerDisposes = 0;
-            MockDisposableSample._Fake = Tools.Faker.Stub<IDisposable>();
+            MockDisposableSample._Fake = disposable.ToFake();
 
             using MockDisposableSample sample = new(null);
             _LongTestInstance.PreventsNullRefExceptionOnMethods(sample);

@@ -5,13 +5,10 @@ using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class CommonSystemCreateHintTests : CreateHintTestBase<CommonSystemCreateHint>
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly CommonSystemCreateHint _TestInstance = new();
 
-    /// <summary>Types that can be created by the hint.</summary>
     private static readonly Type[] _ValidTypes =
     [
         typeof(CultureInfo),
@@ -35,10 +32,8 @@ public sealed class CommonSystemCreateHintTests : CreateHintTestBase<CommonSyste
         typeof(UriBuilder)
     ];
 
-    /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes = [typeof(object)];
 
-    /// <summary>Sets up the tests.</summary>
     public CommonSystemCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
     [Fact]

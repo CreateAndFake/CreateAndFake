@@ -3,7 +3,6 @@ using CreateAndFake.Toolbox.TesterTool;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class GenericFixerTests
 {
     [Fact]

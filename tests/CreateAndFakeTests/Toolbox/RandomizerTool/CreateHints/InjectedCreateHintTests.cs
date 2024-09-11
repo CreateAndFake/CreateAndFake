@@ -6,13 +6,10 @@ using CreateAndFakeTests.Toolbox.FakerTool.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class InjectedCreateHintTests : CreateHintTestBase<InjectedCreateHint>
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly InjectedCreateHint _TestInstance = new();
 
-    /// <summary>Types that can be created by the hint.</summary>
     private static readonly Type[] _ValidTypes =
     [
         typeof(Injected<FakeHolderSample>),
@@ -22,23 +19,19 @@ public sealed class InjectedCreateHintTests : CreateHintTestBase<InjectedCreateH
         typeof(Injected<StructSample>)
     ];
 
-    /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes =
     [
         typeof(object),
         typeof(IUnimplementedSample)
     ];
 
-    /// <summary>Sets up the tests.</summary>
     public InjectedCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
     [Theory, RandomData]
     internal void Create_ValidInjections(Injected<InjectMockSample> sample)
     {
-        Tools.Asserter.IsNot(null, sample.Fake<IOnlyMockSample>());
-        Tools.Asserter.IsNot(null, sample.Fake<IOnlyMockSample>(1));
-
-        Tools.Asserter.IsNot(sample.Fake<IOnlyMockSample>(), sample.Fake<IOnlyMockSample>(1));
+        sample.Fake<IOnlyMockSample>().Assert().IsNot(null);
+        sample.Fake<IOnlyMockSample>(1).Assert().IsNot(null).And.IsNot(sample.Fake<IOnlyMockSample>());
 
         sample.Fake<IOnlyMockSample>().Setup(m => m.FailIfNotMocked(), Behavior.Returns(false, Times.Once));
         sample.Dummy.TestIfMockedSeparately();
@@ -49,14 +42,15 @@ public sealed class InjectedCreateHintTests : CreateHintTestBase<InjectedCreateH
     [Fact]
     internal void Create_NoConstructorThrows()
     {
-        Tools.Asserter.Throws<InvalidOperationException>(
-            () => Tools.Randomizer.Create<Injected<IUnimplementedSample>>());
+        Tools.Randomizer
+            .Assert(t => t.Create<Injected<IUnimplementedSample>>())
+            .Throws<InvalidOperationException>();
     }
 
     [Theory, RandomData]
     internal void Create_ValuesRandom(Injected<FakeHolderSample> sample)
     {
-        Tools.Asserter.IsNot(0, sample.Dummy.Value1);
-        Tools.Asserter.IsNot(null, sample.Dummy.Value2);
+        sample.Dummy.Value1.Assert().IsNot(0);
+        sample.Dummy.Value2.Assert().IsNot(null);
     }
 }

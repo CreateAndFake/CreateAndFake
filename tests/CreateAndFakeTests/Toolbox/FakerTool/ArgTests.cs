@@ -3,7 +3,6 @@ using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class ArgTests
 {
     [Fact]
@@ -14,103 +13,97 @@ public static class ArgTests
             .Select(m => m.Name)
             .ToArray();
 
-        Tools.Asserter.IsEmpty(methods
+        methods
             .Where(m => !m.StartsWith("Lambda", StringComparison.InvariantCulture))
-            .Where(m => !methods.Contains("Lambda" + m)),
-            "Methods should have a lambda version to convert to.");
+            .Where(m => !methods.Contains("Lambda" + m))
+            .Assert().IsEmpty("Methods should have a lambda version to convert to.");
     }
 
     [Fact]
     internal static void Arg_Random()
     {
-        Tools.Asserter.IsNot(default(int), Arg.Any<int>());
-        Tools.Asserter.IsNot(default(int), Arg.Where<int>(null));
+        Arg.Any<int>().Assert().IsNot(default(int));
+        Arg.Where<int>(null).Assert().IsNot(default(int));
 
-        Tools.Asserter.IsNot(default(string), Arg.Any<string>());
-        Tools.Asserter.IsNot(default(string), Arg.NotNull<string>());
-        Tools.Asserter.IsNot(default(string), Arg.Where<string>(null));
+        Arg.Any<string>().Assert().IsNot(default(string));
+        Arg.NotNull<string>().Assert().IsNot(default(string));
+        Arg.Where<string>(null).Assert().IsNot(default(string));
     }
 
     [Fact]
     internal static void Arg_OutRefDefault()
     {
-        Tools.Asserter.Is(default(int), Arg.AnyRef<int>().Var);
-        Tools.Asserter.Is(default(int), Arg.WhereRef<int>(null).Var);
+        Arg.AnyRef<int>().Var.Assert().Is(default(int));
+        Arg.WhereRef<int>(null).Var.Assert().Is(default(int));
 
-        Tools.Asserter.Is(default(string), Arg.AnyRef<string>().Var);
-        Tools.Asserter.Is(default(string), Arg.WhereRef<string>(null).Var);
+        Arg.AnyRef<string>().Var.Assert().Is(default(string));
+        Arg.WhereRef<string>(null).Var.Assert().Is(default(string));
     }
 
-    [Fact]
-    internal static void LambdaAny_MatchesValues()
+    [Theory, RandomData]
+    internal static void LambdaAny_MatchesValues(int value, string name)
     {
-        Tools.Asserter.Is(true, Arg.LambdaAny<int>().Matches(Tools.Randomizer.Create<int>()));
-        Tools.Asserter.Is(true, Arg.LambdaAny<string>().Matches(Tools.Randomizer.Create<string>()));
+        Arg.LambdaAny<int>().Matches(value).Assert().Is(true);
+        Arg.LambdaAny<string>().Matches(name).Assert().Is(true);
     }
 
     [Fact]
     internal static void LambdaAny_NullsMatch()
     {
-        Tools.Asserter.Is(true, Arg.LambdaAny<int>().Matches(null));
-        Tools.Asserter.Is(true, Arg.LambdaAny<string>().Matches(null));
+        Arg.LambdaAny<int>().Matches(null).Assert().Is(true);
+        Arg.LambdaAny<string>().Matches(null).Assert().Is(true);
     }
 
-    [Fact]
-    internal static void LambdaAny_Mismatches()
+    [Theory, RandomData]
+    internal static void LambdaAny_Mismatches(string name, int value)
     {
-        Tools.Asserter.Is(false, Arg.LambdaAny<int>().Matches(Tools.Randomizer.Create<string>()));
-        Tools.Asserter.Is(false, Arg.LambdaAny<string>().Matches(Tools.Randomizer.Create<int>()));
+        Arg.LambdaAny<int>().Matches(name).Assert().Is(false);
+        Arg.LambdaAny<string>().Matches(value).Assert().Is(false);
     }
 
-    [Fact]
-    internal static void LambdaAnyRef_MatchesValues()
+    [Theory, RandomData]
+    internal static void LambdaAnyRef_MatchesValues(OutRef<string> nameRef, OutRef<int> valueRef)
     {
-        Tools.Asserter.Is(true, Arg.LambdaAnyRef<int>().Matches(Tools.Randomizer.Create<OutRef<int>>()));
-        Tools.Asserter.Is(true, Arg.LambdaAnyRef<string>().Matches(Tools.Randomizer.Create<OutRef<string>>()));
+        Arg.LambdaAnyRef<int>().Matches(valueRef).Assert().Is(true);
+        Arg.LambdaAnyRef<string>().Matches(nameRef).Assert().Is(true);
     }
 
-    [Fact]
-    internal static void LambdaNotNull_MatchesValues()
+    [Theory, RandomData]
+    internal static void LambdaNotNull_MatchesValues(string name)
     {
-        Tools.Asserter.Is(true, Arg.LambdaNotNull<string>().Matches(Tools.Randomizer.Create<string>()));
+        Arg.LambdaNotNull<string>().Matches(name).Assert().Is(true);
     }
 
     [Fact]
     internal static void LambdaNotNull_NullsInvalid()
     {
-        Tools.Asserter.Is(false, Arg.LambdaNotNull<string>().Matches(null));
+        Arg.LambdaNotNull<string>().Matches(null).Assert().Is(false);
     }
 
-    [Fact]
-    internal static void LambdaWhere_MatchesCondition()
+    [Theory, RandomData]
+    internal static void LambdaWhere_MatchesCondition(string name)
     {
-        Tools.Asserter.Is(true, Arg.LambdaWhere<string>(null)
-            .Matches(Tools.Randomizer.Create<string>()));
-        Tools.Asserter.Is(true, Arg.LambdaWhere<string>(s => true)
-            .Matches(Tools.Randomizer.Create<string>()));
-        Tools.Asserter.Is(false, Arg.LambdaWhere<string>(s => false)
-            .Matches(Tools.Randomizer.Create<string>()));
+        Arg.LambdaWhere<string>(null).Matches(name).Assert().Is(true);
+        Arg.LambdaWhere<string>(s => true).Matches(name).Assert().Is(true);
+        Arg.LambdaWhere<string>(s => false).Matches(name).Assert().Is(false);
     }
 
-    [Fact]
-    internal static void LambdaWhereRef_MatchesCondition()
+    [Theory, RandomData]
+    internal static void LambdaWhereRef_MatchesCondition(OutRef<string> nameRef)
     {
-        Tools.Asserter.Is(true, Arg.LambdaWhereRef<string>(null)
-            .Matches(Tools.Randomizer.Create<OutRef<string>>()));
-        Tools.Asserter.Is(true, Arg.LambdaWhereRef<string>(s => true)
-            .Matches(Tools.Randomizer.Create<OutRef<string>>()));
-        Tools.Asserter.Is(false, Arg.LambdaWhereRef<string>(s => false)
-            .Matches(Tools.Randomizer.Create<OutRef<string>>()));
+        Arg.LambdaWhereRef<string>(null).Matches(nameRef).Assert().Is(true);
+        Arg.LambdaWhereRef<string>(s => true).Matches(nameRef).Assert().Is(true);
+        Arg.LambdaWhereRef<string>(s => false).Matches(nameRef).Assert().Is(false);
     }
 
     [Theory, RandomData]
     internal static void Arg_Cloneable(string value)
     {
         Arg origin = Arg.LambdaWhere<string>(d => d == value);
-        Arg copy = Tools.Duplicator.Copy(origin);
+        Arg copy = origin.CreateDeepClone();
 
-        Tools.Asserter.Is(origin, copy);
-        Tools.Asserter.Is(true, copy.Matches(value));
-        Tools.Asserter.Is(false, copy.Matches(Tools.Mutator.Variant(value)));
+        copy.Assert().Is(origin);
+        copy.Matches(value).Assert().Is(true);
+        copy.Matches(value.CreateVariant()).Assert().Is(false);
     }
 }

@@ -2,16 +2,12 @@ using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue003Tests
 {
-    /// <summary>For testing.</summary>
     public abstract class RefHolder
     {
-        /// <summary>For testing.</summary>
         public abstract int TestMethodA(out int value);
 
-        /// <summary>For testing.</summary>
         public abstract int TestMethodB(ref int value);
     }
 

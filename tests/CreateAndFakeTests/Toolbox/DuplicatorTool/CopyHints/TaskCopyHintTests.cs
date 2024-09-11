@@ -4,10 +4,8 @@ using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.DuplicatorTool.CopyHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class TaskCopyHintTests : CopyHintTestBase<TaskCopyHint>
 {
-    /// <summary>Types that can be created by the hint.</summary>
     private static readonly Type[] _ValidTypes =
     [
         typeof(Task<DataHolderSample>),
@@ -17,15 +15,13 @@ public sealed class TaskCopyHintTests : CopyHintTestBase<TaskCopyHint>
         typeof(Task<bool>)
     ];
 
-    /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes = [typeof(object)];
 
-    /// <summary>Sets up the tests.</summary>
     public TaskCopyHintTests() : base(_ValidTypes, _InvalidTypes) { }
 
     [Fact]
     internal void TryCopy_NonGenericTaskFalse()
     {
-        Tools.Asserter.Is((false, (object)null), TestInstance.TryCopy(new Task(() => { }), CreateChainer()));
+        TestInstance.TryCopy(new Task(() => { }), CreateChainer()).Assert().Is((false, (object)null));
     }
 }

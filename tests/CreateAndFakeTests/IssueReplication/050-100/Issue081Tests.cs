@@ -2,7 +2,6 @@ using CreateAndFake.Toolbox.AsserterTool;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue081Tests
 {
     [Fact]
@@ -14,7 +13,10 @@ public static class Issue081Tests
     [Fact]
     internal static void Issue081_AssertionsContainSeed()
     {
-        Tools.Asserter.Throws<AssertException>(() => Tools.Asserter.Fail())
-            .Message.Contains($"{Tools.Gen.InitialSeed}").Assert().Is(true);
+        Tools.Asserter
+            .Assert(a => a.Fail())
+            .Throws<AssertException>().Message
+            .Assert()
+            .Contains($"{Tools.Gen.InitialSeed}");
     }
 }

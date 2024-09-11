@@ -6,7 +6,6 @@ using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue052Tests
 {
     internal sealed class Data

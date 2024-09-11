@@ -2,7 +2,6 @@ using CreateAndFake.Toolbox.AsserterTool;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue089Tests
 {
     [Theory, RandomData]

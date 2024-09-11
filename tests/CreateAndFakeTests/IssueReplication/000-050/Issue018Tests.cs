@@ -2,7 +2,6 @@ using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue018Tests
 {
     internal sealed class Sample(IInternalSample internalSample)

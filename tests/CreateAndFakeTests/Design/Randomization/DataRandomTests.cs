@@ -3,13 +3,18 @@ using CreateAndFake.Design.Randomization;
 
 namespace CreateAndFakeTests.Design.Randomization;
 
-/// <summary>Verifies behavior.</summary>
 public static class DataRandomTests
 {
     [Fact]
     internal static void DataRandom_GuardsNulls()
     {
         Tools.Tester.PreventsNullRefException<DataRandom>();
+    }
+
+    [Fact]
+    internal static void DataRandom_NoParameterMutation()
+    {
+        Tools.Tester.PreventsParameterMutation<DataRandom>();
     }
 
     [Theory, RandomData]
@@ -24,7 +29,7 @@ public static class DataRandomTests
     [Theory, RandomData]
     internal static void DataRandom_DataVaries(DataRandom testInstance)
     {
-        Tools.Mutator.Variant(testInstance).Assert().IsNot(testInstance);
+        testInstance.CreateVariant().Assert().IsNot(testInstance);
     }
 
     [Theory, RandomData]
@@ -39,11 +44,11 @@ public static class DataRandomTests
     [Theory, RandomData]
     internal static void Find_IgnoresSpecialChars(DataRandom testInstance)
     {
-        testInstance.Find("_" + DataRandom.SupportedProperties.First()).Assert().IsNot(null);
+        testInstance.Find("_" + Tools.Gen.NextItem(DataRandom.SupportedProperties)).Assert().IsNot(null);
     }
 
     [Theory, RandomData]
-    internal static void Find_NoResultNull(DataRandom testInstance, string name)
+    internal static void Find_MissingName(DataRandom testInstance, string name)
     {
         testInstance.Find(name).Assert().Is(null);
     }

@@ -3,7 +3,6 @@ using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class VoidTypeTests
 {
     [Fact]
@@ -11,7 +10,8 @@ public static class VoidTypeTests
     {
         ConstructorInfo constructor = typeof(VoidType).GetConstructors(
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Single();
-        Tools.Asserter.Is(true, constructor.IsPrivate);
-        constructor.Invoke([]);
+
+        constructor.IsPrivate.Assert().Is(true);
+        constructor.Invoke([]).Assert().Pass();
     }
 }

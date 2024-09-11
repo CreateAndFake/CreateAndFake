@@ -2,7 +2,6 @@
 
 namespace CreateAndFakeTests.Design;
 
-/// <summary>Verifies behavior.</summary>
 public static class ArgumentGuardTests
 {
     [Theory, RandomData]
@@ -14,6 +13,6 @@ public static class ArgumentGuardTests
     [Theory, RandomData]
     internal static void ThrowIfNull_ExceptionWithNull(string name)
     {
-        Tools.Asserter.Throws<ArgumentNullException>(() => ArgumentGuard.ThrowIfNull(null, name));
+        name.Assert(n => ArgumentGuard.ThrowIfNull(null, n)).Throws<ArgumentNullException>();
     }
 }

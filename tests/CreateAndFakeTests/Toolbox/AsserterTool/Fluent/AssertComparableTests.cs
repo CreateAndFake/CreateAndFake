@@ -2,7 +2,6 @@ using CreateAndFake.Toolbox.AsserterTool.Fluent;
 
 namespace CreateAndFakeTests.Toolbox.AsserterTool.Fluent;
 
-/// <summary>Verifies behavior.</summary>
 public static class AssertComparableTests
 {
     [Fact]

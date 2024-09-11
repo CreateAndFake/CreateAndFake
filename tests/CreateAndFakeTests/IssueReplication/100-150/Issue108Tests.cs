@@ -1,6 +1,5 @@
 ﻿namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue108Tests
 {
     public abstract class InnerStuff<T> where T : InnerStuff<T>

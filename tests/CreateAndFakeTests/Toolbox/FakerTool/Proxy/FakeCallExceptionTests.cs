@@ -3,12 +3,11 @@ using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class FakeCallExceptionTests : ExceptionTestBase<FakeCallException>
 {
     [Fact]
     internal static void FakeCallException_MultiNullsOkay()
     {
-        Tools.Asserter.IsNot(null, new FakeCallException(null, null));
+        new FakeCallException(null, null).Assert().IsNot(null);
     }
 }

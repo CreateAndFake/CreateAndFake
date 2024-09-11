@@ -4,7 +4,6 @@ using CreateAndFakeTests.Toolbox.FakerTool.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class InjectedTests
 {
     [Theory, RandomData]
@@ -22,7 +21,7 @@ public static class InjectedTests
     [Theory, RandomData]
     internal static void Fake_CanFindByDummy(Injected<FakeHolderSample> sample)
     {
-        Tools.Asserter.Is(sample.Fake<IFakeSample>(), sample.Fake(sample.Dummy.Sample1));
-        Tools.Asserter.Is(sample.Fake<AbstractFakeSample>(), sample.Fake(sample.Dummy.Sample2));
+        sample.Fake(sample.Dummy.Sample1).Assert().Is(sample.Fake<IFakeSample>());
+        sample.Fake(sample.Dummy.Sample2).Assert().Is(sample.Fake<AbstractFakeSample>());
     }
 }

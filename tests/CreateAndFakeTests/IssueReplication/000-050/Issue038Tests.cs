@@ -3,7 +3,6 @@ using CreateAndFake.Toolbox.FakerTool.Proxy;
 
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue038Tests
 {
     public interface ISample
@@ -60,7 +59,7 @@ public static class Issue038Tests
     {
         sample.Value.SetupReturn(value, Times.Exactly(2));
         sample.Value.Assert().Is(value);
-        Tools.Asserter.Throws<FakeVerifyException>(() => sample.VerifyAllCalls());
+        sample.Assert(s => s.VerifyAllCalls()).Throws<FakeVerifyException>();
         sample.Value.Assert().Is(value);
         sample.VerifyAllCalls();
     }

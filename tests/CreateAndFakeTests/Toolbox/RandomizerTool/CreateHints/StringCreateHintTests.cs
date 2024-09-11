@@ -3,19 +3,14 @@ using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Toolbox.RandomizerTool.CreateHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class StringCreateHintTests : CreateHintTestBase<StringCreateHint>
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly StringCreateHint _TestInstance = new();
 
-    /// <summary>Types that can be created by the hint.</summary>
     private static readonly Type[] _ValidTypes = [typeof(string)];
 
-    /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes = [typeof(object)];
 
-    /// <summary>Sets up the tests.</summary>
     public StringCreateHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 
     [Fact]
@@ -29,8 +24,8 @@ public sealed class StringCreateHintTests : CreateHintTestBase<StringCreateHint>
         {
             string result = (string)hint.TryCreate(typeof(string), CreateChainer()).Item2;
 
-            Tools.Asserter.Is(true, result.Length >= minSize, "Result was too small.");
-            Tools.Asserter.Is(true, result.Length < minSize + range, "Result was too big.");
+            result.Length.Assert().GreaterThanOrEqualTo(minSize, "Result was too small.");
+            result.Length.Assert().LessThan(minSize + range, "Result was too big.");
         }
     }
 
@@ -38,10 +33,10 @@ public sealed class StringCreateHintTests : CreateHintTestBase<StringCreateHint>
     internal static void TryCreate_UsesCharSet()
     {
         StringCreateHint hint = new(3, 0, "a");
+        object value = "aaa";
         for (int i = 0; i < 100; i++)
         {
-            object value = "aaa";
-            Tools.Asserter.Is((true, value), hint.TryCreate(typeof(string), CreateChainer()));
+            hint.TryCreate(typeof(string), CreateChainer()).Assert().Is((true, value));
         }
 
         StringCreateHint hint2 = new(3, 0, "ab");
@@ -49,8 +44,8 @@ public sealed class StringCreateHintTests : CreateHintTestBase<StringCreateHint>
         {
             (bool, object) result = hint2.TryCreate(typeof(string), CreateChainer());
 
-            Tools.Asserter.Is(true, result.Item1);
-            Tools.Asserter.Is(0, ((string)result.Item2).Trim('a', 'b').Length);
+            result.Item1.Assert().Is(true);
+            ((string)result.Item2).Trim('a', 'b').Length.Assert().Is(0);
         }
     }
 }

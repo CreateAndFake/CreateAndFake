@@ -7,7 +7,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent;
 
 /// <summary>Handles common <see cref="Type"/> assertion calls.</summary>
 /// <param name="type"><inheritdoc cref="Type" path="/summary"/></param>
-/// <inheritdoc cref="AssertGroupBase{T}"/>
+/// <inheritdoc cref="AssertObjectBase{T}"/>
 public abstract class AssertTypeBase<T>(IRandom gen, IValuer valuer, Type? type)
     : AssertObjectBase<T>(gen, valuer, type) where T : AssertTypeBase<T>
 {

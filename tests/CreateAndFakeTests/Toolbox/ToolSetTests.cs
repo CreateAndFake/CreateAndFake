@@ -1,6 +1,5 @@
 ﻿namespace CreateAndFakeTests.Toolbox;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class ToolSetTests
 {
     [Fact]

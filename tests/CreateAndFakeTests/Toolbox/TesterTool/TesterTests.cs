@@ -9,14 +9,11 @@ using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class TesterTests
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly Tester _ShortTestInstance = new(Tools.Gen,
         Tools.Randomizer, Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
-    /// <summary>Instance to test with.</summary>
     private static readonly Tester _LongTestInstance = new(Tools.Gen,
         Tools.Randomizer, Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
 

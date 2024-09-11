@@ -40,14 +40,14 @@ public abstract class CreateHintTestBase<T>(
             (bool, object) result = TestInstance.TryCreate(type, CreateChainer());
             try
             {
-                Tools.Asserter.Is(true, result.Item1,
+                result.Item1.Assert().Is(true,
                     "Hint '" + typeof(T).Name + "' did not support type '" + type.Name + "'.");
-                Tools.Asserter.IsNot(null, result.Item2,
+                result.Item2.Assert().IsNot(null,
                     "Hint '" + typeof(T).Name + "' did not create valid '" + type.Name + "'.");
 
                 if (result.Item2 is IEnumerable collection)
                 {
-                    Tools.Asserter.Is(true, collection.GetEnumerator().MoveNext(),
+                    collection.GetEnumerator().MoveNext().Assert().Is(true,
                         "Hint '" + typeof(T).Name + "' failed to create populated '" + type + "'.");
                 }
             }
@@ -64,7 +64,7 @@ public abstract class CreateHintTestBase<T>(
     {
         foreach (Type type in _invalidTypes)
         {
-            Tools.Asserter.Is((false, (object)null), TestInstance.TryCreate(type, CreateChainer()),
+            TestInstance.TryCreate(type, CreateChainer()).Assert().Is((false, (object)null),
                 "Hint '" + typeof(T).Name + "' should not support type '" + type.Name + "'.");
         }
     }

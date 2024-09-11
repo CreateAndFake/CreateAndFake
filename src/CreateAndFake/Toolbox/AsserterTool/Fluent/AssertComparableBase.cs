@@ -5,7 +5,7 @@ namespace CreateAndFake.Toolbox.AsserterTool.Fluent;
 
 /// <summary>Handles common comparables assertion calls.</summary>
 /// <param name="value"><inheritdoc cref="Value" path="/summary"/></param>
-/// <inheritdoc cref="AssertGroupBase{T}"/>
+/// <inheritdoc cref="AssertObjectBase{T}"/>
 public abstract class AssertComparableBase<T>(IRandom gen, IValuer valuer, IComparable? value)
     : AssertObjectBase<T>(gen, valuer, value) where T : AssertComparableBase<T>
 {

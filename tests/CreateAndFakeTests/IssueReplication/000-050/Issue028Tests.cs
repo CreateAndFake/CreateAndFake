@@ -1,6 +1,5 @@
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue028Tests
 {
     internal sealed class Sample
@@ -11,7 +10,6 @@ public static class Issue028Tests
     [Fact]
     internal static void Issue028_ConditionalCreation()
     {
-        Sample sample = Tools.Randomizer.Create<Sample>(s => s.Value > 0);
-        (sample.Value > 0).Assert().Is(true);
+        Tools.Randomizer.Create<Sample>(s => s.Value > 0).Value.Assert().GreaterThan(0);
     }
 }

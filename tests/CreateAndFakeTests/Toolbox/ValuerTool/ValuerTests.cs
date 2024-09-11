@@ -3,7 +3,6 @@ using CreateAndFake.Toolbox.ValuerTool;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class ValuerTests
 {
     [Fact]
@@ -15,67 +14,65 @@ public static class ValuerTests
     [Fact]
     internal static void New_NullHintsValid()
     {
-        Tools.Asserter.IsNot(null, new Valuer(true, null));
-        Tools.Asserter.IsNot(null, new Valuer(false, null));
+        new Valuer(true, null).Assert().Pass();
+        new Valuer(false, null).Assert().Pass();
     }
 
     [Fact]
     internal static void GetHashCode_MissingMatchThrows()
     {
-        _ = Tools.Asserter.Throws<NotSupportedException>(
-            () => new Valuer(false).GetHashCode((object)null));
+        new Valuer(false)
+            .Assert(v => v.GetHashCode((object)null))
+            .Throws<NotSupportedException>();
 
-        _ = Tools.Asserter.Throws<NotSupportedException>(
-            () => new Valuer(false).GetHashCode(new object()));
-    }
-
-    [Fact]
-    internal static void GetHashCode_SupportsMultiple()
-    {
-        int[] data = [Tools.Randomizer.Create<int>(), Tools.Randomizer.Create<int>()];
-
-        Tools.Asserter.Is(Tools.Valuer.GetHashCode(data), Tools.Valuer.GetHashCode(data[0], data[1]));
+        new Valuer(false)
+            .Assert(v => v.GetHashCode(new object()))
+            .Throws<NotSupportedException>();
     }
 
     [Theory, RandomData]
-    internal static void GetHashCode_ValidHint(object data, int result, Fake<CompareHint> hint)
+    internal static void GetHashCode_SupportsMultiple(int value1, int value2)
     {
-        hint.Setup("Supports",
+        Tools.Valuer.GetHashCode(value1, value2).Assert().Is(Tools.Valuer.GetHashCode([value1, value2]));
+    }
+
+    [Theory, RandomData]
+    internal static void GetHashCode_ValidHint(object data, int result, [Fake] CompareHint hint)
+    {
+        hint.ToFake().Setup("Supports",
             [data, data, Arg.LambdaAny<ValuerChainer>()],
             Behavior.Returns(true, Times.Once));
-        hint.Setup("GetHashCode",
+        hint.ToFake().Setup("GetHashCode",
             [data, Arg.LambdaAny<ValuerChainer>()],
             Behavior.Returns(result, Times.Once));
 
-        Tools.Asserter.Is(result, new Valuer(false, hint.Dummy).GetHashCode(data));
-        hint.VerifyAll(Times.Exactly(2));
+        new Valuer(false, hint).GetHashCode(data).Assert().Is(result);
+        hint.VerifyAllCalls(Times.Exactly(2));
     }
 
     [Fact]
     internal static void Compare_MissingMatchThrows()
     {
-        _ = Tools.Asserter.Throws<NotSupportedException>(
-            () => new Valuer(false).Compare(null, new object()));
-
-        _ = Tools.Asserter.Throws<NotSupportedException>(
-            () => new Valuer(false).Compare(new object(), new object()));
+        new Valuer(false).Assert(v => v.Compare(null, new object())).Throws<NotSupportedException>();
+        new Valuer(false).Assert(v => v.Compare(new object(), new object())).Throws<NotSupportedException>();
     }
 
     [Theory, RandomData]
     internal static void Compare_ReferenceNoDifferences(object data)
     {
-        Tools.Asserter.IsEmpty(new Valuer(false).Compare(data, data));
+        new Valuer(false).Compare(data, data).Assert().IsEmpty();
     }
 
     [Theory, RandomData]
     internal static void Compare_NullableWorks(int? item)
     {
-        Tools.Asserter.IsNot(item, Tools.Mutator.Variant(item));
-        Tools.Asserter.Is(item, Tools.Duplicator.Copy(item));
-        Tools.Asserter.IsNot(item, null);
+        item.Assert().IsNot(null);
+        item.CreateVariant().Assert().IsNot(item);
+        item.CreateDeepClone().Assert().Is(item);
+
         int? none = null;
-        Tools.Asserter.IsNot(item, none);
-        Tools.Asserter.Is(none, none);
+        none.Assert().IsNot(item);
+        none.Assert().Is(none);
     }
 
     [Theory, RandomData]
@@ -88,8 +85,7 @@ public static class ValuerTests
             [data1, data2, Arg.LambdaAny<ValuerChainer>()],
             Behavior.Returns(Enumerable.Empty<Difference>(), Times.Once));
 
-        Tools.Asserter.Is(true, new Valuer(false, hint.Dummy).Equals(data1, data2));
-
+        new Valuer(false, hint.Dummy).Equals(data1, data2).Assert().Is(true);
         hint.VerifyAll(Times.Exactly(2));
     }
 
@@ -103,8 +99,7 @@ public static class ValuerTests
             [data1, data2, Arg.LambdaAny<ValuerChainer>()],
             Behavior.Returns(Tools.Randomizer.Create<IEnumerable<Difference>>(), Times.Once));
 
-        Tools.Asserter.Is(false, new Valuer(false, hint.Dummy).Equals(data1, data2));
-
+        new Valuer(false, hint.Dummy).Equals(data1, data2).Assert().Is(false);
         hint.VerifyAll(Times.Exactly(2));
     }
 
@@ -115,10 +110,11 @@ public static class ValuerTests
             [item1, item2, Arg.LambdaAny<ValuerChainer>()],
             Behavior.Throw<InsufficientExecutionStackException>(Times.Once));
 
-        InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
-            () => new Valuer(false, hint.Dummy).Compare(item1, item2));
-
-        Tools.Asserter.Is(true, e.Message.Contains(item1.GetType().Name));
+        new Valuer(false, hint.Dummy)
+            .Assert(v => v.Compare(item1, item2))
+            .Throws<InsufficientExecutionStackException>().Message
+            .Assert()
+            .Contains(item1.GetType().Name);
     }
 
     [Theory, RandomData]
@@ -128,21 +124,26 @@ public static class ValuerTests
             [item, item, Arg.LambdaAny<ValuerChainer>()],
             Behavior.Throw<InsufficientExecutionStackException>(Times.Once));
 
-        InsufficientExecutionStackException e = Tools.Asserter.Throws<InsufficientExecutionStackException>(
-            () => new Valuer(false, hint.Dummy).GetHashCode(item));
-
-        Tools.Asserter.Is(true, e.Message.Contains(item.GetType().Name));
+        new Valuer(false, hint.Dummy)
+            .Assert(v => v.GetHashCode(item))
+            .Throws<InsufficientExecutionStackException>().Message
+            .Assert()
+            .Contains(item.GetType().Name);
     }
 
     [Fact]
     internal static void GetHashCode_CanNotSupportNull()
     {
-        _ = Tools.Asserter.Throws<NotSupportedException>(() => new Valuer(false).GetHashCode((object)null));
+        new Valuer(false)
+            .Assert(v => v.GetHashCode((object)null))
+            .Throws<NotSupportedException>();
     }
 
     [Fact]
     internal static void Compare_CanNotSupportNull()
     {
-        _ = Tools.Asserter.Throws<NotSupportedException>(() => new Valuer(false).Compare(null, new object()));
+        new Valuer(false)
+            .Assert(v => v.Compare(null, new object()))
+            .Throws<NotSupportedException>();
     }
 }

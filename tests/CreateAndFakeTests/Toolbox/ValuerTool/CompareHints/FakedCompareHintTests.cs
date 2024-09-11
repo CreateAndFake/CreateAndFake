@@ -5,18 +5,13 @@ using CreateAndFakeTests.TestBases;
 
 namespace CreateAndFakeTests.Toolbox.ValuerTool.CompareHints;
 
-/// <summary>Verifies behavior.</summary>
 public sealed class FakedCompareHintTests : CompareHintTestBase<FakedCompareHint>
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly FakedCompareHint _TestInstance = new();
 
-    /// <summary>Types that can be created by the hint.</summary>
     private static readonly Type[] _ValidTypes = [typeof(IFaked)];
 
-    /// <summary>Types that can't be created by the hint.</summary>
     private static readonly Type[] _InvalidTypes = [typeof(IEnumerable), typeof(string), typeof(int)];
 
-    /// <summary>Sets up the tests.</summary>
     public FakedCompareHintTests() : base(_TestInstance, _ValidTypes, _InvalidTypes) { }
 }

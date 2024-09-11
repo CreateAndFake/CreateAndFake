@@ -65,6 +65,7 @@
         "omnisharp",
         "outofbounds",
         "Randomizer",
+        "Reflectable",
         "reportgenerator",
         "serializables",
         "signoff",

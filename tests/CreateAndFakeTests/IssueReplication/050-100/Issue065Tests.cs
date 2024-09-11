@@ -1,6 +1,5 @@
 ﻿namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue065Tests
 {
     internal sealed class InfiniteA
@@ -38,13 +37,14 @@ public static class Issue065Tests
 
     private static void TestInfiniteSample<T>(T sample) where T : new()
     {
-        Tools.Asserter.IsNot(null, sample);
-        Tools.Asserter.IsNot(new T(), sample);
-        Tools.Asserter.IsNot(sample, Tools.Mutator.Variant(sample));
+        sample.Assert()
+            .IsNot(null).And
+            .IsNot(new T()).And
+            .IsNot(sample.CreateVariant());
 
-        T dupe = Tools.Duplicator.Copy(sample);
+        T dupe = sample.CreateDeepClone();
 
-        Tools.Asserter.Is(sample, dupe);
-        Tools.Asserter.Is(Tools.Valuer.GetHashCode(sample), Tools.Valuer.GetHashCode(dupe));
+        dupe.Assert().Is(sample);
+        Tools.Valuer.GetHashCode(dupe).Assert().Is(Tools.Valuer.GetHashCode(sample));
     }
 }

@@ -18,25 +18,25 @@ public static class AssertTextTests
     }
 
     [Theory, RandomData]
-    internal static void Contains_UsingSubstring_Success(ICollection<string> sample)
+    internal static void Contains_UsingSubstring(ICollection<string> sample)
     {
         string.Join("", sample).Assert().Contains(Tools.Gen.NextItem(sample));
     }
 
     [Theory, RandomData]
-    internal static void Contains_RandomOther_Failure(string sample)
+    internal static void Contains_RandomOther(string sample)
     {
         sample.Assert(d => d.Assert().Contains(Tools.Mutator.Variant(sample))).Throws<AssertException>();
     }
 
     [Theory, RandomData]
-    internal static void ContainsNot_RandomOther_Success(string sample)
+    internal static void ContainsNot_RandomOther(string sample)
     {
         sample.Assert().ContainsNot(Tools.Mutator.Variant(sample));
     }
 
     [Theory, RandomData]
-    internal static void ContainsNot_UsingSubstring_Failure(ICollection<string> sample)
+    internal static void ContainsNot_UsingSubstring(ICollection<string> sample)
     {
         string.Join("", sample)
             .Assert(d => d.Assert().ContainsNot(Tools.Gen.NextItem(sample)))
@@ -44,13 +44,13 @@ public static class AssertTextTests
     }
 
     [Theory, RandomData]
-    internal static void StartsWith_UsingFirstString_Success(ICollection<string> sample)
+    internal static void StartsWith_UsingFirstString(ICollection<string> sample)
     {
         string.Join("", sample).Assert().StartsWith(sample.First());
     }
 
     [Theory, RandomData]
-    internal static void StartsWith_UsingNonFirstString_Failure([Size(3)] ICollection<string> sample)
+    internal static void StartsWith_UsingNonFirstString([Size(3)] ICollection<string> sample)
     {
         string.Join("", sample)
             .Assert(d => d.Assert().StartsWith(Tools.Gen.NextItem(sample.Skip(1))))
@@ -58,13 +58,13 @@ public static class AssertTextTests
     }
 
     [Theory, RandomData]
-    internal static void StartsNotWith_UsingNonFirstString_Success([Size(3)] ICollection<string> sample)
+    internal static void StartsNotWith_UsingNonFirstString([Size(3)] ICollection<string> sample)
     {
         string.Join("", sample).Assert().StartsNotWith(Tools.Gen.NextItem(sample.Skip(1)));
     }
 
     [Theory, RandomData]
-    internal static void StartsNotWith_UsingFirstString_Failure(ICollection<string> sample)
+    internal static void StartsNotWith_UsingFirstString(ICollection<string> sample)
     {
         string.Join("", sample)
             .Assert(d => d.Assert().StartsNotWith(sample.First()))
@@ -72,13 +72,13 @@ public static class AssertTextTests
     }
 
     [Theory, RandomData]
-    internal static void EndsWith_UsingLastString_Success(ICollection<string> sample)
+    internal static void EndsWith_UsingLastString(ICollection<string> sample)
     {
         string.Join("", sample).Assert().EndsWith(sample.Last());
     }
 
     [Theory, RandomData]
-    internal static void EndsWith_UsingNonLstString_Failure([Size(3)] ICollection<string> sample)
+    internal static void EndsWith_UsingNonLstString([Size(3)] ICollection<string> sample)
     {
         string.Join("", sample)
             .Assert(d => d.Assert().EndsWith(Tools.Gen.NextItem(sample.Reverse().Skip(1))))
@@ -86,13 +86,13 @@ public static class AssertTextTests
     }
 
     [Theory, RandomData]
-    internal static void EndsNotWith_UsingNonLastString_Success([Size(3)] ICollection<string> sample)
+    internal static void EndsNotWith_UsingNonLastString([Size(3)] ICollection<string> sample)
     {
         string.Join("", sample).Assert().EndsNotWith(Tools.Gen.NextItem(sample.Reverse().Skip(1)));
     }
 
     [Theory, RandomData]
-    internal static void EndsNotWith_UsingLstString_Failure(ICollection<string> sample)
+    internal static void EndsNotWith_UsingLstString(ICollection<string> sample)
     {
         string.Join("", sample)
             .Assert(d => d.Assert().EndsNotWith(sample.Last()))

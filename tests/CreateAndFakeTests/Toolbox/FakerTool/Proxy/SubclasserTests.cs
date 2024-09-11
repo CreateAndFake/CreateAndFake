@@ -6,7 +6,6 @@ using CreateAndFakeTests.Toolbox.FakerTool.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy;
 
-/// <summary>Verifies behavior.</summary>
 public static class SubclasserTests
 {
     [Fact]
@@ -24,87 +23,86 @@ public static class SubclasserTests
     [Fact]
     internal static void Create_InterfacesWork()
     {
-        Tools.Asserter.IsNot(null, Subclasser.Create<IFakeSample>());
-        Tools.Asserter.IsNot(null, Subclasser.Create<IFakeSample>(typeof(IClashingFakeSample)));
+        Subclasser.Create<IFakeSample>().Assert().IsNot(null);
+        Subclasser.Create<IFakeSample>(typeof(IClashingFakeSample)).Assert().IsNot(null);
     }
 
     [Fact]
     internal static void Create_ClassesWork()
     {
-        Tools.Asserter.IsNot(null, Subclasser.Create<AbstractFakeSample>());
-        Tools.Asserter.IsNot(null, Subclasser.Create<VirtualFakeSample>());
+        Subclasser.Create<AbstractFakeSample>().Assert().IsNot(null);
+        Subclasser.Create<VirtualFakeSample>().Assert().IsNot(null);
     }
 
     [Fact]
     internal static void Create_BothWork()
     {
-        Tools.Asserter.IsNot(null, Subclasser.Create<AbstractFakeSample>(typeof(IFakeSample)));
-        Tools.Asserter.IsNot(null, Subclasser.Create<VirtualFakeSample>(
-            typeof(IFakeSample), typeof(IClashingFakeSample)));
+        Subclasser.Create<AbstractFakeSample>(typeof(IFakeSample)).Assert().IsNot(null);
+        Subclasser.Create<VirtualFakeSample>(typeof(IFakeSample), typeof(IClashingFakeSample)).Assert().IsNot(null);
     }
 
     [Fact]
     internal static void Create_IFakedDefault()
     {
-        Tools.Asserter.Is(true, Subclasser.Create<object>() is IFaked);
-        Tools.Asserter.IsNot(null, Subclasser.Create(null, null));
+        Subclasser.Create<object>().GetType().Assert().Inherits<IFaked>();
+        Subclasser.Create(null, null).Assert().IsNot(null);
     }
 
     [Fact]
     internal static void Create_IFakedFunctional()
     {
-        Tools.Asserter.IsNot(null, Subclasser.Create<IFaked>().FakeMeta);
+        Subclasser.Create<IFaked>().FakeMeta.Assert().IsNot(null);
     }
 
     [Fact]
     internal static void Create_OnlyMultipleInterfaces()
     {
-        Tools.Asserter.Throws<ArgumentException>(() => Subclasser.Create<DataSample>(typeof(object)));
+        typeof(object).Assert(t => Subclasser.Create<DataSample>(t)).Throws<ArgumentException>();
     }
 
     [Fact]
     internal static void Create_SealedTypesThrow()
     {
-        Tools.Asserter.Throws<ArgumentException>(() => Subclasser.Create<string>());
+        typeof(string).Assert(t => Subclasser.Create(t)).Throws<ArgumentException>();
     }
 
     [Fact]
     internal static void CreateInfo_NoDuplicatesCreated()
     {
-        Tools.Asserter.Is(Subclasser.CreateInfo(typeof(IFakeSample), typeof(IClashingFakeSample)),
+        Subclasser.CreateInfo(typeof(IFakeSample), typeof(IClashingFakeSample)).Assert().ReferenceEqual(
             Subclasser.CreateInfo(typeof(IClashingFakeSample), typeof(IFakeSample)));
     }
 
     [Fact]
     internal static void CreateInfo_IgnoreDupeInterfaces()
     {
-        Tools.Asserter.Is(Subclasser.CreateInfo(typeof(IFakeSample)),
+        Subclasser.CreateInfo(typeof(IFakeSample)).Assert().ReferenceEqual(
             Subclasser.CreateInfo(typeof(IFakeSample), typeof(IFakeSample)));
     }
 
     [Fact]
     internal static void Create_DefinedGenericsWork()
     {
-        Tools.Asserter.IsNot(null, Subclasser.Create<ConstraintSample<int, DataSample>>());
-        Tools.Asserter.IsNot(null, Subclasser.Create<ConstraintSample<bool, DataSample>>());
+        Subclasser.Create<ConstraintSample<int, DataSample>>().Assert().IsNot(null);
+        Subclasser.Create<ConstraintSample<bool, DataSample>>().Assert().IsNot(null);
     }
 
     [Fact]
     internal static void Create_UndefinedGenericsThrow()
     {
-        Tools.Asserter.Throws<ArgumentException>(() => Subclasser.Create(typeof(ConstraintSample<,>)));
+        typeof(ConstraintSample<,>).Assert(t => Subclasser.Create(t)).Throws<ArgumentException>();
     }
 
     [Fact]
     internal static void Create_PointersThrow()
     {
-        Tools.Asserter.Throws<ArgumentException>(() => Subclasser.Create(typeof(void*)));
+        typeof(void*).Assert(t => Subclasser.Create(t)).Throws<ArgumentException>();
     }
 
     [Fact]
     internal static void Create_InternalTypesThrow()
     {
-        Tools.Asserter.Throws<ArgumentException>(() => Subclasser.Create<InternalSample>());
+        typeof(InternalSample).Assert(t => Subclasser.Create(t)).Throws<ArgumentException>();
     }
 
     [Fact]
@@ -122,10 +120,8 @@ public static class SubclasserTests
         type.Assembly.SetupReturn(typeof(object).Assembly);
         type.Name.SetupReturn("TestInvisibleType");
 
-        Tools.Asserter
-            .Throws<ArgumentException>(() => Subclasser.Create(type))
-            .Message
-            .Assert()
-            .Contains("InternalsVisibleTo");
+        type.Assert(t => Subclasser.Create(t))
+            .Throws<ArgumentException>().Message
+            .Assert().Contains("InternalsVisibleTo");
     }
 }

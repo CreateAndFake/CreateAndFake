@@ -1,6 +1,5 @@
 namespace CreateAndFakeTests.IssueReplication;
 
-/// <summary>Verifies issue is resolved.</summary>
 public static class Issue021Tests
 {
     internal sealed class Sample

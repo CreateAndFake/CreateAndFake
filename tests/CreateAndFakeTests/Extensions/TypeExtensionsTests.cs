@@ -5,7 +5,6 @@ using TypeExtensions = CreateAndFake.Toolbox.TypeExtensions;
 
 namespace CreateAndFakeTests.Extensions;
 
-/// <summary>Verifies behavior.</summary>
 public static class TypeExtensionsTests
 {
     [Fact]
@@ -20,7 +19,7 @@ public static class TypeExtensionsTests
         Type testType = Tools.Faker.Stub<object>(Assembly.GetExecutingAssembly()
             .GetTypes().Where(t => t.IsInterface).Where(t => t.IsVisible).ToArray()).GetType();
 
-        Tools.Asserter.Is(true, Parallel.For(0, 10, i => testType.Inherits<object>()).IsCompleted);
+        Parallel.For(0, 10, i => testType.Inherits<object>()).IsCompleted.Assert().Is(true);
     }
 
     [Theory, RandomData]

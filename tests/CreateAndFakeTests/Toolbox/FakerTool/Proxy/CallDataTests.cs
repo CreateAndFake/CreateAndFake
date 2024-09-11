@@ -4,7 +4,6 @@ using CreateAndFakeTests.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.FakerTool.Proxy;
 
-/// <summary>Verifies behavior.</summary>
 public static class CallDataTests
 {
     [Fact]
@@ -20,12 +19,11 @@ public static class CallDataTests
     }
 
     [Theory, RandomData]
-    internal static void MatchesCall_MethodNameMismatch(DataHolderSample[] data, Type[] generics, string name1)
+    internal static void MatchesCall_MethodNameMismatch(DataHolderSample[] data, Type[] generics, string name)
     {
-        string name2 = Tools.Mutator.Variant(name1);
-
-        Tools.Asserter.Is(false, new CallData(name1, generics, data, Tools.Valuer)
-            .MatchesCall(new CallData(name2, generics, data, null)));
+        new CallData(name, generics, data, Tools.Valuer)
+            .MatchesCall(new CallData(name.CreateVariant(), generics, data, null))
+            .Assert().Is(false);
     }
 
     [Theory, RandomData]
@@ -34,8 +32,9 @@ public static class CallDataTests
         Type[] generics1 = Tools.Randomizer.Create<Type[]>().Except([typeof(AnyGeneric)]).ToArray();
         Type[] generics2 = Tools.Mutator.Variant(generics1);
 
-        Tools.Asserter.Is(false, new CallData(name, generics1, data, Tools.Valuer)
-            .MatchesCall(new CallData(name, generics2, data, null)));
+        new CallData(name, generics1, data, Tools.Valuer)
+            .MatchesCall(new CallData(name, generics2, data, null))
+            .Assert().Is(false);
     }
 
     [Theory, RandomData]
@@ -43,19 +42,22 @@ public static class CallDataTests
     {
         Type[] generics2 = generics1.Select(t => typeof(AnyGeneric)).ToArray();
 
-        Tools.Asserter.Is(true, new CallData(name, generics2, data, Tools.Valuer)
-            .MatchesCall(new CallData(name, generics1, data, null)));
+        new CallData(name, generics2, data, Tools.Valuer)
+            .MatchesCall(new CallData(name, generics1, data, null))
+            .Assert().Is(true);
     }
 
     [Theory, RandomData]
     internal static void MatchesCall_DataMatchBehavior(string name, Type[] generics, DataHolderSample[] data1)
     {
-        DataHolderSample[] data2 = data1.Select(d => Tools.Duplicator.Copy(d)).ToArray();
+        DataHolderSample[] data2 = data1.Select(d => d.CreateDeepClone()).ToArray();
 
-        Tools.Asserter.Is(true, new CallData(name, generics, data1, Tools.Valuer)
-            .MatchesCall(new CallData(name, generics, data2, null)));
+        new CallData(name, generics, data1, Tools.Valuer)
+            .MatchesCall(new CallData(name, generics, data2, null))
+            .Assert().Is(true);
 
-        Tools.Asserter.Is(false, new CallData(name, generics, data1, null)
-            .MatchesCall(new CallData(name, generics, data2, null)));
+        new CallData(name, generics, data1, null)
+            .MatchesCall(new CallData(name, generics, data2, null))
+            .Assert().Is(false);
     }
 }

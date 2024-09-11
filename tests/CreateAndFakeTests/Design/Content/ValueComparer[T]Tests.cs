@@ -3,7 +3,6 @@ using CreateAndFake.Toolbox.FakerTool;
 
 namespace CreateAndFakeTests.Design.Content;
 
-/// <summary>Verifies behavior.</summary>
 public static class ValueComparer_T_Tests
 {
     [Fact]
@@ -19,42 +18,42 @@ public static class ValueComparer_T_Tests
     }
 
     [Theory, RandomData]
-    internal static void ValueComparer_ValueEquatableBehavior(
-        Fake<IValueEquatable> fake,
-        Fake<IValueEquatable> equalFake,
-        Fake<IValueEquatable> unequalFake)
+    internal static void GetHashCode_UsesGetValueHash([Fake] IValueEquatable stub, int hash)
     {
+        stub.GetValueHash().SetupReturn(hash, 3);
+        ValueComparer<IValueEquatable>.Use.GetHashCode(stub).Assert().Is(hash);
+        ValueComparer<IValueEquatable>.Use.GetHashCode([stub]).Assert().IsNot(0);
+        ValueComparer<IValueEquatable>.Use.GetHashCode(MapByIndex([stub])).Assert().IsNot(0);
+        stub.VerifyAllCalls();
+    }
+
+    [Theory, RandomData]
+    internal static void Equals_UsesValuesEqual(
+        [Fake] IValueEquatable stub1, [Fake] IValueEquatable stub2, bool result)
+    {
+        stub1.ValuesEqual(stub2).SetupReturn(result);
+        stub2.ValuesEqual(stub1).SetupReturn(result);
+
+        ValueComparer<IValueEquatable>.Use.Equals(stub1, stub2).Assert().Is(result);
+        ValueComparer<IValueEquatable>.Use.Equals([stub1], [stub2]).Assert().Is(result);
+        ValueComparer<IValueEquatable>.Use.Equals(MapByIndex([stub1]), MapByIndex([stub2])).Assert().Is(result);
+    }
+
+    [Theory, RandomData]
+    internal static void Equals_UsesGetValueHash(
+        [Fake] IValueEquatable stub, [Fake] IValueEquatable equalStub, [Fake] IValueEquatable unequalStub, int hash)
+    {
+        stub.GetValueHash().SetupReturn(hash);
+        equalStub.GetValueHash().SetupReturn(hash);
+        unequalStub.GetValueHash().SetupReturn(hash.CreateVariant());
+
         ValueComparer<IValueEquatable> comparer = ValueComparer<IValueEquatable>.Use;
 
-        fake.Setup(m => m.GetValueHash(), Behavior.Returns(1));
-        equalFake.Setup(m => m.GetValueHash(), Behavior.Returns(1));
-        unequalFake.Setup(m => m.GetValueHash(), Behavior.Returns(-1));
-
-        comparer.GetHashCode(fake.Dummy).Assert().Is(1);
-        comparer.GetHashCode(unequalFake.Dummy).Assert().Is(-1);
-        comparer.GetHashCode([fake.Dummy]).Assert().IsNot(0);
-        comparer.GetHashCode(MapByIndex([fake.Dummy])).Assert().IsNot(0);
-
-        fake.Setup(m => m.ValuesEqual(equalFake.Dummy), Behavior.Returns(true));
-        comparer.Equals(fake.Dummy, equalFake.Dummy).Assert().Is(true);
-        comparer.Equals([fake.Dummy], [fake.Dummy]).Assert().Is(true);
-        comparer.Equals(MapByIndex([fake.Dummy]), MapByIndex([fake.Dummy])).Assert().Is(true);
-
-        fake.Setup(m => m.ValuesEqual(unequalFake.Dummy), Behavior.Returns(false));
-        comparer.Equals(fake.Dummy, unequalFake.Dummy).Assert().Is(false);
-        comparer.Equals([fake.Dummy], [unequalFake.Dummy]).Assert().Is(false);
-        comparer.Equals(MapByIndex([fake.Dummy]), MapByIndex([unequalFake.Dummy])).Assert().Is(false);
-
-        fake.Setup(m => m.ValuesEqual(null), Behavior.Returns(false));
-        comparer.Equals(fake.Dummy, null).Assert().Is(false);
-        comparer.Equals(null, fake.Dummy).Assert().Is(false);
-        comparer.Equals((IValueEquatable)null, null).Assert().Is(true);
-
-        comparer.Compare(fake.Dummy, fake.Dummy).Assert().Is(0);
-        comparer.Compare(fake.Dummy, equalFake.Dummy).Assert().Is(0);
-        comparer.Compare(fake.Dummy, unequalFake.Dummy).Assert().IsNot(0);
-        comparer.Compare(fake.Dummy, null).Assert().IsNot(0);
-        comparer.Compare(null, fake.Dummy).Assert().IsNot(0);
+        comparer.Compare(stub, stub).Assert().Is(0);
+        comparer.Compare(stub, equalStub).Assert().Is(0);
+        comparer.Compare(stub, unequalStub).Assert().IsNot(0);
+        comparer.Compare(stub, null).Assert().IsNot(0);
+        comparer.Compare(null, stub).Assert().IsNot(0);
         comparer.Compare((IValueEquatable)null, null).Assert().Is(0);
     }
 

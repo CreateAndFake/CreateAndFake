@@ -6,7 +6,6 @@ namespace CreateAndFakeTests.Design.Content;
 
 #pragma warning disable CA1859 // Change to concrete types: Needed for generic resolution.
 
-/// <summary>Verifies behavior.</summary>
 public static class ValueComparerTests
 {
     private static readonly int[] _OneValue = [0];
@@ -28,8 +27,8 @@ public static class ValueComparerTests
     [Fact]
     internal static void Equals_MismatchSizeFalse()
     {
-        Tools.Asserter.Is(false, ValueComparer.Use.Equals(_OneValue, _TwoValues));
-        Tools.Asserter.Is(false, ValueComparer.Use.Equals(_TwoValues, _OneValue));
+        ValueComparer.Use.Equals(_OneValue, _TwoValues).Assert().Is(false);
+        ValueComparer.Use.Equals(_TwoValues, _OneValue).Assert().Is(false);
     }
 
     [Theory, RandomData]
@@ -41,32 +40,33 @@ public static class ValueComparerTests
     }
 
     [Theory, RandomData]
-    internal static void ValueComparer_SupportsValueEquatable(
-        Fake<IValueEquatable> stub1, Fake<IValueEquatable> stub2)
+    internal static void Equals_SupportsValueEquatable(
+        [Fake] IValueEquatable stub1, [Fake] IValueEquatable stub2, bool result)
     {
-        ValueComparer.Use.Equals(stub1.Dummy, stub2.Dummy);
-        Tools.Asserter.CheckAll(
-            () => stub1.Verify(1, m => m.ValuesEqual(stub2.Dummy)),
-            () => stub1.VerifyTotalCalls(1),
-            () => stub2.VerifyTotalCalls(0));
+        stub1.ValuesEqual(stub2).SetupReturn(result);
+        stub2.ValuesEqual(stub1).SetupReturn(result);
 
-        ValueComparer.Use.Equals((object)stub1.Dummy, stub2.Dummy);
-        Tools.Asserter.CheckAll(
-            () => stub1.Verify(2, m => m.ValuesEqual(stub2.Dummy)),
-            () => stub1.VerifyTotalCalls(2),
-            () => stub2.VerifyTotalCalls(0));
+        ValueComparer.Use.Equals(stub1, stub2).Assert().Is(result);
+        ValueComparer.Use.Equals((object)stub1, stub2).Assert().Is(result);
+    }
 
-        ValueComparer.Use.Compare(stub1.Dummy, stub2.Dummy);
-        Tools.Asserter.CheckAll(
-            () => stub1.Verify(1, m => m.GetValueHash()),
-            () => stub1.VerifyTotalCalls(3),
-            () => stub2.Verify(1, m => m.GetValueHash()),
-            () => stub2.VerifyTotalCalls(1));
+    [Theory, RandomData]
+    internal static void Equals_SupportsValueEquatableNulls([Fake] IValueEquatable stub, bool result)
+    {
+        stub.ValuesEqual(null).SetupReturn(result, 2);
+        ValueComparer.Use.Equals(stub, null).Assert().Is(result);
+        ValueComparer.Use.Equals(null, stub).Assert().Is(result);
+        ValueComparer.Use.Equals((IValueEquatable)null, null).Assert().Is(true);
+        stub.VerifyAllCalls();
+    }
 
-        ValueComparer.Use.GetHashCode((object)stub1.Dummy);
-        Tools.Asserter.CheckAll(
-            () => stub1.Verify(2, m => m.GetValueHash()),
-            () => stub1.VerifyTotalCalls(4));
+    [Theory, RandomData]
+    internal static void GetHashCode_SupportsValueEquatable([Fake] IValueEquatable stub, int hash)
+    {
+        stub.GetValueHash().SetupReturn(hash, 2);
+        ValueComparer.Use.GetHashCode(stub).Assert().Is(hash);
+        ValueComparer.Use.GetHashCode((object)stub).Assert().Is(hash);
+        stub.VerifyAllCalls();
     }
 
     [Fact]
@@ -106,7 +106,6 @@ public static class ValueComparerTests
         TestBehavior<Dictionary<string, string>, IDictionary>(ValueComparer.Use, ValueComparer.Use);
     }
 
-    /// <summary>Verifies instance behavior.</summary>
     private static void TestBehavior<TActual, TComparer>(
         IComparer<TComparer> comparer, IEqualityComparer<TComparer> equalityComparer) where TActual : TComparer
     {
@@ -114,19 +113,19 @@ public static class ValueComparerTests
         TActual equalObject = Tools.Duplicator.Copy(baseObject);
         TActual unequalObject = Tools.Mutator.Variant(baseObject);
 
+        Tools.Asserter.Is(true, equalityComparer.Equals(default, default));
         Tools.Asserter.Is(true, equalityComparer.Equals(baseObject, baseObject));
         Tools.Asserter.Is(true, equalityComparer.Equals(baseObject, equalObject));
         Tools.Asserter.Is(false, equalityComparer.Equals(baseObject, unequalObject));
         Tools.Asserter.Is(false, equalityComparer.Equals(baseObject, default));
         Tools.Asserter.Is(false, equalityComparer.Equals(default, baseObject));
-        Tools.Asserter.Is(true, equalityComparer.Equals(default, default));
 
+        Tools.Asserter.Is(0, comparer.Compare(default, default));
         Tools.Asserter.Is(0, comparer.Compare(baseObject, baseObject));
         Tools.Asserter.Is(0, comparer.Compare(baseObject, equalObject));
         Tools.Asserter.IsNot(0, comparer.Compare(baseObject, unequalObject));
         Tools.Asserter.IsNot(0, comparer.Compare(baseObject, default));
         Tools.Asserter.IsNot(0, comparer.Compare(default, baseObject));
-        Tools.Asserter.Is(0, comparer.Compare(default, default));
     }
 }
 

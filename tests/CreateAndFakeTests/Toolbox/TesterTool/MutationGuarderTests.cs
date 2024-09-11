@@ -6,15 +6,12 @@ using CreateAndFakeTests.Toolbox.TesterTool.TestSamples;
 
 namespace CreateAndFakeTests.Toolbox.TesterTool;
 
-/// <summary>Verifies behavior.</summary>
 public static class MutationGuarderTests
 {
-    /// <summary>Instance to test with.</summary>
     private static readonly MutationGuarder _ShortTestInstance = new(
         new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
         Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 0, 0, 100));
 
-    /// <summary>Instance to test with.</summary>
     private static readonly MutationGuarder _LongTestInstance = new(
         new GenericFixer(Tools.Gen, Tools.Randomizer), Tools.Randomizer,
         Tools.Duplicator, Tools.Asserter, new TimeSpan(0, 0, 10));
@@ -34,8 +31,9 @@ public static class MutationGuarderTests
     [Fact]
     internal static void PreventsParameterMutation_OnStatics()
     {
-        Tools.Asserter.Throws<AssertException>(() =>
-            Tools.Tester.PreventsParameterMutation(typeof(StaticMutationSample)));
+        Tools.Tester
+            .Assert(t => t.PreventsParameterMutation(typeof(StaticMutationSample)))
+            .Throws<AssertException>();
     }
 
     [Fact]
@@ -65,8 +63,9 @@ public static class MutationGuarderTests
     [Fact]
     internal static void CallMethod_TimesOut()
     {
-        Tools.Asserter.Throws<TimeoutException>(() => _ShortTestInstance
-            .PreventsMutationOnStatics(typeof(LongMethodSample), false));
+        _ShortTestInstance
+            .Assert(t => t.PreventsMutationOnStatics(typeof(LongMethodSample), false))
+            .Throws<TimeoutException>();
     }
 
     [Fact]

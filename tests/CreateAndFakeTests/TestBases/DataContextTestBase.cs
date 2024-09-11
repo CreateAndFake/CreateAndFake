@@ -28,6 +28,6 @@ public abstract class DataContextTestBase<T> where T : BaseDataContext
     [Theory, RandomData]
     public void DataContext_DataVaries(T testInstance)
     {
-        Tools.Mutator.Variant(testInstance).Assert().IsNot(testInstance);
+        testInstance.CreateVariant().Assert().IsNot(testInstance);
     }
 }
