@@ -56,6 +56,45 @@ public sealed class Mutator(IRandomizer randomizer, IValuer valuer, Limiter limi
     }
 
     /// <inheritdoc/>
+    public T Unique<T>(T instance, params T?[]? extraInstances)
+    {
+        return (T)Unique(typeof(T), instance, extraInstances);
+    }
+
+    /// <inheritdoc/>
+    public object Unique(Type type, object? instance, params object?[]? extraInstances)
+    {
+        ContentMap[] maps = (extraInstances ?? [])
+            .Prepend(instance)
+            .Where(e => e != null)
+            .Select(ContentMap.Extract)
+            .ToArray();
+
+        try
+        {
+            return _limiter.StallUntil(
+                $"Create unique of type '{type}'",
+                () => _randomizer.Create(type),
+                result =>
+                {
+                    if (!ContentMap.Extract(result).HasSharedContent(valuer, maps))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        Disposer.Cleanup(result);
+                        return false;
+                    }
+                }).Result.Last();
+        }
+        catch (AggregateException e)
+        {
+            throw new TimeoutException($"Could not create unique instance of type '{type}'.", e);
+        }
+    }
+
+    /// <inheritdoc/>
     public bool Modify(object? instance)
     {
         if (instance == null)

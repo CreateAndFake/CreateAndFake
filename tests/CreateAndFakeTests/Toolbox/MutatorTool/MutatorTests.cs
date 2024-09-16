@@ -75,6 +75,57 @@ public static class MutatorTests
     }
 
     [Theory, RandomData]
+    internal static void Unique_AcceptsNull(string value)
+    {
+        Tools.Mutator.Unique<string>(null).Assert().IsNot(null);
+        Tools.Mutator.Unique(value, null).Assert().IsNot(value).And.IsNot(null);
+    }
+
+    [Theory, RandomData]
+    internal static void Unique_ManyValuesWorks(int value, [Size(10000)] int[] data)
+    {
+        int result = Tools.Mutator.Unique(value, data);
+        result.Assert().IsNot(value).Also(data).ContainsNot(result);
+    }
+
+    [Theory, RandomData]
+    internal static void Unique_TimesOut([Fake] IValuer fakeValuer, DataSample sample)
+    {
+        fakeValuer.Equals(Arg.Any<object>(), Arg.Any<object>()).SetupReturn(true);
+        fakeValuer.GetHashCode(Arg.Any<object>()).SetupReturn(0);
+
+        new Mutator(Tools.Randomizer, fakeValuer, new Limiter(3))
+            .Assert(t => t.Unique(sample))
+            .Throws<TimeoutException>();
+    }
+
+    [Theory, RandomData]
+    internal static void Unique_RepeatsUntilUnequal([Fake] IValuer fakeValuer, string sample)
+    {
+        fakeValuer.Equals(Arg.Any<object>(), Arg.Any<object>()).SetupCall(Behavior.Series(true, true, true, false));
+        fakeValuer.GetHashCode(Arg.Any<object>()).SetupReturn(0);
+
+        new Mutator(Tools.Randomizer, fakeValuer, new Limiter(5))
+            .Unique(sample)
+            .Assert()
+            .IsNot(null);
+    }
+
+    [Theory, RandomData]
+    internal static void Unique_RepeatsUntilBothUnequal(
+        [Fake] IValuer fakeValuer, string sample1, string sample2)
+    {
+        fakeValuer.Equals(Arg.Any<object>(), Arg.Any<object>()).SetupCall(
+            Behavior.Series(false, true, true, false, true, true, false, false));
+        fakeValuer.GetHashCode(Arg.Any<object>()).SetupReturn(0);
+
+        new Mutator(Tools.Randomizer, fakeValuer, new Limiter(5))
+            .Unique(sample1, sample2)
+            .Assert()
+            .IsNot(null);
+    }
+
+    [Theory, RandomData]
     internal static void Modify_DataChanged(DataHolderSample data)
     {
         DataHolderSample dupe = data.CreateDeepClone();

@@ -247,7 +247,7 @@ public static class LimiterTests
                 .Throws<TaskCanceledException>();
         }
         Limiter.Few
-            .Assert(l => l.Repeat("", () => { }, new CancellationToken(true)).Wait())
+            .Assert(l => l.Repeat("Test", () => { }, new CancellationToken(true)).Wait())
             .Throws<TaskCanceledException>();
 
         Limiter.Quick
@@ -265,7 +265,7 @@ public static class LimiterTests
                 .Throws<TaskCanceledException>();
         }
         Limiter.Few
-            .Assert(l => l.StallUntil("", () => false, new CancellationToken(true)).Wait())
+            .Assert(l => l.StallUntil("Test", () => false, new CancellationToken(true)).Wait())
             .Throws<TaskCanceledException>();
 
         Limiter.Quick
@@ -283,7 +283,7 @@ public static class LimiterTests
                 .Throws<TaskCanceledException>();
         }
         Limiter.Few
-            .Assert(l => l.Retry("", () => throw exception, new CancellationToken(true)).Wait())
+            .Assert(l => l.Retry("Test", () => throw exception, new CancellationToken(true)).Wait())
             .Throws<TaskCanceledException>();
 
         Limiter.Quick
@@ -301,7 +301,7 @@ public static class LimiterTests
                 .Throws<TaskCanceledException>();
         }
         Limiter.Few
-            .Assert(l => l.Attempt("", () => throw exception, new CancellationToken(true)).Wait())
+            .Assert(l => l.Attempt(null, () => throw exception, new CancellationToken(true)).Wait())
             .Throws<TaskCanceledException>();
 
         Limiter.Quick

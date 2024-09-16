@@ -21,6 +21,12 @@ public static class CreateExtensions
         return Tools.Mutator.Variant(source);
     }
 
+    /// <inheritdoc cref="IMutator.Unique{T}(T,T[])"/>
+    public static T CreateUnique<T>(this T source)
+    {
+        return Tools.Mutator.Unique(source);
+    }
+
     /// <inheritdoc cref="IRandomizer.Create(Type,Func{object,bool})"/>
     public static object CreateRandomInstance(this Type type)
     {

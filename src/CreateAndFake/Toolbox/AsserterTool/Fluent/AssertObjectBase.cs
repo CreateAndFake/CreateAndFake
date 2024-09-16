@@ -1,4 +1,6 @@
-﻿using CreateAndFake.Design.Randomization;
+﻿using System.Text;
+using CreateAndFake.Design.Randomization;
+using CreateAndFake.Toolbox.MutatorTool;
 using CreateAndFake.Toolbox.ValuerTool;
 
 #pragma warning disable CA1307 // Specify StringComparison for clarity: Not available for all versions.
@@ -80,6 +82,33 @@ public abstract class AssertObjectBase<T>(IRandom gen, IValuer valuer, object? a
                 $"Value inequality failed for type '{GetTypeName(expected)}'.",
                 details, Gen.InitialSeed, expected?.ToString());
         }
+        return ToChainer();
+    }
+
+    /// <summary>Verifies <c>actual</c> shares no data with <paramref name="expected"/>.</summary>
+    /// <param name="expected">Instance to compare against.</param>
+    /// <param name="details">Optional failure details to include.</param>
+    /// <returns>Chainer to make additional assertions with.</returns>
+    /// <exception cref="AssertException">If the comparison fails to match the expected behavior.</exception>
+    /// <remarks>Ignores types with too small of range for unique randomization.</remarks>
+    public virtual AssertChainer<T> UniqueFrom(object? expected, string? details = null)
+    {
+        _ = ReferenceNotEqual(expected, details);
+
+        int i = 0;
+        StringBuilder contents = new();
+        foreach (object value in ContentMap.Extract(Actual).FindSharedContent(Valuer, ContentMap.Extract(expected)))
+        {
+            _ = contents.Append('#').Append(i++).Append(':').Append(value).AppendLine();
+        }
+
+        if (i != 0)
+        {
+            throw new AssertException(
+                $"Expected no shared content, but had '{i}' shared items.",
+                details, Gen.InitialSeed, contents.ToString());
+        }
+
         return ToChainer();
     }
 
