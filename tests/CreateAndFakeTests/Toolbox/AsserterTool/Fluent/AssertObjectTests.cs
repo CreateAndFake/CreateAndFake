@@ -91,6 +91,18 @@ public static class AssertObjectTests
     }
 
     [Theory, RandomData]
+    internal static void UniqueFrom_NoSharedPass(string sample)
+    {
+        sample.Assert().UniqueFrom(sample.CreateVariant());
+    }
+
+    [Theory, RandomData]
+    internal static void UniqueFrom_SharedFail(string sample)
+    {
+        sample.Assert(s => s.Assert().UniqueFrom(sample.CreateDeepClone())).Throws<AssertException>();
+    }
+
+    [Theory, RandomData]
     internal static void Fail_Throws(IEnumerable<DataSample> items)
     {
         items.Assert(d => d.Assert().Fail()).Throws<AssertException>();

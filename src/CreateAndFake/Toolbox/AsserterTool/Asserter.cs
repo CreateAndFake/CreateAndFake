@@ -122,7 +122,7 @@ public class Asserter(IRandom gen, IValuer valuer)
 
     /// <param name="actual"><inheritdoc cref="AssertObjectBase{T}.Actual" path="/summary"/></param>
     /// <returns></returns>
-    /// <inheritdoc cref="AssertObjectBase{T}.ValuesEqual(object?, string?)"/>
+    /// <inheritdoc cref="AssertObjectBase{T}.ValuesEqual"/>
     public virtual void ValuesEqual(object? expected, object? actual, string? details = null)
     {
         _ = new AssertObject(Gen, Valuer, actual).ValuesEqual(expected, details);
@@ -130,10 +130,18 @@ public class Asserter(IRandom gen, IValuer valuer)
 
     /// <param name="actual"><inheritdoc cref="AssertObjectBase{T}.Actual" path="/summary"/></param>
     /// <returns></returns>
-    /// <inheritdoc cref="AssertObjectBase{T}.ValuesNotEqual(object?, string?)"/>
+    /// <inheritdoc cref="AssertObjectBase{T}.ValuesNotEqual"/>
     public virtual void ValuesNotEqual(object? expected, object? actual, string? details = null)
     {
         _ = new AssertObject(Gen, Valuer, actual).ValuesNotEqual(expected, details);
+    }
+
+    /// <param name="actual"><inheritdoc cref="AssertObjectBase{T}.Actual" path="/summary"/></param>
+    /// <returns></returns>
+    /// <inheritdoc cref="AssertObjectBase{T}.UniqueFrom"/>    
+    public virtual void AreUnique(object? expected, object? actual, string? details = null)
+    {
+        _ = new AssertObject(Gen, Valuer, actual).UniqueFrom(expected, details);
     }
 
     /// <param name="behavior"><inheritdoc cref="AssertBehaviorBase{T}.Throws" path="/summary"/></param>

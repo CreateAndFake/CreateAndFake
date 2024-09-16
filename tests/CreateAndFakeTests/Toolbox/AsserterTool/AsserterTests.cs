@@ -262,9 +262,9 @@ public sealed class AsserterTests
     [Theory, RandomData]
     internal void ValuesNotEqual_UnequalValid(string value)
     {
-        _testInstance.Assert().ValuesNotEqual(value, value.CreateVariant());
-        _testInstance.Assert().ValuesNotEqual(null, value);
-        _testInstance.Assert().ValuesNotEqual(value, null);
+        _testInstance.ValuesNotEqual(value, value.CreateVariant());
+        _testInstance.ValuesNotEqual(null, value);
+        _testInstance.ValuesNotEqual(value, null);
     }
 
     [Theory, RandomData]
@@ -273,5 +273,21 @@ public sealed class AsserterTests
         _testInstance.Assert(t => t.ValuesNotEqual(value, value.CreateDeepClone())).Throws<AssertException>();
         _testInstance.Assert(t => t.ValuesNotEqual(value, value)).Throws<AssertException>();
         _testInstance.Assert(t => t.ValuesNotEqual(null, null)).Throws<AssertException>();
+    }
+
+    [Theory, RandomData]
+    internal void AreUnique_UnequalValid(string value)
+    {
+        _testInstance.AreUnique(value, value.CreateVariant());
+        _testInstance.AreUnique(null, value);
+        _testInstance.AreUnique(value, null);
+    }
+
+    [Theory, RandomData]
+    internal void AreUnique_EqualInvalid(string value)
+    {
+        _testInstance.Assert(t => t.AreUnique(value, value.CreateDeepClone())).Throws<AssertException>();
+        _testInstance.Assert(t => t.AreUnique(value, value)).Throws<AssertException>();
+        _testInstance.Assert(t => t.AreUnique(null, null)).Throws<AssertException>();
     }
 }
