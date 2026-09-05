@@ -22,4 +22,22 @@ public abstract class BaseUniqueAttribute : ParameterHintAttribute
 
         return localOptions.Mutator.UniqueOf(param.ParameterType, args.Values.Cast<object>());
     }
+
+    /// <inheritdoc/>
+    protected internal override Task<object?> CreateParameterValueAsync(
+        ParameterInfo param,
+        MethodBase method,
+        OrderedDictionary args,
+        RunnerOptions localOptions,
+        CancellationToken canceler
+    )
+    {
+        ArgumentGuard.ThrowIfNull(param, args, localOptions);
+
+        return localOptions.Mutator.UniqueOfAsync(
+            param.ParameterType,
+            args.Values.Cast<object>(),
+            canceler
+        )!;
+    }
 }

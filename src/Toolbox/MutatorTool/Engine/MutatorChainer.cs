@@ -45,6 +45,29 @@ public sealed class MutatorChainer
     }
 
     /// <inheritdoc/>
+    public async Task<T> VariantAsync<T>(
+        T instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return (T)
+            await VariantAsync(typeof(T), instance, canceler, optionConfiguration)
+                .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public Task<object> VariantAsync(
+        Type type,
+        object? instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return Engine.VariantAsync(type, instance, GetSubChainer(optionConfiguration), canceler);
+    }
+
+    /// <inheritdoc/>
     public T VariantOf<T>(IEnumerable<T?> instances, MutatorMod? optionConfiguration = null)
     {
         return (T)VariantOf(typeof(T), instances.Cast<object>(), optionConfiguration);
@@ -61,6 +84,29 @@ public sealed class MutatorChainer
     }
 
     /// <inheritdoc/>
+    public async Task<T> VariantOfAsync<T>(
+        IEnumerable<T?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return (T)
+            await VariantOfAsync(typeof(T), instances.Cast<object>(), canceler, optionConfiguration)
+                .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public Task<object> VariantOfAsync(
+        Type type,
+        IEnumerable<object?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return Engine.VariantOfAsync(type, instances, GetSubChainer(optionConfiguration), canceler);
+    }
+
+    /// <inheritdoc/>
     public T Unique<T>(T instance, MutatorMod? optionConfiguration = null)
     {
         return (T)Unique(typeof(T), instance, optionConfiguration);
@@ -70,6 +116,29 @@ public sealed class MutatorChainer
     public object Unique(Type type, object? instance, MutatorMod? optionConfiguration = null)
     {
         return Engine.Unique(type, instance, GetSubChainer(optionConfiguration));
+    }
+
+    /// <inheritdoc/>
+    public async Task<T> UniqueAsync<T>(
+        T instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return (T)
+            await UniqueAsync(typeof(T), instance, canceler, optionConfiguration)
+                .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public Task<object> UniqueAsync(
+        Type type,
+        object? instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return Engine.UniqueAsync(type, instance, GetSubChainer(optionConfiguration), canceler);
     }
 
     /// <inheritdoc/>
@@ -86,6 +155,29 @@ public sealed class MutatorChainer
     )
     {
         return Engine.UniqueOf(type, instances, GetSubChainer(optionConfiguration));
+    }
+
+    /// <inheritdoc/>
+    public async Task<T> UniqueOfAsync<T>(
+        IEnumerable<T?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return (T)
+            await UniqueOfAsync(typeof(T), instances.Cast<object>(), canceler, optionConfiguration)
+                .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc/>
+    public Task<object> UniqueOfAsync(
+        Type type,
+        IEnumerable<object?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return Engine.UniqueOfAsync(type, instances, GetSubChainer(optionConfiguration), canceler);
     }
 
     /// <inheritdoc/>

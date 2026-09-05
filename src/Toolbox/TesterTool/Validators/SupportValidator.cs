@@ -178,7 +178,9 @@ internal sealed class SupportValidator(TesterOptions options)
                 || (!type.IsSealed && TypeDescriber.For(type).FindLoadedSubclasses().Skip(1).Any())
             )
             {
-                variant = Options.Mutator.Variant(type, original);
+                variant = await Options
+                    .Mutator.VariantAsync(type, original, canceler)
+                    .ConfigureAwait(false);
 
                 await Options
                     .Asserter.ValuesNotEqualAsync(

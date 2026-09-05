@@ -18,6 +18,17 @@ public sealed class MutatorEngine : ToolEngine<IMutateHint>, IMutatorEngine
     }
 
     /// <inheritdoc/>
+    public Task<object> VariantAsync(
+        Type type,
+        object? instance,
+        IMutatorChainer chainer,
+        CancellationToken canceler
+    )
+    {
+        return VariantOfAsync(type, [instance], chainer, canceler);
+    }
+
+    /// <inheritdoc/>
     public object VariantOf(Type type, IEnumerable<object?> instances, IMutatorChainer chainer)
     {
         ArgumentGuard.ThrowIfNull(type, instances, chainer);
@@ -70,9 +81,71 @@ public sealed class MutatorEngine : ToolEngine<IMutateHint>, IMutatorEngine
     }
 
     /// <inheritdoc/>
+    public async Task<object> VariantOfAsync(
+        Type type,
+        IEnumerable<object?> instances,
+        IMutatorChainer chainer,
+        CancellationToken canceler
+    )
+    {
+        ArgumentGuard.ThrowIfNull(type, instances, chainer);
+
+        async Task<bool> isVariantCheckAsync(object result)
+        {
+            foreach (object? item in instances)
+            {
+                if (
+                    await chainer
+                        .Options.Valuer.EqualsAsync(result, item, canceler)
+                        .ConfigureAwait(false)
+                )
+                {
+                    await Disposer.CleanupAsync(result).ConfigureAwait(false);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        try
+        {
+            return (
+                await chainer
+                    .Options.CreateVariantAttemptLimit.StallUntilAsync(
+                        $"Create variant of type '{GenericConverter.ExpandName(type)}'",
+                        () => Task.FromResult(chainer.Options.Randomizer.Create(type)),
+                        isVariantCheckAsync,
+                        canceler
+                    )
+                    .ConfigureAwait(false)
+            ).Last();
+        }
+        catch (Exception e)
+        {
+            throw new ToolException(
+                $"Error creating a variant instance of type '{GenericConverter.ExpandName(type)}'. "
+                    + "Current instance types: "
+                    + string.Join(",", instances.Select(GenericConverter.ExpandName)),
+                e
+            );
+        }
+    }
+
+    /// <inheritdoc/>
     public object Unique(Type type, object? instance, IMutatorChainer chainer)
     {
         return UniqueOf(type, [instance], chainer);
+    }
+
+    /// <inheritdoc/>
+    public Task<object> UniqueAsync(
+        Type type,
+        object? instance,
+        IMutatorChainer chainer,
+        CancellationToken canceler
+    )
+    {
+        return UniqueOfAsync(type, [instance], chainer, canceler);
     }
 
     /// <inheritdoc/>
@@ -107,6 +180,65 @@ public sealed class MutatorEngine : ToolEngine<IMutateHint>, IMutatorEngine
                     isUniqueCheck
                 )
                 .Last();
+        }
+        catch (Exception e)
+        {
+            throw new ToolException(
+                $"Error creating a unique instance of type '{GenericConverter.ExpandName(type)}'. "
+                    + "Current instance types: "
+                    + string.Join(",", instances.Select(GenericConverter.ExpandName)),
+                e
+            );
+        }
+    }
+
+    /// <inheritdoc/>
+    public async Task<object> UniqueOfAsync(
+        Type type,
+        IEnumerable<object?> instances,
+        IMutatorChainer chainer,
+        CancellationToken canceler
+    )
+    {
+        ArgumentGuard.ThrowIfNull(type, instances, chainer);
+
+        List<IAsyncContentMap> maps = [];
+        foreach (object? item in instances)
+        {
+            maps.Add(
+                await chainer.Options.Extractor.ExtractAsync(item, canceler).ConfigureAwait(false)
+            );
+        }
+
+        async Task<bool> isUniqueCheckAsync(object result)
+        {
+            IAsyncContentMap map = await chainer
+                .Options.Extractor.ExtractAsync(result, canceler)
+                .ConfigureAwait(false);
+
+            if (await map.HasSharedContentAsync(maps, canceler).ConfigureAwait(false))
+            {
+                await Disposer.CleanupAsync(result).ConfigureAwait(false);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        try
+        {
+            return (
+                await chainer
+                    .Options.CreateUniqueAttemptLimit.StallUntilAsync(
+                        $"Create unique of type '{GenericConverter.ExpandName(type)}'",
+                        () => Task.FromResult(chainer.Options.Randomizer.Create(type)),
+                        isUniqueCheckAsync,
+                        canceler
+                    )
+                    .ConfigureAwait(false)
+            ).Last();
         }
         catch (Exception e)
         {

@@ -51,4 +51,16 @@ public sealed class AsserterAsyncObjectTests
             .Assert()
             .ThrowsAsync<AssertException>(TestContext.Current.CancellationToken);
     }
+
+    [Theory, RandomData]
+    internal Task AreUniqueAsync_NoThrowWithUnique(
+        AsyncDataSample item,
+        [Unique] AsyncDataSample item2
+    )
+    {
+        return _testInstance
+            .AreUniqueAsync(item, item2, TestContext.Current.CancellationToken)
+            .Assert()
+            .ThrowsNoAsync<Exception>(TestContext.Current.CancellationToken);
+    }
 }

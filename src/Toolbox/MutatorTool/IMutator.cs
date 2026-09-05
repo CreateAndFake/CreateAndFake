@@ -32,6 +32,23 @@ public interface IMutator : IHintTool<MutatorOptions, IMutateHint>
     /// <inheritdoc cref="VariantOf"/>
     object Variant(Type type, object? instance, MutatorMod? optionConfiguration = null);
 
+    /// <inheritdoc cref="Variant{T}"/>
+    /// <param name="canceler">Aborts execution if triggered.</param>
+    Task<T> VariantAsync<T>(
+        T instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    );
+
+    /// <inheritdoc cref="Variant"/>
+    /// <param name="canceler">Aborts execution if triggered.</param>
+    Task<object> VariantAsync(
+        Type type,
+        object? instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    );
+
     /// <summary>
     ///     Creates a <typeparamref name="T"/> unequal by value to the <paramref name="instances"/>.
     /// </summary>
@@ -53,6 +70,23 @@ public interface IMutator : IHintTool<MutatorOptions, IMutateHint>
         MutatorMod? optionConfiguration = null
     );
 
+    /// <inheritdoc cref="VariantOf{T}"/>
+    /// <param name="canceler">Aborts execution if triggered.</param>
+    Task<T> VariantOfAsync<T>(
+        IEnumerable<T?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    );
+
+    /// <inheritdoc cref="VariantOf"/>
+    /// <param name="canceler">Aborts execution if triggered.</param>
+    Task<object> VariantOfAsync(
+        Type type,
+        IEnumerable<object?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    );
+
     /// <summary>
     ///     Creates a <typeparamref name="T"/> that shares
     ///     no values with the <paramref name="instance"/>.
@@ -68,6 +102,23 @@ public interface IMutator : IHintTool<MutatorOptions, IMutateHint>
     /// <param name="instance">The <see langword="object"/> to share no values with.</param>
     /// <inheritdoc cref="UniqueOf"/>
     object Unique(Type type, object? instance, MutatorMod? optionConfiguration = null);
+
+    /// <inheritdoc cref="Unique{T}"/>
+    /// <param name="canceler">Aborts execution if triggered.</param>
+    Task<T> UniqueAsync<T>(
+        T instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    );
+
+    /// <inheritdoc cref="Unique"/>
+    /// <param name="canceler">Aborts execution if triggered.</param>
+    Task<object> UniqueAsync(
+        Type type,
+        object? instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    );
 
     /// <summary>
     ///     Creates a <typeparamref name="T"/> that shares
@@ -91,6 +142,23 @@ public interface IMutator : IHintTool<MutatorOptions, IMutateHint>
     object UniqueOf(
         Type type,
         IEnumerable<object?> instances,
+        MutatorMod? optionConfiguration = null
+    );
+
+    /// <inheritdoc cref="UniqueOf{T}"/>
+    /// <param name="canceler">Aborts execution if triggered.</param>
+    Task<T> UniqueOfAsync<T>(
+        IEnumerable<T?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    );
+
+    /// <inheritdoc cref="UniqueOf"/>
+    /// <param name="canceler">Aborts execution if triggered.</param>
+    Task<object> UniqueOfAsync(
+        Type type,
+        IEnumerable<object?> instances,
+        CancellationToken canceler,
         MutatorMod? optionConfiguration = null
     );
 

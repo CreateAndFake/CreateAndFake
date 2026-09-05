@@ -244,7 +244,11 @@ public abstract class CompareHintTestBase<T>(
             try
             {
                 data = Tools.Randomizer.Create(type);
-                dataDiffer = Tools.Mutator.Variant(type, data);
+                dataDiffer = await Tools.Mutator.VariantAsync(
+                    type,
+                    data,
+                    TestContext.Current.CancellationToken
+                );
 
                 HashCodeHintAsyncResult dataHash = TestInstance.TryToAsyncGetHashCode(
                     data,

@@ -30,6 +30,36 @@ public sealed class Mutator(MutatorOptions options) : IMutator
     }
 
     /// <inheritdoc/>
+    public Task<T> VariantAsync<T>(
+        T instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return new MutatorChainer(Options, _Engine).VariantAsync(
+            instance,
+            canceler,
+            optionConfiguration
+        );
+    }
+
+    /// <inheritdoc/>
+    public Task<object> VariantAsync(
+        Type type,
+        object? instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return new MutatorChainer(Options, _Engine).VariantAsync(
+            type,
+            instance,
+            canceler,
+            optionConfiguration
+        );
+    }
+
+    /// <inheritdoc/>
     public T VariantOf<T>(IEnumerable<T?> instances, MutatorMod? optionConfiguration = null)
     {
         return new MutatorChainer(Options, _Engine).VariantOf(instances, optionConfiguration);
@@ -46,6 +76,36 @@ public sealed class Mutator(MutatorOptions options) : IMutator
     }
 
     /// <inheritdoc/>
+    public Task<T> VariantOfAsync<T>(
+        IEnumerable<T?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return new MutatorChainer(Options, _Engine).VariantOfAsync(
+            instances,
+            canceler,
+            optionConfiguration
+        );
+    }
+
+    /// <inheritdoc/>
+    public Task<object> VariantOfAsync(
+        Type type,
+        IEnumerable<object?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return new MutatorChainer(Options, _Engine).VariantOfAsync(
+            type,
+            instances,
+            canceler,
+            optionConfiguration
+        );
+    }
+
+    /// <inheritdoc/>
     public T Unique<T>(T instance, MutatorMod? optionConfiguration = null)
     {
         return new MutatorChainer(Options, _Engine).Unique(instance, optionConfiguration);
@@ -55,6 +115,36 @@ public sealed class Mutator(MutatorOptions options) : IMutator
     public object Unique(Type type, object? instance, MutatorMod? optionConfiguration = null)
     {
         return new MutatorChainer(Options, _Engine).Unique(type, instance, optionConfiguration);
+    }
+
+    /// <inheritdoc/>
+    public Task<T> UniqueAsync<T>(
+        T instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return new MutatorChainer(Options, _Engine).UniqueAsync(
+            instance,
+            canceler,
+            optionConfiguration
+        );
+    }
+
+    /// <inheritdoc/>
+    public Task<object> UniqueAsync(
+        Type type,
+        object? instance,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return new MutatorChainer(Options, _Engine).UniqueAsync(
+            type,
+            instance,
+            canceler,
+            optionConfiguration
+        );
     }
 
     /// <inheritdoc/>
@@ -71,6 +161,36 @@ public sealed class Mutator(MutatorOptions options) : IMutator
     )
     {
         return new MutatorChainer(Options, _Engine).UniqueOf(type, instances, optionConfiguration);
+    }
+
+    /// <inheritdoc/>
+    public Task<T> UniqueOfAsync<T>(
+        IEnumerable<T?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return new MutatorChainer(Options, _Engine).UniqueOfAsync(
+            instances,
+            canceler,
+            optionConfiguration
+        );
+    }
+
+    /// <inheritdoc/>
+    public Task<object> UniqueOfAsync(
+        Type type,
+        IEnumerable<object?> instances,
+        CancellationToken canceler,
+        MutatorMod? optionConfiguration = null
+    )
+    {
+        return new MutatorChainer(Options, _Engine).UniqueOfAsync(
+            type,
+            instances,
+            canceler,
+            optionConfiguration
+        );
     }
 
     /// <inheritdoc/>
