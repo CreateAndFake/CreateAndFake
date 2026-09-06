@@ -43,6 +43,14 @@ public interface ILimiterTask
     /// <inheritdoc cref="StallUntilAsync{T}(string,Func{Task{T}},Func{T,bool},CancellationToken)"/>
     Task<IReadOnlyCollection<T>> StallUntilAsync<T>(
         string message,
+        Func<T> behavior,
+        Func<Task<bool>> checkState,
+        CancellationToken canceler
+    );
+
+    /// <inheritdoc cref="StallUntilAsync{T}(string,Func{Task{T}},Func{T,bool},CancellationToken)"/>
+    Task<IReadOnlyCollection<T>> StallUntilAsync<T>(
+        string message,
         Func<Task<T>> behavior,
         Func<Task<bool>> checkState,
         CancellationToken canceler
@@ -53,6 +61,14 @@ public interface ILimiterTask
         string message,
         Func<Task<T>> behavior,
         Func<T, bool> checkState,
+        CancellationToken canceler
+    );
+
+    /// <inheritdoc cref="ILimiterAsync.StallUntilAsync{T}(string,Func{T},Func{bool},CancellationToken)"/>
+    Task<IReadOnlyCollection<T>> StallUntilAsync<T>(
+        string message,
+        Func<T> behavior,
+        Func<T, Task<bool>> checkState,
         CancellationToken canceler
     );
 

@@ -248,7 +248,11 @@ public sealed class Runner(RunnerOptions options) : IRunner
             }
             else
             {
-                args.Add(argName, ExtractArg(param, data, args, localOptions, canceler));
+                args.Add(
+                    argName,
+                    await ExtractArgAsync(param, data, args, localOptions, canceler)
+                        .ConfigureAwait(false)
+                );
             }
         }
 
@@ -333,6 +337,59 @@ public sealed class Runner(RunnerOptions options) : IRunner
         )
         {
             return localOptions.Mutator.VariantOf(param.ParameterType, args.Values.Cast<object>());
+        }
+        else
+        {
+            return localOptions.Randomizer.Create(param.ParameterType);
+        }
+    }
+
+    /// <inheritdoc cref="ExtractArg"/>
+    private static async Task<object?> ExtractArgAsync(
+        ParameterInfo param,
+        List<Tuple<Type, object>> data,
+        OrderedDictionary args,
+        RunnerOptions localOptions,
+        CancellationToken canceler
+    )
+    {
+        Tuple<Type, object> match = data.Find(t => t.Item1.Inherits(param.ParameterType))!;
+        if (param.IsOut)
+        {
+            return null;
+        }
+        else if (param.ParameterType == typeof(CancellationToken))
+        {
+            return canceler;
+        }
+        else if (match != default)
+        {
+            _ = data.Remove(match);
+            return match.Item2;
+        }
+        else if (param.ParameterType == typeof(string))
+        {
+            string? smartData = new DataRandom(localOptions.Gen).Find(param.Name);
+            if (smartData != null)
+            {
+                return smartData;
+            }
+        }
+
+        TypeDescriber info = TypeDescriber.For(param.ParameterType);
+        if (
+            args.Count > 0
+            && param.ParameterType != typeof(bool)
+            && (
+                localOptions.Gen.Supports(param.ParameterType)
+                || info.IsMutable()
+                || info.HasInitializableOnlyState()
+            )
+        )
+        {
+            return await localOptions
+                .Mutator.VariantOfAsync(param.ParameterType, args.Values.Cast<object>(), canceler)
+                .ConfigureAwait(false);
         }
         else
         {

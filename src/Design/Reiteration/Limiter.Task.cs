@@ -80,13 +80,30 @@ public sealed partial class Limiter : ILimiterTask
     /// <inheritdoc/>
     public Task<IReadOnlyCollection<T>> StallUntilAsync<T>(
         string message,
+        Func<T> behavior,
+        Func<Task<bool>> checkState,
+        CancellationToken canceler
+    )
+    {
+        ArgumentGuard.ThrowIfNull(behavior);
+        return StallUntilAsync(
+            message,
+            () => Task.FromResult(behavior.Invoke()),
+            checkState,
+            canceler
+        );
+    }
+
+    /// <inheritdoc/>
+    public Task<IReadOnlyCollection<T>> StallUntilAsync<T>(
+        string message,
         Func<Task<T>> behavior,
         Func<Task<bool>> checkState,
         CancellationToken canceler
     )
     {
         ArgumentGuard.ThrowIfNull(checkState);
-        return StallUntilAsync(message, behavior, _ => checkState.Invoke(), canceler);
+        return StallUntilAsync(message, behavior, (T _) => checkState.Invoke(), canceler);
     }
 
     /// <inheritdoc/>
@@ -102,6 +119,23 @@ public sealed partial class Limiter : ILimiterTask
             message,
             behavior,
             x => Task.FromResult(checkState.Invoke(x)),
+            canceler
+        );
+    }
+
+    /// <inheritdoc/>
+    public Task<IReadOnlyCollection<T>> StallUntilAsync<T>(
+        string message,
+        Func<T> behavior,
+        Func<T, Task<bool>> checkState,
+        CancellationToken canceler
+    )
+    {
+        ArgumentGuard.ThrowIfNull(behavior);
+        return StallUntilAsync(
+            message,
+            () => Task.FromResult(behavior.Invoke()),
+            checkState,
             canceler
         );
     }
