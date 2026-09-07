@@ -56,7 +56,7 @@ public static class AsyncHashSet_T_Tests
     internal static Task AsyncHashSet_T_GuardsNulls()
     {
         return Tools.Tester.PreventsNullRefExceptionAsync(
-            typeof(AsyncHashSet<>),
+            typeof(AsyncHashSet<>).Tools().CreateRandomInstance(),
             TestContext.Current.CancellationToken
         );
     }
@@ -65,7 +65,7 @@ public static class AsyncHashSet_T_Tests
     internal static Task AsyncHashSet_T_NoParameterMutation()
     {
         return Tools.Tester.PreventsParameterMutationAsync(
-            typeof(AsyncHashSet<>),
+            typeof(AsyncHashSet<>).Tools().CreateRandomInstance(),
             TestContext.Current.CancellationToken,
             opt => opt with { MethodsToIgnore = [nameof(AsyncHashSet<>.AddToAsync)] }
         );

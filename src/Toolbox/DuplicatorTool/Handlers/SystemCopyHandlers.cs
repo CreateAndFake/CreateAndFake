@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Primitives;
 using Werecodent.CreateAndFake.DuplicatorTool.Engine;
 
 namespace Werecodent.CreateAndFake.DuplicatorTool.Handlers;
@@ -21,6 +22,7 @@ internal static class SystemCopyHandlers
         new RefCopyHandler(typeof(IntPtr)),
         new RefCopyHandler(typeof(string)),
         new RefCopyHandler(typeof(object)),
+        new RefCopyHandler(typeof(StringSegmentComparer)),
         new RefCopyHandler(typeof(RuntimeMethodHandle)),
         new FactoryCopyHandler<UriBuilder>((source, _) => new UriBuilder(source.Uri)),
         new FactoryCopyHandler<DateTimeFormatInfo>(
