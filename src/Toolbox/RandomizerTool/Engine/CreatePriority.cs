@@ -26,34 +26,37 @@ public enum CreatePriority
     /// <summary>Priority for <see cref="InjectedCreateHint"/>.</summary>
     InjectedHint = 4,
 
+    /// <summary>Priority for <see cref="ComparerCreateHint"/>.</summary>
+    ComparerHint = 5,
+
     /// <summary>Priority for <see cref="AsyncHashCreateHint"/>.</summary>
-    AsyncHashHint = 5,
+    AsyncHashHint = 6,
 
     /// <summary>Priority for <see cref="TaskCreateHint"/>.</summary>
-    TaskHint = 6,
+    TaskHint = 7,
 
     /// <summary>Priority for <see cref="DelegateCreateHint"/>.</summary>
-    DelegateHint = 7,
+    DelegateHint = 8,
 
     /// <summary>Priority for <see cref="SpanCreateHint"/>.</summary>
-    SpanHint = 8,
+    SpanHint = 9,
 
     /// <summary>Priority for <see cref="LegacyCollectionCreateHint"/>.</summary>
-    LegacyCollectionHint = 9,
+    LegacyCollectionHint = 10,
 
     /// <summary>Priority for <see cref="CollectionCreateHint"/>.</summary>
-    CollectionHint = 10,
+    CollectionHint = 11,
 
     /// <summary>Priority for <see cref="GenericCreateHint"/>.</summary>
-    GenericHint = 11,
+    GenericHint = 12,
 
     /// <summary>Priority for <see cref="EnumCreateHint"/>.</summary>
-    EnumHint = 12,
+    EnumHint = 13,
 
     /// <summary>Priority for <see cref="HandlerCreateHint"/>.</summary>
-    HandlerHint = 13,
+    HandlerHint = 14,
 
     /// <summary>Starting priority for custom hints that'll execute first.</summary>
     /// <remarks>Add to this priority for even higher priorities.</remarks>
-    Highest = 14,
+    Highest = 15,
 }

@@ -51,7 +51,7 @@ public sealed class AsyncDesignCopyHint : CopyHint
         IDuplicatorChainer duplicator
     )
     {
-        return AsyncHashSet<T>.CreateFromAsync(
+        return AsyncHashSet.CreateFromAsync(
             duplicator.Copy(source.ByHashesAsync(CancellationToken.None)),
             source.Comparer,
             duplicator.Options.Valuer.Options.IterationLimit,

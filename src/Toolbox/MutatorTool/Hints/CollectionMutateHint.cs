@@ -44,8 +44,18 @@ public sealed class CollectionMutateHint : MutateHint
         bool modified = false;
         if (!instance.IsReadOnly)
         {
-            instance.Add(chainer.Options.Randomizer.Create<T>());
-            modified = true;
+            if (instance is ISet<T> set)
+            {
+                for (int i = 0; i < chainer.Options.SetMutationAttemptMax && !modified; i++)
+                {
+                    modified = set.Add(chainer.Options.Randomizer.Create<T>());
+                }
+            }
+            else
+            {
+                instance.Add(chainer.Options.Randomizer.Create<T>());
+                modified = true;
+            }
         }
 
         foreach (T item in chainer.Options.Gen.NextSequence(instance))

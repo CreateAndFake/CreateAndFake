@@ -113,13 +113,13 @@ public sealed class SetCompareHint : CompareHint
             yield return new Difference(expected.GetType(), actual.GetType());
         }
 
-        AsyncHashSet<object> expectedByHash = AsyncHashSet<object>.CreateFromAsync(
+        AsyncHashSet<object> expectedByHash = AsyncHashSet.CreateFromAsync(
             expected.Cast<object>(),
             chainer,
             chainer.Options.IterationLimit,
             canceler
         );
-        AsyncHashSet<object> actualByHash = AsyncHashSet<object>.CreateFromAsync(
+        AsyncHashSet<object> actualByHash = AsyncHashSet.CreateFromAsync(
             expected.Cast<object>(),
             chainer,
             chainer.Options.IterationLimit,

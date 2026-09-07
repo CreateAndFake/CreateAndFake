@@ -29,6 +29,10 @@ public sealed record MutatorOptions : ToolHintOptions<MutatorOptions, IMutateHin
     [ConfigurableOption]
     public ILimiter CreateUniqueAttemptLimit { get; init; } = Limiter.Score;
 
+    /// <summary>Limits attempts at mutating sets.</summary>
+    [ConfigurableOption]
+    public int SetMutationAttemptMax { get; init; } = 6;
+
     /// <summary>
     ///     Creates options from <see langword="this"/>
     ///     overridden with values from <paramref name="config"/>.
@@ -48,6 +52,7 @@ public sealed record MutatorOptions : ToolHintOptions<MutatorOptions, IMutateHin
             CreateVariantAttemptLimit = Config.GetValue(section, CreateVariantAttemptLimit),
             CreateUniqueAttemptLimit = Config.GetValue(section, CreateUniqueAttemptLimit),
             IncludeFrameworkHints = Config.GetValue(section, IncludeFrameworkHints),
+            SetMutationAttemptMax = Config.GetValue(section, SetMutationAttemptMax),
             IncludeFoundHints = Config.GetValue(section, IncludeFoundHints),
             MaxHintRecursion = Config.GetValue(section, MaxHintRecursion),
         };
