@@ -36,7 +36,7 @@ public static class ReferenceComparerTests
     {
         int originalHash = ReferenceComparer.Use.GetHashCode(data);
 
-        Tools.Mutator.Modify(data).Assert().Is(true);
+        data.Tools().Modify().Assert().Is(true);
         ReferenceComparer.Use.GetHashCode(data).Assert().Is(originalHash);
 
         Limiter.Few.Retry(

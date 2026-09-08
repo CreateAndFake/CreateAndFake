@@ -168,7 +168,11 @@ public sealed class AsserterAsyncEnumerableTests
             .ThrowsNoAsync<AssertException>(TestContext.Current.CancellationToken);
 
         await _testInstance
-            .ContainsAsync(item.Tools().Variant(), series, TestContext.Current.CancellationToken)
+            .ContainsAsync(
+                await item.Tools().VariantAsync(TestContext.Current.CancellationToken),
+                series,
+                TestContext.Current.CancellationToken
+            )
             .Assert()
             .ThrowsAsync<AssertException>(TestContext.Current.CancellationToken);
     }
@@ -186,7 +190,11 @@ public sealed class AsserterAsyncEnumerableTests
             .ThrowsAsync<AssertException>(TestContext.Current.CancellationToken);
 
         await _testInstance
-            .ContainsNotAsync(item.Tools().Variant(), series, TestContext.Current.CancellationToken)
+            .ContainsNotAsync(
+                await item.Tools().VariantAsync(TestContext.Current.CancellationToken),
+                series,
+                TestContext.Current.CancellationToken
+            )
             .Assert()
             .ThrowsNoAsync<AssertException>(TestContext.Current.CancellationToken);
     }

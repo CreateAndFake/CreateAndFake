@@ -56,17 +56,15 @@ public static class AsyncHashSetTests
     [Theory, RandomData]
     internal static Task CreateFromAsync_SameHashAdded(KeyValuePair<int, AsyncDataSample> pair)
     {
+        CancellationToken canceler = TestContext.Current.CancellationToken;
+
         AsyncHashSet<AsyncDataSample> set = AsyncHashSet.CreateFromAsync(
-            AsyncSeriesHelper.CreateFromAsync(
-                [pair, pair],
-                2,
-                TestContext.Current.CancellationToken
-            ),
+            AsyncSeriesHelper.CreateFromAsync([pair, pair], 2, canceler),
             Tools.Valuer.ToAsyncComparer<AsyncDataSample>(),
             Tools.Valuer.Options.IterationLimit,
-            TestContext.Current.CancellationToken
+            canceler
         );
 
-        return set.Assert().HasCountAsync(2, TestContext.Current.CancellationToken);
+        return set.Assert().HasCountAsync(2, canceler);
     }
 }

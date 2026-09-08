@@ -37,10 +37,11 @@ public static class SingleCallValueTaskSourceTests
         short token
     )
     {
+        CancellationToken canceler = TestContext.Current.CancellationToken;
+
         ValueTask task = new(source, token);
-        await task.Assert().ThrowsNoAsync<Exception>(TestContext.Current.CancellationToken);
-        await task.Assert()
-            .ThrowsAsync<ValueTaskRepeatedAccessException>(TestContext.Current.CancellationToken);
+        await task.Assert().ThrowsNoAsync<Exception>(canceler);
+        await task.Assert().ThrowsAsync<ValueTaskRepeatedAccessException>(canceler);
     }
 
     [Theory, RandomData]

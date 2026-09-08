@@ -42,10 +42,12 @@ public static class AsyncListTests
     [Theory, RandomData]
     internal static async Task GetAsyncEnumerator_Repeatable(IReadOnlyCollection<DataSample> sample)
     {
+        CancellationToken canceler = TestContext.Current.CancellationToken;
         AsyncList<DataSample> instance = new(sample, Tools.Valuer.Options.IterationLimit);
-        await instance.Assert().IsAsync(sample, TestContext.Current.CancellationToken);
-        await instance.Assert().IsAsync(sample, TestContext.Current.CancellationToken);
-        await instance.Assert().HasCountAsync(sample.Count, TestContext.Current.CancellationToken);
+
+        await instance.Assert().IsAsync(sample, canceler);
+        await instance.Assert().IsAsync(sample, canceler);
+        await instance.Assert().HasCountAsync(sample.Count, canceler);
     }
 
     [Fact]

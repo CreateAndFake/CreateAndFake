@@ -224,12 +224,14 @@ public static class AsyncSeriesHelperTests
         [Size(2)] IAsyncEnumerable<string> data
     )
     {
+        CancellationToken canceler = TestContext.Current.CancellationToken;
+
         IList<string> results = await AsyncSeriesHelper.ToListAsync(
             AsyncSeriesHelper.SelectAsync(data, 2, new CancellationToken(false), item => item),
             2,
-            TestContext.Current.CancellationToken
+            canceler
         );
-        await results.Assert().IsAsync(data, TestContext.Current.CancellationToken);
+        await results.Assert().IsAsync(data, canceler);
 
         results = await AsyncSeriesHelper.ToListAsync(
             AsyncSeriesHelper.SelectAsync(
@@ -239,9 +241,9 @@ public static class AsyncSeriesHelperTests
                 v => Task.FromResult(v)
             ),
             2,
-            TestContext.Current.CancellationToken
+            canceler
         );
-        await results.Assert().IsAsync(data, TestContext.Current.CancellationToken);
+        await results.Assert().IsAsync(data, canceler);
     }
 
     [Theory, RandomData]
@@ -333,14 +335,12 @@ public static class AsyncSeriesHelperTests
     [Theory, RandomData]
     internal static async Task ToListAsync_ConvertsValues(IAsyncEnumerable<string> data)
     {
+        CancellationToken canceler = TestContext.Current.CancellationToken;
+
         await data.Assert()
             .IsAsync(
-                await AsyncSeriesHelper.ToListAsync(
-                    data,
-                    DesignDefaults.IterationLimit,
-                    TestContext.Current.CancellationToken
-                ),
-                TestContext.Current.CancellationToken
+                await AsyncSeriesHelper.ToListAsync(data, DesignDefaults.IterationLimit, canceler),
+                canceler
             );
     }
 

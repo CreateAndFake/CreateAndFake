@@ -1,4 +1,6 @@
-﻿namespace Werecodent.CreateAndFake.Design.Tests.Exceptions;
+﻿using Werecodent.CreateAndFake.Design.Reiteration;
+
+namespace Werecodent.CreateAndFake.Design.Tests.Exceptions;
 
 public abstract class ExceptionTestBase<T>
     where T : Exception
@@ -39,11 +41,14 @@ public abstract class ExceptionTestBase<T>
     [Fact]
     public void Exception_JsonSerializes()
     {
-        T original;
-        do
-        {
-            original = Tools.Randomizer.Create<T>();
-        } while (original.InnerException != null);
+        T original = Limiter
+            .Hundred.StallUntil(
+                "Not all System exceptions support json serialization.",
+                () => Tools.Randomizer.Create<T>(),
+                e => e.InnerException == null,
+                TestContext.Current.CancellationToken
+            )
+            .Last();
 
         Tools.Tester.VerifyJsonSerialization(original);
     }

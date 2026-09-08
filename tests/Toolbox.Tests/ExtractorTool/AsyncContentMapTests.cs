@@ -43,7 +43,9 @@ public static class AsyncContentMapTests
             TestContext.Current.CancellationToken
         );
         await map.HasContentAsync(
-                sample.NestedValue.Tools().Variant(),
+                await sample
+                    .NestedValue.Tools()
+                    .VariantAsync(TestContext.Current.CancellationToken),
                 TestContext.Current.CancellationToken
             )
             .Assert()

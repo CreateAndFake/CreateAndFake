@@ -25,7 +25,10 @@ public static class AsyncSeriesHelper_T_Tests
     [Fact]
     internal static void Empty_Cached()
     {
-        AsyncSeriesHelper<string>.Empty.Assert().ReferenceEqual(AsyncSeriesHelper<string>.Empty);
+        Tools.Asserter.ReferenceEqual(
+            AsyncSeriesHelper<string>.Empty,
+            AsyncSeriesHelper<string>.Empty
+        );
     }
 
     [Fact]

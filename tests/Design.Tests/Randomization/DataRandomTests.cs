@@ -32,9 +32,9 @@ public static class DataRandomTests
     }
 
     [Theory, RandomData]
-    internal static void DataRandom_DataVaries(DataRandom testInstance)
+    internal static void DataRandom_DataVaries(DataRandom testInstance, DataRandom variant)
     {
-        testInstance.Tools().Variant().Assert().IsNot(testInstance);
+        variant.Assert().IsNot(testInstance);
     }
 
     [Theory, RandomData]

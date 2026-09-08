@@ -88,16 +88,6 @@ public class ObjectTools<T>(T source, ToolSet? tools)
         return Tools.Valuer.Equals(Source, y, optionConfiguration);
     }
 
-    /// <inheritdoc cref="IValuer.EqualsAsync(object,object,CancellationToken,ValuerMod)"/>
-    public Task<bool> EqualsAsync(
-        object? y,
-        CancellationToken canceler,
-        ValuerMod? optionConfiguration = null
-    )
-    {
-        return Tools.Valuer.EqualsAsync(Source, y, canceler, optionConfiguration);
-    }
-
     /// <inheritdoc cref="IValuer.GetHashCode(object)"/>
     public override int GetHashCode()
     {
@@ -108,14 +98,5 @@ public class ObjectTools<T>(T source, ToolSet? tools)
     public int GetHashCode(ValuerMod? optionConfiguration)
     {
         return Tools.Valuer.GetHashCode(Source, optionConfiguration);
-    }
-
-    /// <inheritdoc cref="IValuer.GetHashCodeAsync(object,CancellationToken,ValuerMod)"/>
-    public Task<int> GetHashCodeAsync(
-        CancellationToken canceler,
-        ValuerMod? optionConfiguration = null
-    )
-    {
-        return Tools.Valuer.GetHashCodeAsync(Source, canceler, optionConfiguration);
     }
 }

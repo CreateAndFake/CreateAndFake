@@ -31,8 +31,8 @@ public abstract class BaseDataContextTestBase<T>
     }
 
     [Theory, RandomData]
-    public void BaseDataContext_DataVaries(T testInstance)
+    public void BaseDataContext_DataVaries(T testInstance, T variant)
     {
-        testInstance.Tools().Variant().Assert().IsNot(testInstance);
+        variant.Assert().IsNot(testInstance);
     }
 }

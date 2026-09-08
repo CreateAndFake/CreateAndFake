@@ -35,15 +35,14 @@ public static class ValuerAsyncComparableSampleTests
     }
 
     [Theory, RandomData]
-    public static Task CompareAsync_VariantHasDifferences(ValuerAsyncComparableSample data)
+    public static Task CompareAsync_VariantHasDifferences(
+        ValuerAsyncComparableSample data,
+        ValuerAsyncComparableSample variant
+    )
     {
         return AsyncSeriesHelper
             .ToListAsync(
-                data.CompareAsync(
-                    data.Tools().Variant(),
-                    Tools.Valuer,
-                    TestContext.Current.CancellationToken
-                ),
+                data.CompareAsync(variant, Tools.Valuer, TestContext.Current.CancellationToken),
                 Tools.Valuer.Options.IterationLimit,
                 TestContext.Current.CancellationToken
             )
