@@ -36,4 +36,18 @@ public static class AsyncDataSampleTests
             .NumberValue.Assert()
             .HasResultAsync(value, TestContext.Current.CancellationToken);
     }
+
+    [Theory, RandomData]
+    public static Task ReadFromNumberValueAsync_WithDelay(int value)
+    {
+        async Task<int> getNumber()
+        {
+            await Task.Delay(1000, TestContext.Current.CancellationToken);
+            return value;
+        }
+
+        return new AsyncDataSample() { NumberValue = getNumber() }
+            .NumberValue.Assert()
+            .HasResultAsync(value, TestContext.Current.CancellationToken);
+    }
 }
