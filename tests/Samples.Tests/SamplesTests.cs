@@ -57,6 +57,15 @@ public static class SamplesTests
     }
 
     [Fact]
+    internal static Task Samples_VerifyTestSettingsConfig_Default()
+    {
+        return Tools.Tester.ValidateTestSettingsConfigAsync(
+            null,
+            TestContext.Current.CancellationToken
+        );
+    }
+
+    [Fact]
     internal static void Samples_VerifyAllToStrings()
     {
         Tools.Tester.VerifyAllToStrings(_SampleAssembly);

@@ -19,6 +19,9 @@ namespace Werecodent.CreateAndFake.TesterTool;
 /// <summary>Configuration for controlling automated testing behavior.</summary>
 public sealed record TesterOptions : IToolOptions
 {
+    /// <summary>Identifies the configuration section containing these settings.</summary>
+    internal static string ConfigSectionName { get; } = nameof(Tester);
+
     /// <inheritdoc/>
     public required IRandom Gen { get; init; }
 
@@ -134,7 +137,7 @@ public sealed record TesterOptions : IToolOptions
     /// <returns>The created options.</returns>
     internal TesterOptions WithConfig(IConfigurationSection? config)
     {
-        IConfigurationSection? section = config?.GetSection(nameof(Tester));
+        IConfigurationSection? section = config?.GetSection(ConfigSectionName);
         if (section == null)
         {
             return this;

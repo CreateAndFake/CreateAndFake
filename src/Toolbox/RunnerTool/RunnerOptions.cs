@@ -15,6 +15,9 @@ namespace Werecodent.CreateAndFake.RunnerTool;
 /// <summary>Configuration for controlling run behavior.</summary>
 public sealed record RunnerOptions : IToolOptions
 {
+    /// <summary>Identifies the configuration section containing these settings.</summary>
+    internal static string ConfigSectionName { get; } = nameof(Runner);
+
     /// <inheritdoc/>
     public required IRandom Gen { get; init; }
 
@@ -72,7 +75,7 @@ public sealed record RunnerOptions : IToolOptions
     /// <returns>The created options.</returns>
     internal RunnerOptions WithConfig(IConfigurationSection? config)
     {
-        IConfigurationSection? section = config?.GetSection(nameof(Runner));
+        IConfigurationSection? section = config?.GetSection(ConfigSectionName);
         if (section == null)
         {
             return this;

@@ -54,15 +54,37 @@ public sealed class ToolSet(
     /// <summary>Default tools to use.</summary>
     public static ToolSet DefaultSet { get; } = CreateViaConfig();
 
+    /// <summary>Retrieves the configuration used in the given environment.</summary>
+    /// <param name="optional">If the files are not required to be present.</param>
+    /// <param name="environments">Name for the environment to retrieve settings for.</param>
+    /// <returns>The found configuration.</returns>
+    internal static IConfigurationSection GetConfig(
+        bool optional,
+        params IEnumerable<string?> environments
+    )
+    {
+        ConfigurationBuilder builder = new();
+
+        foreach (string? environment in environments?.Distinct() ?? [null])
+        {
+            if (environment == null)
+            {
+                _ = builder.AddJsonFile("testsettings.json", optional);
+            }
+            else
+            {
+                _ = builder.AddJsonFile($"testsettings.{environment}.json", optional);
+            }
+        }
+
+        return builder.Build().GetSection(nameof(CreateAndFake));
+    }
+
     /// <summary>Creates all the reflection tools using configuration settings.</summary>
     /// <returns>The created reflection tools.</returns>
     public static ToolSet CreateViaConfig()
     {
-        IConfigurationSection config = new ConfigurationBuilder()
-            .AddJsonFile("testsettings.json", true)
-            .AddJsonFile($"testsettings.{_EnvironmentName}.json", true)
-            .Build()
-            .GetSection("CreateAndFake");
+        IConfigurationSection config = GetConfig(true, null, _EnvironmentName);
 
         return Create(config.GetValue("Seed", Environment.TickCount), config);
     }
@@ -79,16 +101,16 @@ public sealed class ToolSet(
     /// <param name="seed"><inheritdoc cref="SeededRandom(int?)" path="/param[@name='seed']"/></param>
     /// <param name="config">Loaded configuration to use.</param>
     /// <returns>The created reflection tools.</returns>
-    private static ToolSet Create(int seed, IConfigurationSection? config)
+    internal static ToolSet Create(int seed, IConfigurationSection? config)
     {
         IRandom gen = new SeededRandom(
             config
                 ?.GetSection(nameof(Valuer))
-                .GetValue(nameof(ValuerOptions.IterationLimit), DesignDefaults.IterationLimit)
+                ?.GetValue(nameof(ValuerOptions.IterationLimit), DesignDefaults.IterationLimit)
                 ?? DesignDefaults.IterationLimit,
             !config
                 ?.GetSection(nameof(Randomizer))
-                .GetValue(
+                ?.GetValue(
                     nameof(RandomizerOptions.IncludeInfinityAndNaNGeneration),
                     DesignDefaults.IncludeInfinityAndNaNGeneration
                 )

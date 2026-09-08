@@ -10,6 +10,9 @@ namespace Werecodent.CreateAndFake.AsserterTool;
 /// <summary>Configuration for controlling assert behavior.</summary>
 public sealed record AsserterOptions : IToolOptions
 {
+    /// <summary>Identifies the configuration section containing these settings.</summary>
+    internal static string ConfigSectionName { get; } = nameof(Asserter);
+
     /// <inheritdoc/>
     public required IRandom Gen { get; init; }
 
@@ -42,7 +45,7 @@ public sealed record AsserterOptions : IToolOptions
     /// <returns>The created options.</returns>
     internal AsserterOptions WithConfig(IConfigurationSection? config)
     {
-        IConfigurationSection? section = config?.GetSection(nameof(Asserter));
+        IConfigurationSection? section = config?.GetSection(ConfigSectionName);
         if (section == null)
         {
             return this;

@@ -6,7 +6,8 @@ public static class ToolSetTests
     internal static Task ToolSet_GuardsNulls()
     {
         return Tools.Tester.PreventsNullRefExceptionAsync<ToolSet>(
-            TestContext.Current.CancellationToken
+            TestContext.Current.CancellationToken,
+            opt => opt with { IgnorableExceptions = [typeof(FileNotFoundException)] }
         );
     }
 
@@ -14,7 +15,8 @@ public static class ToolSetTests
     internal static Task ToolSet_NoParameterMutation()
     {
         return Tools.Tester.PreventsParameterMutationAsync<ToolSet>(
-            TestContext.Current.CancellationToken
+            TestContext.Current.CancellationToken,
+            opt => opt with { IgnorableExceptions = [typeof(FileNotFoundException)] }
         );
     }
 

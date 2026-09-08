@@ -1,12 +1,21 @@
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Werecodent.CreateAndFake.AsserterTool;
 using Werecodent.CreateAndFake.Design;
 using Werecodent.CreateAndFake.Design.Content;
 using Werecodent.CreateAndFake.Design.Exceptions;
 using Werecodent.CreateAndFake.Design.Tooling;
 using Werecodent.CreateAndFake.Design.Types;
+using Werecodent.CreateAndFake.DuplicatorTool;
+using Werecodent.CreateAndFake.ExtractorTool;
+using Werecodent.CreateAndFake.FakerTool;
 using Werecodent.CreateAndFake.FakerTool.Proxy;
+using Werecodent.CreateAndFake.Fluent;
+using Werecodent.CreateAndFake.MutatorTool;
+using Werecodent.CreateAndFake.RandomizerTool;
 using Werecodent.CreateAndFake.RunnerTool;
 using Werecodent.CreateAndFake.RunnerTool.Attributes;
+using Werecodent.CreateAndFake.ValuerTool;
 
 namespace Werecodent.CreateAndFake.TesterTool.Validators;
 
@@ -43,6 +52,59 @@ internal sealed class SupportValidator(TesterOptions options)
                         }
                     }
                 )
+        );
+    }
+
+    /// <inheritdoc cref="ITester.ValidateTestSettingsConfigAsync"/>
+    public void VerifyTestSettingsConfig(string? environmentName)
+    {
+        IConfigurationSection config = ToolSet.GetConfig(false, environmentName);
+        ToolSet asConfigured = ToolSet.Create(0, config);
+
+        Dictionary<string, IToolOptions> configuredOptions = new()
+        {
+            { AsserterOptions.ConfigSectionName, asConfigured.Asserter.Options },
+            { DuplicatorOptions.ConfigSectionName, asConfigured.Duplicator.Options },
+            { ExtractorOptions.ConfigSectionName, asConfigured.Extractor.Options },
+            { FakerOptions.ConfigSectionName, asConfigured.Faker.Options },
+            { MutatorOptions.ConfigSectionName, asConfigured.Mutator.Options },
+            { RandomizerOptions.ConfigSectionName, asConfigured.Randomizer.Options },
+            { RunnerOptions.ConfigSectionName, asConfigured.Runner.Options },
+            { ValuerOptions.ConfigSectionName, asConfigured.Valuer.Options },
+            { TesterOptions.ConfigSectionName, asConfigured.Tester.Options },
+        };
+
+        Options.Asserter.IsEmpty(
+            config.GetChildren().Select(c => c.Key).Except(["Seed"]).Except(configuredOptions.Keys),
+            $"Configuration '{nameof(CreateAndFake)}' had extra settings that do not match an actual setting."
+        );
+
+        foreach (KeyValuePair<string, IToolOptions> pair in configuredOptions)
+        {
+            VerifyNoBadConfigValues(pair.Value, pair.Key, config);
+        }
+    }
+
+    private void VerifyNoBadConfigValues(
+        IToolOptions options,
+        string configSectionName,
+        IConfigurationSection config
+    )
+    {
+        Options.Asserter.IsEmpty(
+            config
+                .GetSection(configSectionName)
+                .GetChildren()
+                .Select(c => c.Key)
+                .Except(
+                    TypeDescriber
+                        .For(options.GetType())
+                        .Properties.OnlyPublic.Where(p =>
+                            Attribute.IsDefined(p, typeof(ConfigurableOptionAttribute))
+                        )
+                        .Select(p => p.Name)
+                ),
+            $"Configuration '{configSectionName}' had extra settings that do not match an actual setting."
         );
     }
 

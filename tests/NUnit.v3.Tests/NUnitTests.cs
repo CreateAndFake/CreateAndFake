@@ -41,4 +41,13 @@ public static class NUnitTests
             TestContext.CurrentContext.CancellationToken
         );
     }
+
+    [Test]
+    public static Task NUnit_v3_VerifyTestSettingsConfig_Default()
+    {
+        return Tools.Tester.ValidateTestSettingsConfigAsync(
+            null,
+            TestContext.CurrentContext.CancellationToken
+        );
+    }
 }

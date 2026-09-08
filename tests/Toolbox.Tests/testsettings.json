@@ -7,10 +7,7 @@
         "Mutator": {},
         "Randomizer": {},
         "Runner": {},
-        "Tester": {
-            "DisableNullRefExceptionTests": false,
-            "DisableParameterMutationTests": false
-        },
+        "Tester": {},
         "Valuer": {}
     }
 }

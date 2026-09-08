@@ -41,4 +41,10 @@ public class MSTestTests
             TestContext.CancellationToken
         );
     }
+
+    [TestMethod]
+    public Task MSTest_v3_VerifyTestSettingsConfig_Default()
+    {
+        return Tools.Tester.ValidateTestSettingsConfigAsync(null, TestContext.CancellationToken);
+    }
 }

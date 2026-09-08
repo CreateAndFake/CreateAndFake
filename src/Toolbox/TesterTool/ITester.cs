@@ -185,6 +185,17 @@ public interface ITester : ITool<TesterOptions>
         TesterMod? optionConfiguration = null
     );
 
+    /// <summary>Validates a configuration.</summary>
+    /// <param name="environmentName">Name of the environment to test.</param>
+    /// <param name="canceler">Aborts execution if triggered.</param>
+    /// <param name="optionConfiguration">Modifications of Options to apply for this call.</param>
+    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+    Task ValidateTestSettingsConfigAsync(
+        string? environmentName,
+        CancellationToken canceler,
+        TesterMod? optionConfiguration = null
+    );
+
     /// <summary>Validates the state of the <c>CreateAndFake</c> framework as configured.</summary>
     /// <inheritdoc cref="VerifyToolSetSupportAsync(IEnumerable{Type},CancellationToken,TesterMod)"/>
     Task VerifyToolSetIntegrityAsync(

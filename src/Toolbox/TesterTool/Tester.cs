@@ -241,6 +241,19 @@ public class Tester(TesterOptions options) : ITester
         ).ValidateRandomDataParametersAsync(testAssembly, canceler);
     }
 
+    /// <inheritdoc cref="ITester.ValidateTestSettingsConfigAsync"/>
+    public virtual Task ValidateTestSettingsConfigAsync(
+        string? environmentName,
+        CancellationToken canceler,
+        TesterMod? optionConfiguration = null
+    )
+    {
+        new SupportValidator(Configure(optionConfiguration)).VerifyTestSettingsConfig(
+            environmentName
+        );
+        return Task.CompletedTask;
+    }
+
     /// <inheritdoc/>
     public virtual Task VerifyToolSetIntegrityAsync(
         CancellationToken canceler,

@@ -166,7 +166,7 @@ internal abstract class BaseGuarder(TesterOptions options)
         )
         {
             throw new TesterFailureException(
-                $"Encountered exception when testing '{data}'.",
+                $"Encountered exception when testing - {data}",
                 (Exception)result.Result!
             );
         }

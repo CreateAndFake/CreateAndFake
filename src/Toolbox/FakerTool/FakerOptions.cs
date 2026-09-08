@@ -10,6 +10,9 @@ namespace Werecodent.CreateAndFake.FakerTool;
 /// <summary>Configuration for controlling faking behavior.</summary>
 public sealed record FakerOptions : ToolHintOptions<FakerOptions, IFakeHint>
 {
+    /// <summary>Identifies the configuration section containing these settings.</summary>
+    internal static string ConfigSectionName { get; } = nameof(Faker);
+
     /// <summary>Handles comparisons.</summary>
     public required IValuer Valuer { get; init; }
 
@@ -24,7 +27,7 @@ public sealed record FakerOptions : ToolHintOptions<FakerOptions, IFakeHint>
     /// <returns>The created options.</returns>
     internal FakerOptions WithConfig(IConfigurationSection? config)
     {
-        IConfigurationSection? section = config?.GetSection(nameof(Faker));
+        IConfigurationSection? section = config?.GetSection(ConfigSectionName);
         if (section == null)
         {
             return this;

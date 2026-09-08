@@ -28,4 +28,12 @@ public static class AsyncDataSampleTests
             .Assert()
             .HasResultAsync(default, TestContext.Current.CancellationToken);
     }
+
+    [Theory, RandomData]
+    public static Task ReadFromNumberValueAsync_CorrectValue(int value)
+    {
+        return new AsyncDataSample() { NumberValue = Task.FromResult(value) }
+            .NumberValue.Assert()
+            .HasResultAsync(value, TestContext.Current.CancellationToken);
+    }
 }

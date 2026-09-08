@@ -12,6 +12,9 @@ namespace Werecodent.CreateAndFake.DuplicatorTool;
 /// <summary>Configuration for controlling duplication behavior.</summary>
 public sealed record DuplicatorOptions : ToolHintOptions<DuplicatorOptions, ICopyHint>
 {
+    /// <summary>Identifies the configuration section containing these settings.</summary>
+    internal static string ConfigSectionName { get; } = nameof(Duplicator);
+
     /// <summary>Verifies duplicates are valid.</summary>
     public required IAsserter Asserter { get; init; }
 
@@ -37,7 +40,7 @@ public sealed record DuplicatorOptions : ToolHintOptions<DuplicatorOptions, ICop
     /// <returns>The created options.</returns>
     internal DuplicatorOptions WithConfig(IConfigurationSection? config)
     {
-        IConfigurationSection? section = config?.GetSection(nameof(Duplicator));
+        IConfigurationSection? section = config?.GetSection(ConfigSectionName);
         if (section == null)
         {
             return this;

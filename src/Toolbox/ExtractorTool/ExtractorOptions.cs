@@ -11,6 +11,9 @@ namespace Werecodent.CreateAndFake.ExtractorTool;
 /// <summary>Configuration for controlling extraction behavior.</summary>
 public sealed record ExtractorOptions : ToolHintOptions<ExtractorOptions, IExtractHint>
 {
+    /// <summary>Identifies the configuration section containing these settings.</summary>
+    internal static string ConfigSectionName { get; } = nameof(Extractor);
+
     /// <summary>Handles randomization.</summary>
     public required IRandomizer Randomizer { get; init; }
 
@@ -36,7 +39,7 @@ public sealed record ExtractorOptions : ToolHintOptions<ExtractorOptions, IExtra
     /// <returns>The created options.</returns>
     internal ExtractorOptions WithConfig(IConfigurationSection? config)
     {
-        IConfigurationSection? section = config?.GetSection(nameof(Extractor));
+        IConfigurationSection? section = config?.GetSection(ConfigSectionName);
         if (section == null)
         {
             return this;

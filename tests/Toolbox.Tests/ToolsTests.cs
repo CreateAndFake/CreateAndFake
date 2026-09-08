@@ -40,6 +40,15 @@ public static class ToolsTests
     }
 
     [Fact]
+    internal static Task CreateAndFake_VerifyTestSettingsConfig_Default()
+    {
+        return Tools.Tester.ValidateTestSettingsConfigAsync(
+            null,
+            TestContext.Current.CancellationToken
+        );
+    }
+
+    [Fact]
     internal static void CreateAndFake_VerifyAllToStrings()
     {
         Tools.Tester.VerifyAllToStrings(Assembly.GetAssembly(typeof(ToolSet)));

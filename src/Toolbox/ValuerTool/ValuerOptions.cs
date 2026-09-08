@@ -11,6 +11,9 @@ namespace Werecodent.CreateAndFake.ValuerTool;
 /// <summary>Configuration for controlling comparison behavior.</summary>
 public sealed record ValuerOptions : ToolHintOptions<ValuerOptions, ICompareHint>
 {
+    /// <summary>Identifies the configuration section containing these settings.</summary>
+    internal static string ConfigSectionName { get; } = nameof(Valuer);
+
     /// <summary>Allows <see cref="IEquatable{T}"/> to handle comparisons if applicable.</summary>
     [ConfigurableOption]
     public bool UseEquatableComparisons { get; init; } = true;
@@ -52,7 +55,7 @@ public sealed record ValuerOptions : ToolHintOptions<ValuerOptions, ICompareHint
     /// <returns>The created options.</returns>
     internal ValuerOptions WithConfig(IConfigurationSection? config)
     {
-        IConfigurationSection? section = config?.GetSection(nameof(Valuer));
+        IConfigurationSection? section = config?.GetSection(ConfigSectionName);
         if (section == null)
         {
             return this;

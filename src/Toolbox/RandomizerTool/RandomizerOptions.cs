@@ -14,6 +14,9 @@ namespace Werecodent.CreateAndFake.RandomizerTool;
 /// <summary>Configuration for controlling randomization behavior.</summary>
 public sealed record RandomizerOptions : ToolHintOptions<RandomizerOptions, ICreateHint>
 {
+    /// <summary>Identifies the configuration section containing these settings.</summary>
+    internal static string ConfigSectionName { get; } = nameof(Randomizer);
+
     /// <summary>Handles comparisons.</summary>
     public required IValuer Valuer { get; init; }
 
@@ -86,7 +89,7 @@ public sealed record RandomizerOptions : ToolHintOptions<RandomizerOptions, ICre
     /// <returns>The created options.</returns>
     internal RandomizerOptions WithConfig(IConfigurationSection? config)
     {
-        IConfigurationSection? section = config?.GetSection(nameof(Randomizer));
+        IConfigurationSection? section = config?.GetSection(ConfigSectionName);
         if (section == null)
         {
             return this;

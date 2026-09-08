@@ -12,6 +12,9 @@ namespace Werecodent.CreateAndFake.MutatorTool;
 /// <summary>Configuration for manipulating <see cref="IMutator"/> behavior.</summary>
 public sealed record MutatorOptions : ToolHintOptions<MutatorOptions, IMutateHint>
 {
+    /// <summary>Identifies the configuration section containing these settings.</summary>
+    internal static string ConfigSectionName { get; } = nameof(Mutator);
+
     /// <summary>Handles randomization.</summary>
     public required IRandomizer Randomizer { get; init; }
 
@@ -41,7 +44,7 @@ public sealed record MutatorOptions : ToolHintOptions<MutatorOptions, IMutateHin
     /// <returns>The created options.</returns>
     internal MutatorOptions WithConfig(IConfigurationSection? config)
     {
-        IConfigurationSection? section = config?.GetSection(nameof(Mutator));
+        IConfigurationSection? section = config?.GetSection(ConfigSectionName);
         if (section == null)
         {
             return this;

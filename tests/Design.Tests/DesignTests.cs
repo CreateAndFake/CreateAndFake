@@ -32,6 +32,15 @@ public static class DesignTests
     }
 
     [Fact]
+    internal static Task Design_VerifyTestSettingsConfig_Default()
+    {
+        return Tools.Tester.ValidateTestSettingsConfigAsync(
+            null,
+            TestContext.Current.CancellationToken
+        );
+    }
+
+    [Fact]
     internal static void Design_VerifyAllToStrings()
     {
         Tools.Tester.VerifyAllToStrings(_DesignAssembly);

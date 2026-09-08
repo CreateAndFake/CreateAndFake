@@ -38,4 +38,13 @@ public static class XUnitTests
             TestContext.Current.CancellationToken
         );
     }
+
+    [Fact]
+    internal static Task XUnit_v3_VerifyTestSettingsConfig_Default()
+    {
+        return Tools.Tester.ValidateTestSettingsConfigAsync(
+            null,
+            TestContext.Current.CancellationToken
+        );
+    }
 }
