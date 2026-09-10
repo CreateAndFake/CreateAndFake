@@ -78,6 +78,7 @@ public static class AssertTypeTests
         results
             .RawResults.Where(r => r.Result != null)
             .Where(r => r.Result is not AssertChainer<AssertType>)
+            .Where(r => r.Result as string != nameof(AssertType))
             .Assert()
             .IsEmpty();
     }

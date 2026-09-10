@@ -26,14 +26,15 @@ public static class TaskAssertObjectExtensionsTests
     {
         typeof(AssertObjectBase<>)
             .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-            .OrderBy(m => m.Name)
             .Select(m => m.Name)
+            .Where(x => x != nameof(ToString))
+            .Order()
             .Assert()
             .Is(
                 typeof(TaskAssertObjectExtensions)
                     .GetMethods(BindingFlags.Static | BindingFlags.Public)
-                    .OrderBy(m => m.Name)
                     .Select(m => m.Name)
+                    .Order()
             );
     }
 }

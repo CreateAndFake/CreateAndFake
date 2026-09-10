@@ -4,28 +4,28 @@ using Werecodent.CreateAndFake.Fluent.AssertCalls;
 
 namespace Werecodent.CreateAndFake.Tests.Fluent.TaskAssertUnwrapping;
 
-public static class TaskAssertEnumerableExtensionsTests
+public static class TaskAssertErrorExtensionsTests
 {
     [Fact]
-    internal static Task TaskAssertEnumerableExtensions_GuardsNulls()
+    internal static Task TaskAssertErrorExtensions_GuardsNulls()
     {
         return Tools.Tester.PreventsNullRefExceptionAsync(
-            typeof(TaskAssertEnumerableExtensions),
+            typeof(TaskAssertErrorExtensions),
             TestContext.Current.CancellationToken,
             opt => opt with { IgnorableExceptions = [typeof(AssertException)] }
         );
     }
 
     [Fact]
-    internal static void TaskAssertEnumerableExtensions_MatchesEveryMethod()
+    internal static void TaskAssertErrorExtensions_MatchesEveryMethod()
     {
-        typeof(AssertEnumerableBase<>)
+        typeof(AssertErrorBase<>)
             .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
             .OrderBy(m => m.Name)
             .Select(m => m.Name)
             .Assert()
             .Is(
-                typeof(TaskAssertEnumerableExtensions)
+                typeof(TaskAssertErrorExtensions)
                     .GetMethods(BindingFlags.Static | BindingFlags.Public)
                     .OrderBy(m => m.Name)
                     .Select(m => m.Name)

@@ -45,7 +45,7 @@ internal static class Unwrapper
 
         Type resultType = result.GetType();
 
-        if (resultType.Inherits(typeof(ICollection<>)))
+        if (resultType == typeof(string) || resultType.Inherits(typeof(ICollection<>)))
         {
             return result;
         }

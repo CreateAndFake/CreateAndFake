@@ -153,6 +153,7 @@ public static class AssertDelegateTests
                 && !TypeDescriber.For(r.Result?.GetType()).Inherits(typeof(ExceptionChainer<>))
                 && r.Result is not AlsoChainer
             )
+            .Where(r => r.Result as string != nameof(AssertDelegate))
             .Assert()
             .IsEmpty();
     }

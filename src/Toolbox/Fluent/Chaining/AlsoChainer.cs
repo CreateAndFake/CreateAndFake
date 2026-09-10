@@ -1,5 +1,6 @@
 using System.Collections;
 using Werecodent.CreateAndFake.AsserterTool;
+using Werecodent.CreateAndFake.Design.Types;
 using Werecodent.CreateAndFake.Fluent.AssertAsyncCalls;
 using Werecodent.CreateAndFake.Fluent.AssertCalls;
 
@@ -129,5 +130,11 @@ public class AlsoChainer(IAsserter asserter)
     public AssertType Also(Type? type)
     {
         return new AssertType(asserter, type);
+    }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return GenericConverter.ExpandName(GetType());
     }
 }

@@ -50,6 +50,7 @@ public static class AssertComparableTests
         results
             .RawResults.Where(r => r.Result != null)
             .Where(r => r.Result is not AssertChainer<AssertComparable>)
+            .Where(r => r.Result as string != nameof(AssertComparable))
             .Assert()
             .IsEmpty();
     }

@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Werecodent.CreateAndFake.AsserterTool;
 using Werecodent.CreateAndFake.AsserterTool.Categories;
+using Werecodent.CreateAndFake.Design.Types;
 using Werecodent.CreateAndFake.FakerTool;
 using Werecodent.CreateAndFake.Fluent.Chaining;
 
@@ -255,5 +256,11 @@ public abstract class AssertObjectBase<T>(IAsserter asserter, object? actual)
     protected internal AssertChainer<T> ToChainer()
     {
         return new AssertChainer<T>((T)this, Asserter);
+    }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        return GenericConverter.ExpandName(GetType());
     }
 }

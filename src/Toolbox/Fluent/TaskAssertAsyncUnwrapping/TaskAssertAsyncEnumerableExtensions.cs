@@ -342,7 +342,7 @@ public static class TaskAssertAsyncEnumerableExtensions
 
     /// <inheritdoc cref="AssertAsyncEnumerableBase{T,T}.DebugAsync(CancellationToken,AsserterMod,string)"/>
     /// <param name="origin">Assert provider in asynchronous context.</param>
-    public static async Task<ExceptionChainer<Exception>> ThrowsAsync<T>(
+    public static async Task<ExceptionChainer<Exception>> ThrowsExceptionAsync<T>(
         this Task<AssertAsyncEnumerable<T>> origin,
         CancellationToken canceler,
         string? details = null
@@ -356,7 +356,7 @@ public static class TaskAssertAsyncEnumerableExtensions
 
     /// <inheritdoc cref="AssertAsyncEnumerableBase{T,T}.DebugAsync(CancellationToken,AsserterMod,string)"/>
     /// <param name="origin">Assert provider in asynchronous context.</param>
-    public static async Task<ExceptionChainer<Exception>> ThrowsAsync<T>(
+    public static async Task<ExceptionChainer<Exception>> ThrowsExceptionAsync<T>(
         this Task<AssertAsyncEnumerable<T>> origin,
         CancellationToken canceler,
         AsserterMod? optionConfiguration,

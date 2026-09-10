@@ -56,6 +56,7 @@ public static class AssertFuncTests
                 && !TypeDescriber.For(r.Result?.GetType()).Inherits(typeof(ExceptionChainer<>))
                 && r.Result is not AlsoChainer
             )
+            .Where(r => r.Result as string != "AssertFunc<String>")
             .Assert()
             .IsEmpty();
     }

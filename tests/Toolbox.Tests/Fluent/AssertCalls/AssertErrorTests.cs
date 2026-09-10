@@ -51,6 +51,7 @@ public static class AssertErrorTests
             .RawResults.Where(r => r.Result != null)
             .Where(r => r.Result is not AssertChainer<AssertError>)
             .Where(r => !r.Result?.GetType().Inherits(typeof(ExceptionChainer<>)) ?? false)
+            .Where(r => r.Result as string != nameof(AssertError))
             .Assert()
             .IsEmpty();
     }

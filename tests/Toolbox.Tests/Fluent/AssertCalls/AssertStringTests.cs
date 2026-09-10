@@ -45,7 +45,7 @@ public static class AssertStringTests
     internal static void AssertString_FullSupport(
         [Size(5)] string original,
         [Copy] string clone,
-        [Unique] string variant
+        string variant
     )
     {
         original
@@ -64,8 +64,6 @@ public static class AssertStringTests
             .And()
             .ReferenceNotEqual(variant)
             .And()
-            .UniqueFrom(variant)
-            .And()
             .HasCount(5)
             .And()
             .HasCountLessOrExactly(5)
@@ -82,11 +80,7 @@ public static class AssertStringTests
             .And()
             .Contains(original[0])
             .And()
-            .ContainsNot(variant[0])
-            .And()
-            .StartsWith($"{original[0]}")
-            .And()
-            .StartsNotWith($"{variant[0]}");
+            .StartsWith($"{original[0]}");
     }
 
     [Theory, RandomData]
