@@ -150,18 +150,18 @@ public static class TaskAlsoChainerExtensions
         return (await origin.ConfigureAwait(false)).Also(actual.Invoke());
     }
 
-    /*/// <inheritdoc cref="AssertDelegate"/>
+    /// <inheritdoc cref="AssertDelegate"/>
     /// <param name="actual"><inheritdoc cref="AssertDelegateBase{T}.Behavior" path="/summary"/></param>
     /// <returns>Asserter to test <paramref name="actual"/> with.</returns>
     public static async Task<AssertFunc<TItem>> Also<TSelf, TItem>(
         this Task<TSelf> origin,
-        Func<TItem>? actual
+        Func<Func<TItem>>? actual
     )
         where TSelf : AlsoChainer
     {
         ArgumentGuard.ThrowIfNull(origin, actual);
-        return (await origin.ConfigureAwait(false)).Also(actual);
-    }*/
+        return (await origin.ConfigureAwait(false)).Also(actual.Invoke());
+    }
 
     /// <inheritdoc cref="AssertString"/>
     /// <param name="actual"><inheritdoc cref="AssertStringBase{T}.Text" path="/summary"/></param>

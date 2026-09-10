@@ -102,7 +102,8 @@ public static class FieldScannerTests
             .PublicOrInternal.ToHashSet()
             .Assert()
             .Is(expectedFields)
-            .And.Is(scanner.Visible.ToHashSet());
+            .And()
+            .Is(scanner.Visible.ToHashSet());
     }
 
     [Fact]

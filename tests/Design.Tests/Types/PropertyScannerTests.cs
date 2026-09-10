@@ -98,7 +98,8 @@ public static class PropertyScannerTests
             .PublicOrInternal.ToHashSet()
             .Assert()
             .Is(expectedProperties)
-            .And.Is(scanner.Visible.ToHashSet());
+            .And()
+            .Is(scanner.Visible.ToHashSet());
     }
 
     [Fact]

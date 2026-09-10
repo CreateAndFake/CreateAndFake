@@ -39,13 +39,13 @@ public static class AssertDelegateTests
     [Theory, RandomData]
     internal static void Throws_ReturnsException(Exception error)
     {
-        error.Assert(x => false ? "" : throw x).Throws<Exception>().That.Is(error);
+        error.Assert(x => false ? "" : throw x).Throws<Exception>().That().Is(error);
     }
 
     [Theory, RandomData]
     internal static void Throws_CatchesExpected(ArgumentNullException error)
     {
-        error.Assert(x => false ? "" : throw x).Throws<ArgumentNullException>().That.Is(error);
+        error.Assert(x => false ? "" : throw x).Throws<ArgumentNullException>().That().Is(error);
     }
 
     [Theory, RandomData]
@@ -54,7 +54,8 @@ public static class AssertDelegateTests
         error
             .Assert(x => false ? "" : throw new AggregateException(x))
             .Throws<InvalidOperationException>()
-            .That.Is(error);
+            .That()
+            .Is(error);
     }
 
     [Theory, RandomData]

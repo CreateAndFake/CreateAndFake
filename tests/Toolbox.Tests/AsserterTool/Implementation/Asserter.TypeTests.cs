@@ -11,7 +11,7 @@ public static class AsserterTypeTests
     [Fact]
     internal static void Inherits_ParentToChild()
     {
-        typeof(IParentType).Assert().Inherits<IChildType>().And.Inherits(typeof(IChildType));
+        typeof(IParentType).Assert().Inherits<IChildType>().And().Inherits(typeof(IChildType));
     }
 
     [Theory, RandomData]
@@ -20,7 +20,8 @@ public static class AsserterTypeTests
         typeof(IParentType)
             .Assert()
             .Inherits<IChildType>(mod)
-            .And.Inherits(typeof(IChildType), mod);
+            .And()
+            .Inherits(typeof(IChildType), mod);
     }
 
     [Fact]
@@ -37,7 +38,11 @@ public static class AsserterTypeTests
     [Fact]
     internal static void InheritedBy_ChildToParent()
     {
-        typeof(IChildType).Assert().InheritedBy<IParentType>().And.InheritedBy(typeof(IParentType));
+        typeof(IChildType)
+            .Assert()
+            .InheritedBy<IParentType>()
+            .And()
+            .InheritedBy(typeof(IParentType));
     }
 
     [Fact]

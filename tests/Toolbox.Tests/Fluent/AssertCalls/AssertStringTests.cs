@@ -42,6 +42,58 @@ public static class AssertStringTests
     }
 
     [Theory, RandomData]
+    internal static void AssertString_FullSupport(
+        [Size(5)] string original,
+        [Copy] string clone,
+        [Unique] string variant
+    )
+    {
+        original
+            .Assert()
+            .Pass()
+            .And()
+            .Is(clone)
+            .And()
+            .IsNot(variant)
+            .And()
+            .IsNotEmpty()
+            .And()
+            .IsNotNull()
+            .And()
+            .ReferenceEqual(original)
+            .And()
+            .ReferenceNotEqual(variant)
+            .And()
+            .UniqueFrom(variant)
+            .And()
+            .HasCount(5)
+            .And()
+            .HasCountLessOrExactly(5)
+            .And()
+            .HasCountLessOrExactly(6)
+            .And()
+            .HasCountLessThan(6)
+            .And()
+            .HasCountMoreOrExactly(5)
+            .And()
+            .HasCountMoreOrExactly(4)
+            .And()
+            .HasCountMoreThan(4)
+            .And()
+            .Contains(original[0])
+            .And()
+            .ContainsNot(variant[0])
+            .And()
+            .StartsWith($"{original[0]}")
+            .And()
+            .StartsNotWith($"{variant[0]}")
+            .And()
+            .EndsWith($"{original[^1]}")
+            .And()
+            .EndsNotWith($"{variant[^1]}");
+    }
+
+    [Theory, RandomData]
     internal static async Task AssertString_CallsAndChains(Injected<AssertString> instance)
     {
         RunResults results = await Tools.Runner.CallMethodsOnAsync(

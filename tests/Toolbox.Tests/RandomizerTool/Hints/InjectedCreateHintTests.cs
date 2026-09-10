@@ -35,7 +35,8 @@ public sealed class InjectedCreateHintTests : CreateHintTestBase<InjectedCreateH
             .Fake<IOnlyMockSample>(1)
             .Assert()
             .IsNotNull()
-            .And.IsNot(sample.Fake<IOnlyMockSample>());
+            .And()
+            .IsNot(sample.Fake<IOnlyMockSample>());
 
         sample
             .Fake<IOnlyMockSample>()

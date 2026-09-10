@@ -138,7 +138,7 @@ public static class ValuerTests
         new Valuer(Tools.Valuer.Options with { IncludeFrameworkHints = false, Hints = [hint] })
             .Assert(x => x.Compare(item1, item2).ToList())
             .Throws<ToolException>()
-            .With.Message.Assert()
+            .With(e => e.Message)
             .Contains(GenericConverter.ExpandName(item1));
     }
 
@@ -151,7 +151,7 @@ public static class ValuerTests
         new Valuer(Tools.Valuer.Options with { IncludeFrameworkHints = false, Hints = [hint] })
             .Assert(x => x.GetHashCode(item))
             .Throws<ToolException>()
-            .With.Message.Assert()
+            .With(e => e.Message)
             .Contains(GenericConverter.ExpandName(item));
     }
 }

@@ -95,7 +95,7 @@ public static class LimiterSyncTests
                 )
             )
             .Throws<TimeoutException>()
-            .With.InnerException.Assert()
+            .With(e => e.InnerException)
             .Is(exception)
             .Also(attempts)
             .Is(tries);
@@ -353,7 +353,8 @@ public static class LimiterSyncTests
             .HasCount(tries)
             .Also(checkAttempt)
             .Is(attempt)
-            .And.Is(tries);
+            .And()
+            .Is(tries);
     }
 
     [Theory, InlineData(1), InlineData(3)]
@@ -425,7 +426,8 @@ public static class LimiterSyncTests
                 )
             )
             .Throws<NotSupportedException>()
-            .That.Is(exception);
+            .That()
+            .Is(exception);
 
         IOException exception2 = new();
         new Limiter(3)
@@ -437,7 +439,8 @@ public static class LimiterSyncTests
                 )
             )
             .Throws<IOException>()
-            .That.Is(exception2);
+            .That()
+            .Is(exception2);
     }
 
     [Theory, InlineData(1), InlineData(3)]
@@ -509,7 +512,8 @@ public static class LimiterSyncTests
                 )
             )
             .Throws<NotSupportedException>()
-            .That.Is(exception);
+            .That()
+            .Is(exception);
 
         IOException exception2 = new();
         Limiter
@@ -521,7 +525,8 @@ public static class LimiterSyncTests
                 )
             )
             .Throws<IOException>()
-            .That.Is(exception2);
+            .That()
+            .Is(exception2);
     }
 
     private static string GetAMessage()

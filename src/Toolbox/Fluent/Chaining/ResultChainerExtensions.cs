@@ -23,7 +23,7 @@ public static class ResultChainerExtensions
 
     /// <inheritdoc cref="AlsoChainer.Also(object)"/>
     /// <param name="origin">Assert provider.</param>
-    public static AssertAsyncObject That(this ResultChainer<object?> origin)
+    public static AssertAsyncObject That<T>(this ResultChainer<T> origin)
     {
         ArgumentGuard.ThrowIfNull(origin);
         return origin.Also(origin.GetResultValue());

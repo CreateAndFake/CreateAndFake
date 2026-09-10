@@ -39,7 +39,8 @@ public static class TypeSupporterTests
             .GroupBySupportedType([item, item2])
             .Assert()
             .Contains(new KeyValuePair<Type, ITypeSupporter>(item.SupportedType, item))
-            .And.Contains(new KeyValuePair<Type, ITypeSupporter>(item2.SupportedType, item2));
+            .And()
+            .Contains(new KeyValuePair<Type, ITypeSupporter>(item2.SupportedType, item2));
     }
 
     [Fact]
@@ -60,7 +61,8 @@ public static class TypeSupporterTests
             .GroupByInheritance([item1, item2])[typeof(object)]
             .Assert()
             .Contains(item1)
-            .And.Contains(item2);
+            .And()
+            .Contains(item2);
     }
 
     [Fact]
@@ -81,7 +83,8 @@ public static class TypeSupporterTests
             .GroupBySubclasses([item1, item2])[typeof(string)]
             .Assert()
             .Contains(item1)
-            .And.Contains(item2);
+            .And()
+            .Contains(item2);
     }
 
     [Fact]

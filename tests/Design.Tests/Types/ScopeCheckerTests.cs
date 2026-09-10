@@ -34,7 +34,8 @@ public static class ScopeCheckerTests
             .FindLoadedSpecificTypes(typeof(DataSample).Assembly)
             .Assert()
             .Contains(typeof(DataSample))
-            .And.ContainsNot(typeof(IIsGoodOrBadSample));
+            .And()
+            .ContainsNot(typeof(IIsGoodOrBadSample));
     }
 
     [Theory, RandomData]

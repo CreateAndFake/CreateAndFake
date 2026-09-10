@@ -47,20 +47,26 @@ public static class IntegrationTests
         [Unique] string stringUnique
     )
     {
-        intCapMax.Assert().GreaterThanOrIs(0).And.LessThan(5);
+        intCapMax.Assert().GreaterThanOrIs(0).And().LessThan(5);
         intCopyMax.Assert().Is(intCapMax);
-        intCapRange.Assert().GreaterThanOrIs(8).And.LessThanOrIs(11);
-        doubleCapMax.Assert().GreaterThanOrIs(0d).And.LessThan(5d);
-        floatCapRange.Assert().GreaterThanOrIs(20f).And.LessThanOrIs(24f);
+        intCapRange.Assert().GreaterThanOrIs(8).And().LessThanOrIs(11);
+        doubleCapMax.Assert().GreaterThanOrIs(0d).And().LessThan(5d);
+        floatCapRange.Assert().GreaterThanOrIs(20f).And().LessThanOrIs(24f);
         intCopyRange.Assert().Is(intCapRange);
         stubGen.NextBytes(0).Assert().IsNull();
         stubContext.NextName.Assert().IsNull();
         fakeGen.NextBytes(0).Assert().IsNotNull();
         fakeContext.NextName.Assert().IsNotNull();
         stringSizeSet.Assert().HasCount(2);
-        stringSizeRange.Assert().HasCountMoreOrExactly(3).And.HasCountLessOrExactly(5);
-        stringNone.Assert().IsNot(stringSizeSet).And.IsNot(stringSizeRange);
-        stringUnique.Assert().IsNot(stringNone).And.IsNot(stringSizeSet).And.IsNot(stringSizeRange);
+        stringSizeRange.Assert().HasCountMoreOrExactly(3).And().HasCountLessOrExactly(5);
+        stringNone.Assert().IsNot(stringSizeSet).And().IsNot(stringSizeRange);
+        stringUnique
+            .Assert()
+            .IsNot(stringNone)
+            .And()
+            .IsNot(stringSizeSet)
+            .And()
+            .IsNot(stringSizeRange);
     }
 
 #if !LEGACY // xUnit needs Type parameters to inherit IReflectableType, which cannot be faked in legacy .NET.

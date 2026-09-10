@@ -30,7 +30,8 @@ public static class MutatorEngineTests
             .Variant(value, null)
             .Assert()
             .IsNot(value)
-            .And.IsNotNull();
+            .And()
+            .IsNotNull();
     }
 
     [Theory, RandomData]
@@ -120,7 +121,7 @@ public static class MutatorEngineTests
     internal static void Unique_AcceptsNull(string value)
     {
         Tools.Mutator.Unique<string>(null).Assert().IsNotNull();
-        Tools.Mutator.Unique(value, null).Assert().IsNot(value).And.IsNotNull();
+        Tools.Mutator.Unique(value, null).Assert().IsNot(value).And().IsNotNull();
     }
 
     [Theory, RandomData]

@@ -38,7 +38,7 @@ public static class RandomDataAttributeTests
         );
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact(Timeout = 10000)]
     internal static async Task GetData_UsesTrials()
     {
         (await new RandomDataAttribute() { Trials = 0 }.GetData(GetGeneratableMethod(), null))

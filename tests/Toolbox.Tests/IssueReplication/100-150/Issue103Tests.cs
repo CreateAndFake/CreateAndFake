@@ -22,6 +22,7 @@ public static class Issue103Tests
             .Asserter.Throws<AssertException>(() => text.Assert().Contains(alt, details))
             .Message.Assert()
             .Contains(alt)
-            .And.Contains(details);
+            .And()
+            .Contains(details);
     }
 }

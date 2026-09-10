@@ -78,7 +78,8 @@ public static class StaticMethodScannerTests
             .PublicOrInternal.ToHashSet()
             .Assert()
             .Is(expectedMethods)
-            .And.Is(scanner.Visible.ToHashSet());
+            .And()
+            .Is(scanner.Visible.ToHashSet());
     }
 
     [Fact]

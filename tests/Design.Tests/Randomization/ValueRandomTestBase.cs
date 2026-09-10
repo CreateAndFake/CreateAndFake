@@ -362,13 +362,13 @@ public abstract class ValueRandomTestBase<T>(T testInstance)
         where TValueType : struct, IComparable, IComparable<TValueType>, IEquatable<TValueType>
     {
         TValueType min = default;
-        testInstance.Next(max).Assert().GreaterThanOrEqualTo(min).And.LessThan(max);
+        testInstance.Next(max).Assert().GreaterThanOrEqualTo(min).And().LessThan(max);
     }
 
     private void TestNext<TValueType>(TValueType min, TValueType max)
         where TValueType : struct, IComparable, IComparable<TValueType>, IEquatable<TValueType>
     {
-        testInstance.Next(min, max).Assert().GreaterThanOrEqualTo(min).And.LessThanOrEqualTo(max);
+        testInstance.Next(min, max).Assert().GreaterThanOrEqualTo(min).And().LessThanOrEqualTo(max);
     }
 
     [Theory, RandomData]
@@ -467,7 +467,8 @@ public abstract class ValueRandomTestBase<T>(T testInstance)
             .Next(double.NegativeInfinity, double.PositiveInfinity)
             .Assert()
             .GreaterThanOrEqualTo(double.MinValue)
-            .And.LessThanOrEqualTo(double.MaxValue);
+            .And()
+            .LessThanOrEqualTo(double.MaxValue);
 
         testInstance.Next(double.NaN, 0).Assert().Is(double.NaN);
         testInstance.Next(double.NaN, double.NaN).Assert().Is(double.NaN);
@@ -485,7 +486,8 @@ public abstract class ValueRandomTestBase<T>(T testInstance)
             .Next(float.NegativeInfinity, float.PositiveInfinity)
             .Assert()
             .GreaterThanOrEqualTo(float.MinValue)
-            .And.LessThanOrEqualTo(float.MaxValue);
+            .And()
+            .LessThanOrEqualTo(float.MaxValue);
 
         testInstance.Next(float.NaN, 0).Assert().Is(float.NaN);
         testInstance.Next(float.NaN, float.NaN).Assert().Is(float.NaN);

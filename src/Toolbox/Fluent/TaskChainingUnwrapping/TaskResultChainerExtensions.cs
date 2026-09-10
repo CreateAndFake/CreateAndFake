@@ -9,7 +9,7 @@ namespace Werecodent.CreateAndFake.Fluent;
 /// <summary>Provides fluent assertions.</summary>
 public static class TaskResultChainerExtensions
 {
-    /// <inheritdoc cref="ResultChainer{T}.With"/>
+    /// <inheritdoc cref="ResultChainer{T}.GetResultValue"/>
     public static async Task<T> GetResultValue<T>(this Task<ResultChainer<T>> origin)
     {
         ArgumentGuard.ThrowIfNull(origin);
@@ -142,6 +142,17 @@ public static class TaskResultChainerExtensions
     {
         ArgumentGuard.ThrowIfNull(origin);
         return (await origin.ConfigureAwait(false)).That();
+    }
+
+    /// <inheritdoc cref="AlsoChainer.Also(string)"/>
+    /// <param name="origin">Assert provider in asynchronous context.</param>
+    public static async Task<AssertString> That<T>(
+        this Task<ResultChainer<T>> origin,
+        Func<T, string?> selector
+    )
+    {
+        ArgumentGuard.ThrowIfNull(origin, selector);
+        return selector((await origin.ConfigureAwait(false)).GetResultValue()).Assert();
     }
 
     /// <inheritdoc cref="AlsoChainer.Also(Type)"/>

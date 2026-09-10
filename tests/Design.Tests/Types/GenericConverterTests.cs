@@ -131,7 +131,8 @@ public static class GenericConverterTests
             .ExpandName<Dictionary<int, string>>()
             .Assert()
             .Contains(nameof(Int32))
-            .And.Contains(nameof(String));
+            .And()
+            .Contains(nameof(String));
     }
 
     [Fact]
@@ -141,8 +142,10 @@ public static class GenericConverterTests
             .BuildTestName(_TestMethod)
             .Assert()
             .Contains(nameof(HiddenTestName))
-            .And.Contains(nameof(String))
-            .And.Contains(nameof(Int32));
+            .And()
+            .Contains(nameof(String))
+            .And()
+            .Contains(nameof(Int32));
     }
 
     private static void HiddenTestName(string value, int num)

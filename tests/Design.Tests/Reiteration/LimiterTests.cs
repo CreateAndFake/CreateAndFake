@@ -136,14 +136,20 @@ public static class LimiterTests
         true
             .Assert()
             .Is(original.Equals(original))
-            .And.Is(original.Equals(dupe))
-            .And.IsNot(original.Equals(variant1))
-            .And.IsNot(original.Equals(variant2))
+            .And()
+            .Is(original.Equals(dupe))
+            .And()
+            .IsNot(original.Equals(variant1))
+            .And()
+            .IsNot(original.Equals(variant2))
             .Also(original.GetHashCode())
             .Is(original.GetHashCode())
-            .And.Is(dupe.GetHashCode())
-            .And.IsNot(variant1.GetHashCode())
-            .And.IsNot(variant2.GetHashCode());
+            .And()
+            .Is(dupe.GetHashCode())
+            .And()
+            .IsNot(variant1.GetHashCode())
+            .And()
+            .IsNot(variant2.GetHashCode());
     }
 
     [Fact]

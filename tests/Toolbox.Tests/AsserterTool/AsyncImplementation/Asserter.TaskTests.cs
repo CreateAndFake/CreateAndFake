@@ -7,11 +7,11 @@ public sealed class AsserterTaskTests
     private readonly Asserter _testInstance = new(Tools.Asserter.Options);
 
     [Theory, RandomData]
-    internal Task HasResultAsync_Throws(IAsyncEnumerable<object> series)
+    internal Task HasResultAsync_ReturnsResult(int value)
     {
         return _testInstance
-            .FailAsync(series, TestContext.Current.CancellationToken)
+            .HasResultAsync(Task.FromResult(value), TestContext.Current.CancellationToken)
             .Assert()
-            .ThrowsAsync<AssertException>(TestContext.Current.CancellationToken);
+            .IsAsync(Task.FromResult(value), TestContext.Current.CancellationToken);
     }
 }

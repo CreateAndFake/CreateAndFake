@@ -77,7 +77,8 @@ public abstract class MutateHintTestBase<T>(
         TestInstance
             .EnginePriority.Assert()
             .GreaterThan((int)MutatePriority.None)
-            .And.LessThan((int)MutatePriority.Highest);
+            .And()
+            .LessThan((int)MutatePriority.Highest);
     }
 
     /// <summary>Ensure expanded type name is used.</summary>

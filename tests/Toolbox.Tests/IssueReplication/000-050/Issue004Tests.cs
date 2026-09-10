@@ -94,7 +94,7 @@ public static class Issue004Tests
     internal static void Issue004_MockCanCallBaseThrow(Fake<BaseHolder> sample, Exception e)
     {
         sample.Setup(d => d.ThrowError(e), Behavior.Base());
-        sample.Dummy.Assert(x => x.ThrowError(e)).Throws<Exception>().That.Is(e);
+        sample.Dummy.Assert(x => x.ThrowError(e)).Throws<Exception>().That().Is(e);
         sample.Verify();
     }
 

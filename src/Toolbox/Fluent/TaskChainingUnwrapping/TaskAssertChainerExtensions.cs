@@ -10,6 +10,6 @@ public static class TaskAssertChainerExtensions
     public static async Task<T> And<T>(this Task<AssertChainer<T>> origin)
     {
         ArgumentGuard.ThrowIfNull(origin);
-        return (await origin.ConfigureAwait(false)).And;
+        return (await origin.ConfigureAwait(false)).And();
     }
 }

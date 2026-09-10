@@ -1,10 +1,10 @@
-#pragma warning disable CA1307, CA1310 // Not available for all .NET versions.
-
 using Werecodent.CreateAndFake.AsserterTool;
 using Werecodent.CreateAndFake.AsserterTool.Categories;
 using Werecodent.CreateAndFake.Fluent.Chaining;
 
 namespace Werecodent.CreateAndFake.Fluent.AssertCalls;
+
+#pragma warning disable CA1307, CA1310 // Not available for all .NET versions.
 
 /// <summary>Handles common <see cref="string"/> assertion calls.</summary>
 /// <param name="text"><inheritdoc cref="Text" path="/summary"/></param>
