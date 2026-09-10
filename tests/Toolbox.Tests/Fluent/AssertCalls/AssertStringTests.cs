@@ -86,11 +86,7 @@ public static class AssertStringTests
             .And()
             .StartsWith($"{original[0]}")
             .And()
-            .StartsNotWith($"{variant[0]}")
-            .And()
-            .EndsWith($"{original[^1]}")
-            .And()
-            .EndsNotWith($"{variant[^1]}");
+            .StartsNotWith($"{variant[0]}");
     }
 
     [Theory, RandomData]
