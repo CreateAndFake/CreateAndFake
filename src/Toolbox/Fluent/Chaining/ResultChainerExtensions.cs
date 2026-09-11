@@ -95,6 +95,14 @@ public static class ResultChainerExtensions
 
     /// <inheritdoc cref="AlsoChainer.Also(IEnumerable)"/>
     /// <param name="origin">Assert provider.</param>
+    public static AssertEnumerable That<T>(this ResultChainer<IEnumerable<T>?> origin)
+    {
+        ArgumentGuard.ThrowIfNull(origin);
+        return origin.Also(origin.GetResultValue());
+    }
+
+    /// <inheritdoc cref="AlsoChainer.Also(IEnumerable)"/>
+    /// <param name="origin">Assert provider.</param>
     public static AssertEnumerable That(this ResultChainer<IEnumerable?> origin)
     {
         ArgumentGuard.ThrowIfNull(origin);

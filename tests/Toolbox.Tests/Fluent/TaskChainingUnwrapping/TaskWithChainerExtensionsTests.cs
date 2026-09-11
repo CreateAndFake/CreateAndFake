@@ -78,6 +78,15 @@ public static class TaskWithChainerExtensionsTests
     }
 
     [Theory, RandomData]
+    internal static void With_SupportsNullableGenericValueTask(
+        Task<ResultChainer<object>> chainer,
+        ValueTask<int>? data
+    )
+    {
+        chainer.With(_ => data).GetType().Assert().Is(typeof(Task<AssertGenericValueTask<int>>));
+    }
+
+    [Theory, RandomData]
     internal static void With_SupportsTask(Task<ResultChainer<object>> chainer, Task data)
     {
         chainer.With(_ => data).GetType().Assert().Is(typeof(Task<AssertTask>));
@@ -85,6 +94,15 @@ public static class TaskWithChainerExtensionsTests
 
     [Theory, RandomData]
     internal static void With_SupportsValueTask(Task<ResultChainer<object>> chainer, ValueTask data)
+    {
+        chainer.With(_ => data).GetType().Assert().Is(typeof(Task<AssertValueTask>));
+    }
+
+    [Theory, RandomData]
+    internal static void With_SupportsNullableValueTask(
+        Task<ResultChainer<object>> chainer,
+        ValueTask? data
+    )
     {
         chainer.With(_ => data).GetType().Assert().Is(typeof(Task<AssertValueTask>));
     }

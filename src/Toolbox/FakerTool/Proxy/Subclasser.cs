@@ -19,6 +19,16 @@ internal static class Subclasser
         { typeof(Array), $"Cannot subclass system reserved '{nameof(Array)}' type." },
         { typeof(ObjectDisposedException), $"{typeof(ObjectDisposedException)} not allowed." },
         { typeof(Task), $"{typeof(Task)} not supported without a provided constructor." },
+        { typeof(ValueTask), $"{typeof(ValueTask)} not supported without a provided constructor." },
+        {
+            typeof(ValueTask?),
+            $"{typeof(ValueTask?)} not supported without a provided constructor."
+        },
+        { typeof(Task<>), $"{typeof(Task<>)} not supported without a provided constructor." },
+        {
+            typeof(ValueTask<>),
+            $"{typeof(ValueTask<>)} not supported without a provided constructor."
+        },
 #if LEGACY // Required feature shipped with C# 14 / .NET 10.0
         { typeof(TypeInfo), $"{typeof(TypeInfo)} itself has specific issues being faked." },
 #endif
@@ -121,7 +131,12 @@ internal static class Subclasser
         {
             return (true, null);
         }
-        else if (_InvalidTypes.TryGetValue(parent, out string? error))
+        else if (
+            _InvalidTypes.TryGetValue(
+                GenericConverter.AsGenericBase(parent) ?? parent,
+                out string? error
+            )
+        )
         {
             return (false, new ArgumentException(error, nameof(parent)));
         }

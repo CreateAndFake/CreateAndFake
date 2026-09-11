@@ -70,6 +70,15 @@ public static class AlsoChainerTests
     }
 
     [Theory, RandomData]
+    internal static void Also_SupportsNullableGenericValueTask(
+        AlsoChainer chainer,
+        ValueTask<int>? data
+    )
+    {
+        chainer.Also(data).GetType().Assert().Is(typeof(AssertGenericValueTask<int>));
+    }
+
+    [Theory, RandomData]
     internal static void Also_SupportsTask(AlsoChainer chainer, Task data)
     {
         chainer.Also(data).GetType().Assert().Is(typeof(AssertTask));
@@ -77,6 +86,12 @@ public static class AlsoChainerTests
 
     [Theory, RandomData]
     internal static void Also_SupportsValueTask(AlsoChainer chainer, ValueTask data)
+    {
+        chainer.Also(data).GetType().Assert().Is(typeof(AssertValueTask));
+    }
+
+    [Theory, RandomData]
+    internal static void Also_SupportsNullableValueTask(AlsoChainer chainer, ValueTask? data)
     {
         chainer.Also(data).GetType().Assert().Is(typeof(AssertValueTask));
     }

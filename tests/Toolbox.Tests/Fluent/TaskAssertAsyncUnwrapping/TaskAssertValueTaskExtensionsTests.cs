@@ -1,4 +1,6 @@
+using System.Reflection;
 using Werecodent.CreateAndFake.AsserterTool;
+using Werecodent.CreateAndFake.Fluent.AssertAsyncCalls;
 
 namespace Werecodent.CreateAndFake.Tests.Fluent.TaskAssertAsyncUnwrapping;
 
@@ -22,5 +24,21 @@ public static class TaskAssertValueTaskExtensionsTests
             TestContext.Current.CancellationToken,
             opt => opt with { IgnorableExceptions = [typeof(AssertException)] }
         );
+    }
+
+    [Fact]
+    internal static void TaskAssertValueTaskExtensions_MatchesEveryMethod()
+    {
+        typeof(AssertValueTaskBase<>)
+            .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+            .OrderBy(m => m.Name)
+            .Select(m => m.Name)
+            .Assert()
+            .Is(
+                typeof(TaskAssertValueTaskExtensions)
+                    .GetMethods(BindingFlags.Static | BindingFlags.Public)
+                    .OrderBy(m => m.Name)
+                    .Select(m => m.Name)
+            );
     }
 }

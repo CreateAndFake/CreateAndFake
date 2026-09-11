@@ -16,14 +16,6 @@ public static class TaskResultChainerExtensions
         return (await origin.ConfigureAwait(false)).GetResultValue();
     }
 
-    /// <inheritdoc cref="AlsoChainer.Also(object)"/>
-    public static async Task<AssertAsyncObject> That<T>(this Task<ResultChainer<T>> origin)
-    {
-        ArgumentGuard.ThrowIfNull(origin);
-        ResultChainer<T> chainer = await origin.ConfigureAwait(false);
-        return chainer.Also(chainer.GetResultValue());
-    }
-
     /// <inheritdoc cref="AlsoChainer.Also{T}(IAsyncEnumerable{T})"/>
     /// <param name="origin">Assert provider in asynchronous context.</param>
     public static async Task<AssertAsyncEnumerable<T>> That<T>(
@@ -36,7 +28,7 @@ public static class TaskResultChainerExtensions
 
     /// <inheritdoc cref="AlsoChainer.Also(object)"/>
     /// <param name="origin">Assert provider in asynchronous context.</param>
-    public static async Task<AssertAsyncObject> That(this Task<ResultChainer<object?>> origin)
+    public static async Task<AssertAsyncObject> That<T>(this Task<ResultChainer<T>> origin)
     {
         ArgumentGuard.ThrowIfNull(origin);
         return (await origin.ConfigureAwait(false)).That();
@@ -107,6 +99,16 @@ public static class TaskResultChainerExtensions
     /// <inheritdoc cref="AlsoChainer.Also(IComparable)"/>
     /// <param name="origin">Assert provider in asynchronous context.</param>
     public static async Task<AssertComparable> That(this Task<ResultChainer<IComparable?>> origin)
+    {
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).That();
+    }
+
+    /// <inheritdoc cref="AlsoChainer.Also(IEnumerable)"/>
+    /// <param name="origin">Assert provider in asynchronous context.</param>
+    public static async Task<AssertEnumerable> That<T>(
+        this Task<ResultChainer<IEnumerable<T>?>> origin
+    )
     {
         ArgumentGuard.ThrowIfNull(origin);
         return (await origin.ConfigureAwait(false)).That();

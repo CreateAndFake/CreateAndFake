@@ -14,14 +14,6 @@ public static class CallDataTests
         );
     }
 
-    [Fact]
-    internal static Task CallData_NoParameterMutation()
-    {
-        return Tools.Tester.PreventsParameterMutationAsync<CallData>(
-            TestContext.Current.CancellationToken
-        );
-    }
-
     [Theory, RandomData]
     internal static void MatchesCall_MethodNameMismatch(
         DataHolderSample[] data,

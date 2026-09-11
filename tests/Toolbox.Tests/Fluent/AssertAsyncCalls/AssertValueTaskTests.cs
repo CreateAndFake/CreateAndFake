@@ -1,6 +1,10 @@
 using Werecodent.CreateAndFake.AsserterTool;
 using Werecodent.CreateAndFake.Design.Exceptions;
+using Werecodent.CreateAndFake.Design.Types;
+using Werecodent.CreateAndFake.FakerTool;
 using Werecodent.CreateAndFake.Fluent.AssertAsyncCalls;
+using Werecodent.CreateAndFake.Fluent.Chaining;
+using Werecodent.CreateAndFake.RunnerTool;
 
 namespace Werecodent.CreateAndFake.Tests.Fluent.AssertAsyncCalls;
 
@@ -36,12 +40,13 @@ public static class AssertValueTaskTests
         );
     }
 
-    /*[Theory, RandomData]
+    [Theory, RandomData]
     internal static async Task AssertValueTask_CallsAndChains(Injected<AssertValueTask> instance)
     {
         RunResults results = await Tools.Runner.CallMethodsOnAsync(
             instance.Dummy,
-            TestContext.Current.CancellationToken
+            TestContext.Current.CancellationToken,
+            opt => opt with { IncludeBaseObjectMethods = false }
         );
         results
             .RawResults.Where(r => r.Result != null)
@@ -49,8 +54,9 @@ public static class AssertValueTaskTests
                 r.Result is not Task<AssertChainer<AssertValueTask>>
                 && !TypeDescriber.For(r.Result?.GetType()).Inherits(typeof(ExceptionChainer<>))
                 && r.Result is not AlsoChainer
+                && r.Result as string != nameof(AssertValueTask)
             )
             .Assert()
             .IsEmpty();
-    }*/
+    }
 }

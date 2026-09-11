@@ -36,6 +36,37 @@ public static class TaskAssertGenericValueTaskExtensions
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc cref="AssertGenericValueTaskBase{T,T}.HasResultAsync(CancellationToken,string)"/>
+    /// <returns><inheritdoc cref="ResultChainer{T}" path="/summary"/></returns>
+    public static async Task<AssertChainer<AssertGenericValueTask<T>>> HasResultAsync<T>(
+        this Task<AssertGenericValueTask<T>> origin,
+        T expected,
+        CancellationToken canceler,
+        string? details = null
+    )
+    {
+        ArgumentGuard.ThrowIfNull(origin);
+        return await (await origin.ConfigureAwait(false))
+            .HasResultAsync(expected, canceler, details)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc cref="AssertGenericValueTaskBase{T,T}.HasResultAsync(CancellationToken,AsserterMod,string)"/>
+    /// <returns><inheritdoc cref="ResultChainer{T}" path="/summary"/></returns>
+    public static async Task<AssertChainer<AssertGenericValueTask<T>>> HasResultAsync<T>(
+        this Task<AssertGenericValueTask<T>> origin,
+        T expected,
+        CancellationToken canceler,
+        AsserterMod? optionConfiguration,
+        string? details = null
+    )
+    {
+        ArgumentGuard.ThrowIfNull(origin);
+        return await (await origin.ConfigureAwait(false))
+            .HasResultAsync(expected, canceler, optionConfiguration, details)
+            .ConfigureAwait(false);
+    }
+
     /// <inheritdoc cref="AssertGenericValueTaskBase{T,T}.ThrowsAsync{T}(CancellationToken,string)"/>
     /// <returns><inheritdoc cref="ExceptionChainer{T}" path="/summary"/></returns>
     public static async Task<ExceptionChainer<Exception>> ThrowsExceptionAsync<T>(
