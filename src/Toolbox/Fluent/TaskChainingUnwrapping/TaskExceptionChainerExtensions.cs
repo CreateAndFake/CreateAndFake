@@ -25,170 +25,181 @@ public static class TaskExceptionChainerExtensions
         return (await origin.ConfigureAwait(false)).GetCaughtException();
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertAsyncEnumerable<TContent>> With<T, TContent>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, IAsyncEnumerable<TContent>> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <param name="origin">Assert provider in asynchronous context.</param>
-    /// <inheritdoc cref="WithChainer{T}.With{TContent}(Func{T,TContent})"/>
-    /// <inheritdoc cref="WithChainer{T}"/>
-    public static async Task<AssertAsyncObject> With<T, TContent>(
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
+    public static async Task<AssertAsyncObject> With<T>(
         this Task<ExceptionChainer<T>> origin,
-        Func<T, TContent> selector
+        Func<T, object?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertGenericTask<TContent>> With<T, TContent>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, Task<TContent>?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertGenericValueTask<TContent>> With<T, TContent>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, ValueTask<TContent>?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertGenericValueTask<TContent>> With<T, TContent>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, ValueTask<TContent>> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertTask> With<T>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, Task?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertValueTask> With<T>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, ValueTask> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertValueTask> With<T>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, ValueTask?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertAction> With<T>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, Action?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
+    public static async Task<AssertAction> With<T>(
+        this Task<ExceptionChainer<T>> origin,
+        Action<T>? selector
+    )
+        where T : Exception
+    {
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
+    }
+
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertComparable> With<T>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, IComparable?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertEnumerable> With<T>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, IEnumerable?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertError> With<T>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, Exception?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <param name="origin">Assert provider in asynchronous context.</param>
+    /// <inheritdoc cref="WithChainer{T}.With{TContent}(Func{T,Func{TContent}})"/>
+    /// <inheritdoc cref="WithChainer{T}"/>
     public static async Task<AssertFunc<TContent>> With<T, TContent>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, Func<TContent>?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertString> With<T>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, string?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 
-    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,TContent})"/>
+    /// <inheritdoc cref="With{T,TContent}(Task{ExceptionChainer{T}},Func{T,Func{TContent}})"/>
     public static async Task<AssertType> With<T>(
         this Task<ExceptionChainer<T>> origin,
         Func<T, Type?> selector
     )
         where T : Exception
     {
-        ArgumentGuard.ThrowIfNull(origin, selector);
-        return selector.Invoke(await origin.GetCaughtException().ConfigureAwait(false)).Assert();
+        ArgumentGuard.ThrowIfNull(origin);
+        return (await origin.ConfigureAwait(false)).With(selector);
     }
 }
