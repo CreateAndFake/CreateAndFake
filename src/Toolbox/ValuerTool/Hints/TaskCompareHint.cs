@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using Werecodent.CreateAndFake.Design.Exceptions;
 using Werecodent.CreateAndFake.Design.Types;
 using Werecodent.CreateAndFake.ValuerTool.Engine;
@@ -82,7 +83,7 @@ public sealed class TaskCompareHint : CompareHint<Task>
     {
         if (item.Status == TaskStatus.RanToCompletion && IsGenericTask(item))
         {
-            return ((dynamic)item).Result;
+            return GrabResult(item);
         }
         else
         {
@@ -111,15 +112,28 @@ public sealed class TaskCompareHint : CompareHint<Task>
             );
         }
 
+        await item.ConfigureAwait(false);
         if (IsGenericTask(item))
         {
-            return await ((dynamic)item).ConfigureAwait(false);
+            return GrabResult(item);
         }
         else
         {
-            await item.ConfigureAwait(false);
             return (item.Status, item.Exception);
         }
+    }
+
+    /// <summary>Retrieves data from a completed task.</summary>
+    /// <param name="task">Wrapped data.</param>
+    /// <returns>The unwrapped result.</returns>
+    private static object? GrabResult(Task task)
+    {
+        PropertyInfo? resultProp = TypeDescriber
+            .For(task.GetType())
+            .Properties.OnlyPublic.FirstOrDefault(p => p.Name == "Result");
+
+        // await ((dynamic)result) crashes legacy .NET.
+        return resultProp.GetValue(task);
     }
 
     /// <summary>Determines if the <paramref name="item"/> is a <see cref="Task{T}"/>.</summary>

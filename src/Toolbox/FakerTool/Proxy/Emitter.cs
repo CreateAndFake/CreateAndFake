@@ -5,6 +5,8 @@ using Werecodent.CreateAndFake.Design.Types;
 
 namespace Werecodent.CreateAndFake.FakerTool.Proxy;
 
+#pragma warning disable S125 // Code comments are documentation here.
+
 /// <summary>Creates dynamic subclasses by IL code.</summary>
 internal static class Emitter
 {
@@ -356,3 +358,5 @@ internal static class Emitter
         return getterInfo;
     }
 }
+
+#pragma warning restore
