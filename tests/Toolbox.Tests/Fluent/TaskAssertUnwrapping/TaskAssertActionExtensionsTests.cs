@@ -21,6 +21,20 @@ public static class TaskAssertActionExtensionsTests
     }
 
     [Fact]
+    internal static Task TaskAssertActionExtensions_NoParameterMutation()
+    {
+        return Tools.Tester.PreventsParameterMutationAsync(
+            typeof(TaskAssertActionExtensions),
+            TestContext.Current.CancellationToken,
+            opt =>
+                opt with
+                {
+                    IgnorableExceptions = [typeof(AssertException), typeof(ArgumentException)],
+                }
+        );
+    }
+
+    [Fact]
     internal static void TaskAssertActionExtensions_MatchesEveryMethod()
     {
         typeof(AssertActionBase<>)

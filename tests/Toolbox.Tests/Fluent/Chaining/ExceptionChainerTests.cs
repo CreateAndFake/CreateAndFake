@@ -12,4 +12,13 @@ public static class ExceptionChainerTests
             TestContext.Current.CancellationToken
         );
     }
+
+    [Fact]
+    internal static Task ExceptionChainer_NoParameterMutation()
+    {
+        return Tools.Tester.PreventsParameterMutationAsync(
+            typeof(ExceptionChainer<>),
+            TestContext.Current.CancellationToken
+        );
+    }
 }

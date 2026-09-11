@@ -133,10 +133,6 @@ internal sealed class SupportValidator(TesterOptions options)
             try
             {
                 data = await Options.Runner.CreateForAsync(method, canceler).ConfigureAwait(false);
-                foreach (object? item in data.Args)
-                {
-                    _ = Options.TestDisplayNameConverter.Invoke(item);
-                }
                 generatedData.Add(data.ToString());
             }
             catch (Exception e)

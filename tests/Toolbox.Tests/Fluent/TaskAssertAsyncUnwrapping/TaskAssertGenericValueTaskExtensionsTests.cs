@@ -22,4 +22,22 @@ public static class TaskAssertGenericValueTaskExtensionsTests
                 }
         );
     }
+
+    [Fact]
+    internal static Task TaskAssertGenericValueTaskExtensions_NoParameterMutation()
+    {
+        return Tools.Tester.PreventsParameterMutationAsync(
+            typeof(TaskAssertGenericValueTaskExtensions),
+            TestContext.Current.CancellationToken,
+            opt =>
+                opt with
+                {
+                    IgnorableExceptions =
+                    [
+                        typeof(AssertException),
+                        typeof(ValueTaskRepeatedAccessException),
+                    ],
+                }
+        );
+    }
 }

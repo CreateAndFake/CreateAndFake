@@ -128,9 +128,9 @@ public sealed class TaskCompareHint : CompareHint<Task>
     /// <returns>The unwrapped result.</returns>
     private static object? GrabResult(Task task)
     {
-        PropertyInfo? resultProp = TypeDescriber
+        PropertyInfo resultProp = TypeDescriber
             .For(task.GetType())
-            .Properties.OnlyPublic.FirstOrDefault(p => p.Name == "Result");
+            .Properties.OnlyPublic.First(p => p.Name == "Result");
 
         // await ((dynamic)result) crashes legacy .NET.
         return resultProp.GetValue(task);

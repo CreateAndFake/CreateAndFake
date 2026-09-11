@@ -18,6 +18,16 @@ public static class TaskAssertEnumerableExtensionsTests
     }
 
     [Fact]
+    internal static Task TaskAssertEnumerableExtensions_NoParameterMutation()
+    {
+        return Tools.Tester.PreventsParameterMutationAsync(
+            typeof(TaskAssertEnumerableExtensions),
+            TestContext.Current.CancellationToken,
+            opt => opt with { IgnorableExceptions = [typeof(AssertException)] }
+        );
+    }
+
+    [Fact]
     internal static void TaskAssertEnumerableExtensions_MatchesEveryMethod()
     {
         typeof(AssertEnumerableBase<>)

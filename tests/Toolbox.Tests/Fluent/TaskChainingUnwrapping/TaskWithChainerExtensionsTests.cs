@@ -13,4 +13,14 @@ public static class TaskWithChainerExtensionsTests
             opt => opt with { IgnorableExceptions = [typeof(AssertException)] }
         );
     }
+
+    [Fact]
+    internal static Task TaskWithChainerExtensions_NoParameterMutation()
+    {
+        return Tools.Tester.PreventsParameterMutationAsync(
+            typeof(TaskWithChainerExtensions),
+            TestContext.Current.CancellationToken,
+            opt => opt with { IgnorableExceptions = [typeof(AssertException)] }
+        );
+    }
 }

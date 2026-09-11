@@ -84,9 +84,6 @@ public sealed record TesterOptions : IToolOptions
     [ConfigurableOption]
     public ImmutableArray<string> TestClassNameGenericSubstitutes { get; init; } = ["", "_T_"];
 
-    /// <summary>Method used to convert parameters to a test name.</summary>
-    public Func<object?, string> TestDisplayNameConverter { get; init; } = o => o?.ToString() ?? "";
-
     /// <summary>Types to ignore for test class coverage tests.</summary>
     [ConfigurableOption]
     public FrozenSet<string> TestClassCoverageExceptions { get; init; } = [];
@@ -149,7 +146,6 @@ public sealed record TesterOptions : IToolOptions
             DisableNullRefExceptionTests = Config.GetValue(section, DisableNullRefExceptionTests),
             TestMethodNameAllowedTargets = Config.GetSet(section, TestMethodNameAllowedTargets),
             TestClassCoverageExceptions = Config.GetSet(section, TestClassCoverageExceptions),
-            TestDisplayNameConverter = Config.GetValue(section, TestDisplayNameConverter),
             DisablePassthroughTests = Config.GetValue(section, DisablePassthroughTests),
             IncludeInstanceMethods = Config.GetValue(section, IncludeInstanceMethods),
             TestClassNameSuffixes = Config.GetArray(section, TestClassNameSuffixes),

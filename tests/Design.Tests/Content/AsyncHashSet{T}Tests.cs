@@ -276,7 +276,7 @@ public static class AsyncHashSet_T_Tests
         return set1.FindMissingFromAsync(set2, canceler)
             .Assert()
             .IsAsync(missing1, canceler)
-            .Also(set2.FindMissingFromAsync(set1, canceler))
+            .Also(() => set2.FindMissingFromAsync(set1, canceler))
             .IsAsync(missing2, canceler);
     }
 

@@ -12,4 +12,13 @@ public static class ResultChainerTests
             TestContext.Current.CancellationToken
         );
     }
+
+    [Fact]
+    internal static Task ResultChainer_NoParameterMutation()
+    {
+        return Tools.Tester.PreventsParameterMutationAsync(
+            typeof(ResultChainer<>),
+            TestContext.Current.CancellationToken
+        );
+    }
 }
