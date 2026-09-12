@@ -1,4 +1,5 @@
 using System.Collections;
+using Werecodent.CreateAndFake.Design.Content;
 using Werecodent.CreateAndFake.Fluent.AssertAsyncCalls;
 using Werecodent.CreateAndFake.Fluent.AssertCalls;
 using Werecodent.CreateAndFake.Fluent.Chaining;
@@ -39,6 +40,15 @@ public static class ResultChainerTests
     )
     {
         chainer.With(_ => data).GetType().Assert().Is(typeof(AssertAsyncEnumerable<int>));
+    }
+
+    [Theory, RandomData]
+    internal static void With_SupportsSpecificIAsyncEnumerable(
+        ResultChainer<object> chainer,
+        AsyncList<string> data
+    )
+    {
+        chainer.With(_ => data).GetType().Assert().Is(typeof(AssertAsyncEnumerable<string>));
     }
 
     [Theory, RandomData]
@@ -123,6 +133,18 @@ public static class ResultChainerTests
     }
 
     [Theory, RandomData]
+    internal static void With_SupportsList(ResultChainer<List<int>> chainer)
+    {
+        chainer.With(x => x).GetType().Assert().Is(typeof(AssertEnumerable));
+    }
+
+    [Theory, RandomData]
+    internal static void With_SupportsArray(ResultChainer<string[]> chainer)
+    {
+        chainer.With(x => x).GetType().Assert().Is(typeof(AssertEnumerable));
+    }
+
+    [Theory, RandomData]
     internal static void With_SupportsIEnumerable(ResultChainer<object> chainer, IEnumerable data)
     {
         chainer.With(_ => data).GetType().Assert().Is(typeof(AssertEnumerable));
@@ -132,6 +154,12 @@ public static class ResultChainerTests
     internal static void With_SupportsException(ResultChainer<Exception> chainer)
     {
         chainer.With(x => x.InnerException).GetType().Assert().Is(typeof(AssertError));
+    }
+
+    [Theory, RandomData]
+    internal static void With_SupportsSpecificException(ResultChainer<ArgumentException> chainer)
+    {
+        chainer.With(x => x).GetType().Assert().Is(typeof(AssertError));
     }
 
     [Theory, RandomData]

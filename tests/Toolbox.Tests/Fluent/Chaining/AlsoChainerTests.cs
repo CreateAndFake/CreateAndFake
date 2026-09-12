@@ -1,4 +1,5 @@
 using System.Collections;
+using Werecodent.CreateAndFake.Design.Content;
 using Werecodent.CreateAndFake.Fluent.AssertAsyncCalls;
 using Werecodent.CreateAndFake.Fluent.AssertCalls;
 using Werecodent.CreateAndFake.Fluent.Chaining;
@@ -43,6 +44,15 @@ public static class AlsoChainerTests
     )
     {
         chainer.Also(data).GetType().Assert().Is(typeof(AssertAsyncEnumerable<int>));
+    }
+
+    [Theory, RandomData]
+    internal static void Also_SupportsSpecificIAsyncEnumerable(
+        AlsoChainer chainer,
+        AsyncList<string> data
+    )
+    {
+        chainer.Also(data).GetType().Assert().Is(typeof(AssertAsyncEnumerable<string>));
     }
 
     [Theory, RandomData]
@@ -124,6 +134,18 @@ public static class AlsoChainerTests
     }
 
     [Theory, RandomData]
+    internal static void Also_SupportsList(AlsoChainer chainer, List<int> data)
+    {
+        chainer.Also(data).GetType().Assert().Is(typeof(AssertEnumerable));
+    }
+
+    [Theory, RandomData]
+    internal static void Also_SupportsArray(AlsoChainer chainer, DataSample[] data)
+    {
+        chainer.Also(data).GetType().Assert().Is(typeof(AssertEnumerable));
+    }
+
+    [Theory, RandomData]
     internal static void Also_SupportsIEnumerable(AlsoChainer chainer, IEnumerable data)
     {
         chainer.Also(data).GetType().Assert().Is(typeof(AssertEnumerable));
@@ -131,6 +153,12 @@ public static class AlsoChainerTests
 
     [Theory, RandomData]
     internal static void Also_SupportsException(AlsoChainer chainer, Exception data)
+    {
+        chainer.Also(data).GetType().Assert().Is(typeof(AssertError));
+    }
+
+    [Theory, RandomData]
+    internal static void Also_SupportsSpecificException(AlsoChainer chainer, ArgumentException data)
     {
         chainer.Also(data).GetType().Assert().Is(typeof(AssertError));
     }

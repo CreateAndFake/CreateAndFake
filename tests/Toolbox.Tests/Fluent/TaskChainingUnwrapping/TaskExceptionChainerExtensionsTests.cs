@@ -1,5 +1,6 @@
 using System.Collections;
 using Werecodent.CreateAndFake.AsserterTool;
+using Werecodent.CreateAndFake.Design.Content;
 using Werecodent.CreateAndFake.Fluent.AssertAsyncCalls;
 using Werecodent.CreateAndFake.Fluent.AssertCalls;
 using Werecodent.CreateAndFake.Fluent.Chaining;
@@ -45,6 +46,15 @@ public static class TaskExceptionChainerExtensionsTests
     )
     {
         chainer.With(_ => data).GetType().Assert().Is(typeof(Task<AssertAsyncEnumerable<int>>));
+    }
+
+    [Theory, RandomData]
+    internal static void With_SupportsSpecificIAsyncEnumerable(
+        Task<ExceptionChainer<Exception>> chainer,
+        AsyncList<string> data
+    )
+    {
+        chainer.With(_ => data).GetType().Assert().Is(typeof(Task<AssertAsyncEnumerable<string>>));
     }
 
     [Theory, RandomData]
@@ -144,6 +154,24 @@ public static class TaskExceptionChainerExtensionsTests
     }
 
     [Theory, RandomData]
+    internal static void With_SupportsList(
+        Task<ExceptionChainer<Exception>> chainer,
+        List<int> data
+    )
+    {
+        chainer.With(_ => data).GetType().Assert().Is(typeof(Task<AssertEnumerable>));
+    }
+
+    [Theory, RandomData]
+    internal static void With_SupportsArray(
+        Task<ExceptionChainer<Exception>> chainer,
+        DataSample[] data
+    )
+    {
+        chainer.With(_ => data).GetType().Assert().Is(typeof(Task<AssertEnumerable>));
+    }
+
+    [Theory, RandomData]
     internal static void With_SupportsIEnumerable(
         Task<ExceptionChainer<Exception>> chainer,
         IEnumerable data
@@ -156,6 +184,14 @@ public static class TaskExceptionChainerExtensionsTests
     internal static void With_SupportsException(Task<ExceptionChainer<Exception>> chainer)
     {
         chainer.With(x => x.InnerException).GetType().Assert().Is(typeof(Task<AssertError>));
+    }
+
+    [Theory, RandomData]
+    internal static void With_SupportsSpecificException(
+        Task<ExceptionChainer<ArgumentException>> chainer
+    )
+    {
+        chainer.With(x => x).GetType().Assert().Is(typeof(Task<AssertError>));
     }
 
     [Theory, RandomData]

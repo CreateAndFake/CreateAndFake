@@ -1,5 +1,6 @@
 using System.Collections;
 using Werecodent.CreateAndFake.AsserterTool;
+using Werecodent.CreateAndFake.Design.Content;
 using Werecodent.CreateAndFake.Fluent.AssertAsyncCalls;
 using Werecodent.CreateAndFake.Fluent.AssertCalls;
 using Werecodent.CreateAndFake.Fluent.Chaining;
@@ -48,6 +49,15 @@ public static class TaskAlsoChainerExtensionsTests
     )
     {
         chainer.Also(() => data).GetType().Assert().Is(typeof(Task<AssertAsyncEnumerable<int>>));
+    }
+
+    [Theory, RandomData]
+    internal static void Also_SupportsSpecificIAsyncEnumerable(
+        Task<AlsoChainer> chainer,
+        AsyncList<string> data
+    )
+    {
+        chainer.Also(() => data).GetType().Assert().Is(typeof(Task<AssertAsyncEnumerable<string>>));
     }
 
     [Theory, RandomData]
@@ -132,6 +142,18 @@ public static class TaskAlsoChainerExtensionsTests
     }
 
     [Theory, RandomData]
+    internal static void Also_SupportsList(Task<AlsoChainer> chainer, List<int> data)
+    {
+        chainer.Also(() => data).GetType().Assert().Is(typeof(Task<AssertEnumerable>));
+    }
+
+    [Theory, RandomData]
+    internal static void Also_SupportsArray(Task<AlsoChainer> chainer, string[] data)
+    {
+        chainer.Also(() => data).GetType().Assert().Is(typeof(Task<AssertEnumerable>));
+    }
+
+    [Theory, RandomData]
     internal static void Also_SupportsIEnumerable(Task<AlsoChainer> chainer, IEnumerable data)
     {
         chainer.Also(() => data).GetType().Assert().Is(typeof(Task<AssertEnumerable>));
@@ -139,6 +161,15 @@ public static class TaskAlsoChainerExtensionsTests
 
     [Theory, RandomData]
     internal static void Also_SupportsException(Task<AlsoChainer> chainer, Exception data)
+    {
+        chainer.Also(() => data).GetType().Assert().Is(typeof(Task<AssertError>));
+    }
+
+    [Theory, RandomData]
+    internal static void Also_SupportsSpecificException(
+        Task<AlsoChainer> chainer,
+        ArgumentException data
+    )
     {
         chainer.Also(() => data).GetType().Assert().Is(typeof(Task<AssertError>));
     }
