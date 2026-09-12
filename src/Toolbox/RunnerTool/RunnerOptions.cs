@@ -62,7 +62,7 @@ public sealed record RunnerOptions : IToolOptions
 
     /// <summary>How long to wait for methods to complete.</summary>
     [ConfigurableOption]
-    public TimeSpan Timeout { get; init; } = new(0, 0, 30);
+    public TimeSpan Timeout { get; init; } = new(0, 0, 50);
 
     /// <summary>Values to inject into called methods.</summary>
     public ImmutableArray<object?> InjectionValues { get; init; } = [];

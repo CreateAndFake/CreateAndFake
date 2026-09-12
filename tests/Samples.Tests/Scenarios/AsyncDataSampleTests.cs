@@ -33,7 +33,8 @@ public static class AsyncDataSampleTests
     public static Task ReadFromNumberValueAsync_CorrectValue(int value)
     {
         return new AsyncDataSample() { NumberValue = Task.FromResult(value) }
-            .NumberValue.Assert()
+            .ReadFromNumberValueAsync()
+            .Assert()
             .HasResultAsync(value, TestContext.Current.CancellationToken);
     }
 
@@ -47,7 +48,8 @@ public static class AsyncDataSampleTests
         }
 
         return new AsyncDataSample() { NumberValue = getNumber() }
-            .NumberValue.Assert()
+            .ReadFromNumberValueAsync()
+            .Assert()
             .HasResultAsync(value, TestContext.Current.CancellationToken);
     }
 }
